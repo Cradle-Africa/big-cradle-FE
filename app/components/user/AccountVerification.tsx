@@ -1,0 +1,130 @@
+'use client';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { X } from 'lucide-react';
+import OtpInput from './OtpInput';
+import { verifyOtpSuperAdminService, resendOtpSuperAdminService } from '../../services/user/userService';
+
+interface AccountVerificationProps {
+    showAccountVerification: boolean;
+    setShowAccountVerification: React.Dispatch<React.SetStateAction<boolean>>;
+    email: string;
+}
+
+const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVerification, setShowAccountVerification, email }) => {
+    const [formData, setFormData] = useState<{ email: string; otp: string }>({
+        email,
+        otp: '',
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Sync email when props change
+    useEffect(() => {
+        setFormData(prev => ({ ...prev, email }));
+    }, [email]);
+
+    
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (formData.otp.length !== 6) {
+            toast.error('OTP must be 6 digits');
+            return;
+        }
+
+        setIsSubmitting(true);
+        const payload = {
+            email: formData.email,
+            otp: formData.otp.toString(),
+        };
+
+        try {
+            toast.loading('Verifying OTP...');
+            await verifyOtpSuperAdminService(payload);
+            setFormData({ ...formData, otp: '' }); // Clear the OTP input
+            toast.dismiss();
+            toast.success('OTP verified successfully!');
+            setShowAccountVerification(false);
+            window.location.href = '/user/signin';
+        } catch (error: any) {
+            toast.dismiss();
+            toast.error(error.message || 'OTP verification failed');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleResendCode = async () => {
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
+        const payload = {
+            email: formData.email,
+        }
+
+        try {
+            toast.loading('Resending OTP...');
+            await resendOtpSuperAdminService(payload);
+            setFormData({ ...formData, otp: '' }); // Clear the OTP input
+            toast.dismiss();
+            toast.success('OTP resent successfully!');
+        } catch (error: any) {
+            toast.dismiss();
+            toast.error(error.message || 'Failed to resend OTP');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+    return (
+        <>
+            <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
+            <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <div className="text-center">
+                    <h2 className="text-md font-semibold text-gray-700 mb-4">Verify your email address</h2>
+                    <p className="text-sm text-gray-500">We sent a six digit code to your email address. Input it here to proceed.</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4 mt-5">
+                    <OtpInput
+                        length={6}
+                        value={formData.otp}
+                        onChange={(otp) => setFormData({ ...formData, otp })}
+                    />
+
+                    <div className="text-center text-xs mt-5">
+                        <p>
+                            Didn’t get the code?
+                            <a onClick={handleResendCode} className="underline text-blue-500 mx-1 hover:cursor-pointer">Resend code</a>
+                            in 4 seconds...
+                        </p>
+                    </div>
+
+                    <div className="flex gap-5 justify-center mt-5">
+                        <button
+                            type="button"
+                            className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:bg-blue-800 hover:text-white"
+                            onClick={() => setShowAccountVerification(false)}
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className={`w-full hover:cursor-pointer py-2 rounded-md text-white ${isSubmitting
+                                ? 'bg-gray-400'
+                                : 'bg-gradient-to-br from-blue-500 to-blue-800 hover:opacity-90'}`}
+                        >
+                            {isSubmitting ? 'Verifying...' : 'Verify'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
+};
+
+export default AccountVerification;
