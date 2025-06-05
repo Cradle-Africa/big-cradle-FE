@@ -32,7 +32,7 @@ export default function SignInPage() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-
+    
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -68,7 +68,6 @@ export default function SignInPage() {
             setIsSubmitting(false);
         }
     };
-
 
     return (
 
@@ -147,7 +146,7 @@ export default function SignInPage() {
                         <p className="text-sm text-gray-500">Forgot password?
                             <a
                                 className="underline ml-1 text-blue-500 hover:cursor-pointer"
-                                onClick={() => setOpenReset(!openReset)}
+                                onClick={() => setOpenReset(!openReset) }
                             >Reset now</a>
                         </p>
                         <hr className="mt-5 border-gray-200" />

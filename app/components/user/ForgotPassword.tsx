@@ -2,6 +2,10 @@
 import React from 'react'
 import { useState } from 'react';
 import { X } from 'lucide-react';
+import { forgotPasswordService } from '@/app/services/user/userService';
+import toast from 'react-hot-toast';
+
+
 
 interface ResetPasswordProps {
     openReset: boolean;
@@ -19,15 +23,43 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
         email: '',
     });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     console.log(formData);
-    // };
+    const handleForgotPassword = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (isSubmitting) return;
+
+        setIsSubmitting(true);
+
+        const payload = {
+            email: formData.email,
+        }
+
+        try {
+            toast.loading('Sending OTP...');
+            await forgotPasswordService(payload);
+            setFormData({ ...formData, email: '' });
+            toast.dismiss();
+            toast.success('Password reset email sent successfully!');
+            setOpenReset(!openReset); 
+            setOpenResetCode(!openResetCode);
+        } catch (error: unknown) {
+            toast.dismiss();
+            if (error instanceof Error) {
+                toast.error(error.message || 'Failed to reset the password');
+            } else {
+                toast.error('Failed to reset the password');
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <>
@@ -37,7 +69,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
                     <h2 className="text-md font-semibold text-gray-700 mb-4">Forgot password</h2>
                     <X size={15} className='text-red-500 hover:cursor-pointer' onClick={() => setOpenReset(false)} />
                 </div>
-                <form className="space-y-4">
+                <form onSubmit={handleForgotPassword} className="space-y-4">
                     <input
                         type="email"
                         name="email"
@@ -49,8 +81,8 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
                     />
                     <button
                         type="submit"
+                        disabled={isSubmitting}
                         className="w-full bg-gray-300 text-gray-500 py-2 rounded-md hover:cursor-pointer hover:text-white hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)]"
-                        onClick={() => { setOpenReset(!openReset); setOpenResetCode(!openResetCode) }}
                     >
                         Reset Password
                     </button>

@@ -4,7 +4,8 @@ import {
     SignUpPayload, 
     SignInPayload, 
     VerifyOtpPayload, 
-    ResendOtpPayload  
+    ResendOtpPayload,
+    forgotPassswordPayload,
 } from "../../types/User";
 
 
@@ -91,6 +92,23 @@ export const suspendUserService = async (payload: ResendOtpPayload) => {
 
 export const deleteUserService = async (payload: ResendOtpPayload) => {
     const response = await fetch(`${BASE_URL}/delete-user`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Fail to delete the user');
+    }
+    return data;
+};
+
+
+export const forgotPasswordService = async (payload: forgotPassswordPayload) => {
+    const response = await fetch(`${BASE_URL}/authentication/forgot-password`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

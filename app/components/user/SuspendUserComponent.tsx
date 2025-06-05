@@ -22,7 +22,7 @@ const SuspendUser: React.FC<SuspendUserProps> = ({ setOpenSuspend }) => {
         };
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
-    }, []);
+    });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
