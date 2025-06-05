@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Settings, Headset, BarChart, House } from 'lucide-react';
+import { Menu, X, Settings, Headset, BarChart, House, UsersRound, MonitorCog, Banknote, Layers } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Sidebar() {
@@ -43,17 +43,23 @@ export default function Sidebar() {
                             href='/system-config'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
-                            System Config
+                            <div className='flex gap-1 items-center'>
+                                <MonitorCog size={15} />
+                                System Config
+                            </div>
                         </Link>
                     </li>
 
                     <span className="flex py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
                     <li>
                         <Link
-                            href='/users-access'
+                            href='/user/user-management/'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
-                            Users & Access
+                            <div className='flex gap-1 items-center'>
+                                <UsersRound size={15} />
+                                Users & Access
+                            </div>
                         </Link>
                     </li>
                     <li>
@@ -61,7 +67,10 @@ export default function Sidebar() {
                             href='/ecosystem'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
-                            Ecosystem
+                            <div className='flex gap-1 items-center'>
+                                <Layers size={15} />
+                                Ecosystem
+                            </div>
                         </Link>
                     </li>
 
@@ -82,7 +91,10 @@ export default function Sidebar() {
                             href='/billing'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
-                            Billing
+                            <div className='flex gap-1 items-center'>
+                                <Banknote size={15} />                            
+                                Billing
+                            </div>
                         </Link>
                     </li>
 
