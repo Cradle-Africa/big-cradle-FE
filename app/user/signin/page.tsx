@@ -93,9 +93,8 @@ export default function SignInPage() {
                     />
                 )}
 
-
                 <div className="w-full max-w-md space-y-6">
-                    <Image src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
+                    <Image src='/auth-logo.png' width={8} height={5}  alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?
                         <Link href="/user/signup" className="underline ml-1">Sign up</Link>
@@ -165,7 +164,7 @@ export default function SignInPage() {
             </div>
 
             <div className="hidden md:block w-3/4 relative">
-                <Image src="/auth-img.png" alt="big cradle Sign up" fill className="object-cover" />
+                <Image src="/auth-img.png"  alt="big cradle Sign up" fill className="object-cover" />
             </div>
         </div>
     );

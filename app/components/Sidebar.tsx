@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Settings, Headset, BarChart } from 'lucide-react';
+import { Menu, X, Settings, Headset, BarChart, House } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Sidebar() {
@@ -24,7 +24,7 @@ export default function Sidebar() {
                     } lg:block`}
             >
                 <ul className="flex flex-col space-y-2 mt-4 px-4">
-                    <Image src={"/logo.png"} alt="Logo" className="w-auto h-13" />
+                    <Image src={"/logo.png"} width={100} height={13} alt="Logo" className="w-auto h-13" />
 
                     <span className="flex py-1 px-3 text-xs text-gray-400">Control</span>
                     <li>
@@ -32,7 +32,10 @@ export default function Sidebar() {
                             href='/'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
-                            Dashboard
+                            <div className='flex gap-1 items-center'>
+                                <House size={15} />
+                                Dashboard
+                            </div>
                         </Link>
                     </li>
                     <li>
