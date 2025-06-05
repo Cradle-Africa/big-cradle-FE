@@ -1,15 +1,15 @@
 import { BASE_URL } from "../base";
 
 import { 
-    SignUpSuperAdminPayload, 
-    SignInSuperAdminPayload, 
+    SignUpPayload, 
+    SignInPayload, 
     VerifyOtpPayload, 
     ResendOtpPayload  
 } from "../../types/User";
 
 
 
-export const signUpSuperAdminService = async (payload: SignUpSuperAdminPayload) => {
+export const signUpService = async (payload: SignUpPayload) => {
     const response = await fetch(`${BASE_URL}/super-admin-auth/sign-up`, {
         method: 'POST',
         headers: {
@@ -25,8 +25,8 @@ export const signUpSuperAdminService = async (payload: SignUpSuperAdminPayload) 
     return data;
 };
 
-export const signInSuperAdminService = async (payload: SignInSuperAdminPayload) => {
-    const response = await fetch(`${BASE_URL}/super-admin-auth/sign-in`, {
+export const signInService = async (payload: SignInPayload) => {
+    const response = await fetch(`${BASE_URL}/authentication/sign-in`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -40,9 +40,8 @@ export const signInSuperAdminService = async (payload: SignInSuperAdminPayload) 
     return data;
 };
 
-
-export const verifyOtpSuperAdminService = async (payload: VerifyOtpPayload) => {
-    const response = await fetch(`${BASE_URL}/super-admin-auth/verify-otp`, {
+export const verifyOtpService = async (payload: VerifyOtpPayload) => {
+    const response = await fetch(`${BASE_URL}/authentication/verify-otp`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -57,8 +56,8 @@ export const verifyOtpSuperAdminService = async (payload: VerifyOtpPayload) => {
     return data;
 };  
 
-export const resendOtpSuperAdminService = async (payload: ResendOtpPayload) => {
-    const response = await fetch(`${BASE_URL}/super-admin-auth/resend-otp`, {
+export const resendOtpService = async (payload: ResendOtpPayload) => {
+    const response = await fetch(`${BASE_URL}/authentication/resend-otp`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -72,4 +71,38 @@ export const resendOtpSuperAdminService = async (payload: ResendOtpPayload) => {
     }
     return data;
 };
+
+export const suspendUserService = async (payload: ResendOtpPayload) => {
+    const response = await fetch(`${BASE_URL}/suspend-user`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Fail to suspend a user');
+    }
+    return data;
+};
+
+
+export const deleteUserService = async (payload: ResendOtpPayload) => {
+    const response = await fetch(`${BASE_URL}/delete-user`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Fail to delete the user');
+    }
+    return data;
+};
+
 

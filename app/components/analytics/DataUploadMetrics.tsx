@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 const DataUploadMetrics = () => {
     const pathname = usePathname();
     return (
-        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5">
+        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white">
             <div className='flex justify-between items-center mb-4'>
                 <h2 className="text-md text-gray-700 font-semibold mb-4">Data Upload Metrics</h2>
                 { pathname !== '/analytics/data-upload-metrics' && (

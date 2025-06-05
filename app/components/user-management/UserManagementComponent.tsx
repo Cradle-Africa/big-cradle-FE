@@ -7,9 +7,8 @@ import UserDropDownMenu from '../drop-down/UserDropDownMenu';
 
 const UserManagementComponent = () => {
     const pathname = usePathname();
-
     return (
-        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5">
+        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white">
             <div className='flex justify-between items-center mb-4'>
                 <h2 className="text-md text-gray-700 font-semibold mb-4">User Directory Table</h2>
                 {pathname !== '/user/user-management/user-directory' && (

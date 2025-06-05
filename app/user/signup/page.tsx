@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Eye, EyeOff } from 'lucide-react';
 import { validateSignUp } from '../../utils/signupValidation';
-import { signUpSuperAdminService } from '../../services/user/userService';
+import { signUpService } from '../../services/user/userService';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import toast from 'react-hot-toast';
 
@@ -52,7 +52,7 @@ export default function SignUpPage() {
         };
 
         try {
-            await signUpSuperAdminService(payload);
+            await signUpService(payload);
             toast.dismiss();
             toast.success('Account created successfully!');
             setShowAccountVerification(true);

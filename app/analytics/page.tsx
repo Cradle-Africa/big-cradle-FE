@@ -1,4 +1,4 @@
-import AnalyticsCharts from "../components/analytics/AnalyticsCharts";
+import AnalyticsCharts from "../components/charts/AnalyticsCharts";
 import CampaignPerformance from "../components/analytics/CampaignPerformance";
 import DataUploadMetrics from "../components/analytics/DataUploadMetrics";
 import { Download, ListChecks, UsersRound, Wallet, AppWindow, CheckSquare, ClipboardList } from "lucide-react";

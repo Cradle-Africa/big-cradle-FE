@@ -12,7 +12,7 @@ export interface User {
     __v: number;
 };
 
-export interface SignUpSuperAdminPayload {
+export interface SignUpPayload {
     fullName: string;
     email: string;
     role: string;
@@ -20,7 +20,7 @@ export interface SignUpSuperAdminPayload {
     profilePicture: string;
 }
 
-export interface SignInSuperAdminPayload {
+export interface SignInPayload {
     email: string;
     password: string;
 }

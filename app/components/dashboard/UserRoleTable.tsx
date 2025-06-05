@@ -2,7 +2,7 @@ import React from 'react'
 
 const UserRoleTable = () => {
     return (
-        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5">
+        <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white">
             <h2 className="text-md text-gray-700 font-semibold mb-4">User Breakdown Table</h2>
             <table className="min-w-full divide-y divide-gray-200">
                 <thead>

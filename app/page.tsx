@@ -1,4 +1,4 @@
-import DashboardCharts from "./components/dashboard/DashboardCharts";
+import DashboardCharts from "./components/charts/DashboardCharts";
 import UserRoleTable from "./components/dashboard/UserRoleTable";
 import { UsersRound, CheckSquare, Banknote } from "lucide-react";
 import DashboardLayout from "./components/layouts/DashboardLayout";

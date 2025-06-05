@@ -8,7 +8,7 @@ import ResetPasswordCode from '@/app/components/user/ResetPasswordCode';
 import { Eye, EyeOff } from 'lucide-react';
 import { validateSignIn } from '../../utils/signupValidation';
 import toast from 'react-hot-toast';
-import { signInSuperAdminService } from '../../services/user/userService';
+import { signInService } from '../../services/user/userService';
 import { addUser } from '@/app/utils/userData';
 
 export default function SignInPage() {
@@ -51,7 +51,7 @@ export default function SignInPage() {
         try {
             toast.dismiss();
             toast.loading('Signing in...');
-            const response = await signInSuperAdminService(payload);
+            const response = await signInService(payload);
             console.log('Sign in response:', response.data);
             addUser(response.data);
             toast.dismiss();

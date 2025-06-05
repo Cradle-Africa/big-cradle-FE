@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import OtpInput from './OtpInput';
-import { verifyOtpSuperAdminService, resendOtpSuperAdminService } from '../../services/user/userService';
+import { verifyOtpService, resendOtpService } from '../../services/user/userService';
 
 interface AccountVerificationProps {
     showAccountVerification: boolean;
@@ -41,7 +41,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
 
         try {
             toast.loading('Verifying OTP...');
-            await verifyOtpSuperAdminService(payload);
+            await verifyOtpService(payload);
             setFormData({ ...formData, otp: '' }); // Clear the OTP input
             toast.dismiss();
             toast.success('OTP verified successfully!');
@@ -70,7 +70,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
 
         try {
             toast.loading('Resending OTP...');
-            await resendOtpSuperAdminService(payload);
+            await resendOtpService(payload);
             setFormData({ ...formData, otp: '' });
             toast.dismiss();
             toast.success('OTP resent successfully!');
