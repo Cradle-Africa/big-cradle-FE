@@ -1,8 +1,5 @@
 import { BASE_URL } from "../base";
 
-
-// This service handles the signup and OTP verification for super admins in the application.
-// It communicates with the backend API to create a new super admin account and verify the OTP sent to the email.
 import { 
     SignUpSuperAdminPayload, 
     SignInSuperAdminPayload, 

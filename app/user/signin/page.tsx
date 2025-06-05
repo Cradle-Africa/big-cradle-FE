@@ -115,7 +115,7 @@ export default function SignInPage() {
                             placeholder="Enter your email address"
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full border border-gray-300 rounded-md p-2 outline-none "
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none "
                             required
                         />
                         {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
@@ -127,7 +127,7 @@ export default function SignInPage() {
                                 placeholder="Enter your password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 outline-none "
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none "
                                 required
                             />
                             {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
@@ -151,7 +151,7 @@ export default function SignInPage() {
 
                         <button
                             type="submit"
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-white ${isSubmitting ? 'bg-gray-400' : 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90'}`}
+                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? 'Logging in...' : 'Log In'}

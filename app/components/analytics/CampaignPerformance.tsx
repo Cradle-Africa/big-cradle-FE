@@ -1,16 +1,21 @@
+'use client'
 import React from 'react'
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const CampaignPerformance = () => {
+    const pathname = usePathname();
     return (
         <div className="overflow-x-auto w-full mt-5 rounded-md border border-gray-100 px-5 py-5">
             <div className='flex justify-between items-center mb-4'>
-                <h2 className="text-md text-gray-700 font-semibold mb-4">CampaignPerformance</h2>
-                <div className="flex items-center gap-1 text-sm underline text-[#0023E8]">
-                    <Link href='/analytics/campaign-performance'> View all</Link>
-                    <ArrowRight size={15}/>
-                </div>
+                <h2 className="text-md text-gray-700 font-semibold mb-4">Campaign Performance</h2>
+                { pathname !== '/analytics/campaign-performance' && (
+                    <div className="flex items-center gap-1 text-sm underline text-[#0023E8]">
+                        <Link href='/analytics/campaign-performance'> View all</Link>
+                        <ArrowRight size={15}/>
+                    </div>
+                )}
             </div>
 
             <table className="min-w-full divide-y divide-gray-200">

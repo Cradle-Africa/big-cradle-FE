@@ -53,7 +53,7 @@ export default function SignUpPage() {
 
         try {
             await signUpSuperAdminService(payload);
-            toast.dismiss(); 
+            toast.dismiss();
             toast.success('Account created successfully!');
             setShowAccountVerification(true);
         } catch (error: any) {
@@ -101,7 +101,7 @@ export default function SignUpPage() {
                                 placeholder="Full Name"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 outline-none"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                             />
                             {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
                         </div>
@@ -113,7 +113,7 @@ export default function SignUpPage() {
                                 placeholder="Email Address"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 outline-none"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                             />
                             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
                         </div>
@@ -126,7 +126,7 @@ export default function SignUpPage() {
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 pr-10 outline-none"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
                             />
                             <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
                                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -141,7 +141,7 @@ export default function SignUpPage() {
                                 placeholder="Confirm Password"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md p-2 pr-10 outline-none"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
                             />
                             <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -152,8 +152,8 @@ export default function SignUpPage() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-white ${isSubmitting ? 'bg-gray-400' : 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90'
-                                }`}
+                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
+
                         >
                             {isSubmitting ? 'Submitting...' : 'Create account'}
                         </button>

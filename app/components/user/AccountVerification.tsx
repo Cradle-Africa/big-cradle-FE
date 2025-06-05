@@ -24,7 +24,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVe
         setFormData(prev => ({ ...prev, email }));
     }, [email]);
 
-    
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -114,9 +114,8 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVe
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full hover:cursor-pointer py-2 rounded-md text-white ${isSubmitting
-                                ? 'bg-gray-400'
-                                : 'bg-gradient-to-br from-blue-500 to-blue-800 hover:opacity-90'}`}
+                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
+
                         >
                             {isSubmitting ? 'Verifying...' : 'Verify'}
                         </button>
