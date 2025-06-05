@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { X } from 'lucide-react';
 import OtpInput from './OtpInput';
 import { verifyOtpSuperAdminService, resendOtpSuperAdminService } from '../../services/user/userService';
 
@@ -11,7 +10,7 @@ interface AccountVerificationProps {
     email: string;
 }
 
-const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVerification, setShowAccountVerification, email }) => {
+const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccountVerification, email }) => {
     const [formData, setFormData] = useState<{ email: string; otp: string }>({
         email,
         otp: '',
@@ -48,9 +47,13 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVe
             toast.success('OTP verified successfully!');
             setShowAccountVerification(false);
             window.location.href = '/user/signin';
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.dismiss();
-            toast.error(error.message || 'OTP verification failed');
+            if (error instanceof Error) {
+                toast.error(error.message || 'OTP verification failed');
+            } else {
+                toast.error('OTP verification failed');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -68,12 +71,16 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ showAccountVe
         try {
             toast.loading('Resending OTP...');
             await resendOtpSuperAdminService(payload);
-            setFormData({ ...formData, otp: '' }); // Clear the OTP input
+            setFormData({ ...formData, otp: '' });
             toast.dismiss();
             toast.success('OTP resent successfully!');
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.dismiss();
-            toast.error(error.message || 'Failed to resend OTP');
+            if (error instanceof Error) {
+                toast.error(error.message || 'OTP verification failed');
+            } else {
+                toast.error('OTP verification failed');
+            }
         } finally {
             setIsSubmitting(false);
         }

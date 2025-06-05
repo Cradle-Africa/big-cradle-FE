@@ -1,4 +1,3 @@
-import Image from "next/image";
 import DashboardCharts from "./components/dashboard/DashboardCharts";
 import UserRoleTable from "./components/dashboard/UserRoleTable";
 import { UsersRound, CheckSquare, Banknote } from "lucide-react";

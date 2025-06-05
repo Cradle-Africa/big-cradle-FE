@@ -24,10 +24,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(formData);
-    };
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     console.log(formData);
+    // };
 
     return (
         <>
@@ -50,7 +50,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
                     <button
                         type="submit"
                         className="w-full bg-gray-300 text-gray-500 py-2 rounded-md hover:cursor-pointer hover:text-white hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)]"
-                        onClick={() => { setOpenReset(!openReset), setOpenResetCode(!openResetCode) }}
+                        onClick={() => { setOpenReset(!openReset); setOpenResetCode(!openResetCode) }}
                     >
                         Reset Password
                     </button>

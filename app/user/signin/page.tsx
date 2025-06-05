@@ -57,9 +57,13 @@ export default function SignInPage() {
             toast.dismiss();
             toast.success('Signed in successfully!');
             window.location.href = '/';
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast.dismiss();
-            toast.error(error.message || 'Sign in failed');
+            if (error instanceof Error) {
+                toast.error(error.message || 'Sign in failed');
+            } else {
+                toast.error('Sign in failed');
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -91,7 +95,7 @@ export default function SignInPage() {
 
 
                 <div className="w-full max-w-md space-y-6">
-                    <img src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
+                    <Image src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?
                         <Link href="/user/signup" className="underline ml-1">Sign up</Link>

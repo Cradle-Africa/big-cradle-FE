@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, Settings, Headset, BarChart } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Sidebar() {
                     } lg:block`}
             >
                 <ul className="flex flex-col space-y-2 mt-4 px-4">
-                    <img src={"/logo.png"} alt="Logo" className="w-auto h-13" />
+                    <Image src={"/logo.png"} alt="Logo" className="w-auto h-13" />
 
                     <span className="flex py-1 px-3 text-xs text-gray-400">Control</span>
                     <li>

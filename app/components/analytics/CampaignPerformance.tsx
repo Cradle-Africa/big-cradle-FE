@@ -30,7 +30,7 @@ const CampaignPerformance = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                     <tr>
-                        <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">Youth Trends '25</td>
+                        <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">Youth Trends 25</td>
                         <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">DevSpark NG</td>
                         <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">89%</td>
                         <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">1,220</td>

@@ -10,12 +10,12 @@ interface ResetPasswordProps {
     setOpenResetCode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, openResetCode, setOpenResetCode }) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, openResetCode, setOpenResetCode }) => {
     const [otp, setOtp] = useState('');
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    };
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    // };
 
     return (
         <>
@@ -48,7 +48,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
                         <button
                             type="submit"
                             className="w-full bg-gray-300 text-gray-500 py-2 rounded-md hover:cursor-pointer hover:text-white hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)]"
-                            onClick={() => { setOpenResetCode(!openReset), setOpenResetCode(!openResetCode) }}
+                            onClick={() => { setOpenResetCode(!openReset); setOpenResetCode(!openResetCode) }}
                         >
                             Verify code
                         </button>

@@ -2,6 +2,7 @@
 import React from 'react'
 import { Search, Bell, ChevronRight } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
+import Image from 'next/image';
 
 const Topbar = () => {
     const user = useUser();
@@ -22,7 +23,7 @@ const Topbar = () => {
 
             <div className='flex justify-between gap-5 items-center'>
                 <Bell className="w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
-                <img src="/profile.png" alt='profile image' className='w-8 h-8' />
+                <Image src="/profile.png" alt='profile image' className='w-8 h-8' />
                 <div className='flex flex-col'>
                     <span className='text-xs font-semibold'>{user?.fullName}</span>
                     <span className='text-xs text-gray-500'>{user?.role}</span>

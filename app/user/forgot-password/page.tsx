@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
             <div className="flex items-center justify-center w-[400px] px-4 md:px-12 py-4 bg-white">
 
                 <div className="w-full max-w-md space-y-5">
-                    <img src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
+                    <Image src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-xl font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700'>Enter your new password below</p>
 
