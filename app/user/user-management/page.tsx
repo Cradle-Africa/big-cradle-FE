@@ -11,7 +11,7 @@ export default function Analytics() {
 	return (
 		<DashboardLayout>
 			<div>
-				<div className='me:flex justify-between items-center w-full'>
+				<div className='lg:flex justify-between items-center w-full'>
 					<div>
 						<p className='font-semibold text-md space-y-1'>User Management & Access Control</p>
 						<p className="text-sm">View and manage every user in the system, their roles, permissions, login activity, and security status.</p>
