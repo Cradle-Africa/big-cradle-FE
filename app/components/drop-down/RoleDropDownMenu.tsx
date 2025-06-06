@@ -1,11 +1,14 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import { UserRoundMinus, UserRoundX, Eye } from 'lucide-react';
+import SuspendUserComponent from '../user/SuspendUserComponent';
+import DeleteUserComponent from '../user/DeleteUserComponent';
 
 export default function UserDropDownMenu() {
 	const [open, setOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
+	const [openSuspend, setOpenSuspend] = useState(false);
+	const [openDelete, setOpenDelete] = useState(false);
 
 	// Close the menu if clicked outside
 	useEffect(() => {
@@ -23,11 +26,24 @@ export default function UserDropDownMenu() {
 			{/* Three dots button */}
 			<button
 				onClick={() => setOpen(!open)}
-				className="text-gray-500 hover:text-black rounded px-1 py-1 hover:cursor-pointer bg-gray-100 focus:outline-none"
+				className="text-gray-500 hover:text-black rounded px-2 py-1 hover:cursor-pointer bg-gray-100 focus:outline-none"
 			>
-				&#8942; 
+				&#8942;
 			</button>
 
+			{openSuspend && (
+				<SuspendUserComponent
+					openSuspend={openSuspend}
+					setOpenSuspend={setOpenSuspend}
+				/>
+			)}
+
+			{openDelete && (
+				<DeleteUserComponent
+					openDelete={openDelete}
+					setOpenDelete={setOpenDelete}
+				/>
+			)}
 			{/* Dropdown Menu */}
 			{open && (
 				<div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md border border-gray-100 z-50">
@@ -45,7 +61,7 @@ export default function UserDropDownMenu() {
 						</li>
 						<li className='px-1'>
 							<button
-								onClick={() => alert('Suspend User')}
+								onClick={() => { setOpenSuspend(!openSuspend); setOpen(false); }}
 								className="w-full px-4 py-2 text-left text-sm rounded-md text-yellow-700 hover:bg-yellow-100 hover:cursor-pointer"
 							>
 								<div className="flex items-center gap-1">
@@ -56,7 +72,7 @@ export default function UserDropDownMenu() {
 						</li>
 						<li className='px-1'>
 							<button
-								onClick={() => alert('Delete User')}
+                                onClick={() => {setOpen(false); setOpenDelete(!openDelete);}}
 								className="w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-100 hover:cursor-pointer"
 							>
 								<div className="flex items-center gap-1">

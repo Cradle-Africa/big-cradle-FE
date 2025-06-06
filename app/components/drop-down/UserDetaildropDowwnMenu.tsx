@@ -27,7 +27,7 @@ export default function UserDetailDropDownMenu() {
             {/* Three dots button */}
             <button
                 onClick={() => setOpen(!open)}
-                className="text-gray-500 hover:text-black rounded px-1 py-1 hover:cursor-pointer bg-gray-100 focus:outline-none"
+                className="text-gray-500 hover:text-black rounded px-2 py-1 hover:cursor-pointer bg-gray-100 focus:outline-none"
             >
                 &#8942;
             </button>

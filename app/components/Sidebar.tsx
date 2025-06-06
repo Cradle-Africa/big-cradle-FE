@@ -7,7 +7,6 @@ import Image from 'next/image';
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
 
-
     return (
         <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute'} `}>
             {/* Mobile toggle */}

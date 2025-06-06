@@ -64,7 +64,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ openReset, setOpenReset, 
     return (
         <>
             <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 flex items-center justify-center z-50"></div>
-            <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="bg-white p-6 rounded-md shadow-md w-82 lg:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className='flex justify-between'>
                     <h2 className="text-md font-semibold text-gray-700 mb-4">Forgot password</h2>
                     <X size={15} className='text-red-500 hover:cursor-pointer' onClick={() => setOpenReset(false)} />
