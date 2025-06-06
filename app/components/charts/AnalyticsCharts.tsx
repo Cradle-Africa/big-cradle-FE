@@ -21,14 +21,14 @@ export default function DashboardCharts() {
             {/* Revenue Split Pie Chart */}
             <div className="bg-white rounded-xl px-2 py-4 border border-[#F7F7F7]">
                 <h2 className="text-md text-gray-700 font-semibold ml-2 mb-4">Feedback Quality Insights</h2>
-                <div className='md:flex items-center justify-between mb-4'>
+                <div className='flex items-center gap-5 justify-between mb-4'>
                     <ResponsiveContainer width="100%" height={250}>
                         <PieChart>
                             <Pie
                                 data={pieData}
                                 dataKey="value"
                                 nameKey="name"
-                                cx="40%"
+                                cx="50%"
                                 cy="50%"
                                 outerRadius={80}
                                 innerRadius={60}

@@ -24,14 +24,14 @@ export default function DashboardCharts() {
             {/* Revenue Split Pie Chart */}
             <div className="bg-white rounded-xl px-2 py-4 border border-[#F7F7F7]">
                 <h2 className="text-md text-gray-700 font-semibold ml-2 mb-4">Revenue Split</h2>
-                <div className='md:flex items-center justify-between mb-4'>
+                <div className='flex items-center justify-between mb-4'>
                     <ResponsiveContainer width="100%" height={250}>
                         <PieChart>
                             <Pie
                                 data={pieData}
                                 dataKey="value"
                                 nameKey="name"
-                                cx="40%"
+                                cx="50%"
                                 cy="50%"
                                 outerRadius={80}
                                 innerRadius={60}
@@ -43,11 +43,11 @@ export default function DashboardCharts() {
                             </Pie>
                         </PieChart>
                     </ResponsiveContainer>
-                    <ul className="space-y-1 text-sm w-full">
+                    <ul className="space-y-1 text-xs md:text-sm w-full px-3 md:px-0">
                         {pieData.map((item) => (
                             <li key={item.name} className="flex items-center mt-4 gap-1">
                                 <span className="w-3 h-3" style={{ backgroundColor: item.color }}></span>
-                                <span className='text-sm'>{item.value}% – {item.name}</span>
+                                <span className='text-xs md:text-sm'>{item.value}%  {item.name}</span>
                             </li>
                         ))}
                     </ul>

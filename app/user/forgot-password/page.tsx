@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
 
                 <div className="w-full max-w-md space-y-5">
                     <Image src='/auth-logo.png' alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-700">Welcome to Big Cradle</h3>
+                    <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700'>Enter your new password below</p>
 
                     <form onSubmit={handleSubmit} className="space-y-4">

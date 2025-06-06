@@ -51,7 +51,7 @@ const SuspendUser: React.FC<SuspendUserProps> = ({ setOpenSuspend }) => {
     return (
         <>
             <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
-            <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+            <div className="bg-white p-6 rounded-md shadow-md w-82 lg:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
                 <div className='flex justify-center'>
                     <UserRoundMinus size={60} className="text-blue-700 bg-gray-100 rounded-full px-3 py-2" />
                 </div>
@@ -60,8 +60,7 @@ const SuspendUser: React.FC<SuspendUserProps> = ({ setOpenSuspend }) => {
                     <p className="text-sm text-gray-500">Are you sure you would like to suspend this user?</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4 mt-12">
-
+                <form onSubmit={handleSubmit} className="space-y-4 mt-5 lg:mt-12">
                     <div className="flex gap-5 justify-center mt-5">
                         <button
                             type="button"

@@ -81,7 +81,7 @@ export default function SignUpPage() {
             <div className="flex items-center justify-center w-[400px] px-4 md:px-12 py-4 bg-white">
                 <div className="w-full max-w-md space-y-6">
                     <Image src="/auth-logo.png" width={8} height={8} alt="Logo" className="w-8 mr-auto mb-4" />
-                    <h3 className="text-xl font-semibold text-gray-700">Welcome to Big Cradle</h3>
+                    <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>
                         Already have an account?
                         <Link href="/user/signin" className="underline ml-1">Log in</Link>

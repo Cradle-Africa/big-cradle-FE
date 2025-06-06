@@ -9,24 +9,31 @@ export default function Sidebar() {
 
 
     return (
-        <div className="fixed h-screen md:w-64 flex flex-col bg-white rounded-md">
+        <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute'} `}>
             {/* Mobile toggle */}
-            <div className="lg:hidden p-4 flex justify-between items-center border-b border-gray-200">
-                Menu
-                <button onClick={() => setOpen(!open)} className="text-gray-600">
-                    {open ? <X /> : <Menu />}
+            <div className={` ${open ? '' : 'border border-gray-200'} md:hidden rounded-md mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}>
+                <button onClick={() => setOpen(!open)} className="text-gray-500 hover:cursor-pointer">
+                    {open ? (
+                        <div className='flex items-center justify-between'>
+                            <Link href='/'>
+                                <Image src={"/logo.png"} width={150} height={13} alt="Logo" className='' />
+                            </Link>
+                            <X size={15} className='text-red-500' />
+                        </div>
+                    ) : <Menu size={25} className='' />}
                 </button>
             </div>
 
             {/* Menu list */}
             <div
-                className={`lg:flex flex-col justify-between flex-grow ${open ? 'block' : 'hidden'
+                className={`lg:flex flex-col justify-between text-sm flex-grow ${open ? 'block' : 'hidden'
                     } lg:block`}
             >
-                <ul className="flex flex-col space-y-2 mt-4 px-4">
-                    <Image src={"/logo.png"} width={100} height={13} alt="Logo" className="w-auto h-13" />
-
-                    <span className="flex py-1 px-3 text-xs text-gray-400">Control</span>
+                <ul className="flex flex-col space-y-2 mt-2 px-4">
+                    <Link href='/'>
+                        <Image src={"/logo.png"} width={100} height={13} alt="Logo" className={` ${open ? 'hidden' : 'w-auto h-13'}`} />
+                    </Link>
+                    <span className="flex md:py-1 px-3 text-xs text-gray-400">Control</span>
                     <li>
                         <Link
                             href='/'
@@ -50,7 +57,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
 
-                    <span className="flex py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
+                    <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
                     <li>
                         <Link
                             href='/user/user-management/'
@@ -74,7 +81,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
 
-                    <span className="flex py-1 px-3 border-t border-gray-100 text-xs text-gray-400">Intelligence & Insights</span>
+                    <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">Intelligence & Insights</span>
                     <li>
                         <Link
                             href='/analytics'
@@ -92,7 +99,7 @@ export default function Sidebar() {
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
                             <div className='flex gap-1 items-center'>
-                                <Banknote size={15} />                            
+                                <Banknote size={15} />
                                 Billing
                             </div>
                         </Link>
@@ -126,7 +133,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
                 </ul>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

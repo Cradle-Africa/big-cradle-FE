@@ -11,8 +11,8 @@ const Topbar = () => {
     }
 
     return (
-        <div className="border-b border-gray-100 w-full flex justify-between pt-5 pb-4 px-5">
-            <form className="relative flex items-center">
+        <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pt-5 pb-4 px-5">
+            <form className="hidden relative md:flex items-center">
                 <Search className="absolute left-3 text-gray-300 w-4 h-4 pointer-events-none" />
                 <input
                     type="text"
@@ -22,10 +22,11 @@ const Topbar = () => {
             </form>
 
             <div className='flex justify-between gap-5 items-center'>
-                <Bell className="w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
+                <Bell className="hidden md:block w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
                 <Image src="/profile.png" width={8} height={8} alt='profile image' className='w-8 h-8' />
                 <div className='flex flex-col'>
-                    <span className='text-xs font-semibold'>{user?.fullName}</span>
+                    <span className='hidden lg:inline text-xs font-semibold'>{user?.fullName}</span>
+                    <span className='inline lg:hidden text-xs font-semibold'>{ user?.fullName?.slice(0, 12) + '...'}</span>
                     <span className='text-xs text-gray-500'>{user?.role}</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-gray-500 hover:cursor-pointer" />
