@@ -3,7 +3,7 @@ import React from 'react'
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import UserDropDownMenu from '../drop-down/UserDropDownMenu';
+import ActionDropdownMenu from '../drop-down/ActionDropdownMenu';
 
 const UserManagementComponent = () => {
     const pathname = usePathname();
@@ -41,7 +41,20 @@ const UserManagementComponent = () => {
                                 </span>
                             </td>
                             <td className='border border-gray-100 px-6 py-3 whitespace-nowrap'>
-                                <UserDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    onViewProfile={() => {}}
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -54,7 +67,20 @@ const UserManagementComponent = () => {
                                 </span>
                             </td>
                             <td className='border border-gray-100 px-6 py-3 whitespace-nowrap'>
-                                <UserDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    onViewProfile={() => {}}
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -67,7 +93,20 @@ const UserManagementComponent = () => {
                                 </span>
                             </td>
                             <td className='border border-gray-100 px-6 py-3 whitespace-nowrap'>
-                                <UserDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    onViewProfile={() => {}}
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
                         <tr>
@@ -80,7 +119,20 @@ const UserManagementComponent = () => {
                                 </span>
                             </td>
                             <td className='border border-gray-100 px-6 py-3 whitespace-nowrap'>
-                                <UserDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    onViewProfile={() => {}}
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
 

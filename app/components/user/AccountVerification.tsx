@@ -18,12 +18,9 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Sync email when props change
     useEffect(() => {
         setFormData(prev => ({ ...prev, email }));
     }, [email]);
-
-
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

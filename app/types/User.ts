@@ -1,3 +1,10 @@
+export interface ApiRequestOptions {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    headers?: HeadersInit;
+	body?: Record<string, unknown>;
+
+}
+
 export interface User {
     id: string;
     fullName: string;
@@ -34,6 +41,20 @@ export interface ResendOtpPayload {
    email: string;
 }
 
-export interface forgotPassswordPayload {
+export interface ForgotPassswordPayload {
    email: string;
+}
+
+export interface SuspendUserPayload {
+   id: string;
+}
+
+export interface DeleteUserPayload {
+   id: string;
+}
+
+export interface ResetPassswordPayload {
+    email: string;
+    resetToken: string;
+    newPassword: string;
 }

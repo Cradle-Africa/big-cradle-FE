@@ -3,15 +3,25 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import ResetPassword from '@/app/components/user/ForgotPassword';
-import ResetPasswordCode from '@/app/components/user/ResetPasswordCode';
+import ForgotPassword from '@/app/components/user/ForgotPassword';
+import ForgotPasswordCode from '../../components/user/ForgotPasswordCode';
+import ResetPassword from '../../components/user/ResetPassword';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignIn } from '../../utils/signupValidation';
+import { validateSignIn } from '../../utils/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../services/user/userService';
 import { addUser } from '@/app/utils/userData';
 
 export default function SignInPage() {
+    const [openReset, setOpenReset] = useState(false);
+    const [openResetCode, setOpenResetCode] = useState(false);
+    const [openResetPassword, setOpenResetPassword] = useState(false);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [resetToken, setResetToken] = useState('');
+
     const [formData, setFormData] = useState<{
         email: string;
         password: string;
@@ -21,18 +31,12 @@ export default function SignInPage() {
         password: '',
     });
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const [openReset, setOpenReset] = useState(false);
-    const [openResetCode, setOpenResetCode] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -75,25 +79,34 @@ export default function SignInPage() {
 
             <div className="flex items-center justify-center w-[400px] px-4 md:px-12 py-4 bg-white">
                 {openReset && (
-                    <ResetPassword
+                    <ForgotPassword
                         openReset={openReset}
                         setOpenReset={setOpenReset}
                         openResetCode={openResetCode}
                         setOpenResetCode={setOpenResetCode}
+                        setEmail={setEmail}
                     />
                 )}
 
                 {openResetCode && (
-                    <ResetPasswordCode
-                        openReset={openReset}
-                        setOpenReset={setOpenReset}
+                    <ForgotPasswordCode
                         openResetCode={openResetCode}
                         setOpenResetCode={setOpenResetCode}
+                        setOpenResetPassword={setOpenResetPassword}
+                        setResetToken={setResetToken}
+                    />
+                )}
+
+                {openResetPassword && (
+                    <ResetPassword
+                        email={email}
+                        resetToken={resetToken}
+                        setopenResetPassword={setOpenResetPassword}
                     />
                 )}
 
                 <div className="w-full max-w-md space-y-6">
-                    <Image src='/auth-logo.png' width={8} height={5}  alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
+                    <Image src='/auth-logo.png' width={8} height={5} alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?
                         <Link href="/user/signup" className="underline ml-1">Sign up</Link>
@@ -146,7 +159,7 @@ export default function SignInPage() {
                         <p className="text-sm text-gray-500">Forgot password?
                             <a
                                 className="underline ml-1 text-blue-500 hover:cursor-pointer"
-                                onClick={() => setOpenReset(!openReset) }
+                                onClick={() => setOpenReset(!openReset)}
                             >Reset now</a>
                         </p>
                         <hr className="mt-5 border-gray-200" />
@@ -163,7 +176,7 @@ export default function SignInPage() {
             </div>
 
             <div className="hidden md:block w-3/4 relative">
-                <Image src="/auth-img.png"  alt="big cradle Sign up" fill className="object-cover" />
+                <Image src="/auth-img.png" alt="big cradle Sign up" fill className="object-cover" />
             </div>
         </div>
     );

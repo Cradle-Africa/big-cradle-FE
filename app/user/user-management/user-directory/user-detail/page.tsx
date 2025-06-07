@@ -1,7 +1,9 @@
+'use client';
 import React from 'react'
 import Link from 'next/link';
 import DashboardLayout from '../../../../components/layouts/DashboardLayout';
-import UserDetailDropDownMenu from '../../../../components/drop-down/UserDetaildropDowwnMenu';
+import ActionDropdownMenu from '../../../../components/drop-down/ActionDropdownMenu';
+
 import { IdCard, User, Check, CircleUserRound, Megaphone } from 'lucide-react';
 
 const UserDetailPage = () => {
@@ -23,7 +25,20 @@ const UserDetailPage = () => {
                 <div className="w-93 md:w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white">
                     <div className='flex justify-between items-center mb-2'>
                         <h2 className="text-sm md:text-md text-gray-700 font-semibold mb-4">User Detail Page</h2>
-                        <UserDetailDropDownMenu />
+                        <ActionDropdownMenu
+                            Id="123"
+                            onViewProfile={() => { }}
+                            suspendAction={{
+                                endPoint: '/api/user/suspend',
+                                method: 'POST',
+                                payload: { reason: 'violation' }
+                            }}
+                            deleteAction={{
+                                endPoint: '/api/user/delete',
+                                method: 'DELETE',
+                                payload: {}
+                            }}
+                        />
                     </div>
                     <div className='flex items-center gap-1 mb-2'>
                         <IdCard size={15} className='text-blue-600' />

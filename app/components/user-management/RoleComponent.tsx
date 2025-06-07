@@ -3,7 +3,7 @@ import React from 'react'
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import RoleDropDownMenu from '../drop-down/RoleDropDownMenu';
+import ActionDropdownMenu from '../drop-down/ActionDropdownMenu';
 
 const RoleComponent = () => {
     const pathname = usePathname();
@@ -27,7 +27,6 @@ const RoleComponent = () => {
                             <th className="border-r border-gray-200 px-6 py-3 text-left text-sm font-semibold text-gray-600 tracking-wider">Users Assigned</th>
                             <th className="border-r border-gray-200 px-6 py-3 text-left text-sm font-semibold text-gray-600 tracking-wider">Permissions</th>
                             <th className="rounded-tr-lg border-l border-gray-200 px-6 py-3 text-left text-sm font-semibold text-gray-600 tracking-wider">Actions</th>
-
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -37,7 +36,20 @@ const RoleComponent = () => {
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">8</td>
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">All</td>
                             <td className='border border-gray-100 px-6 py-3 whitespace-nowrap'>
-                                <RoleDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
+
                             </td>
                         </tr>
 
@@ -47,7 +59,19 @@ const RoleComponent = () => {
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">4</td>
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">All</td>
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">
-                                <RoleDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
 
@@ -57,7 +81,19 @@ const RoleComponent = () => {
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">4</td>
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">All</td>
                             <td className="border border-gray-100 px-6 py-3 whitespace-nowrap text-sm">
-                                <RoleDropDownMenu />
+                                <ActionDropdownMenu
+                                    Id="123"
+                                    suspendAction={{
+                                        endPoint: '/api/user/suspend',
+                                        method: 'POST',
+                                        payload: { reason: 'violation' }
+                                    }}
+                                    deleteAction={{
+                                        endPoint: '/api/user/delete',
+                                        method: 'DELETE',
+                                        payload: {}
+                                    }}
+                                />
                             </td>
                         </tr>
 

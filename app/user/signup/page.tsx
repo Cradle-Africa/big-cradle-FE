@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignUp } from '../../utils/signupValidation';
+import { validateSignUp } from '../../utils/userValidation';
 import { signUpService } from '../../services/user/userService';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import toast from 'react-hot-toast';
