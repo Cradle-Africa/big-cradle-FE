@@ -20,7 +20,8 @@ export interface User {
 };
 
 export interface SignUpPayload {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     role: string;
     password: string;

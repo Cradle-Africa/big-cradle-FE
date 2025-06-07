@@ -12,7 +12,8 @@ import toast from 'react-hot-toast';
 
 export default function SignUpPage() {
     const [formData, setFormData] = useState({
-        fullName: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -42,7 +43,8 @@ export default function SignUpPage() {
         setIsSubmitting(true);
 
         const payload = {
-            fullName: formData.fullName,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
             email: formData.email,
             role: formData.role,
             password: formData.password,
@@ -58,9 +60,9 @@ export default function SignUpPage() {
             setShowAccountVerification(true);
         } catch (error: unknown) {
             toast.dismiss();
-            if(error instanceof Error){
+            if (error instanceof Error) {
                 toast.error(error.message || 'Sign up failed. Please try again.');
-            }else{
+            } else {
                 toast.error('Sign up failed, please try again')
             }
         } finally {
@@ -98,17 +100,32 @@ export default function SignUpPage() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <input
-                                type="text"
-                                name="fullName"
-                                placeholder="Full Name"
-                                value={formData.fullName}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                            />
-                            {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName}</p>}
+                        <div className='md:flex justify-between gap-2'>
+                            <div>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    placeholder="First Name"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                />
+                                {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
+                            </div>
+
+                            <div className='mt-4 md:mt-0'>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                />
+                                {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
+                            </div>
                         </div>
+
 
                         <div>
                             <input

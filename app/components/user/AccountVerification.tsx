@@ -109,7 +109,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                     <div className="flex gap-5 justify-center mt-5">
                         <button
                             type="button"
-                            className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:bg-blue-800 hover:text-white"
+                            className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
                             onClick={() => setShowAccountVerification(false)}
                         >
                             Cancel
@@ -118,7 +118,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
+                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
 
                         >
                             {isSubmitting ? 'Verifying...' : 'Verify'}

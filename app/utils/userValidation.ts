@@ -1,5 +1,6 @@
 export interface SignUpFormData {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -18,7 +19,8 @@ export interface ResetPasswordFormData {
 export const validateSignUp = (data: SignUpFormData): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};
 
-    if (!data.fullName.trim()) errors.fullName = 'Full name is required';
+    if (!data.firstName.trim()) errors.firstName = 'First name is required';
+    if (!data.lastName.trim()) errors.lastName = 'Last name is required';
     if (!data.email.trim()) errors.email = 'Email is required';
     if (!data.password || data.password.length < 6)
         errors.password = 'Password must be at least 6 characters';
