@@ -9,6 +9,8 @@ import { validateBusinessAdminSignUp, validateStep } from '../../utils/userValid
 import CountryCodeSelect from '@/app/components/CountryCodeSelect';
 import CountrySelect from '@/app/components/CountrySelect';
 import { BusinessAdminSignUpService } from '../../services/user/userService';
+import SearchSelect from '../SearchSelect';
+import cities from '../../utils/data/cities.json';
 
 export default function BusinessAdminSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -51,6 +53,10 @@ export default function BusinessAdminSignUp() {
         } else {
             setForm((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleSelectChange = (field: string, value: string) => {
+        setForm((prev) => ({ ...prev, [field]: value }));
     };
 
     const next = () => {
@@ -164,12 +170,20 @@ export default function BusinessAdminSignUp() {
 
                                 </div>
                                 <div className='md:flex w-full justify-between gap-2 mt-5'>
-                                    <div className='w-full md:w-1/2'> 
+                                    <div className='w-full md:w-1/2'>
                                         <input name="businessAddress" value={form.businessAddress} onChange={handleChange} placeholder="Address" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                         {errors.businessAddress && <p className="text-red-500 text-xs">{errors.businessAddress}</p>}
                                     </div>
                                     <div className='w-full md:w-1/2 mt-5 md:mt-0'>
-                                        <input name="businessCity" value={form.businessCity} onChange={handleChange} placeholder="City" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        <SearchSelect
+                                            data={cities}
+                                            value={form.businessCity}
+                                            onSelect={(value) => handleSelectChange('businessCity', value)}
+                                            placeholder="Search for a city..."
+                                            name="businessCity"
+                                            className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
+                                        />
+                                        {/* <input name="businessCity" value={form.businessCity} onChange={handleChange} placeholder="City" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" /> */}
                                         {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
                                     </div>
                                 </div>
