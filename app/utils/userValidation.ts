@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, SignInPayload } from '../types/User';
+import { SuperAdminSignUpPayload, BusinessForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
 
 
 export interface ResetPasswordFormData {
@@ -66,7 +66,6 @@ export const validateStep = (step: number, form: BusinessForm) => {
 };
 
 
-
 export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};
 
@@ -80,6 +79,22 @@ export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: 
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
 
+    return errors;
+};
+
+
+export const validateEmployeeSignUp = (data: EmployeeSignUpPayload): { [key: string]: string } => {
+    const errors: { [key: string]: string } = {};
+
+    if (!data.firstName.trim()) errors.firstName = 'First name is required';
+    if (!data.lastName.trim()) errors.lastName = 'Last name is required';
+    if (!data.email.trim()) errors.email = 'Email is required';
+    if (!data.departmentId.trim()) errors.departmentId = 'Department is required';
+    if (!data.profilePicture.trim()) errors.profilePicture = 'Profile picture is required';
+    if (!/\S+@\S+\.\S+/.test(data.email)) errors.email = 'Email is invalid';
+    if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
+        errors.email = 'Email is invalid';
+    }
     return errors;
 };
 

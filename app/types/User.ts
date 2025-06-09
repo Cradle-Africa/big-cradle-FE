@@ -48,7 +48,14 @@ export interface SuperAdminSignUpPayload {
     profilePicture: string;
     confirmPassword: string;
     password: string;
+}
 
+export interface EmployeeSignUpPayload {
+    firstName: string;
+    lastName: string;
+    email: string;
+    departmentId: string;
+    profilePicture: string;
 }
 
 export interface BusinessAdminSignUpPayload {

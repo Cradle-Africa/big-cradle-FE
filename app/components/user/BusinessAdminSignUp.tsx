@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, Image, File } from 'lucide-react';
+import { useState, ChangeEvent } from 'react';
+import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, File } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessForm } from '@/app/types/User';
@@ -119,17 +119,18 @@ export default function BusinessAdminSignUp() {
                                     <input name="contactPersonLastName" value={form.contactPersonLastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                     {errors.contactPersonLastName && <p className="text-red-500 text-xs">{errors.contactPersonLastName}</p>}
                                 </div>
-                                <div className="flex gap-2 mt-5">
-                                    <div className=''>
+                                <div className="md:flex w-full gap-2 mt-5">
+                                    <div className='md:w-2/3'>
                                         <CountryCodeSelect
                                             value={form.countryCode}
                                             onChange={handleChange}
-                                            className="border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                                         />
+                                        {errors.countryCode && <p className="text-red-500 text-xs">{errors.countryCode}</p>}
                                     </div>
 
-                                    <div className='w-2/3'>
-                                        <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Phone Number" className="border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    <div className='mt-5 md:mt-0 w-full md:w-2/3'>
+                                        <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Phone Number" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                         {errors.contactNumber && <p className="text-red-500 text-xs">{errors.contactNumber}</p>}
                                     </div>
                                 </div>

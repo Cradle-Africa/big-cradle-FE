@@ -2,20 +2,20 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import SuperAdminSignUp from '@/app/components/user/SuperadminSignUp';
 import BusinessAdminSignUp from '../../components/user/BusinessAdminSignUp'
+import EmployeeSignUp from '../../components/user/EmployeeSignUp';
 
 export default function SignUpPage() {
     const [showVerification, setShowVerification] = useState<boolean>(false);
     const [superAdminSignUp, setSuperAdminSignUp] = useState(false);
     const [businessAdminSignUp, setBusinessAdminSignUp] = useState(true);
-    // const [employeeSignUp,  setEmployeeSignUp] = useState(false);
+    const [employeeSignUp, setEmployeeSignUp] = useState(false);
 
-    const [formData, setFormData] = useState({
+    const [formData] = useState({
         email: '',
     });
 
@@ -29,14 +29,14 @@ export default function SignUpPage() {
                 />
             )}
 
-            <div className="flex justify-between gap-5 w-full px-5 md:px-10 text-sm">
+            <div className="flex justify-between items-center gap-5 w-full px-5 md:px-10 text-sm">
                 <div className="w-full md:w-[500px] space-y-3 py-10">
                     <Image src="/auth-logo.png" width={32} height={32} alt="Logo" className="w-8 mb-4" />
                     <h3 className="text-lg font-semibold text-gray-700">Create Business Account</h3>
 
                     <p className="text-gray-700 text-sm">
                         Already have an account?
-                        <Link href="/user/signin" className="underline ml-1">Log in</Link>
+                        <Link href="/user/signin" className="underline ml-1">Sign in</Link>
                     </p>
                     <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
                         <FcGoogle className="text-md" /> Continue with Google
@@ -48,20 +48,31 @@ export default function SignUpPage() {
                         <hr className="flex-grow border-gray-300" />
                     </div>
 
-                    
-                    <div className='flex justify-between border border-gray-200 px-1 py-1 rounded-md text-sm text-gray-700'>
-                        <button onClick={() => { setSuperAdminSignUp(true); setBusinessAdminSignUp(false) }} className={`md:w-1/2 py-2 px-4 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Super admin sign up
-                        </button>
-                        <button onClick={() => { setBusinessAdminSignUp(true); setSuperAdminSignUp(false) }} className={`md:w-1/2 py-2 px-4 rounded-md hover:cursor-pointer ${businessAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Organisation sign up
-                        </button>
+
+                    <div className='overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700'>
+                        <div className=''>
+                            <button onClick={() => { setSuperAdminSignUp(true); setBusinessAdminSignUp(false); setEmployeeSignUp(false) }} className={`py-2 px-1 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Super admin sign up
+                            </button>
+                        </div>
+
+                        <div className=' '>
+                            <button onClick={() => { setBusinessAdminSignUp(true); setSuperAdminSignUp(false); setEmployeeSignUp(false) }} className={`py-2 px-1 rounded-md hover:cursor-pointer ${businessAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Business sign up
+                            </button>
+                        </div>
+                        <div className=' '>
+                            <button onClick={() => { setEmployeeSignUp(true); setSuperAdminSignUp(false); setBusinessAdminSignUp(false) }} className={`py-2 px-1 rounded-md hover:cursor-pointer ${employeeSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Employee sign up
+                            </button>
+                        </div>
+
                     </div>
 
                     <div>
                         {superAdminSignUp && <SuperAdminSignUp />}
                         {businessAdminSignUp && <BusinessAdminSignUp />}
-                        {/* {employeeSignUp && <EmployeeSignUpComponent />} */}
+                        {employeeSignUp && <EmployeeSignUp />}
                     </div>
 
                 </div>

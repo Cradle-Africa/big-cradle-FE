@@ -39,7 +39,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
         try {
             toast.loading('Verifying OTP...');
             await verifyOtpService(payload);
-            setFormData({ ...formData, otp: '' }); // Clear the OTP input
+            setFormData({ ...formData, otp: '' }); 
             toast.dismiss();
             toast.success('OTP verified successfully!');
             setShowAccountVerification(false);
@@ -85,7 +85,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
     return (
         <>
             <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
-            <div className="bg-white p-6 rounded-md shadow-md w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div className="text-center">
                     <h2 className="text-md font-semibold text-gray-700 mb-4">Verify your email address</h2>
                     <p className="text-sm text-gray-500">We sent a six digit code to your email address. Input it here to proceed.</p>

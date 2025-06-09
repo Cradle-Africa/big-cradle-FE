@@ -23,7 +23,7 @@ const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
     name = "countryCode",
     className = "",
     showLabel = false,
-    defaultOption = "+234 Nigerian"
+    // defaultOption = "+234 Nigerian"
 }) => {
     const [countries, setCountries] = useState<Country[]>([]);
 
