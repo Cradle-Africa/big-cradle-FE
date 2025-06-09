@@ -77,7 +77,7 @@ export default function SignInPage() {
 
         <div className="min-h-screen flex justify-between px-5 md:py-0 bg-white">
 
-            <div className="flex items-center justify-center w-[400px] px-4 md:px-12 py-4 bg-white">
+            <div className="flex items-center justify-center w-[500px] px-4 md:px-12 py-4 bg-white">
                 {openReset && (
                     <ForgotPassword
                         openReset={openReset}
@@ -105,7 +105,7 @@ export default function SignInPage() {
                     />
                 )}
 
-                <div className="w-full max-w-md space-y-6">
+                <div className="w-full max-w-md space-y-6 text-sm">
                     <Image src='/auth-logo.png' width={8} height={5} alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?

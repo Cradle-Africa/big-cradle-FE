@@ -2,94 +2,43 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { Eye, EyeOff } from 'lucide-react';
-import { validateSignUp } from '../../utils/userValidation';
-import { signUpService } from '../../services/user/userService';
+import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import AccountVerification from '@/app/components/user/AccountVerification';
-import toast from 'react-hot-toast';
+import SuperAdminSignUp from '@/app/components/user/SuperadminSignUp';
+import BusinessAdminSignUp from '../../components/user/BusinessAdminSignUp'
 
 export default function SignUpPage() {
+    const [showVerification, setShowVerification] = useState<boolean>(false);
+    const [superAdminSignUp, setSuperAdminSignUp] = useState(false);
+    const [businessAdminSignUp, setBusinessAdminSignUp] = useState(true);
+    // const [employeeSignUp,  setEmployeeSignUp] = useState(false);
+
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
         email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'super admin',
-        profilePicture: '',
     });
 
-    const [errors, setErrors] = useState<{ [key: string]: string }>({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showAccountVerification, setShowAccountVerification] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const validationErrors = validateSignUp(formData);
-        setErrors(validationErrors);
-
-        if (Object.keys(validationErrors).length > 0) return;
-
-        setIsSubmitting(true);
-
-        const payload = {
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            role: formData.role,
-            password: formData.password,
-            profilePicture:
-                formData.profilePicture ||
-                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==',
-        };
-
-        try {
-            await signUpService(payload);
-            toast.dismiss();
-            toast.success('Account created successfully!');
-            setShowAccountVerification(true);
-        } catch (error: unknown) {
-            toast.dismiss();
-            if (error instanceof Error) {
-                toast.error(error.message || 'Sign up failed. Please try again.');
-            } else {
-                toast.error('Sign up failed, please try again')
-            }
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
     return (
-        <div className="min-h-screen flex justify-between px-5 md:py-0 bg-white">
-            {showAccountVerification && (
+        <div className="h-screen flex bg-white">
+            {showVerification && (
                 <AccountVerification
-                    showAccountVerification={showAccountVerification}
-                    setShowAccountVerification={setShowAccountVerification}
+                    showAccountVerification={showVerification}
+                    setShowAccountVerification={setShowVerification}
                     email={formData.email}
                 />
             )}
 
-            <div className="flex items-center justify-center w-[400px] px-4 md:px-12 py-4 bg-white">
-                <div className="w-full max-w-md space-y-6">
-                    <Image src="/auth-logo.png" width={8} height={8} alt="Logo" className="w-8 mr-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
-                    <p className='text-gray-700 text-sm'>
+            <div className="flex justify-between gap-5 w-full px-5 md:px-10 text-sm">
+                <div className="w-full md:w-[500px] space-y-3 py-10">
+                    <Image src="/auth-logo.png" width={32} height={32} alt="Logo" className="w-8 mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-700">Create Business Account</h3>
+
+                    <p className="text-gray-700 text-sm">
                         Already have an account?
                         <Link href="/user/signin" className="underline ml-1">Log in</Link>
                     </p>
-
-                    <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 py-2">
+                    <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
                         <FcGoogle className="text-md" /> Continue with Google
                     </button>
 
@@ -99,92 +48,29 @@ export default function SignUpPage() {
                         <hr className="flex-grow border-gray-300" />
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className='md:flex justify-between gap-2'>
-                            <div>
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    placeholder="First Name"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                />
-                                {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
-                            </div>
-
-                            <div className='mt-4 md:mt-0'>
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    placeholder="Last Name"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                />
-                                {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                            />
-                            {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                        </div>
-
-
-                        <div className="relative">
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                name="password"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
-                            />
-                            <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </div>
-                            {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-                        </div>
-
-                        <div className="relative">
-                            <input
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                name="confirmPassword"
-                                placeholder="Confirm Password"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
-                            />
-                            <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </div>
-                            {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
-
-                        >
-                            {isSubmitting ? 'Submitting...' : 'Create account'}
+                    
+                    <div className='flex justify-between border border-gray-200 px-1 py-1 rounded-md text-sm text-gray-700'>
+                        <button onClick={() => { setSuperAdminSignUp(true); setBusinessAdminSignUp(false) }} className={`md:w-1/2 py-2 px-4 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                            Super admin sign up
                         </button>
-                    </form>
+                        <button onClick={() => { setBusinessAdminSignUp(true); setSuperAdminSignUp(false) }} className={`md:w-1/2 py-2 px-4 rounded-md hover:cursor-pointer ${businessAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                            Organisation sign up
+                        </button>
+                    </div>
+
+                    <div>
+                        {superAdminSignUp && <SuperAdminSignUp />}
+                        {businessAdminSignUp && <BusinessAdminSignUp />}
+                        {/* {employeeSignUp && <EmployeeSignUpComponent />} */}
+                    </div>
+
+                </div>
+                <div className="hidden md:block md:w-3/4 md:ml-5 h-full relative">
+                    <Image src="/auth-img.png" alt="signup" fill className="object-cover" />
                 </div>
             </div>
 
-            <div className="hidden md:block w-3/4 relative">
-                <Image src="/auth-img.png" alt="signup" fill className="object-cover" />
-            </div>
+
         </div>
     );
 }

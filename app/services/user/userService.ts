@@ -1,7 +1,8 @@
 import { BASE_URL } from "../base";
 
 import {
-    SignUpPayload,
+    SuperAdminSignUpPayload,
+    BusinessAdminSignUpPayload,
     SignInPayload,
     VerifyOtpPayload,
     ResendOtpPayload,
@@ -28,8 +29,25 @@ export const apiService = async (endPoint: string, method: string, payload: ApiR
     return data;
 };
 
-export const signUpService = async (payload: SignUpPayload) => {
+export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) => {
     const response = await fetch(`${BASE_URL}/super-admin-auth/sign-up`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Signup failed');
+    }
+    return data;
+};
+
+
+export const BusinessAdminSignUpService = async (payload: BusinessAdminSignUpPayload) => {
+    const response = await fetch(`${BASE_URL}/business-auth/sign-up`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

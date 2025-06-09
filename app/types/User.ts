@@ -19,13 +19,56 @@ export interface User {
     __v: number;
 };
 
-export interface SignUpPayload {
+export interface BusinessForm {
+    businessName: string;
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactName: string;
+    countryCode: string;
+    contactNumber: string;
+    businessAddress: string;
+    businessCity: string;
+    businessState: string;
+    businessCountry: string;
+    sector: string;
+    organizationSize: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    businessLogo: string;
+    certificateOfIncorporation: string;
+    role: 'business';
+}
+
+export interface SuperAdminSignUpPayload {
     firstName: string;
     lastName: string;
     email: string;
     role: string;
-    password: string;
     profilePicture: string;
+    confirmPassword: string;
+    password: string;
+
+}
+
+export interface BusinessAdminSignUpPayload {
+    businessName: string;
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactName: string;
+    countryCode: string;
+    contactNumber: string;
+    businessAddress: string;
+    businessCity: string;
+    businessState: string;
+    businessCountry: string;
+    sector: string;
+    organizationSize: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    businessLogo?: string;
+    certificateOfIncorporation?: string;
 }
 
 export interface SignInPayload {
