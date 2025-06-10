@@ -22,8 +22,20 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
     if (!data.sector.trim()) errors.sector = 'Sector is required';
     if (!data.organizationSize.trim()) errors.organizationSize = 'Organization size is required';
     if (!data.email.trim()) errors.email = 'Email is required';
-    if (!data.password || data.password.length < 8)
+
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
         errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
@@ -58,7 +70,19 @@ export const validateBusinessStep = (step: number, form: BusinessForm) => {
     if (step === 3) {
         if (!form.email) errors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(form.email)) errors.email = 'Email is invalid';
-        if (!form.password) errors.password = 'Password is required';
+
+        if (!form.password) {
+            errors.password = 'Password is required';
+        } else if (form.password.length < 8) {
+            errors.password = 'Password must be at least 8 characters';
+        } else if (form.password.length > 15) {
+            errors.password = 'Password must not exceed 15 characters';
+        } else if (
+            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(form.password)
+        ) {
+            errors.password =
+                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+        }
         if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     }
 
@@ -80,14 +104,26 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
     if (!data.city.trim()) errors.city = 'City is required';
     if (!data.state.trim()) errors.state = 'State is required';
     if (!data.email.trim()) errors.email = 'Email is required';
-    if (!data.password || data.password.length < 8)
+
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
         errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
     if (!data.image.trim()) errors.image = 'Image is required';
-    
+
     return errors;
 };
 
@@ -114,7 +150,19 @@ export const validateAdminStep = (step: number, form: AdminForm) => {
     if (step === 3) {
         if (!form.email) errors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(form.email)) errors.email = 'Email is invalid';
-        if (!form.password) errors.password = 'Password is required';
+
+        if (!form.password) {
+            errors.password = 'Password is required';
+        } else if (form.password.length < 8) {
+            errors.password = 'Password must be at least 8 characters';
+        } else if (form.password.length > 15) {
+            errors.password = 'Password must not exceed 15 characters';
+        } else if (
+            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(form.password)
+        ) {
+            errors.password =
+                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+        }
         if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     }
 
@@ -127,8 +175,21 @@ export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: 
     if (!data.firstName.trim()) errors.firstName = 'First name is required';
     if (!data.lastName.trim()) errors.lastName = 'Last name is required';
     if (!data.email.trim()) errors.email = 'Email is required';
-    if (!data.password || data.password.length < 6)
-        errors.password = 'Password must be at least 6 characters';
+    
+
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
@@ -167,8 +228,19 @@ export const validateSignIn = (data: SignInPayload): { [key: string]: string } =
 export const validateResetPassword = (data: ResetPasswordFormData): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};
 
-    if (!data.password || data.password.length < 6)
-        errors.password = 'Password must be at least 6 characters';
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+    
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
