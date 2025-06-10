@@ -12,24 +12,8 @@ import {
     ResetPassswordPayload,
     SuspendUserPayload,
     DeleteUserPayload,
-    ApiRequestOptions
 } from "../../types/User";
 
-export const apiService = async (endPoint: string, method: string, payload: ApiRequestOptions) => {
-    const response = await fetch(`${BASE_URL}/${endPoint}`, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'request failed');
-    }
-    return data;
-};
 
 export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) => {
     const response = await fetch(`${BASE_URL}/super-admin-auth/sign-up`, {

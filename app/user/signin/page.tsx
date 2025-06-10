@@ -10,7 +10,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { validateSignIn } from '../../utils/user/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../services/user/userService';
-import { addUser } from '@/app/utils/user/userData';
+import { addUser, addToken } from '@/app/utils/user/userData';
 
 export default function SignInPage() {
     const [openReset, setOpenReset] = useState(false);
@@ -25,7 +25,6 @@ export default function SignInPage() {
     const [formData, setFormData] = useState<{
         email: string;
         password: string;
-
     }>({
         email: '',
         password: '',
@@ -56,8 +55,8 @@ export default function SignInPage() {
             toast.dismiss();
             toast.loading('Signing in...');
             const response = await signInService(payload);
-            console.log('Sign in response:', response.data);
             addUser(response.data);
+            addToken(response.accessToken);
             toast.dismiss();
             toast.success('Signed in successfully!');
             window.location.href = '/';

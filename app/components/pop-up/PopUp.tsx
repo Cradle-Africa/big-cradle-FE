@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import {apiService} from  '../../services/user/userService';
+import {apiPostService} from  '../../services/apiService';
 import { UserRoundX } from 'lucide-react';
 import IconComponent from './IconComponent';
 
@@ -39,7 +39,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
         console.log(endPoint_, '*************')
         try {
             toast.loading('Loading...');
-            await apiService(endPoint_, method, payload);
+            await apiPostService(endPoint_, method, payload);
             toast.dismiss();
             toast.success(message);
             setOpen(false);

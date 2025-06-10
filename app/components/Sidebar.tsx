@@ -1,15 +1,19 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Settings, Headset, BarChart, House, UsersRound, MonitorCog, Banknote, Layers } from 'lucide-react';
+import {
+    Menu, X, Settings, Headset, BarChart, House,
+    UsersRound, MonitorCog, Banknote, Layers, ChevronDown,
+    ChevronUp, User, Shield, UserCog, Building2, Users, LockKeyhole
+} from 'lucide-react';
 import Image from 'next/image';
-
 export default function Sidebar() {
     const [open, setOpen] = useState(false);
+    const [usersMenuOpen, setUsersMenuOpen] = useState(false);
 
     return (
         <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute'} `}>
-            {/* Mobile toggle */}
+            {/* Mobile toggle - unchanged */}
             <div className={` ${open ? '' : 'border border-gray-200'} md:hidden rounded-md mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}>
                 <button onClick={() => setOpen(!open)} className="text-gray-500 hover:cursor-pointer">
                     {open ? (
@@ -58,15 +62,64 @@ export default function Sidebar() {
 
                     <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
                     <li>
-                        <Link
-                            href='/user/user-management/'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
+                        <div
+                            onClick={() => setUsersMenuOpen(!usersMenuOpen)}
+                            className="block py-2 px-3 rounded hover:bg-gray-200 transition cursor-pointer"
                         >
-                            <div className='flex gap-1 items-center'>
-                                <UsersRound size={15} />
-                                Users & Access
+                            <div className='flex gap-1 items-center justify-between'>
+                                <div className='flex gap-1 items-center'>
+                                    <UsersRound size={15} />
+                                    Users & Access
+                                </div>
+                                {usersMenuOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
                             </div>
-                        </Link>
+                        </div>
+                        {usersMenuOpen && (
+                            <div className="ml-6 mt-1 space-y-1">
+                                <Link
+                                    href='/user/user-management/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <User size={14} />
+                                    User management
+                                </Link>
+                                <Link
+                                    href='/user/super-admin/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <Shield size={14} />
+                                    Super admin
+                                </Link>
+                                <Link
+                                    href='/user/admin/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <UserCog size={14} />
+                                    Investors/Admins
+                                </Link>
+                                <Link
+                                    href='/user/business/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <Building2 size={14} />
+                                    Businesses
+                                </Link>
+                                <Link
+                                    href='/user/employee/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <Users size={14} />
+                                    Employees
+                                </Link>
+                                <Link
+                                    href='/user/access-control/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <LockKeyhole size={14} />
+                                    Access Control
+                                </Link>
+                            </div>
+                        )}
                     </li>
                     <li>
                         <Link
@@ -80,6 +133,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
 
+                    {/* Rest of your menu items remain unchanged */}
                     <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">Intelligence & Insights</span>
                     <li>
                         <Link
@@ -103,11 +157,9 @@ export default function Sidebar() {
                             </div>
                         </Link>
                     </li>
-
-
                 </ul>
 
-                {/* Bottom items */}
+                {/* Bottom items - unchanged */}
                 <ul className="flex flex-col space-y-2 px-4 pb-4 mt-auto">
                     <li>
                         <Link
@@ -132,7 +184,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
                 </ul>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 }

@@ -2,7 +2,6 @@ export interface ApiRequestOptions {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     headers?: HeadersInit;
 	body?: Record<string, unknown>;
-
 }
 
 export interface User {
