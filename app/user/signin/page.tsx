@@ -7,10 +7,10 @@ import ForgotPassword from '@/app/components/user/ForgotPassword';
 import ForgotPasswordCode from '../../components/user/ForgotPasswordCode';
 import ResetPassword from '../../components/user/ResetPassword';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignIn } from '../../utils/userValidation';
+import { validateSignIn } from '../../utils/user/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../services/user/userService';
-import { addUser } from '@/app/utils/userData';
+import { addUser } from '@/app/utils/user/userData';
 
 export default function SignInPage() {
     const [openReset, setOpenReset] = useState(false);

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { getUser } from '../utils/userData'; 
+import { getUser } from '../utils/user/userData'; 
 
 export const useAuthGuard = () => {
     const router = useRouter();

@@ -4,15 +4,16 @@ import { useState, ChangeEvent } from 'react';
 import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, File } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
-import { BusinessForm } from '@/app/types/User';
-import { validateBusinessAdminSignUp, validateStep } from '../../utils/userValidation';
+import { AdminForm } from '@/app/types/User';
+import { validateAdminSignUp, validateAdminStep } from '../../utils/user/userValidation';
 import CountryCodeSelect from '@/app/components/CountryCodeSelect';
 import CountrySelect from '@/app/components/CountrySelect';
-import { BusinessAdminSignUpService } from '../../services/user/userService';
+import { AdminSignUpService } from '../../services/user/userService';
 import SearchSelect from '../SearchSelect';
 import cities from '../../utils/data/cities.json';
+import { removeEmptyProperties} from '../../utils/clean-data';
 
-export default function BusinessAdminSignUp() {
+export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -20,25 +21,22 @@ export default function BusinessAdminSignUp() {
     const [showVerification, setShowVerification] = useState<boolean>(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-    const [form, setForm] = useState<BusinessForm>({
+    const [form, setForm] = useState<AdminForm>({
         businessName: '',
-        contactPersonFirstName: '',
-        contactPersonLastName: '',
-        contactName: '',
-        countryCode: '',
-        contactNumber: '',
-        businessAddress: '',
-        businessCity: '',
-        businessState: '',
-        businessCountry: '',
-        sector: '',
-        organizationSize: '',
+        firstName: '',
+        lastName: '',
         email: '',
+        userType: '',
+        countryCode: '',
+        phoneNumber: '',
+        address: '',
+        city: '',
+        state: '',
+        country: '',
+        role: 'admin',
         password: '',
         confirmPassword: '',
-        businessLogo: '',
-        certificateOfIncorporation: '',
-        role: 'business',
+        image: '',
     });
 
     const handleChange = (
@@ -60,8 +58,9 @@ export default function BusinessAdminSignUp() {
     };
 
     const next = () => {
-        const validationErrors = validateStep(step, form);
+        const validationErrors = validateAdminStep(step, form);
         setErrors(validationErrors);
+
 
         if (Object.keys(validationErrors).length === 0) {
             setStep((s) => s + 1);
@@ -73,16 +72,16 @@ export default function BusinessAdminSignUp() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const validationErrors = validateBusinessAdminSignUp(form);
+        const validationErrors = validateAdminSignUp(form);
         setErrors(validationErrors);
-        console.log(errors);
 
         if (Object.keys(validationErrors).length > 0) return;
 
         setIsSubmitting(true);
         try {
-            await BusinessAdminSignUpService(form);
-            toast.success('Business registered successfully!');
+            const clean_form = removeEmptyProperties(form) as AdminForm;
+            await AdminSignUpService(clean_form);
+            toast.success('Admin registered successfully!');
             setShowVerification(true);
         } catch (error) {
             toast.error(error instanceof Error ? error.message : 'Registration failed');
@@ -108,22 +107,31 @@ export default function BusinessAdminSignUp() {
                         {step === 1 && (
                             <>
                                 <div>
+                                    <select
+                                        name="userType"
+                                        value={form.userType}
+                                        onChange={handleChange}
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                    >
+                                        <option value="">Select User type</option>
+                                        <option value="corporate">corporate</option>
+                                        <option value="individual">individual</option>
+                                    </select>
+                                    {errors.userType && <p className="text-red-500 text-xs">{errors.userType}</p>}
+                                </div>
+                                <div className='mt-5'>
                                     <input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                     {errors.businessName && <p className="text-red-500 text-xs">{errors.businessName}</p>}
                                 </div>
 
                                 <div className='mt-5'>
-                                    <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="Contact Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.contactName && <p className="text-red-500 text-xs">{errors.contactName}</p>}
-                                </div>
-                                <div className='mt-5'>
-                                    <input name="contactPersonFirstName" value={form.contactPersonFirstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.contactPersonFirstName && <p className="text-red-500 text-xs">{errors.contactPersonFirstName}</p>}
+                                    <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
                                 </div>
 
                                 <div className='mt-5'>
-                                    <input name="contactPersonLastName" value={form.contactPersonLastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.contactPersonLastName && <p className="text-red-500 text-xs">{errors.contactPersonLastName}</p>}
+                                    <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
                                 </div>
                                 <div className="md:flex w-full gap-2 mt-5">
                                     <div className='md:w-2/3'>
@@ -134,10 +142,9 @@ export default function BusinessAdminSignUp() {
                                         />
                                         {errors.countryCode && <p className="text-red-500 text-xs">{errors.countryCode}</p>}
                                     </div>
-
                                     <div className='mt-5 md:mt-0 w-full md:w-2/3'>
-                                        <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Phone Number" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.contactNumber && <p className="text-red-500 text-xs">{errors.contactNumber}</p>}
+                                        <input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} placeholder="Phone Number" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber}</p>}
                                     </div>
                                 </div>
                                 <div className='flex justify-end mt-5'>
@@ -155,57 +162,36 @@ export default function BusinessAdminSignUp() {
                                 <div className='md:flex w-full justify-between gap-2 mt-5'>
                                     <div className='w-full md:w-1/2'>
                                         <CountrySelect
-                                            value={form.businessCountry}
+                                            value={form.country}
                                             onChange={handleChange}
-                                            name="businessCountry"
+                                            name="country"
                                             className="border border-gray-300 rounded-md px-3 py-2 outline-none"
                                         />
-                                        {errors.businessCountry && <p className="text-red-500 text-xs">{errors.businessCountry}</p>}
+                                        {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
                                     </div>
 
                                     <div className='w-full md:w-1/2'>
-                                        <input name="businessState" value={form.businessState} onChange={handleChange} placeholder="State" className="w-full mt-5 md:mt-0 border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.businessState && <p className="text-red-500 text-xs">{errors.businessState}</p>}
+                                        <input name="state" value={form.state} onChange={handleChange} placeholder="State" className="w-full mt-5 md:mt-0 border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
                                     </div>
 
                                 </div>
                                 <div className='md:flex w-full justify-between gap-2 mt-5'>
                                     <div className='w-full md:w-1/2'>
-                                        <input name="businessAddress" value={form.businessAddress} onChange={handleChange} placeholder="Address" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.businessAddress && <p className="text-red-500 text-xs">{errors.businessAddress}</p>}
+                                        <input name="address" value={form.address} onChange={handleChange} placeholder="Address" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        {errors.address && <p className="text-red-500 text-xs">{errors.address}</p>}
                                     </div>
                                     <div className='w-full md:w-1/2 mt-5 md:mt-0'>
                                         <SearchSelect
                                             data={cities}
-                                            value={form.businessCity}
-                                            onSelect={(value) => handleSelectChange('businessCity', value)}
+                                            value={form.city}
+                                            onSelect={(value) => handleSelectChange('city', value)}
                                             placeholder="Search for a city..."
-                                            name="businessCity"
+                                            name="city"
                                             className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
                                         />
-                                        {/* <input name="businessCity" value={form.businessCity} onChange={handleChange} placeholder="City" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" /> */}
-                                        {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+                                        {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
                                     </div>
-                                </div>
-
-                                <div className='mt-5'>
-                                    <input name="sector" value={form.sector} onChange={handleChange} placeholder="Sector" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.sector && <p className="text-red-500 text-xs">{errors.sector}</p>}
-                                </div>
-
-                                <div className='mt-5'>
-                                    <select
-                                        name="organizationSize"
-                                        value={form.organizationSize}
-                                        onChange={handleChange}
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                    >
-                                        <option value="">Select Organization Size</option>
-                                        <option value="1-10">Small</option>
-                                        <option value="11-50">Medium</option>
-                                        <option value="51-200">Large</option>
-                                    </select>
-                                    {errors.organizationSize && <p className="text-red-500 text-xs">{errors.organizationSize}</p>}
                                 </div>
 
                                 <div className="flex justify-between gap-2 mt-5">
@@ -274,27 +260,17 @@ export default function BusinessAdminSignUp() {
                         {step === 4 && (
                             <>
                                 <div className='relative mt-5'>
-                                    <label>Business Logo</label>
+                                    <label>Image</label>
                                     <div className='bg-gray-100 rounded-md'>
-                                        <input name="businessLogo" type="file" accept="image/*" onChange={handleChange}
+                                        <input name="image" type="file" accept="image/*" onChange={handleChange}
                                             className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
                                         <File size={16}
                                             className='absolute top-1/3 ml-2 mt-[9px]'
                                         />
                                     </div>
-                                    {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
+                                    {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
                                 </div>
-                                <div className='relative mt-5'>
-                                    <label>Certificate of Incorporation</label>
-                                    <div className='bg-gray-100 rounded-md'>
-                                        <input name="certificateOfIncorporation" type="file" accept="application/pdf,image/*" onChange={handleChange}
-                                            className="w-fullrounded-md px-3 py-2 ml-4 outline-none hover:cursor-pointer" />
-                                        <File size={16}
-                                            className='absolute top-1/3 ml-2 mt-[9px]'
-                                        />
-                                    </div>
-                                    {errors.certificateOfIncorporation && <p className="text-red-500 text-xs">{errors.certificateOfIncorporation}</p>}
-                                </div>
+                                
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />

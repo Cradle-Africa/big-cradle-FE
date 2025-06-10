@@ -1,4 +1,4 @@
-import { User } from '../types/User';
+import { User } from '../../types/User';
 const key = 'user';
 
 // Get the user data from local storage

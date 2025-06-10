@@ -2,8 +2,9 @@ import { BASE_URL } from "../base";
 
 import {
     SuperAdminSignUpPayload,
-    BusinessAdminSignUpPayload,
+    BusinessSignUpPayload,
     EmployeeSignUpPayload,
+    AdminForm,
     SignInPayload,
     VerifyOtpPayload,
     ResendOtpPayload,
@@ -47,7 +48,7 @@ export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) 
 };
 
 
-export const BusinessAdminSignUpService = async (payload: BusinessAdminSignUpPayload) => {
+export const BusinessSignUpService = async (payload: BusinessSignUpPayload) => {
     const response = await fetch(`${BASE_URL}/business-auth/sign-up`, {
         method: 'POST',
         headers: {
@@ -63,8 +64,25 @@ export const BusinessAdminSignUpService = async (payload: BusinessAdminSignUpPay
     return data;
 };
 
+
+export const AdminSignUpService = async (payload: AdminForm) => {
+    const response = await fetch(`${BASE_URL}/admin-auth/sign-up`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.message || 'Signup failed');
+    }
+    return data;
+};
+
 export const EmployeeSignUpService = async (payload: EmployeeSignUpPayload) => {
-    const response = await fetch(`${BASE_URL}/business/employees`, {
+    const response = await fetch(`${BASE_URL}/business-employees`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { validateEmployeeSignUp } from '../../utils/userValidation';
+import { validateEmployeeSignUp } from '../../utils/user/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
 import {File} from 'lucide-react';

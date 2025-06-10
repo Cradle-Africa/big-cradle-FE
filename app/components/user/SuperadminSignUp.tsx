@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignUp } from '../../utils/userValidation';
+import { validateSignUp } from '../../utils/user/userValidation';
 import { SuperAdminSignUpService } from '../../services/user/userService';
 
 import AccountVerification from '@/app/components/user/AccountVerification';

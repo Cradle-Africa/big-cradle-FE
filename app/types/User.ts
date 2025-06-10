@@ -37,7 +37,25 @@ export interface BusinessForm {
     confirmPassword: string;
     businessLogo: string;
     certificateOfIncorporation: string;
-    role: 'business';
+    role: string;
+}
+
+export interface AdminForm {
+    businessName: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userType: string;
+    countryCode: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+    role: string;
+    password: string;
+    confirmPassword: string;
+    image: string;
 }
 
 export interface SuperAdminSignUpPayload {
@@ -58,7 +76,7 @@ export interface EmployeeSignUpPayload {
     profilePicture: string;
 }
 
-export interface BusinessAdminSignUpPayload {
+export interface BusinessSignUpPayload {
     businessName: string;
     contactPersonFirstName: string;
     contactPersonLastName: string;

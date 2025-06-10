@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
+import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../../types/User';
 
 
 export interface ResetPasswordFormData {
@@ -6,7 +6,7 @@ export interface ResetPasswordFormData {
     confirmPassword: string;
 }
 
-export const validateBusinessAdminSignUp = (data: BusinessForm): { [key: string]: string } => {
+export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};
 
     if (!data.businessName.trim()) errors.businessName = 'Business name is required';
@@ -35,7 +35,7 @@ export const validateBusinessAdminSignUp = (data: BusinessForm): { [key: string]
 };
 
 
-export const validateStep = (step: number, form: BusinessForm) => {
+export const validateBusinessStep = (step: number, form: BusinessForm) => {
     const errors: { [key: string]: string } = {};
 
     if (step === 1) {
@@ -65,6 +65,61 @@ export const validateStep = (step: number, form: BusinessForm) => {
     return errors;
 };
 
+export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } => {
+    const errors: { [key: string]: string } = {};
+
+    if (data.userType === 'corporate' && !data.businessName.trim()) {
+        errors.businessName = 'Admin name is required';
+    }
+    if (!data.firstName.trim()) errors.firstName = 'First name is required';
+    if (!data.lastName.trim()) errors.lastName = 'Last name is required';
+    if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
+    if (!data.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required';
+    if (!data.address.trim()) errors.address = 'Address is required';
+    if (!data.country.trim()) errors.country = 'Country is required';
+    if (!data.city.trim()) errors.city = 'City is required';
+    if (!data.state.trim()) errors.state = 'State is required';
+    if (!data.email.trim()) errors.email = 'Email is required';
+    if (!data.password || data.password.length < 8)
+        errors.password = 'Password must be at least 8 characters';
+    if (!data.confirmPassword)
+        errors.confirmPassword = 'Please confirm your password';
+    else if (data.password !== data.confirmPassword)
+        errors.confirmPassword = 'Passwords do not match';
+    if (!data.image.trim()) errors.image = 'Image is required';
+    
+    return errors;
+};
+
+export const validateAdminStep = (step: number, form: AdminForm) => {
+    const errors: { [key: string]: string } = {};
+
+    if (step === 1) {
+        if (!form.userType) errors.userType = 'User type is required';
+        if (form.userType === 'corporate' && !form.businessName) {
+            errors.businessName = 'Business name is required';
+        }
+        if (!form.firstName) errors.firstName = 'First name is required';
+        if (!form.lastName) errors.lastName = 'Last name is required';
+        if (!form.phoneNumber) errors.phoneNumber = 'Phone number is required';
+    }
+
+    if (step === 2) {
+        if (!form.country) errors.country = 'Country is required';
+        if (!form.state) errors.state = 'State is required';
+        if (!form.address) errors.address = 'Address is required';
+        if (!form.city) errors.city = 'City is required';
+    }
+
+    if (step === 3) {
+        if (!form.email) errors.email = 'Email is required';
+        else if (!/\S+@\S+\.\S+/.test(form.email)) errors.email = 'Email is invalid';
+        if (!form.password) errors.password = 'Password is required';
+        if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
+    }
+
+    return errors;
+};
 
 export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};
