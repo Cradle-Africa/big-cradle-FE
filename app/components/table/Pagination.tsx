@@ -45,7 +45,7 @@ const Pagination: React.FC<PaginationProps> = ({
     };
 
     return (
-        <div className={`flex items-center gap-3 mt-5 ${className}`}>
+        <div className={`flex items-center gap-3 mt-5 py-5 ${className}`}>
             {/* Previous Button */}
             <button
                 onClick={handlePrevious}

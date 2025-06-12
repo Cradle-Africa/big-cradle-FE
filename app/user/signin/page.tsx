@@ -30,7 +30,6 @@ export default function SignInPage() {
         password: '',
     });
 
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -52,16 +51,13 @@ export default function SignInPage() {
         };
 
         try {
-            toast.dismiss();
-            toast.loading('Signing in...');
             const response = await signInService(payload);
             addUser(response.data);
             addToken(response.accessToken);
-            toast.dismiss();
+            localStorage.setItem('businessId', response.data.id);
             toast.success('Signed in successfully!');
             window.location.href = '/';
         } catch (error: unknown) {
-            toast.dismiss();
             if (error instanceof Error) {
                 toast.error(error.message || 'Sign in failed');
             } else {

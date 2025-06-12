@@ -123,6 +123,17 @@ export default function Sidebar() {
                     </li>
                     <li>
                         <Link
+                            href='/user/department'
+                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
+                        >
+                            <div className='flex gap-1 items-center'>
+                                <MonitorCog size={15} />
+                                Department
+                            </div>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
                             href='/ecosystem'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >

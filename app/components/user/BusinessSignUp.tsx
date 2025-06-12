@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, File } from 'lucide-react';
+import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, File, FileImage } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessForm } from '@/app/types/User';
@@ -278,9 +278,7 @@ export default function BusinessSignUp() {
                                     <div className='bg-gray-100 rounded-md'>
                                         <input name="businessLogo" type="file" accept="image/*" onChange={handleChange}
                                             className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
-                                        <File size={16}
-                                            className='absolute top-1/3 ml-2 mt-[9px]'
-                                        />
+                                        <FileImage size={16} className='absolute top-1/3 ml-2 mt-[10px]'/>
                                     </div>
                                     {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
                                 </div>
@@ -290,7 +288,7 @@ export default function BusinessSignUp() {
                                         <input name="certificateOfIncorporation" type="file" accept="application/pdf,image/*" onChange={handleChange}
                                             className="w-fullrounded-md px-3 py-2 ml-4 outline-none hover:cursor-pointer" />
                                         <File size={16}
-                                            className='absolute top-1/3 ml-2 mt-[9px]'
+                                            className='absolute top-1/3 ml-2 mt-[10px]'
                                         />
                                     </div>
                                     {errors.certificateOfIncorporation && <p className="text-red-500 text-xs">{errors.certificateOfIncorporation}</p>}

@@ -35,8 +35,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const endPoint_ = endPoint+'/'+Id
-        console.log(endPoint_, '*************')
+        const endPoint_ = endPoint+'/'+Id;
         try {
             toast.loading('Loading...');
             await apiPostService(endPoint_, method, payload);
@@ -46,9 +45,9 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {
-                toast.error(error.message || 'User Deleted failed');
+                toast.error(error.message || 'success');
             } else {
-                toast.error('Failed to delete user');
+                console.log('Request Failed');
             }
         } finally {
             setIsSubmitting(false);

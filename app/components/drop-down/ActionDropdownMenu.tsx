@@ -20,12 +20,20 @@ interface ActionDropdownMenuProps {
 		payload: Record<string, unknown>;
 		message?: string;
 	};
+	editAction?: {
+		endPoint: string;
+		method: string;
+		payload: Record<string, unknown>;
+		message?: string;
+	};
 }
 
-const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfile, suspendAction, deleteAction}: ActionDropdownMenuProps) => {
+const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfile, suspendAction, deleteAction, editAction}: ActionDropdownMenuProps) => {
 	const [open, setOpen] = useState(false);
 	const [openSuspend, setOpenSuspend] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
+
 	const menuRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -50,7 +58,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 			{openSuspend && suspendAction && (
 				<PopUp
 					setOpen={setOpenSuspend}
-					title="Suspend User"
+					title="Suspend"
 					label="Suspend"
 					subTitle="Are you sure you want to suspend this user?"
 					message={suspendAction.message || 'User suspended successfully'}
@@ -64,7 +72,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 			{openDelete && deleteAction && (
 				<PopUp
 					setOpen={setOpenDelete}
-					title="Delete User"
+					title="Delete"
 					label="Delete"
 					subTitle="Are you sure you want to delete this user?"
 					message={deleteAction.message || 'User deleted successfully'}
@@ -72,6 +80,20 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 					method={deleteAction.method}
 					Id={Id}
 					payload={deleteAction.payload}
+				/>
+			)}
+
+			{openEdit && editAction && (
+				<PopUp
+					setOpen={setOpenEdit}
+					title="Edit"
+					label="Edit"
+					subTitle="Are you sure you want to delete this user?"
+					message={editAction.message || 'User deleted successfully'}
+					endPoint={editAction.endPoint}
+					method={editAction.method}
+					Id={Id}
+					payload={editAction.payload}
 				/>
 			)}
 
@@ -102,8 +124,8 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 									className="w-full px-4 py-2 text-left text-sm rounded-md text-yellow-700 hover:bg-yellow-100 hover:cursor-pointer"
 								>
 									<div className="flex items-center gap-1">
-										<UserRoundMinus size={15} />
-										Suspend User
+										<UserRoundMinus size={13} />
+										Suspend 
 									</div>
 								</button>
 							</li>
@@ -119,8 +141,25 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 									className="w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-100 hover:cursor-pointer"
 								>
 									<div className="flex items-center gap-1">
-										<UserRoundX size={15} />
-										Delete User
+										<UserRoundX size={13} />
+										Delete 
+									</div>
+								</button>
+							</li>
+						)}
+
+						{editAction && (
+							<li className="px-1">
+								<button
+									onClick={() => {
+										setOpenEdit(true);
+										setOpen(false);
+									}}
+									className="w-full px-4 py-2 text-left text-sm rounded-md text-blue-600 hover:bg-blue-100 hover:cursor-pointer"
+								>
+									<div className="flex items-center gap-1">
+										<UserRoundX size={13} />
+										Edit
 									</div>
 								</button>
 							</li>

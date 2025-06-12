@@ -1,14 +1,15 @@
 'use client'
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
-
 const Admin = () => {
-
+    
     const employeeFields = [
-        { key: 'fullName', label: 'Full Name', className: 'min-w-[200px]' },
-        { key: 'email', label: 'Email', className: 'min-w-[200px]' },
-        { key: 'phoneNumber', label: 'Phone Number', className: 'min-w-[200px]' },
-        { key: 'address', label: 'Address', className: 'min-w-[200px]' }
+        { key: 'firstName', label: 'First Name', className: '' },
+        { key: 'LastName', label: 'Last Name', className: '' },
+        { key: 'email', label: 'Email', className: '' },
+        { key: 'phoneNumber', label: 'Phone Number', className: '' },
+        { key: 'address', label: 'Address', className: '' },
+        { key: 'role', label: 'Role', className: ''},
     ]
 
     const actionConfig = {
@@ -24,18 +25,29 @@ const Admin = () => {
         }
     }
 
+    const rightAction = {
+        add: {
+            label: 'Invite Employee',
+            endpoint: 'manage-employee/invite-employee-user',
+            method: 'POST',
+            icon: '',
+            className: 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] opacity-90 text-white px-2 py-1 rounded-sm cursor-pointer',
+            payload: {}
+        }
+    }
+
     return (
         <>
             <TableComponent
                 title="Employees"
-                endpoint="business-employees"
+                endpoint="manage-employee/all-business-user-employeees"
                 fields={employeeFields}
                 breadcrumbs={{
                     parent: { path: '/user/user-management', label: 'User & Access' },
                     current: 'Employees'
                 }}
                 actionConfig={actionConfig}
-
+                rightAction={rightAction}
             />
         </>
 

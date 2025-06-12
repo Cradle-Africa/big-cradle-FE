@@ -5,14 +5,18 @@ import { validateEmployeeSignUp } from '../../utils/user/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
 import {File} from 'lucide-react';
+import { EmployeeSignUpPayload } from '@/app/types/User';
 
 export default function EmployeeSignUp() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<EmployeeSignUpPayload>({
         firstName: '',
         lastName: '',
         email: '',
         departmentId: '',
-        profilePicture: ''
+        image: '',
+        password: '',
+        confirmPassword: '',
+        role: 'employee',
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -35,7 +39,7 @@ export default function EmployeeSignUp() {
         try {
             await EmployeeSignUpService(formData);
             toast.dismiss();
-            toast.success('Employee created successfully!');
+            toast.success('Signed up successfully!');
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {
@@ -93,7 +97,7 @@ export default function EmployeeSignUp() {
 
                         <div className='mt-5'>
                             <input
-                                type="text"
+                                type="hidden"
                                 name="departmentId"
                                 placeholder="Department"
                                 value={formData.departmentId}

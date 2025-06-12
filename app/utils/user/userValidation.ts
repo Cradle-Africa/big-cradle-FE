@@ -206,7 +206,7 @@ export const validateEmployeeSignUp = (data: EmployeeSignUpPayload): { [key: str
     if (!data.lastName.trim()) errors.lastName = 'Last name is required';
     if (!data.email.trim()) errors.email = 'Email is required';
     if (!data.departmentId.trim()) errors.departmentId = 'Department is required';
-    if (!data.profilePicture.trim()) errors.profilePicture = 'Profile picture is required';
+    if (!data.image.trim()) errors.profilePicture = 'Profile picture is required';
     if (!/\S+@\S+\.\S+/.test(data.email)) errors.email = 'Email is invalid';
     if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
         errors.email = 'Email is invalid';

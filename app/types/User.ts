@@ -1,7 +1,7 @@
 export interface ApiRequestOptions {
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
     headers?: HeadersInit;
-	body?: Record<string, unknown>;
+    body?: Record<string, unknown> | FormData;
 }
 
 export interface User {
@@ -72,7 +72,10 @@ export interface EmployeeSignUpPayload {
     lastName: string;
     email: string;
     departmentId: string;
-    profilePicture: string;
+    image: string;
+    role: string;
+    password: string;
+    confirmPassword: string;
 }
 
 export interface BusinessSignUpPayload {
@@ -106,19 +109,19 @@ export interface VerifyOtpPayload {
 }
 
 export interface ResendOtpPayload {
-   email: string;
+    email: string;
 }
 
 export interface ForgotPassswordPayload {
-   email: string;
+    email: string;
 }
 
 export interface SuspendUserPayload {
-   id: string;
+    id: string;
 }
 
 export interface DeleteUserPayload {
-   id: string;
+    id: string;
 }
 
 export interface ResetPassswordPayload {
