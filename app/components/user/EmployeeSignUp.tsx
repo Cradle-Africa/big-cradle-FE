@@ -7,12 +7,13 @@ import toast from 'react-hot-toast';
 import {File} from 'lucide-react';
 import { EmployeeSignUpPayload } from '@/app/types/User';
 
-export default function EmployeeSignUp() {
+
+export default function EmployeeSignUp(departmentId: any){
     const [formData, setFormData] = useState<EmployeeSignUpPayload>({
         firstName: '',
         lastName: '',
         email: '',
-        departmentId: '',
+        departmentId: departmentId,
         image: '',
         password: '',
         confirmPassword: '',

@@ -49,7 +49,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
         };
 
         fetchData();
-    }, [currentPage, limit, endpoint]);
+    }, [currentPage, limit, endpoint, businessId]);
 
     return (
         <DashboardLayout>
