@@ -11,7 +11,8 @@ import CountrySelect from '@/app/components/CountrySelect';
 import { AdminSignUpService } from '../../services/user/userService';
 import SearchSelect from '../SearchSelect';
 import cities from '../../utils/data/cities.json';
-import { removeEmptyProperties} from '../../utils/clean-data';
+import { removeEmptyProperties } from '../../utils/clean-data';
+import ImageUploader from '../ImageUploader';
 
 export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -55,6 +56,13 @@ export default function AdminSignUp() {
 
     const handleSelectChange = (field: string, value: string) => {
         setForm((prev) => ({ ...prev, [field]: value }));
+    };
+
+    const handleInputChange = (name: string, value: string) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const next = () => {
@@ -261,16 +269,15 @@ export default function AdminSignUp() {
                             <>
                                 <div className='relative mt-5'>
                                     <label>Image</label>
-                                    <div className='bg-gray-100 rounded-md'>
-                                        <input name="image" type="file" accept="image/*" onChange={handleChange}
-                                            className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
-                                        <File size={16}
-                                            className='absolute top-1/3 ml-2 mt-[9px]'
-                                        />
-                                    </div>
+                                    <ImageUploader
+                                        onChange={handleInputChange}
+                                        text="Upload Image"
+                                        id="image"
+                                        name="image"
+                                    />
                                     {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
                                 </div>
-                                
+
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />

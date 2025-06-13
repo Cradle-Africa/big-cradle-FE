@@ -15,6 +15,8 @@ export interface User {
     otp: string;
     otpExpiresAt: string;
     profilePicture: string;
+    contactPersonFirstName: string;
+    kycStatus: string;
     __v: number;
 };
 

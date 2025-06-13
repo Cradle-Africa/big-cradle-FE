@@ -6,9 +6,11 @@ export const useUser = (): User | null => {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const storedUser = getUser();
-    if (storedUser) {
-      setUser(storedUser);
+    if (typeof window !== "undefined") {
+      const storedUser = getUser();
+      if (storedUser) {
+        setUser(storedUser);
+      }
     }
   }, []);
 

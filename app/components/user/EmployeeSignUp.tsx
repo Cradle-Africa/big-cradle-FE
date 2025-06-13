@@ -4,9 +4,10 @@ import { useState, ChangeEvent } from 'react';
 import { validateEmployeeSignUp } from '../../utils/user/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
-import {File, Eye, EyeOff} from 'lucide-react';
+import { File, Eye, EyeOff } from 'lucide-react';
 import { EmployeeSignUpPayload } from '@/app/types/User';
 import AccountVerification from '../../components/user/AccountVerification';
+import ImageUploader from '../ImageUploader';
 
 interface EmployeeSignUpProps {
     signUpToken: any;
@@ -14,7 +15,7 @@ interface EmployeeSignUpProps {
     businessUserId: any;
 }
 
-export default function EmployeeSignUp({signUpToken, employeeEmail, businessUserId}: EmployeeSignUpProps) {
+export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUserId }: EmployeeSignUpProps) {
 
     const [formData, setFormData] = useState<EmployeeSignUpPayload>({
         firstName: '',
@@ -45,6 +46,13 @@ export default function EmployeeSignUp({signUpToken, employeeEmail, businessUser
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
+    };
+
+    const handleFileChange = (name: string, value: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,13 +133,12 @@ export default function EmployeeSignUp({signUpToken, employeeEmail, businessUser
 
                         <div className='relative mt-5'>
                             <label>Profile picture</label>
-                            <div className='bg-gray-100 rounded-md'>
-                                <input name="image" type="file" accept="image/*" onChange={handleChange}
-                                    className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
-                                <File size={16}
-                                    className='absolute top-1/3 ml-2 mt-[9px]'
-                                />
-                            </div>
+                            <ImageUploader
+                                onChange={handleFileChange}
+                                text="Upload Profile Image"
+                                id="image"
+                                name="image"
+                            />
                             {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
                         </div>
 

@@ -11,6 +11,9 @@ import CountrySelect from '@/app/components/CountrySelect';
 import { BusinessSignUpService } from '../../services/user/userService';
 import SearchSelect from '../SearchSelect';
 import cities from '../../utils/data/cities.json';
+import ImageUploader from '../ImageUploader';
+import PdfUploader from '../PdfUploader';
+
 
 export default function BusinessSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -57,6 +60,13 @@ export default function BusinessSignUp() {
 
     const handleSelectChange = (field: string, value: string) => {
         setForm((prev) => ({ ...prev, [field]: value }));
+    };
+
+    const handleInputChange = (name: string, value: string) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     const next = () => {
@@ -273,22 +283,35 @@ export default function BusinessSignUp() {
                             <>
                                 <div className='relative mt-5'>
                                     <label>Business Logo</label>
-                                    <div className='bg-gray-100 rounded-md'>
+                                    {/* <div className='bg-gray-100 rounded-md'>
                                         <input name="businessLogo" type="file" accept="image/*" onChange={handleChange}
                                             className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
                                         <FileImage size={16} className='absolute top-1/3 ml-2 mt-[10px]'/>
-                                    </div>
+                                    </div> */}
+                                    <ImageUploader
+                                        onChange={handleInputChange}
+                                        text="Upload Business Logo"
+                                        id="businessLogo"
+                                        name="businessLogo"
+                                    />
                                     {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
                                 </div>
                                 <div className='relative mt-5'>
                                     <label>Certificate of Incorporation</label>
-                                    <div className='bg-gray-100 rounded-md'>
+                                    {/* <div className='bg-gray-100 rounded-md'>
                                         <input name="certificateOfIncorporation" type="file" accept="application/pdf,image/*" onChange={handleChange}
                                             className="w-fullrounded-md px-3 py-2 ml-4 outline-none hover:cursor-pointer" />
                                         <File size={16}
                                             className='absolute top-1/3 ml-2 mt-[10px]'
                                         />
-                                    </div>
+                                    </div> */}
+
+                                    <PdfUploader
+                                        onChange={handleInputChange}
+                                        text="Upload Business Certificate"
+                                        id="certificateOfIncorporation"
+                                        name="certificateOfIncorporation"
+                                    />
                                     {errors.certificateOfIncorporation && <p className="text-red-500 text-xs">{errors.certificateOfIncorporation}</p>}
                                 </div>
                                 <div className="flex justify-between gap-2 mt-5">

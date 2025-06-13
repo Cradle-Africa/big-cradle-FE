@@ -41,7 +41,7 @@ const OtpInput: React.FC<OTPInputProps> = ({ length, value, onChange }) => {
                     value={value[index] || ''}
                     onChange={(e) => handleChange(e, index)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
-                    className="w-6 md:w-12 h-6 md:h-12 text-center border border-gray-300 rounded-sm text-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-6 md:w-12 h-6 md:h-12 text-center border border-gray-300 rounded-sm text-sm md:text-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
             ))}
         </div>

@@ -1,9 +1,10 @@
+import { headers } from 'next/headers';
 import { User } from '../../types/User';
 const key = 'user';
 
 // Get the user data from local storage
 export const getUser = (): User | null => {
-    if (typeof window === 'undefined') return null; 
+    if (typeof window === 'undefined') return null;
     const user = localStorage.getItem(key);
     return user ? JSON.parse(user) as User : null;
 };
@@ -19,10 +20,10 @@ export const getToken = (): string | null => {
 
 // Get the accessToken from local storage
 export const getBusinessId = (): string | null => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('businessId');
-  }
-  return null;
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('businessId');
+    }
+    return null;
 };
 
 
@@ -44,3 +45,19 @@ export const removeUser = (): void => {
     localStorage.removeItem('businessId');
     window.location.href = '/user/signin';
 };
+
+export const updateUserKycStatus = (endPoint: string): void => {
+    if (endPoint === 'business-auth/upload-certificate-of-incorporation') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                user.kycStatus = 'submitted';
+                localStorage.setItem('user', JSON.stringify(user));
+                window.location.href = '/'
+            } catch (error) {
+                console.error('Failed to update user in localStorage:', error);
+            }
+        }
+    }
+}

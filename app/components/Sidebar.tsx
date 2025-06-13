@@ -111,13 +111,7 @@ export default function Sidebar() {
                                     <Users size={14} />
                                     Employees
                                 </Link>
-                                <Link
-                                    href='/user/access-control/'
-                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
-                                >
-                                    <LockKeyhole size={14} />
-                                    Access Control
-                                </Link>
+                               
                             </div>
                         )}
                     </li>

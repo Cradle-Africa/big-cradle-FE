@@ -5,7 +5,7 @@ import { apiPostService } from '../../services/apiService';
 import { convertToBase64 } from '../../utils/covertToBase64';
 import { FormPopupProps, OptionType } from './types/PopUp';
 import { validateFields } from './validation/formValidator';
-import { FileImage } from 'lucide-react';
+import PdfUpload from '../../components/PdfUploader';
 
 const FormPopup: React.FC<FormPopupProps> = ({
     setOpen,
@@ -22,7 +22,11 @@ const FormPopup: React.FC<FormPopupProps> = ({
     const [dynamicOptions, setDynamicOptions] = useState<Record<string, OptionType[]>>({});
 
     useEffect(() => {
-        setFormData({ ...defaultValues });
+        // setFormData({ ...defaultValues });
+        setFormData(prev => {
+            const isSame = JSON.stringify(prev) === JSON.stringify(defaultValues);
+            return isSame ? prev : { ...defaultValues };
+        });
 
         const handler = (e: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -63,6 +67,14 @@ const FormPopup: React.FC<FormPopupProps> = ({
         }
     };
 
+    const handleInputChange = (name: string, value: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) {
@@ -81,8 +93,10 @@ const FormPopup: React.FC<FormPopupProps> = ({
             // Handle image field
             const imageField = fields.find(f => f.type === 'file');
             if (imageField && formData[imageField.name]) {
-                const base64Image = await convertToBase64(formData[imageField.name]);
-                payload[imageField.name] = base64Image;
+                const value = formData[imageField.name];
+                payload[imageField.name] = typeof value === 'string' && value.startsWith('data:')
+                    ? value
+                    : await convertToBase64(value);
             }
 
             await apiPostService(endPoint, method, payload);
@@ -108,13 +122,12 @@ const FormPopup: React.FC<FormPopupProps> = ({
                             <label className="block text-sm text-gray-600 mb-1">{field.label}</label>
                             {field.type === 'file' ? (
                                 <div className='relative bg-gray-100 rounded'>
-                                    <input
-                                        type="file"
+                                    <PdfUpload
+                                        onChange={handleInputChange}
+                                        text="Upload Certificate of incorparation"
+                                        id="image"
                                         name={field.name}
-                                        onChange={handleChange}
-                                        className="ml-5 w-full px-3 py-2 text-sm outline-none cursor-pointer"
                                     />
-                                    <FileImage size={15} className='absolute top-1/3 ml-2 mt-[-2px]' />
                                 </div>
                             ) : field.type === 'select' ? (
                                 <select

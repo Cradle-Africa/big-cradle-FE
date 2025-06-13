@@ -10,7 +10,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 	useAuthGuard();
 
 	return (
-		<div className="flex w-full lg:px-10 lg:my-5">
+		<div className="flex w-full lg:px-10">
 			<Sidebar />
 			<div className="lg:ml-64 flex-1">
 				<Topbar />

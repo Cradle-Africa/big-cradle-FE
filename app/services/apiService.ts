@@ -1,5 +1,6 @@
 import { BASE_URL } from './base';
 import { getToken, removeUser } from '../utils/user/userData';
+import {updateUserKycStatus} from '../utils/user/userData';
 
 export const apiPostService = async <T extends object>(endPoint: string, method: string, payload: T) => {
     const accessToken = getToken();
@@ -27,6 +28,8 @@ export const apiPostService = async <T extends object>(endPoint: string, method:
     }
 
     const data = await response.json();
+
+    updateUserKycStatus(endPoint)
     if (!response.ok) {
         if (response.status === 400 && data.message) {
             // Handle validation errors

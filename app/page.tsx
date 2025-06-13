@@ -1,13 +1,52 @@
+'use client';
+import { useState } from "react";
 import DashboardCharts from "./components/charts/DashboardCharts";
 import UserRoleTable from "./components/dashboard/UserRoleTable";
-import { UsersRound, CheckSquare, Banknote } from "lucide-react";
+import { UsersRound, CheckSquare, Banknote, UploadCloud } from "lucide-react";
 import DashboardLayout from "./components/layouts/DashboardLayout";
+import FormPopup from '@/app/components/pop-up/PopUpForm';
+import {useUser} from './hooks/useUser';
 
 export default function Home() {
+	const user = useUser();
+	const [openKycVerification, setOpenKycVerification] = useState(false)
+	if (!user) return null;
+
 	return (
 		<DashboardLayout>
 			<div>
+				{openKycVerification && (
+					<FormPopup
+						setOpen={setOpenKycVerification}
+						title="KYC Verification"
+						method={'POST'}
+						endPoint='business-auth/upload-certificate-of-incorporation'
+						fields={[
+							{ name: 'email', label: '', type: 'hidden', required: true },
+							{ name: 'certificateOfIncorporation', label: 'Certificate of Incorporation', type: 'file', required: true },
+						]}
+	                    defaultValues={{ email: user?.email }}
 
+					/>
+				)}
+
+				{user?.kycStatus === 'not-submitted' && (
+					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-red-400 text-white px-5 py-3 rounded-md mb-4'>
+						<div className='text-sm'>Upload your certificate for KYC verification</div>
+						<button
+							onClick={() => { setOpenKycVerification(true) }}
+							className=' bg-red-700 text-white rounded-md mt-5 md:mt-0 px-5 py-1 h-8 text-sm hover:border hover:border-white hover:cursor-pointer'
+						>
+							<UploadCloud size={14} className='inline' />
+							<span className='ml-1'>Verify KYC</span>
+						</button>
+					</div>
+				)}
+				{user?.kycStatus == 'submitted' && (
+					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90 px-5 py-3 rounded-md mb-4'>
+						<div className='text-sm'>Your KYC has been submitted</div>
+					</div>
+				)}
 				<div className='w-full'>
 					<p className='font-semibold text-md space-y-1'>Hi Esther, here’s your platform overview for today</p>
 					<p className="text-sm">All systems operational. Last sync: 10 mins ago</p>
@@ -49,7 +88,7 @@ export default function Home() {
 						<p className="text-xs">Across mobile & QR responses</p>
 					</div>
 				</div>
-				<DashboardCharts/>
+				<DashboardCharts />
 				<UserRoleTable />
 			</div>
 
