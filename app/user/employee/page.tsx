@@ -8,8 +8,8 @@ const Admin = () => {
         { key: 'LastName', label: 'Last Name', className: '' },
         { key: 'email', label: 'Email', className: '' },
         { key: 'phoneNumber', label: 'Phone Number', className: '' },
-        { key: 'address', label: 'Address', className: '' },
         { key: 'role', label: 'Role', className: ''},
+        { key: 'invitationStatus', label: 'Invitation Status', className: ''}
     ]
 
     const actionConfig = {

@@ -40,8 +40,8 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    if (!data.businessLogo.trim()) errors.businessLogo = 'Business logo is required';
-    if (!data.certificateOfIncorporation.trim()) errors.certificateOfIncorporation = 'Certificate of incorporation is required';
+    // if (!data.businessLogo.trim()) errors.businessLogo = 'Business logo is required';
+    // if (!data.certificateOfIncorporation.trim()) errors.certificateOfIncorporation = 'Certificate of incorporation is required';
 
     return errors;
 };
@@ -122,7 +122,7 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    if (!data.image.trim()) errors.image = 'Image is required';
+    // if (!data.image.trim()) errors.image = 'Image is required';
 
     return errors;
 };
@@ -205,12 +205,31 @@ export const validateEmployeeSignUp = (data: EmployeeSignUpPayload): { [key: str
     if (!data.firstName.trim()) errors.firstName = 'First name is required';
     if (!data.lastName.trim()) errors.lastName = 'Last name is required';
     if (!data.email.trim()) errors.email = 'Email is required';
-    if (!data.departmentId.trim()) errors.departmentId = 'Department is required';
-    if (!data.image.trim()) errors.profilePicture = 'Profile picture is required';
+    if (!data.businessUserId.trim()) errors.businessUserId = 'business User id is required';
+    // if (!data.image.trim()) errors.image = 'Image is required';
     if (!/\S+@\S+\.\S+/.test(data.email)) errors.email = 'Email is invalid';
     if (data.email && !/\S+@\S+\.\S+/.test(data.email)) {
         errors.email = 'Email is invalid';
     }
+
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+    
+    if (!data.confirmPassword)
+        errors.confirmPassword = 'Please confirm your password';
+    else if (data.password !== data.confirmPassword)
+        errors.confirmPassword = 'Passwords do not match';
+
     return errors;
 };
 

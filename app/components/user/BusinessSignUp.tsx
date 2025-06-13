@@ -75,7 +75,6 @@ export default function BusinessSignUp() {
 
         const validationErrors = validateBusinessSignUp(form);
         setErrors(validationErrors);
-        console.log(errors);
 
         if (Object.keys(validationErrors).length > 0) return;
 
@@ -183,7 +182,6 @@ export default function BusinessSignUp() {
                                             name="businessCity"
                                             className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
                                         />
-                                        {/* <input name="businessCity" value={form.businessCity} onChange={handleChange} placeholder="City" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" /> */}
                                         {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
                                     </div>
                                 </div>

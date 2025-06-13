@@ -13,7 +13,9 @@ import EmployeeSignUp from '../../components/user/EmployeeSignUp';
 import AdminSignUp from '../../components/user/AdminSignUp';
 
 interface DepartmentPayload {
-    id: string;
+    departmentId: string;
+    email: string;
+    businessUserId: string
 }
 
 export default function SignUpContent() {
@@ -24,16 +26,22 @@ export default function SignUpContent() {
     const [employeeSignUp, setEmployeeSignUp] = useState(false);
     const [adminSignUp, setAdminSignUp] = useState(false);
     const [departmentId, setDepartmentId] = useState<string | null>(null);
+    const [employeeEmail, setEmployeeEmail] = useState<string | null>(null);
+    const [businessUserId, setBusinessUserId] = useState<string | null>(null);
+    const [token, setToken] = useState<string | null>(null)
 
     const [formData] = useState({ email: '' });
 
     useEffect(() => {
-        const encrypted = searchParams.get('departmentId');
+        const encrypted = searchParams.get('token');
+        setToken(encrypted)
+
         if (encrypted) {
             try {
-                const decoded = jwtDecode<DepartmentPayload>(encrypted);
-                console.log('Decrypted department ID:', decoded.id);
-                setDepartmentId(decoded.id);
+                const decodedData = jwtDecode<DepartmentPayload>(encrypted);
+                setDepartmentId(decodedData.departmentId);
+                setEmployeeEmail(decodedData.email);
+                setBusinessUserId(decodedData.businessUserId);
                 setEmployeeSignUp(true);
                 setBusinessSignUp(false);
                 setSuperAdminSignUp(false);
@@ -77,25 +85,30 @@ export default function SignUpContent() {
                         <hr className="flex-grow border-gray-300" />
                     </div>
 
-                    <div className='overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700'>
-                        <button onClick={() => { setSuperAdminSignUp(true); setBusinessSignUp(false); setEmployeeSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Super admin
-                        </button>
-                        <button onClick={() => { setAdminSignUp(true); setBusinessSignUp(false); setEmployeeSignUp(false); setSuperAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${adminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Investor
-                        </button>
-                        <button onClick={() => { setBusinessSignUp(true); setSuperAdminSignUp(false); setEmployeeSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${businessSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Business
-                        </button>
-                        <button onClick={() => { setEmployeeSignUp(true); setSuperAdminSignUp(false); setBusinessSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${employeeSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
-                            Employee
-                        </button>
-                    </div>
+                    {!departmentId && (
+                        <div className='overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700'>
+                            <button onClick={() => { setSuperAdminSignUp(true); setBusinessSignUp(false); setEmployeeSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Super admin
+                            </button>
+                            <button onClick={() => { setAdminSignUp(true); setBusinessSignUp(false); setEmployeeSignUp(false); setSuperAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${adminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Investor
+                            </button>
+                            <button onClick={() => { setBusinessSignUp(true); setSuperAdminSignUp(false); setEmployeeSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${businessSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
+                                Business
+                            </button>
+                        </div>
+                    )} 
 
                     <div>
                         {superAdminSignUp && <SuperAdminSignUp />}
                         {businessSignUp && <BusinessSignUp />}
-                        {employeeSignUp && departmentId && <EmployeeSignUp departmentId={departmentId} />}
+                        {employeeSignUp && departmentId &&
+                            <EmployeeSignUp
+                                signUpToken={token}
+                                employeeEmail={employeeEmail}
+                                businessUserId={businessUserId}
+                            />
+                        }
                         {adminSignUp && <AdminSignUp />}
                     </div>
                 </div>

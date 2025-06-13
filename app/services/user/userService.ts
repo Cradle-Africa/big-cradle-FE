@@ -65,16 +65,20 @@ export const AdminSignUpService = async (payload: AdminForm) => {
     return data;
 };
 
-export const EmployeeSignUpService = async (payload: EmployeeSignUpPayload) => {
-    const response = await fetch(`${BASE_URL}/business-employees`, {
+export const EmployeeSignUpService = async (payload: EmployeeSignUpPayload, signUpToken: string) => {
+
+    const url = new URL(`${BASE_URL}/manage-employee/complete-employee-signup`);
+    url.searchParams.append('token', signUpToken);
+    const response = await fetch(url.toString(), {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload),
     });
 
     const data = await response.json();
+
     if (!response.ok) {
         throw new Error(data.message || 'Signup failed');
     }
@@ -101,6 +105,7 @@ export const verifyOtpService = async (payload: VerifyOtpPayload) => {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+
         },
         body: JSON.stringify(payload),
     });

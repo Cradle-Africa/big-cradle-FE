@@ -5,7 +5,6 @@ import TableComponent from '@/app/components/table/TableComponent';
 const SuperAdmin = () => {
 
     const fields = [
-        { key: '#', label: '#', className: '' },
         { key: 'fullName', label: 'Full Name', className: '' },
         { key: 'email', label: 'Email', className: '' }
     ]

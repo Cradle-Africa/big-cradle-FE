@@ -71,7 +71,7 @@ export interface EmployeeSignUpPayload {
     firstName: string;
     lastName: string;
     email: string;
-    departmentId: string;
+    businessUserId: string;
     image: string;
     role: string;
     password: string;
