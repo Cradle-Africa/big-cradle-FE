@@ -1,16 +1,19 @@
 'use client';
-import React from 'react'
-import { Search, Bell, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react'
+import { Search, Bell, ChevronRight, CircleUser, LogOut, X } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
 import Image from 'next/image';
+import TopBarSkeleton from './skeleton/TopBarSkeleton';
+import {removeUser} from '../utils/user/userData';
 
 const Topbar = () => {
-
+    const [openProfile, setOpenProfile] = useState(false);
     const user = useUser();
     if (!user) {
-        return null;
+        return (
+            <TopBarSkeleton/>
+        )
     }
-
     return (
         <>
             <div className=''>
@@ -24,19 +27,56 @@ const Topbar = () => {
                         />
                     </form>
 
-                    <div className='flex justify-between gap-5 items-center'>
+                    <div className='flex justify-between gap-3 items-center'>
                         <Bell className="hidden md:block w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
-                        <Image src="/profile.png" width={8} height={8} alt='profile image' className='w-8 h-8' />
-                        <div className='flex flex-col'>
+
+                        {user?.profilePicture ?
+                            <Image src={user?.profilePicture} width={8} height={8} alt='profile image' className='rounded-full w-8 h-8' />
+                            :
+                            <CircleUser className='rounded-full w-8 h-8' />
+                        }
+
+                        <div className='flex flex-col hover:cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
                             <span className='hidden lg:inline text-xs font-semibold'>
-                                {user?.fullName ?? user?.contactPersonFirstName}
+                                {user?.fullName ?? (user?.contactPersonFirstName + ' ' + user?.contactPersonLastName)}
                             </span>
                             <span className='inline lg:hidden text-xs font-semibold'>{user?.fullName?.slice(0, 12) + '...'}</span>
                             <span className='text-xs text-gray-500'>{user?.role}</span>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-gray-500 hover:cursor-pointer" />
+                        <ChevronRight
+                            onClick={() => setOpenProfile(!openProfile)}
+                            className="w-4 h-4 text-gray-500 hover:cursor-pointer" />
                     </div>
                 </div>
+                {openProfile && (
+                    <div className='absolute z-20 right-5 md:right-10 showdow-md bg-white px-2 py-2 md:px-5 md:py-5 rounded-md border border-gray-100'>
+                        <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer' color='red' />
+                        <div className='flex justify-center mt-5'>
+                            {user?.profilePicture ?
+                                <Image src={user?.profilePicture} width={8} height={8} alt='profile image' className='rounded-full w-12 h-12' />
+                                :
+                                <CircleUser className='rounded-full w-12 h-12' />
+                            }
+                        </div>
+                        <div className='flex flex-col mt-5 md:mt-10 text-blue-600'>
+                            <span className='hidden lg:inline text-sm font-semibold '>
+                                {user?.fullName ?? (user?.contactPersonFirstName + ' ' + user?.contactPersonLastName)}
+                            </span>
+                            <span className='inline lg:hidden text-sm font-semibold'>{user?.fullName}</span>
+                            <span className='text-xs'>{user?.role}</span>
+                        </div>
+                        <button
+                            className='w-full px-2 py-1 bg-gray-100 rounded-md mt-5 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
+                        >
+                            <LogOut 
+                                size={12} 
+                                className='inline mr-1' 
+                                onClick={() => removeUser()}
+                                />
+                            Logout
+                        </button>
+                    </div>
+                )}
             </div>
         </>
 

@@ -73,31 +73,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                         <p className="text-sm text-gray-500">{subTitle}</p>
                     </div>
 
-
                     <form onSubmit={handleSubmit} className="space-y-4 mt-5 lg:mt-12">
-
-                        {setOpen && (
-                            <FormPopup
-                                setOpen={setOpen}
-                                title={title}
-                                method={method || 'POST'}
-                                endPoint={endPoint}
-                                fields={[
-                                    { name: 'businessUserId', label: '', type: 'hidden', required: true },
-                                    { name: 'reason', label: 'Reason', type: 'text', required: true },
-                                    {
-                                        name: 'action', label: 'Action', type: 'select', required: true,
-                                        options: [
-                                            { label: 'approved', value: 'approved' },
-                                            { label: 'rejected', value: 'rejected' },
-                                        ]
-                                    },
-
-                                ]}
-                                defaultValues={{ businessUserId: businessUserId || '' }}
-                            />
-                        )}
-
                         <div className="flex gap-5 justify-center mt-5">
                             <button
                                 type="button"
@@ -118,6 +94,31 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                     </form>
 
 
+                </div>
+            )}
+
+            {setOpen && (
+                <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                    <FormPopup
+                        setOpen={setOpen}
+                        title={title}
+                        method={method || 'POST'}
+                        endPoint={endPoint}
+                        fields={[
+                            { name: 'businessUserId', label: '', type: 'hidden', required: true },
+                            {
+                                name: 'action', label: 'Action', type: 'select', required: true,
+                                options: [
+                                    { label: 'approved', value: 'approved' },
+                                    { label: 'rejected', value: 'rejected' },
+                                ]
+                            },
+                            { name: 'reason', label: 'Reason', type: 'text', required: true },
+
+
+                        ]}
+                        defaultValues={{ businessUserId: businessUserId || '' }}
+                    />
                 </div>
             )}
 

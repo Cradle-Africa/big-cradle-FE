@@ -34,13 +34,7 @@ interface ActionDropdownMenuProps {
 		payload: Record<string, unknown>;
 		message?: string;
 	};
-	approveAction?: {
-		endPoint: string;
-		method: string;
-		payload: Record<string, unknown>;
-		message?: string;
-	};
-	rejectAction?: {
+	reviewAction?: {
 		endPoint: string;
 		method: string;
 		payload: Record<string, unknown>;
@@ -57,17 +51,14 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 		deleteAction, 
 		editAction, 
 		viewAction, 
-		approveAction, 
-		rejectAction
+		reviewAction
 	}: ActionDropdownMenuProps) => {
 	const [open, setOpen] = useState(false);
 	const [openSuspend, setOpenSuspend] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openView, setOpenView] = useState(false);
-	const [openApprove, setOpenApprove] = useState(false);
-	const [openReject, setOpenReject] = useState(false);
-
+	const [openReview, setOpenReview] = useState(false);
 
 	const menuRef = useRef<HTMLDivElement>(null);
 
@@ -146,36 +137,20 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				/>
 			)}
 
-			{openApprove && approveAction && (
+			{openReview && reviewAction && (
 				<PopUp
-					setOpen={setOpenApprove}
+					setOpen={setOpenReview}
 					title="Approve"
 					label="Approve"
 					subTitle="Approve"
-					message={approveAction.message || 'Approved successfully'}
-					endPoint={approveAction.endPoint}
-					method={approveAction.method}
+					message={reviewAction.message || 'Approved successfully'}
+					endPoint={reviewAction.endPoint}
+					method={reviewAction.method}
 					Id={Id}
 					businessUserId={businessUserId}
-					payload={approveAction.payload}
+					payload={reviewAction.payload}
 				/>
 			)}
-
-			{openReject && rejectAction && (
-				<PopUp
-					setOpen={setOpenReject}
-					title="Reject"
-					label="Reject"
-					subTitle="Reject"
-					message={rejectAction.message || 'Rejected successfully'}
-					endPoint={rejectAction.endPoint}
-					method={rejectAction.method}
-					Id={Id}
-					businessUserId={businessUserId}
-					payload={rejectAction.payload}
-				/>
-			)}
-
 
 			{open && (
 				<div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md border border-gray-100 z-50">
@@ -262,35 +237,18 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 							</li>
 						)}
 
-						{approveAction && (
+						{openReview && (
 							<li className="px-1">
 								<button
 									onClick={() => {
-										setOpenApprove(true);
+										setOpenReview(true);
 										setOpen(false);
 									}}
 									className="w-full px-4 py-2 text-left text-sm rounded-md text-blue-600 hover:bg-blue-100 hover:cursor-pointer"
 								>
 									<div className="flex items-center gap-1">
 										<Check size={13} />
-										Approve
-									</div>
-								</button>
-							</li>
-						)}
-
-						{rejectAction && (
-							<li className="px-1">
-								<button
-									onClick={() => {
-										setOpenReject(true);
-										setOpen(false);
-									}}
-									className="w-full px-4 py-2 text-left text-sm rounded-md text-red-600 hover:bg-blue-100 hover:cursor-pointer"
-								>
-									<div className="flex items-center gap-1">
-										<UserRoundX size={13} />
-										Reject
+										Review
 									</div>
 								</button>
 							</li>

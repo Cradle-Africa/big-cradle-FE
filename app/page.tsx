@@ -5,12 +5,19 @@ import UserRoleTable from "./components/dashboard/UserRoleTable";
 import { UsersRound, CheckSquare, Banknote, UploadCloud } from "lucide-react";
 import DashboardLayout from "./components/layouts/DashboardLayout";
 import FormPopup from '@/app/components/pop-up/PopUpForm';
-import {useUser} from './hooks/useUser';
+import { useUser } from './hooks/useUser';
+import DashboardSkeleton from './components/skeleton/Dashboardskeleton';
 
 export default function Home() {
 	const user = useUser();
 	const [openKycVerification, setOpenKycVerification] = useState(false)
-	if (!user) return null;
+	if (!user) {
+		return (
+			<DashboardLayout>
+				<DashboardSkeleton/>
+			</DashboardLayout>
+		)
+	}
 
 	return (
 		<DashboardLayout>
@@ -25,7 +32,7 @@ export default function Home() {
 							{ name: 'email', label: '', type: 'hidden', required: true },
 							{ name: 'certificateOfIncorporation', label: 'Certificate of Incorporation', type: 'file', required: true },
 						]}
-	                    defaultValues={{ email: user?.email }}
+						defaultValues={{ email: user?.email }}
 
 					/>
 				)}
@@ -52,7 +59,7 @@ export default function Home() {
 					<p className="text-sm">All systems operational. Last sync: 10 mins ago</p>
 				</div>
 				<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
-					<div className="border border-[#F7F7F7] bg-[#fafafa] p-2 rounded-md">
+					<div className="border border-[#F7F7F7] bg-white py-2 px-3 rounded-md">
 						<h3 className="flex gap-1 items-center text-sm mb-2">
 							<UsersRound size={13} />
 							Total Users</h3>
@@ -64,7 +71,7 @@ export default function Home() {
 						<p className="text-xs">Registered accross all roles</p>
 					</div>
 
-					<div className="border border-[#F7F7F7] bg-[#fafafa] p-2 rounded-md ">
+					<div className="border border-[#F7F7F7] bg-white py-2 px-3 rounded-md ">
 						<h3 className="flex gap-1 items-center text-sm mb-2">
 							<Banknote size={13} /> Revenue (This Month)
 						</h3>
@@ -76,7 +83,7 @@ export default function Home() {
 						<p className="text-xs">Total from active campaigns</p>
 					</div>
 
-					<div className="border border-[#F7F7F7] bg-[#fafafa] p-2 rounded-md">
+					<div className="border border-[#F7F7F7] bg-white py-2 px-3 rounded-md">
 						<h3 className="flex gap-1 items-center text-sm mb-2">
 							<CheckSquare size={13} /> <div className="hidden md:inline"></div>Task completion time
 						</h3>

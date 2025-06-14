@@ -2,7 +2,7 @@
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
 
-const Business = () => {
+const BusinessKyc = () => {
 
     const fields = [
         { key: 'kycReviewReason', label: 'Reason', className: '' },
@@ -43,12 +43,12 @@ const Business = () => {
     return (
         <>
             <TableComponent
-                title="Business"
+                title="Business KYC"
                 endpoint="super-admin-auth/all-businesses-kyc-review"
                 fields={fields}
                 breadcrumbs={{
                     parent: { path: '/user-management', label: 'User' },
-                    current: 'Businesses'
+                    current: 'Businesses KYC'
                 }}
                 actionConfig={actionConfig}
             />
@@ -57,4 +57,4 @@ const Business = () => {
     )
 }
 
-export default Business
+export default BusinessKyc

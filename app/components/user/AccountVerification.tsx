@@ -44,7 +44,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
             toast.dismiss();
             toast.success('OTP verified successfully!');
             setShowAccountVerification(false);
-            router.push('/user/signin');
+            router.push('/pages/user/signin');
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {

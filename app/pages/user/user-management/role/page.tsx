@@ -1,6 +1,6 @@
 import React from 'react'
-import RoleComponent from '../../../components/user-management/RoleComponent';
-import DashboardLayout from '../../../components/layouts/DashboardLayout';
+import RoleComponent from '../../../../components/user-management/RoleComponent';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import Link from 'next/link';
 
 const RolePage = () => {

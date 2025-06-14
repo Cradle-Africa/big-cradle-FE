@@ -1,8 +1,8 @@
 'use client';
 import React from 'react'
 import Link from 'next/link';
-import DashboardLayout from '../../../../components/layouts/DashboardLayout';
-import ActionDropdownMenu from '../../../../components/drop-down/ActionDropdownMenu';
+import DashboardLayout from '../../../../../components/layouts/DashboardLayout';
+import ActionDropdownMenu from '../../../../../components/drop-down/ActionDropdownMenu';
 
 import { IdCard, User, Check, CircleUserRound, Megaphone } from 'lucide-react';
 

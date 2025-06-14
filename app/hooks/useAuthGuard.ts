@@ -10,7 +10,7 @@ export const useAuthGuard = () => {
     useEffect(() => {
         const user = getUser();
         if (!user) {
-            router.replace('/user/signin');
+            router.replace('/pages/user/signin');
         }
     }, [router]);
 };
@@ -22,7 +22,7 @@ export const useSuperAdminGuard = () => {
     useEffect(() => {
         const user = getUser();
         if (!user || user.role !== 'super admin') {
-            router.replace('/user/signin');
+            router.replace('/pages/user/signin');
         }
     }, [router]);
 };
@@ -34,7 +34,7 @@ export const useAdminGuard = () => {
     useEffect(() => {
         const user = getUser();
         if (!user || user.role !== 'admin') {
-            router.replace('/user/signin');
+            router.replace('/pages/user/signin');
         }
     }, [router]);
 };

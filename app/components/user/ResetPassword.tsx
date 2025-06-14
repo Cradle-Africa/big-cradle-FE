@@ -58,7 +58,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, resetToken, setope
             await resetPasswordService(payload);
             toast.dismiss();
             toast.success('Password reset successfully!');
-            router.push('/user/signin');
+            router.push('/pages/user/signin');
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {

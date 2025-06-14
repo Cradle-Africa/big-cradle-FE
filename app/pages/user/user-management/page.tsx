@@ -5,7 +5,7 @@ import RoleComponent from "@/app/components/user-management/RoleComponent";
 
 import { Download, UsersRound } from "lucide-react";
 import Link from "next/link";
-import DashboardLayout from "../../components/layouts/DashboardLayout";
+import DashboardLayout from "../../../components/layouts/DashboardLayout";
 
 export default function Analytics() {
 	return (

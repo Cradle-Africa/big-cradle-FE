@@ -12,7 +12,7 @@ export default function Sidebar() {
     const [usersMenuOpen, setUsersMenuOpen] = useState(false);
 
     return (
-        <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute'} `}>
+        <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute '} `}>
             {/* Mobile toggle - unchanged */}
             <div className={` ${open ? '' : 'border border-gray-200'} md:hidden rounded-md mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}>
                 <button onClick={() => setOpen(!open)} className="text-gray-500 hover:cursor-pointer">
@@ -77,35 +77,35 @@ export default function Sidebar() {
                         {usersMenuOpen && (
                             <div className="ml-6 mt-1 space-y-1">
                                 <Link
-                                    href='/user/user-management/'
+                                    href='/pages/user/user-management/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <User size={14} />
                                     User management
                                 </Link>
-                                <Link
-                                    href='/user/super-admin/'
+                                {/* <Link
+                                    href='/pages/user/super-admin/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <Shield size={14} />
                                     Super admin
                                 </Link>
                                 <Link
-                                    href='/user/admin/'
+                                    href='/pages/user/admin/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <UserCog size={14} />
                                     Investors/Admins
-                                </Link>
+                                </Link> */}
                                 <Link
-                                    href='/user/business/'
+                                    href='/pages/user/business-kyc/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <Building2 size={14} />
-                                    Businesses
+                                    Businesses KYC
                                 </Link>
                                 <Link
-                                    href='/user/employee/'
+                                    href='/pages/user/employee/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <Users size={14} />
@@ -117,7 +117,7 @@ export default function Sidebar() {
                     </li>
                     <li>
                         <Link
-                            href='/user/department'
+                            href='/pages/user/department'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
                         >
                             <div className='flex gap-1 items-center'>

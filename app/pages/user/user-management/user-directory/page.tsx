@@ -1,6 +1,6 @@
 import React from 'react';
-import DashboardLayout from '../../../components/layouts/DashboardLayout';
-import UserManagementComponent from '../../../components/user-management/UserManagementComponent';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
+import UserManagementComponent from '../../../../components/user-management/UserManagementComponent';
 import Link from 'next/link';
 
 const UserManagementPage = () => {

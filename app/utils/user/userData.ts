@@ -44,7 +44,7 @@ export const removeUser = (): void => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('businessId');
-    window.location.href = '/user/signin';
+    window.location.href = '/pages/user/signin';
 };
 
 export const updateUserKycStatus = (endPoint: string): void => {

@@ -4,12 +4,12 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import ForgotPassword from '@/app/components/user/ForgotPassword';
-import ForgotPasswordCode from '../../components/user/ForgotPasswordCode';
-import ResetPassword from '../../components/user/ResetPassword';
+import ForgotPasswordCode from '../../../components/user/ForgotPasswordCode';
+import ResetPassword from '../../../components/user/ResetPassword';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignIn } from '../../utils/user/userValidation';
+import { validateSignIn } from '../../../utils/user/userValidation';
 import toast from 'react-hot-toast';
-import { signInService } from '../../services/user/userService';
+import { signInService } from '../../../services/user/userService';
 import { addUser, addToken } from '@/app/utils/user/userData';
 import { useRouter } from 'next/navigation';
 

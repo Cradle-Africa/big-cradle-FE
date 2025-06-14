@@ -39,16 +39,12 @@ export interface TableComponentProps {
             method: string
             payload: Record<string, unknown>
         }
-        approve?: {
+        review?: {
             endPoint: string
             method: string
             payload: Record<string, unknown>
         }
-        reject?: {
-            endPoint: string
-            method: string
-            payload: Record<string, unknown>
-        }
+        
     }
 
     rightAction?: {

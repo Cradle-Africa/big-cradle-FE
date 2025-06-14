@@ -8,9 +8,9 @@ import { jwtDecode } from 'jwt-decode';
 import { FcGoogle } from 'react-icons/fc';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import SuperAdminSignUp from '@/app/components/user/SuperadminSignUp';
-import BusinessSignUp from '../../components/user/BusinessSignUp';
-import EmployeeSignUp from '../../components/user/EmployeeSignUp';
-import AdminSignUp from '../../components/user/AdminSignUp';
+import BusinessSignUp from '../../../components/user/BusinessSignUp';
+import EmployeeSignUp from '../../../components/user/EmployeeSignUp';
+import AdminSignUp from '../../../components/user/AdminSignUp';
 
 interface DepartmentPayload {
     departmentId: string;

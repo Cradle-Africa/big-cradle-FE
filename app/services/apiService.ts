@@ -1,102 +1,91 @@
+import axios, { InternalAxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
 import { BASE_URL } from './base';
-import { getToken, removeUser } from '../utils/user/userData';
-import {updateUserKycStatus} from '../utils/user/userData';
+import { getToken, removeUser, updateUserKycStatus } from '../utils/user/userData';
 
+// Axios instance
+const apiClient = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+
+// Request interceptor with type
+apiClient.interceptors.request.use(
+    (config: InternalAxiosRequestConfig) => {
+        const token = getToken();
+        if (token) {
+            config.headers.set('Authorization', `Bearer ${token}`);
+        } else {
+            throw new Error('No authentication token found');
+        }
+        return config;
+    },
+    (error: AxiosError) => Promise.reject(error)
+);
+
+// Response interceptor with type
+apiClient.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    (error: AxiosError) => {
+        if (error.response?.status === 401) {
+            removeUser();
+        }
+        return Promise.reject(error);
+    }
+);
+
+// POST or PUT service
 export const apiPostService = async <T extends object>(endPoint: string, method: string, payload: T) => {
-    const accessToken = getToken();
-    if (!accessToken) {
-        throw new Error('No authentication token found');
-    }
+    try {
+        const response = await apiClient.request({
+            url: endPoint,
+            method,
+            data: payload,
+        });
 
-    const headers: HeadersInit = {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-    };
+        updateUserKycStatus(endPoint);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{ message?: string | string[] }>;
+        const message = err.response?.data?.message;
 
-    // Convert payload to JSON string
-    const body = JSON.stringify(payload);
-
-    const response = await fetch(`${BASE_URL}/${endPoint}`, {
-        method: method,
-        headers: headers,
-        body: body,
-    });
-
-    if (response.status === 401) {
-        removeUser();
-        throw new Error('Unauthorized');
-    }
-
-    const data = await response.json();
-
-    updateUserKycStatus(endPoint)
-    if (!response.ok) {
-        if (response.status === 400 && data.message) {
-            // Handle validation errors
-            const errorMessage = Array.isArray(data.message) ?
-                data.message.join('\n') :
-                data.message;
+        if (err.response?.status === 400 && message) {
+            const errorMessage = Array.isArray(message) ? message.join('\n') : message;
             throw new Error(errorMessage);
         }
-        throw new Error(data.message || 'Request failed');
+
+        throw new Error(typeof message === 'string' ? message : 'Request failed');
     }
-    return data;
 };
 
-
-export const apiGetService = async (endPoint: string, method: string) => {
-    const accessToken = getToken();
-    if (!accessToken) {
-        throw new Error('No authentication token found');
+// GET service
+export const apiGetService = async (endPoint: string) => {
+    try {
+        const response = await apiClient.get(endPoint);
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{ message?: string }>;
+        throw new Error(err.response?.data?.message || 'Request failed');
     }
-    const response = await fetch(`${BASE_URL}/${endPoint}`, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-        },
-    });
-
-    if (response.status === 401) {
-        removeUser()
-        throw new Error('Unauthorized');
-    }
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'request failed');
-    }
-    return data;
 };
 
+// GET with pagination
+export const apiGetPaginateService = async (
+    endpoint: string,
+    queryParams?: { page?: number; limit?: number; businessUserId?: string | null }
+) => {
+    try {
+        const params = {
+            page: queryParams?.page || 1,
+            limit: queryParams?.limit || 10,
+            businessUserId: queryParams?.businessUserId || undefined,
+        };
 
-export const apiGetPaginateService = async (endpoint: string, queryParams?: { page?: number; limit?: number; businessUserId?: string | null },) => {
-    const accessToken = getToken();
-
-    if (!accessToken) {
-        throw new Error('No authentication token found');
+        const response = await apiClient.get(endpoint, { params });
+        return response.data;
+    } catch (error) {
+        const err = error as AxiosError<{ message?: string }>;
+        throw new Error(err.response?.data?.message || 'Request failed');
     }
-
-    const queryString = new URLSearchParams({
-        page: String(queryParams?.page || 1),
-        limit: String(queryParams?.limit || 10),
-        businessUserId: String(queryParams?.businessUserId || '')
-    }).toString()
-    const response = await fetch(
-        `${BASE_URL}/${endpoint}?${queryString}`,
-        {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
-            },
-        }
-    );
-
-    if (response.status === 401) {
-        removeUser()
-        throw new Error('Unauthorized');
-    }
-    const data = await response.json();
-    return data;
 };

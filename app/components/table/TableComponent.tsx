@@ -93,7 +93,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                     }
                                 );
                                 const data = await res.json();
-                                return (data?.department as Department[]).map((d: Department) => ({ label: d.departmentName, value: d.id }));
+                                return (data?.department as Department[])?.map((d: Department) => ({ label: d.departmentName, value: d.id }));
                             }
                         },
                     ]}
@@ -213,14 +213,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                                 >
                                                     <ActionDropdownMenu
                                                         Id={item.id}
-                                                        businessUserId={item.businessUserId}
+                                                        businessUserId={item.id}
                                                         certificate={item.certificateOfIncorporation}
                                                         suspendAction={actionConfig.suspend}
                                                         deleteAction={actionConfig.delete}
                                                         editAction={actionConfig.edit}
                                                         viewAction={actionConfig.view}
-                                                        approveAction={actionConfig.approve}
-                                                        rejectAction={actionConfig.reject}
+                                                        reviewAction={actionConfig.review}
                                                     />
                                                 </td>
                                             )}

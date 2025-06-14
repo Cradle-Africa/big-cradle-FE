@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { BASE_URL } from "../base";
 
 import {
@@ -14,191 +15,145 @@ import {
     DeleteUserPayload,
 } from "../../types/User";
 
-
 export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) => {
-    const response = await fetch(`${BASE_URL}/super-admin-auth/sign-up`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/super-admin-auth/sign-up`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signup failed');
     }
-    return data;
 };
-
 
 export const BusinessSignUpService = async (payload: BusinessSignUpPayload) => {
-    const response = await fetch(`${BASE_URL}/business-auth/sign-up`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/business-auth/sign-up`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signup failed');
     }
-    return data;
 };
 
-
 export const AdminSignUpService = async (payload: AdminForm) => {
-    const response = await fetch(`${BASE_URL}/admin-auth/sign-up`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/admin-auth/sign-up`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signup failed');
     }
-    return data;
 };
 
 export const EmployeeSignUpService = async (payload: EmployeeSignUpPayload, signUpToken: string) => {
-
-    const url = new URL(`${BASE_URL}/manage-employee/complete-employee-signup`);
-    url.searchParams.append('token', signUpToken);
-    const response = await fetch(url.toString(), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/manage-employee/complete-employee-signup?token=${signUpToken}`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signup failed');
     }
-    return data;
 };
 
 export const signInService = async (payload: SignInPayload) => {
-    const response = await fetch(`${BASE_URL}/authentication/sign-in`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Signin failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/authentication/sign-in`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signin failed');
     }
-    return data;
 };
 
 export const verifyOtpService = async (payload: VerifyOtpPayload) => {
-    const response = await fetch(`${BASE_URL}/authentication/verify-otp`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'OTP verification failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/authentication/verify-otp`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'OTP verification failed');
     }
-    return data;
 };
 
 export const resendOtpService = async (payload: ResendOtpPayload) => {
-    const response = await fetch(`${BASE_URL}/authentication/resend-otp`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Resend OTP failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/authentication/resend-otp`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Resend OTP failed');
     }
-    return data;
 };
 
 export const suspendUserService = async (payload: SuspendUserPayload) => {
-    const response = await fetch(`${BASE_URL}/suspend-user`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Fail to suspend a user');
+    try {
+        const response = await axios.post(`${BASE_URL}/suspend-user`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Fail to suspend a user');
     }
-    return data;
 };
 
-
 export const deleteUserService = async (payload: DeleteUserPayload) => {
-    const response = await fetch(`${BASE_URL}/delete-user`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Fail to delete the user');
+    try {
+        const response = await axios.post(`${BASE_URL}/delete-user`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Fail to delete the user');
     }
-    return data;
 };
 
 export const forgotPasswordService = async (payload: ForgotPassswordPayload) => {
-    const response = await fetch(`${BASE_URL}/authentication/forgot-password`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Request Failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/authentication/forgot-password`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Request Failed');
     }
-    return data;
 };
 
 export const resetPasswordService = async (payload: ResetPassswordPayload) => {
-    const response = await fetch(`${BASE_URL}/authentication/reset-password`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.message || 'Request Failed');
+    try {
+        const response = await axios.post(`${BASE_URL}/authentication/reset-password`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Request Failed');
     }
-    return data;
 };
-
-
-
-
-

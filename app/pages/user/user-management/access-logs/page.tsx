@@ -1,6 +1,6 @@
 import React from 'react'
-import AccessLogsComponent from '../../../components/user-management/AccessLogsComponent';
-import DashboardLayout from '../../../components/layouts/DashboardLayout';
+import AccessLogsComponent from '../../../../components/user-management/AccessLogsComponent';
+import DashboardLayout from '../../../../components/layouts/DashboardLayout';
 import Link from 'next/link';
 
 const AccessLogsPage = () => {
