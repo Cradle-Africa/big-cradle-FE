@@ -2,42 +2,52 @@
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
 
-const Businesses = () => {
+const Business = () => {
 
     const fields = [
-        { key: '#', label: '#', className: '' },
-        { key: 'fullName', label: 'Full Name', className: '' },
-        { key: 'phoneNumber', label: 'Phone Number', className: '' },
-        { key: 'country', label: 'Country', className: '' },
-        { key: 'state', label: 'State', className: '' },
-        { key: 'city', label: 'City', className: '' },
-        { key: 'address', label: 'Address', className: '' },
-        { key: 'email', label: 'Email', className: '' },
-        { key: 'role', label: 'Role', className: '' },
-        { key: 'size', label: 'Size', className: '' },
+        { key: 'kycReviewReason', label: 'Reason', className: '' },
+        { key: 'businessName', label: 'Business Name', className: '' },
+        { key: 'contactPersonFirstName', label: 'First Name', className: '' },
+        { key: 'contactPersonLastName', label: 'Last Name', className: '' },
+        { key: 'businessCountry', label: 'businessCountry', className: '' },
+        { key: 'contactNumber', label: 'Phone Number', className: '' },
+        { key: 'businessCity', label: 'City', className: '' },
+        { key: 'businessState', label: 'State', className: '' },
+        { key: 'kycStatus', label: 'Status', className: '' },
+        { key: 'organizationSize', label: 'Size', className: '' },
+        { key: 'businessAddress', label: 'businessAddress', className: '' },
+        { key: 'email', label: 'Email', className: '' }
     ]
 
     const actionConfig = {
-        delete: {
-            endPoint: '/api/user/delete',
-            method: 'DELETE',
+        approve: {
+            endPoint: 'super-admin-auth/review-kyc',
+            method: 'POST',
             payload: {}
         },
-        suspend: {
-            endPoint: '/api/user/suspend',
+        reject: {
+            endPoint: 'super-admin-auth/review-kyc',
             method: 'POST',
-            payload: { }
-        }    
+            payload: {}
+        },
+        view: {
+            endPoint: 'super-admin-auth/review-kyc',
+            method: 'POST',
+            payload: {}
+        },
+
+
     }
+
 
     return (
         <>
             <TableComponent
-                title="Businesses"
-                endpoint="all-admin-user-businesses"
+                title="Business"
+                endpoint="super-admin-auth/all-businesses-kyc-review"
                 fields={fields}
                 breadcrumbs={{
-                    parent: { path: '/user/business', label: 'Business' },
+                    parent: { path: '/user-management', label: 'User' },
                     current: 'Businesses'
                 }}
                 actionConfig={actionConfig}
@@ -47,4 +57,4 @@ const Businesses = () => {
     )
 }
 
-export default Businesses
+export default Business

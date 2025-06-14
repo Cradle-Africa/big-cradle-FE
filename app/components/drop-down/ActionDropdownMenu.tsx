@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { UserRoundMinus, UserRoundX, Eye } from 'lucide-react';
+import { UserRoundMinus, UserRoundX, Eye, Check } from 'lucide-react';
 import PopUp from '../pop-up/PopUp';
 import Link from 'next/link'
 
 interface ActionDropdownMenuProps {
 	Id: string | number;
+	certificate?: string | number | boolean | null | undefined;
+	businessUserId?: string | number | boolean | null | undefined;
 	onViewProfile?: () => void;
 	suspendAction?: {
 		endPoint: string;
@@ -26,13 +28,46 @@ interface ActionDropdownMenuProps {
 		payload: Record<string, unknown>;
 		message?: string;
 	};
+	viewAction?: {
+		endPoint: string;
+		method: string;
+		payload: Record<string, unknown>;
+		message?: string;
+	};
+	approveAction?: {
+		endPoint: string;
+		method: string;
+		payload: Record<string, unknown>;
+		message?: string;
+	};
+	rejectAction?: {
+		endPoint: string;
+		method: string;
+		payload: Record<string, unknown>;
+		message?: string;
+	};
 }
 
-const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfile, suspendAction, deleteAction, editAction}: ActionDropdownMenuProps) => {
+const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
+	{	Id, 
+		certificate, 
+		businessUserId,
+		onViewProfile, 
+		suspendAction, 
+		deleteAction, 
+		editAction, 
+		viewAction, 
+		approveAction, 
+		rejectAction
+	}: ActionDropdownMenuProps) => {
 	const [open, setOpen] = useState(false);
 	const [openSuspend, setOpenSuspend] = useState(false);
 	const [openDelete, setOpenDelete] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
+	const [openView, setOpenView] = useState(false);
+	const [openApprove, setOpenApprove] = useState(false);
+	const [openReject, setOpenReject] = useState(false);
+
 
 	const menuRef = useRef<HTMLDivElement>(null);
 
@@ -60,8 +95,8 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 					setOpen={setOpenSuspend}
 					title="Suspend"
 					label="Suspend"
-					subTitle="Are you sure you want to suspend this user?"
-					message={suspendAction.message || 'User suspended successfully'}
+					subTitle="Are you sure you want to suspend?"
+					message={suspendAction.message || 'Suspended successfully'}
 					endPoint={suspendAction.endPoint}
 					method={suspendAction.method}
 					Id={Id}
@@ -74,8 +109,8 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 					setOpen={setOpenDelete}
 					title="Delete"
 					label="Delete"
-					subTitle="Are you sure you want to delete this user?"
-					message={deleteAction.message || 'User deleted successfully'}
+					subTitle="Are you sure you want to delete?"
+					message={deleteAction.message || 'Deleted successfully'}
 					endPoint={deleteAction.endPoint}
 					method={deleteAction.method}
 					Id={Id}
@@ -88,14 +123,59 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 					setOpen={setOpenEdit}
 					title="Edit"
 					label="Edit"
-					subTitle="Are you sure you want to delete this user?"
-					message={editAction.message || 'User deleted successfully'}
+					subTitle="Are you sure you want to edit?"
+					message={editAction.message || 'Edited successfully'}
 					endPoint={editAction.endPoint}
 					method={editAction.method}
 					Id={Id}
 					payload={editAction.payload}
 				/>
 			)}
+
+			{openView && viewAction && (
+				<PopUp
+					setOpen={setOpenView}
+					title="View"
+					label="View"
+					subTitle="View information"
+					message={viewAction.message || 'View'}
+					method={viewAction.method}
+					Id={Id}
+					certificate={certificate}
+					payload={viewAction.payload}
+				/>
+			)}
+
+			{openApprove && approveAction && (
+				<PopUp
+					setOpen={setOpenApprove}
+					title="Approve"
+					label="Approve"
+					subTitle="Approve"
+					message={approveAction.message || 'Approved successfully'}
+					endPoint={approveAction.endPoint}
+					method={approveAction.method}
+					Id={Id}
+					businessUserId={businessUserId}
+					payload={approveAction.payload}
+				/>
+			)}
+
+			{openReject && rejectAction && (
+				<PopUp
+					setOpen={setOpenReject}
+					title="Reject"
+					label="Reject"
+					subTitle="Reject"
+					message={rejectAction.message || 'Rejected successfully'}
+					endPoint={rejectAction.endPoint}
+					method={rejectAction.method}
+					Id={Id}
+					businessUserId={businessUserId}
+					payload={rejectAction.payload}
+				/>
+			)}
+
 
 			{open && (
 				<div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md border border-gray-100 z-50">
@@ -160,6 +240,57 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =({Id, onViewProfil
 									<div className="flex items-center gap-1">
 										<UserRoundX size={13} />
 										Edit
+									</div>
+								</button>
+							</li>
+						)}
+
+						{viewAction && (
+							<li className="px-1">
+								<button
+									onClick={() => {
+										setOpenView(true);
+										setOpen(false);
+									}}
+									className="w-full px-4 py-2 text-left text-sm rounded-md text-blue-600 hover:bg-blue-100 hover:cursor-pointer"
+								>
+									<div className="flex items-center gap-1">
+										<Eye size={13} />
+										View
+									</div>
+								</button>
+							</li>
+						)}
+
+						{approveAction && (
+							<li className="px-1">
+								<button
+									onClick={() => {
+										setOpenApprove(true);
+										setOpen(false);
+									}}
+									className="w-full px-4 py-2 text-left text-sm rounded-md text-blue-600 hover:bg-blue-100 hover:cursor-pointer"
+								>
+									<div className="flex items-center gap-1">
+										<Check size={13} />
+										Approve
+									</div>
+								</button>
+							</li>
+						)}
+
+						{rejectAction && (
+							<li className="px-1">
+								<button
+									onClick={() => {
+										setOpenReject(true);
+										setOpen(false);
+									}}
+									className="w-full px-4 py-2 text-left text-sm rounded-md text-red-600 hover:bg-blue-100 hover:cursor-pointer"
+								>
+									<div className="flex items-center gap-1">
+										<UserRoundX size={13} />
+										Reject
 									</div>
 								</button>
 							</li>

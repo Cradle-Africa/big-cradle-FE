@@ -42,7 +42,7 @@ export default function Home() {
 						</button>
 					</div>
 				)}
-				{user?.kycStatus == 'submitted' && (
+				{user?.kycStatus == 'pending' && (
 					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90 px-5 py-3 rounded-md mb-4'>
 						<div className='text-sm'>Your KYC has been submitted</div>
 					</div>

@@ -11,6 +11,8 @@ import { validateSignIn } from '../../utils/user/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../services/user/userService';
 import { addUser, addToken } from '@/app/utils/user/userData';
+import { useRouter } from 'next/navigation';
+
 
 export default function SignInPage() {
     const [openReset, setOpenReset] = useState(false);
@@ -29,7 +31,7 @@ export default function SignInPage() {
         email: '',
         password: '',
     });
-
+    const router = useRouter()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -56,7 +58,7 @@ export default function SignInPage() {
             addToken(response.accessToken);
             localStorage.setItem('businessId', response.data.id);
             toast.success('Signed in successfully!');
-            window.location.href = '/';
+            router.push('/');
         } catch (error: unknown) {
             if (error instanceof Error) {
                 toast.error(error.message || 'Sign in failed');

@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { resetPasswordService } from '../../services/user/userService';
 import { validateResetPassword } from '../../utils/user/userValidation';
+import { useRouter } from 'next/navigation';
 
 interface ResetPasswordProps {
     email: string;
@@ -24,6 +25,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, resetToken, setope
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const router = useRouter()
 
     useEffect(() => {
         setFormData(prev => ({ ...prev, email, resetToken }));
@@ -56,7 +58,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, resetToken, setope
             await resetPasswordService(payload);
             toast.dismiss();
             toast.success('Password reset successfully!');
-            window.location.href = '/user/signin';
+            router.push('/user/signin');
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {

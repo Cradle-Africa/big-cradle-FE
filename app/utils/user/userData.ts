@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import { User } from '../../types/User';
 const key = 'user';
+import { useRouter } from 'next/router';
 
 // Get the user data from local storage
 export const getUser = (): User | null => {
@@ -52,7 +53,7 @@ export const updateUserKycStatus = (endPoint: string): void => {
         if (storedUser) {
             try {
                 const user = JSON.parse(storedUser);
-                user.kycStatus = 'submitted';
+                user.kycStatus = 'pending';
                 localStorage.setItem('user', JSON.stringify(user));
                 window.location.href = '/'
             } catch (error) {

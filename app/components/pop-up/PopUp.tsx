@@ -1,23 +1,26 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import {apiPostService} from  '../../services/apiService';
+import { apiPostService } from '../../services/apiService';
 import { UserRoundX } from 'lucide-react';
 import IconComponent from './IconComponent';
+import FormPopup from '../../components/pop-up/PopUpForm';
 
 interface PopUpProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     title: string;
     label: string;
     subTitle: string;
-	message:  string;
-    endPoint: string;
+    message: string;
+    endPoint?: string;
     method: string;
     Id: string | number;
+    certificate?: string | number | boolean | null | undefined;
+    businessUserId?: string | number | boolean | null | undefined;
     payload: Record<string, unknown>;
 }
 
-const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message, endPoint, method, Id, payload }) => {
+const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message, endPoint, method, Id, certificate, businessUserId, payload }) => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -35,7 +38,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const endPoint_ = endPoint+'/'+Id;
+        const endPoint_ = endPoint + '/' + Id;
         try {
             toast.loading('Loading...');
             await apiPostService(endPoint_, method, payload);
@@ -55,43 +58,81 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
     };
 
     return (
-        <>
+        <div>
             <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
-            <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
-                <div className='flex justify-center'>
-                    <IconComponent 
-                        Icon={UserRoundX}
-                        label={label}
-                    />
-                </div>
-                <div className="items-center text-center mt-5">
-                    <h2 className="text-md font-semibold text-gray-700 mb-4">{title}</h2>
-                    <p className="text-sm text-gray-500">{subTitle}</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4 mt-5 lg:mt-12">
-
-                    <div className="flex gap-5 justify-center mt-5">
-                        <button
-                            type="button"
-                            className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:bg-blue-800 hover:text-white"
-                            onClick={() => {setOpen(false);}}
-                        >
-                            Cancel
-                        </button>
-
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            className={'w-full py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300  shadow-md hover:text-white hover:bg-red-800'}
-
-                        >
-                            {isSubmitting ? 'Processing...' : title}
-                        </button>
+            {!certificate && (
+                <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                    <div className='flex justify-center'>
+                        <IconComponent
+                            Icon={UserRoundX}
+                            label={label}
+                        />
                     </div>
-                </form>
-            </div>
-        </>
+                    <div className="items-center text-center mt-5">
+                        <h2 className="text-md font-semibold text-gray-700 mb-4">{title}</h2>
+                        <p className="text-sm text-gray-500">{subTitle}</p>
+                    </div>
+
+
+                    <form onSubmit={handleSubmit} className="space-y-4 mt-5 lg:mt-12">
+
+                        {setOpen && (
+                            <FormPopup
+                                setOpen={setOpen}
+                                title={title}
+                                method={method || 'POST'}
+                                endPoint={endPoint}
+                                fields={[
+                                    { name: 'businessUserId', label: '', type: 'hidden', required: true },
+                                    { name: 'reason', label: 'Reason', type: 'text', required: true },
+                                    {
+                                        name: 'action', label: 'Action', type: 'select', required: true,
+                                        options: [
+                                            { label: 'approved', value: 'approved' },
+                                            { label: 'rejected', value: 'rejected' },
+                                        ]
+                                    },
+
+                                ]}
+                                defaultValues={{ businessUserId: businessUserId || '' }}
+                            />
+                        )}
+
+                        <div className="flex gap-5 justify-center mt-5">
+                            <button
+                                type="button"
+                                className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white"
+                                onClick={() => { setOpen(false); }}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className={'w-full py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300  shadow-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white'}
+                            >
+                                {isSubmitting ? 'Processing...' : title}
+                            </button>
+                        </div>
+                    </form>
+
+
+                </div>
+            )}
+
+            {certificate && (
+                <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                    <div>
+                        <iframe
+                            src={typeof certificate === 'string' ? certificate : undefined}
+                            className="w-full h-full"
+                            title="Certificate of corporation Preview"
+                        />
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 

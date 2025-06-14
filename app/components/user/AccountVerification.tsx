@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import OtpInput from './OtpInput';
 import { verifyOtpService, resendOtpService } from '../../services/user/userService';
+import { useRouter } from 'next/navigation';
 
 interface AccountVerificationProps {
     showAccountVerification: boolean;
@@ -15,7 +16,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
         email,
         otp: '',
     });
-
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -43,7 +44,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
             toast.dismiss();
             toast.success('OTP verified successfully!');
             setShowAccountVerification(false);
-            window.location.href = '/user/signin';
+            router.push('/user/signin');
         } catch (error: unknown) {
             toast.dismiss();
             if (error instanceof Error) {

@@ -74,7 +74,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     setOpen={setOpenEmployee}
                     title="Send Invite Link"
                     method={rightAction?.add?.method || 'POST'}
-                    endPoint={rightAction?.add?.endpoint || ''}
+                    endPoint={rightAction?.add?.endpoint}
                     fields={[
                         { name: 'email', label: 'Email', type: 'email', required: true },
                         { name: 'role', label: '', type: 'hidden', required: true },
@@ -158,7 +158,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                     {fields.map((field, index) => (
                                         <th
                                             key={`header-${field.key}-${index}`}
-                                            className={`px-3 py-2 text-left text-sm font-medium text-gray-700 border-r border-gray-200 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''} ${field.className || ''}`}>
+                                            className={`px-3 py-2 text-left text-sm font-medium text-gray-700 border-r border-gray-200 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
                                             {field.label}
                                         </th>
                                     ))}
@@ -193,9 +193,17 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                             {fields.map((field, idx) => (
                                                 <td
                                                     key={`cell-${item.id}-${field.key}-${idx}`}
-                                                    className={`border border-gray-100 px-3 py-2 whitespace-nowrap text-sm ${field.className || ''}`}
+                                                    className={`border border-gray-100 px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
                                                 >
-                                                    {item[field.key]}
+                                                    <span 
+                                                        className={` 
+                                                            ${field.label === 'Status' && item[field.key] === 'pending' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-2 py-[2px]'} 
+                                                            ${field.label === 'Status' && item[field.key] === 'rejected' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-2 py-[2px]'} 
+                                                            ${field.label === 'Status' && item[field.key] !== 'pending' && 'text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-1 py-[2px]'} 
+                                                            
+                                                        }`}>
+                                                        {item[field.key]}                                              
+                                                    </span>
                                                 </td>
                                             ))}
                                             {actionConfig && (
@@ -205,9 +213,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                                 >
                                                     <ActionDropdownMenu
                                                         Id={item.id}
+                                                        businessUserId={item.businessUserId}
+                                                        certificate={item.certificateOfIncorporation}
                                                         suspendAction={actionConfig.suspend}
                                                         deleteAction={actionConfig.delete}
                                                         editAction={actionConfig.edit}
+                                                        viewAction={actionConfig.view}
+                                                        approveAction={actionConfig.approve}
+                                                        rejectAction={actionConfig.reject}
                                                     />
                                                 </td>
                                             )}

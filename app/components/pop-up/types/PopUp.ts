@@ -18,7 +18,7 @@ export type Field = {
 export interface FormPopupProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
-  endPoint: string;
+  endPoint: any;
   method: string;
   fields: Field[];
   defaultValues?: Record<string, unknown>;

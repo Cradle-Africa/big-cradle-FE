@@ -34,12 +34,27 @@ export interface TableComponentProps {
             method: string
             payload: Record<string, unknown>
         }
+        view?: {
+            endPoint: string
+            method: string
+            payload: Record<string, unknown>
+        }
+        approve?: {
+            endPoint: string
+            method: string
+            payload: Record<string, unknown>
+        }
+        reject?: {
+            endPoint: string
+            method: string
+            payload: Record<string, unknown>
+        }
     }
 
     rightAction?: {
         add?: {
             label: string
-            endpoint: string
+            endpoint: string | undefined
             method: string
             icon?: string
             className?: string
