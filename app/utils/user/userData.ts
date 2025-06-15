@@ -1,7 +1,6 @@
-import { headers } from 'next/headers';
-import { User } from '../../types/User';
+
+import { User } from '../../pages/user/types/User';
 const key = 'user';
-import { useRouter } from 'next/router';
 
 // Get the user data from local storage
 export const getUser = (): User | null => {

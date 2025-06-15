@@ -13,7 +13,7 @@ import {
     ResetPassswordPayload,
     SuspendUserPayload,
     DeleteUserPayload,
-} from "../../types/User";
+} from "../../pages/user/types/User";
 
 export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) => {
     try {

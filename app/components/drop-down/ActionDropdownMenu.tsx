@@ -140,10 +140,10 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 			{openReview && reviewAction && (
 				<PopUp
 					setOpen={setOpenReview}
-					title="Approve"
-					label="Approve"
-					subTitle="Approve"
-					message={reviewAction.message || 'Approved successfully'}
+					title="KYC Review"
+					label="Review"
+					subTitle="KYC Review"
+					message={reviewAction.message || ''}
 					endPoint={reviewAction.endPoint}
 					method={reviewAction.method}
 					Id={Id}

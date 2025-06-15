@@ -1,18 +1,17 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check, File, FileImage } from 'lucide-react';
+import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
-import { BusinessForm } from '@/app/types/User';
+import { BusinessForm } from '@/app/pages/user/types/User';
 import { validateBusinessSignUp, validateBusinessStep } from '../../utils/user/userValidation';
-import CountryCodeSelect from '@/app/components/CountryCodeSelect';
-import CountrySelect from '@/app/components/CountrySelect';
+import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
+import CountrySelect from '@/app/components/form/CountrySelect';
 import { BusinessSignUpService } from '../../services/user/userService';
-import SearchSelect from '../SearchSelect';
+import SearchSelect from '../form/SearchSelect';
 import cities from '../../utils/data/cities.json';
-import ImageUploader from '../ImageUploader';
-import PdfUploader from '../PdfUploader';
+import ImageUploader from '../form/ImageUploader';
 
 
 export default function BusinessSignUp() {
@@ -306,7 +305,7 @@ export default function BusinessSignUp() {
                                         />
                                     </div> */}
 
-                                    <PdfUploader
+                                    <ImageUploader
                                         onChange={handleInputChange}
                                         text="Upload Business Certificate"
                                         id="certificateOfIncorporation"

@@ -1,28 +1,9 @@
 'use client';
-import { motion } from 'framer-motion';
-
-const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.2
-        }
-    }
-};
-
-const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-};
 
 export default function DashboardSkeleton() {
     return (
         <div
             className="animate-pulse"
-            // variants={containerVariants}
-            // initial="hidden"
-            // animate="show"
         >
             <div className="w-full space-y-2" >
                 <div className="bg-gray-100 rounded-md py-5 px-5 h-24 space-y-2">
@@ -39,7 +20,6 @@ export default function DashboardSkeleton() {
                     <div
                         key={i}
                         className="border border-[#F7F7F7] bg-gray-100 rounded-md px-5 py-4 space-y-3"
-                        // variants={itemVariants}
                     >
                         <div className="bg-gray-200 rounded-md w-24 h-5 mt-2" />
                         <div className="bg-gray-200 rounded-md h-6" />
@@ -53,7 +33,6 @@ export default function DashboardSkeleton() {
                     <div
                         key={i}
                         className="border border-[#F7F7F7] bg-gray-100 rounded-md px-5 py-4 space-y-3"
-                        // variants={itemVariants}
                     >
                         <div className="bg-gray-200 rounded-md h-5 w-1/3" />
                         <div className="bg-gray-200 rounded-md h-24" />
@@ -63,7 +42,6 @@ export default function DashboardSkeleton() {
             </div>
 
             <div className="w-full mt-5 bg-gray-100 px-5 py-5" >
-            {/* // variants={itemVariants} */}
                 <p className="font-semibold text-md bg-gray-200 rounded-md p-5" />
             </div>
         </div>

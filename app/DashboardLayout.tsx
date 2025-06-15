@@ -1,8 +1,8 @@
 // app/components/layouts/DashboardLayout.tsx
 "use client";
 
-import Sidebar from "../Sidebar";
-import Topbar from "../Topbar";
+import Sidebar from "./components/sidebar/SuperAdminSidebar";
+import Topbar from "./components/Topbar";
 import { ReactNode } from "react";
 import { useAuthGuard } from "@/app/hooks/useAuthGuard";
 

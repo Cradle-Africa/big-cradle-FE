@@ -1,5 +1,5 @@
 import React from 'react';
-import DashboardLayout from '../../../../components/layouts/DashboardLayout';
+import DashboardLayout from '../../../../DashboardLayout';
 import UserManagementComponent from '../../../../components/user-management/UserManagementComponent';
 import Link from 'next/link';
 

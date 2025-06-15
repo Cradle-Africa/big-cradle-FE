@@ -65,3 +65,25 @@ export interface Department {
   departmentName: string;
   businessUserId: string;
 }
+
+export interface BreadsCrumpsProps {
+    title: string
+    openEmployee: boolean
+    openDepartment: boolean
+    setOpenEmployee: React.Dispatch<React.SetStateAction<boolean>>
+    setOpenDepartment: React.Dispatch<React.SetStateAction<boolean>>
+    breadcrumbs: {
+        parent: { path: string; label: string }
+        current: string
+    }
+    rightAction?: {
+        add?: {
+            label: string
+            endpoint: string | undefined
+            method: string
+            icon?: string
+            className?: string
+            payload?: Record<string, unknown>
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 import DataUploadMetrics from '../../components/analytics/DataUploadMetrics';
-import DashboardLayout from '../../components/layouts/DashboardLayout';
+import DashboardLayout from '../../DashboardLayout';
 
 const DataUploadsPage = () => {
     return (

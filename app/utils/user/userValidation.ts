@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../../types/User';
+import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../../pages/user/types/User';
 
 
 export interface ResetPasswordFormData {

@@ -109,8 +109,8 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                             {
                                 name: 'action', label: 'Action', type: 'select', required: true,
                                 options: [
-                                    { label: 'approved', value: 'approved' },
-                                    { label: 'rejected', value: 'rejected' },
+                                    { label: 'Approved', value: 'approved' },
+                                    { label: 'Rejected', value: 'rejected' },
                                 ]
                             },
                             { name: 'reason', label: 'Reason', type: 'text', required: true },

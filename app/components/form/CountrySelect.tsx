@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
-import countryData from "../utils/data/countries.json";
+import countryData from "../../utils/data/countries.json";
 
 type Country = {
     name: string;

@@ -1,6 +1,6 @@
 import React from 'react'
 import CampaignPerformance from '../../components/analytics/CampaignPerformance';
-import DashboardLayout from '../../components/layouts/DashboardLayout';
+import DashboardLayout from '../../DashboardLayout';
 
 const CampaignPerformancePage = () => {
     return (

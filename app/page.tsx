@@ -3,7 +3,7 @@ import { useState } from "react";
 import DashboardCharts from "./components/charts/DashboardCharts";
 import UserRoleTable from "./components/dashboard/UserRoleTable";
 import { UsersRound, CheckSquare, Banknote, UploadCloud } from "lucide-react";
-import DashboardLayout from "./components/layouts/DashboardLayout";
+import DashboardLayout from "./DashboardLayout";
 import FormPopup from '@/app/components/pop-up/PopUpForm';
 import { useUser } from './hooks/useUser';
 import DashboardSkeleton from './components/skeleton/Dashboardskeleton';
@@ -51,7 +51,13 @@ export default function Home() {
 				)}
 				{user?.kycStatus == 'pending' && (
 					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90 px-5 py-3 rounded-md mb-4'>
-						<div className='text-sm'>Your KYC has been submitted</div>
+						<div className='text-sm'>Your KYC has been submitted and is under review</div>
+					</div>
+				)}
+
+				{user?.kycStatus == 'rejected' && (
+					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#ff5762] to-[#d20505] hover:opacity-90 px-5 py-3 rounded-md mb-4'>
+						<div className='text-sm'>Your KYC has been Rejected</div>
 					</div>
 				)}
 				<div className='w-full'>

@@ -11,12 +11,8 @@ import SuperAdminSignUp from '@/app/components/user/SuperadminSignUp';
 import BusinessSignUp from '../../../components/user/BusinessSignUp';
 import EmployeeSignUp from '../../../components/user/EmployeeSignUp';
 import AdminSignUp from '../../../components/user/AdminSignUp';
+import { DepartmentPayload } from '../types/User';
 
-interface DepartmentPayload {
-    departmentId: string;
-    email: string;
-    businessUserId: string
-}
 
 export default function SignUpContent() {
     const searchParams = useSearchParams();
@@ -73,7 +69,7 @@ export default function SignUpContent() {
 
                     <p className="text-gray-700 text-sm">
                         Already have an account?
-                        <Link href="/user/signin" className="underline ml-1">Sign in</Link>
+                        <Link href="/pages/user/signin" className="underline ml-1">Sign in</Link>
                     </p>
                     <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
                         <FcGoogle className="text-md" /> Continue with Google

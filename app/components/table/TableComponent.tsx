@@ -1,15 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
 import ActionDropdownMenu from '../../components/drop-down/ActionDropdownMenu'
-import DashboardLayout from '@/app/components/layouts/DashboardLayout'
+import DashboardLayout from '@/app/DashboardLayout'
 import { apiGetPaginateService } from '../../services/apiService'
 import { removeUser } from '@/app/utils/user/userData';
 import Pagination from '@/app/components/table/Pagination';
-import FormPopup from '@/app/components/pop-up/PopUpForm';
-import { getBusinessId, getToken } from '../../utils/user/userData'
-import { TableData, TableComponentProps, Department } from './types/Table';
-import { BASE_URL } from '@/app/services/base'
+import { getBusinessId } from '../../utils/user/userData'
+import { TableData, TableComponentProps } from './types/Table';
+import BreadsCrumps from './BreadsCrumps'
 
 const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, fields, breadcrumbs, actionConfig, rightAction, }) => {
     const [tableData, setTableData] = useState<TableData[]>(data || [])
@@ -20,10 +18,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
     const [totalItems, setTotalItems] = useState(0);
 
     const totalPages = Math.ceil(totalItems / limit);
-    const [openDepartment, setOpenDepartment] = useState(false);
-    const [openEmployee, setOpenEmployee] = useState(false);
+    const [openDepartment, setOpenDepartment] = useState<boolean>(false);
+    const [openEmployee, setOpenEmployee] = useState<boolean>(false);
     const businessId = getBusinessId();
-    const accessToken = getToken();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,89 +50,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
 
     return (
         <DashboardLayout>
-
-            {openDepartment && (
-                <FormPopup
-                    setOpen={setOpenDepartment}
-                    title="Create Department"
-                    method={rightAction?.add?.method || 'POST'}
-                    endPoint={rightAction?.add?.endpoint || ''}
-                    fields={[
-                        { name: 'departmentName', label: 'Name', type: 'text', required: true },
-                        { name: 'departmentDescription', label: 'Description', type: 'text', required: false },
-                        { name: 'businessUserId', label: '', type: 'hidden', required: true }
-                    ]}
-                    defaultValues={{ businessUserId: businessId || '' }}
-                />
-            )}
-
-            {openEmployee && (
-                <FormPopup
-                    setOpen={setOpenEmployee}
-                    title="Send Invite Link"
-                    method={rightAction?.add?.method || 'POST'}
-                    endPoint={rightAction?.add?.endpoint}
-                    fields={[
-                        { name: 'email', label: 'Email', type: 'email', required: true },
-                        { name: 'role', label: '', type: 'hidden', required: true },
-                        { name: 'businessUserId', label: '', type: 'hidden', required: false },
-                        {
-                            name: 'departmentId', label: 'Department', type: 'select', required: true,
-                            fetchOptions: async () => {
-                                const res = await fetch(
-                                    `${BASE_URL}/department-mgt/all-business-departments?businessUserId=${businessId}`,
-                                    {
-                                        method: 'GET',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'Authorization': `Bearer ${accessToken}`,
-                                        },
-                                    }
-                                );
-                                const data = await res.json();
-                                return (data?.department as Department[])?.map((d: Department) => ({ label: d.departmentName, value: d.id }));
-                            }
-                        },
-                    ]}
-                    defaultValues={{ businessUserId: businessId || '', role: 'employee' }}
-                />
-            )}
-
-            <div className='flex justify-between w-full text-sm'>
-                <div>
-                    <span className='text-gray-400'>
-                        <Link href={breadcrumbs.parent.path} key="breadcrumb-link">
-                            {breadcrumbs.parent.label} /
-                        </Link>
-                    </span>
-                    <span className='text-gray-700 ml-1' key="breadcrumb-current">
-                        {breadcrumbs.current}
-                    </span>
-                </div>
-                <div>
-                    {rightAction && rightAction.add && (
-                        <>
-                            <button
-                                onClick={() => {
-                                    if (title === 'Employees') {
-                                        setOpenEmployee(true)
-                                    } else if (title === 'Departments') {
-                                        setOpenDepartment(true)
-                                    }
-                                }}
-                                className={`btn ${rightAction.add.className || 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] opacity-90 text-white px-2 py-1 rounded-sm cursor-pointer'}`}
-                                key="right-action-button"
-                            >
-                                {rightAction.add.icon && (
-                                    <span className={`icon ${rightAction.add.icon}`} key="right-action-icon"></span>
-                                )}
-                                {rightAction.add.label}
-                            </button>
-                        </>
-
-                    )}
-                </div>
-            </div>
+            <BreadsCrumps
+                title={title}
+                openDepartment={openDepartment}
+                openEmployee={openEmployee}
+                setOpenDepartment={setOpenDepartment}
+                setOpenEmployee={setOpenEmployee}
+                rightAction={rightAction}
+                breadcrumbs={breadcrumbs}
+            />
 
             <div className="relative w-93 sm:min-w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white" key="table-container">
                 <div className='flex justify-between items-center mb-4' key="table-header">

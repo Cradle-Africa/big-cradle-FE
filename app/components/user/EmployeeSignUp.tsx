@@ -4,10 +4,10 @@ import { useState, ChangeEvent } from 'react';
 import { validateEmployeeSignUp } from '../../utils/user/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
-import { File, Eye, EyeOff } from 'lucide-react';
-import { EmployeeSignUpPayload } from '@/app/types/User';
+import { Eye, EyeOff } from 'lucide-react';
+import { EmployeeSignUpPayload } from '@/app/pages/user/types/User';
 import AccountVerification from '../../components/user/AccountVerification';
-import ImageUploader from '../ImageUploader';
+import ImageUploader from '../form/ImageUploader';
 
 interface EmployeeSignUpProps {
     signUpToken: any;

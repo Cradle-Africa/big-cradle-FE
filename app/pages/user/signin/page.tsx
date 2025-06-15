@@ -11,7 +11,6 @@ import { validateSignIn } from '../../../utils/user/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../../services/user/userService';
 import { addUser, addToken } from '@/app/utils/user/userData';
-import { useRouter } from 'next/navigation';
 
 
 export default function SignInPage() {
@@ -31,7 +30,6 @@ export default function SignInPage() {
         email: '',
         password: '',
     });
-    const router = useRouter()
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -58,7 +56,8 @@ export default function SignInPage() {
             addToken(response.accessToken);
             localStorage.setItem('businessId', response.data.id);
             toast.success('Signed in successfully!');
-            router.push('/');
+            // router.push('/');
+            window.location.href = '/'
         } catch (error: unknown) {
             if (error instanceof Error) {
                 toast.error(error.message || 'Sign in failed');
@@ -106,7 +105,7 @@ export default function SignInPage() {
                     <Image src='/auth-logo.png' width={8} height={5} alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?
-                        <Link href="/user/signup" className="underline ml-1">Sign up</Link>
+                        <Link href="/pages/user/signup" className="underline ml-1">Sign up</Link>
                     </p>
                     <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 py-2 hover:cursor-pointer">
                         <FcGoogle className="text-md font-semibold" />

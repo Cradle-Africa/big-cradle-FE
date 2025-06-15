@@ -132,3 +132,9 @@ export interface ResetPassswordPayload {
     resetToken: string;
     newPassword: string;
 }
+
+export interface DepartmentPayload {
+    departmentId: string;
+    email: string;
+    businessUserId: string
+}

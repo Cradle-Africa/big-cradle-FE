@@ -3,7 +3,7 @@ import CampaignPerformance from "../components/analytics/CampaignPerformance";
 import DataUploadMetrics from "../components/analytics/DataUploadMetrics";
 import { Download, ListChecks, UsersRound, Wallet, AppWindow, CheckSquare, ClipboardList } from "lucide-react";
 import Link from "next/link";
-import DashboardLayout from "../components/layouts/DashboardLayout";
+import DashboardLayout from "../DashboardLayout";
 
 export default function AnalyticsPage() {
 	return (

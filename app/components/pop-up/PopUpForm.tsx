@@ -5,7 +5,7 @@ import { apiPostService } from '../../services/apiService';
 import { convertToBase64 } from '../../utils/covertToBase64';
 import { FormPopupProps, OptionType } from './types/PopUp';
 import { validateFields } from './validation/formValidator';
-import PdfUpload from '../../components/PdfUploader';
+import PdfUpload from '../form/PdfUploader';
 
 const FormPopup: React.FC<FormPopupProps> = ({
     setOpen,

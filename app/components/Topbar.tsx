@@ -4,14 +4,15 @@ import { Search, Bell, ChevronRight, CircleUser, LogOut, X } from 'lucide-react'
 import { useUser } from '../hooks/useUser';
 import Image from 'next/image';
 import TopBarSkeleton from './skeleton/TopBarSkeleton';
-import {removeUser} from '../utils/user/userData';
+import { removeUser } from '../utils/user/userData';
+import Link from 'next/link'
 
 const Topbar = () => {
     const [openProfile, setOpenProfile] = useState(false);
     const user = useUser();
     if (!user) {
         return (
-            <TopBarSkeleton/>
+            <TopBarSkeleton />
         )
     }
     return (
@@ -49,13 +50,13 @@ const Topbar = () => {
                     </div>
                 </div>
                 {openProfile && (
-                    <div className='absolute z-20 right-5 md:right-10 showdow-md bg-white px-2 py-2 md:px-5 md:py-5 rounded-md border border-gray-100'>
+                    <div className='absolute md:w-62 z-20 right-5 md:right-10 showdow-md bg-white px-2 py-2 md:px-5 md:py-5 rounded-md border border-gray-100'>
                         <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer' color='red' />
                         <div className='flex justify-center mt-5'>
                             {user?.profilePicture ?
-                                <Image src={user?.profilePicture} width={8} height={8} alt='profile image' className='rounded-full w-12 h-12' />
+                                <Image src={user?.profilePicture} width={10} height={10} alt='profile image' className='rounded-full w-12 h-12' />
                                 :
-                                <CircleUser className='rounded-full w-12 h-12' />
+                                <CircleUser className='rounded-full w-18 h-18' />
                             }
                         </div>
                         <div className='flex flex-col mt-5 md:mt-10 text-blue-600'>
@@ -65,14 +66,18 @@ const Topbar = () => {
                             <span className='inline lg:hidden text-sm font-semibold'>{user?.fullName}</span>
                             <span className='text-xs'>{user?.role}</span>
                         </div>
+                        <Link
+                            href='/pages/user/profile'
+                            className='w-full flex justify-center px-2 py-1 bg-gray-100 rounded-md mt-5 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
+                        >Profile</Link>
                         <button
-                            className='w-full px-2 py-1 bg-gray-100 rounded-md mt-5 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
+                            className='w-full px-2 py-1 bg-gray-100 rounded-md mt-2 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
                         >
-                            <LogOut 
-                                size={12} 
-                                className='inline mr-1' 
+                            <LogOut
+                                size={12}
+                                className='inline mr-1'
                                 onClick={() => removeUser()}
-                                />
+                            />
                             Logout
                         </button>
                     </div>

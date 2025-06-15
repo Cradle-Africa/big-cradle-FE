@@ -2,12 +2,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import {
-    Menu, X, Settings, Headset, BarChart, House,
-    UsersRound, MonitorCog, Banknote, Layers, ChevronDown,
-    ChevronUp, User, Shield, UserCog, Building2, Users, LockKeyhole
+    Menu, X, Settings, Headset, House, UsersRound, ChevronDown,
+    ChevronUp, User, Building2, Users
 } from 'lucide-react';
 import Image from 'next/image';
-export default function Sidebar() {
+export default function SuperAdminSidebar() {
     const [open, setOpen] = useState(false);
     const [usersMenuOpen, setUsersMenuOpen] = useState(false);
 
@@ -48,7 +47,7 @@ export default function Sidebar() {
                             </div>
                         </Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link
                             href='/system-config'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
@@ -58,7 +57,7 @@ export default function Sidebar() {
                                 System Config
                             </div>
                         </Link>
-                    </li>
+                    </li> */}
 
                     <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
                     <li>
@@ -115,7 +114,7 @@ export default function Sidebar() {
                             </div>
                         )}
                     </li>
-                    <li>
+                    {/* <li>
                         <Link
                             href='/pages/user/department'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
@@ -125,8 +124,8 @@ export default function Sidebar() {
                                 Department
                             </div>
                         </Link>
-                    </li>
-                    <li>
+                    </li> */}
+                    {/* <li>
                         <Link
                             href='/ecosystem'
                             className="block py-2 px-3 rounded hover:bg-gray-200 transition"
@@ -138,7 +137,6 @@ export default function Sidebar() {
                         </Link>
                     </li>
 
-                    {/* Rest of your menu items remain unchanged */}
                     <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">Intelligence & Insights</span>
                     <li>
                         <Link
@@ -161,7 +159,7 @@ export default function Sidebar() {
                                 Billing
                             </div>
                         </Link>
-                    </li>
+                    </li> */}
                 </ul>
 
                 {/* Bottom items - unchanged */}
