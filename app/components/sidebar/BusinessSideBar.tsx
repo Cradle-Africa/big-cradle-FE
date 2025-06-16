@@ -1,12 +1,25 @@
 "use client";
 
-import { House, Menu, X } from "lucide-react";
+import {
+  Building2,
+  ChevronDown,
+  ChevronUp,
+  File,
+  House,
+  Menu,
+  MonitorCog,
+  Users,
+  UsersRound,
+  X
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function BusinessSideBar() {
   const [open, setOpen] = useState(false);
+  const [usersMenuOpen, setUsersMenuOpen] = useState(false);
+
   return (
     <div
       className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${
@@ -71,6 +84,64 @@ export default function BusinessSideBar() {
                 Dashboard
               </div>
             </Link>
+          </li>
+          <li>
+            <Link
+              href="/"
+              className="block py-2 px-3 rounded hover:bg-gray-200 transition"
+            >
+              <div className="flex gap-1 items-center">
+                <File size={15} />
+                Survey Builder
+              </div>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/pages/user/department"
+              className="block py-2 px-3 rounded hover:bg-gray-200 transition"
+            >
+              <div className="flex gap-1 items-center">
+                <MonitorCog size={15} />
+                Department
+              </div>
+            </Link>
+          </li>
+          <li>
+            <div
+              onClick={() => setUsersMenuOpen(!usersMenuOpen)}
+              className="block py-2 px-3 rounded hover:bg-gray-200 transition cursor-pointer"
+            >
+              <div className="flex gap-1 items-center justify-between">
+                <div className="flex gap-1 items-center">
+                  <UsersRound size={15} />
+                  Users & Access
+                </div>
+                {usersMenuOpen ? (
+                  <ChevronUp size={15} />
+                ) : (
+                  <ChevronDown size={15} />
+                )}
+              </div>
+            </div>
+            {usersMenuOpen && (
+              <div className="ml-6 mt-1 space-y-1">
+                <Link
+                  href="/pages/user/business-kyc/"
+                  className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                >
+                  <Building2 size={14} />
+                  Businesses KYC
+                </Link>
+                <Link
+                  href="/pages/user/employee/"
+                  className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                >
+                  <Users size={14} />
+                  Employees
+                </Link>
+              </div>
+            )}
           </li>
         </ul>
       </div>
