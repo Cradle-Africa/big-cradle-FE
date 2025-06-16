@@ -53,6 +53,7 @@ export default function SuperAdminSignUp() {
         };
 
         try {
+            toast.loading('Loading...');
             await SuperAdminSignUpService(payload);
             toast.dismiss();
             toast.success('Account created successfully!');

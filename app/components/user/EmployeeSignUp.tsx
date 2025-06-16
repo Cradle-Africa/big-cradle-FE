@@ -65,6 +65,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
         setIsSubmitting(true);
 
         try {
+            toast.loading('Loading...');
             await EmployeeSignUpService(formData, signUpToken);
             toast.dismiss();
             toast.success('Signed up successfully!');

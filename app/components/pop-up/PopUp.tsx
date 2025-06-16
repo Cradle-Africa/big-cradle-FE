@@ -33,7 +33,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
         };
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
-    });
+    },[setOpen]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -123,11 +123,12 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
             )}
 
             {certificate && (
-                <div className="bg-white p-6 rounded-md  shadow-md w-full z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
-                    <div className='w-full border border-gray-100 rounded-md'>
+                <div className="bg-white p-6 rounded-md  shadow-md w-82 h-[300px] md:h-[500px] md:w-3/4 z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                    <div className='flex w-full h-full border border-gray-100 rounded-md'>
                         <iframe
-                            src={typeof certificate === 'string' ? certificate : undefined}
-                            className="w-full h-full"
+                            src={typeof certificate === 'string' ? certificate : ''}
+                            className="flex w-full h-full"
+                            width={100}
                             title="Certificate of corporation Preview"
                         />
                     </div>

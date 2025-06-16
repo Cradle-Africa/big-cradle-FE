@@ -88,7 +88,9 @@ export default function BusinessSignUp() {
 
         setIsSubmitting(true);
         try {
+            toast.loading('Loading...');
             await BusinessSignUpService(form);
+            toast.dismiss();
             toast.success('Business registered successfully!');
             setShowVerification(true);
         } catch (error) {

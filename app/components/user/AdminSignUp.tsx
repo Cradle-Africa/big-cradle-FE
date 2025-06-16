@@ -88,7 +88,9 @@ export default function AdminSignUp() {
         setIsSubmitting(true);
         try {
             const clean_form = removeEmptyProperties(form) as AdminForm;
+            toast.loading('Loading...');
             await AdminSignUpService(clean_form);
+            toast.dismiss()
             toast.success('Admin registered successfully!');
             setShowVerification(true);
         } catch (error) {
@@ -127,20 +129,26 @@ export default function AdminSignUp() {
                                     </select>
                                     {errors.userType && <p className="text-red-500 text-xs">{errors.userType}</p>}
                                 </div>
-                                <div className='mt-5'>
-                                    <input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.businessName && <p className="text-red-500 text-xs">{errors.businessName}</p>}
-                                </div>
+                                {form.userType === 'corporate' && (
+                                    <div className='mt-5'>
+                                        <input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        {errors.businessName && <p className="text-red-500 text-xs">{errors.businessName}</p>}
+                                    </div>
+                                )}
 
-                                <div className='mt-5'>
-                                    <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
-                                </div>
+                                {form.userType === 'individual' && (
+                                    <>
+                                        <div className='mt-5'>
+                                            <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                            {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
+                                        </div>
 
-                                <div className='mt-5'>
-                                    <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
-                                </div>
+                                        <div className='mt-5'>
+                                            <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                            {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
+                                        </div>
+                                    </>
+                                )}
                                 <div className="md:flex w-full gap-2 mt-5">
                                     <div className='md:w-2/3'>
                                         <CountryCodeSelect

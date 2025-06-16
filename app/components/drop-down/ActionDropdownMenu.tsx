@@ -220,7 +220,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 							</li>
 						)}
 
-						{viewAction && (
+						{viewAction && certificate && (
 							<li className="px-1">
 								<button
 									onClick={() => {
