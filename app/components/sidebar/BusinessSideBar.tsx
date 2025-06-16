@@ -10,7 +10,7 @@ import {
   MonitorCog,
   Users,
   UsersRound,
-  X
+  X,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -87,7 +87,7 @@ export default function BusinessSideBar() {
           </li>
           <li>
             <Link
-              href="/"
+              href="/pages/user/flywheel"
               className="block py-2 px-3 rounded hover:bg-gray-200 transition"
             >
               <div className="flex gap-1 items-center">
