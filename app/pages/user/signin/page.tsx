@@ -54,7 +54,7 @@ export default function SignInPage() {
             const response = await signInService(payload);
             addUser(response.data);
             addToken(response.accessToken);
-            localStorage.setItem('businessId', response.data.id);
+            response.data.role === 'business' ? localStorage.setItem('businessId', response.data.id) : '';
             toast.success('Signed in successfully!');
             // router.push('/');
             window.location.href = '/'

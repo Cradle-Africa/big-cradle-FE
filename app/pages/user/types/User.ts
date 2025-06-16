@@ -18,6 +18,7 @@ export interface User {
     contactPersonFirstName: string;
     contactPersonLastName: string;
     kycStatus: string;
+    certificateOfIncorporation: string;
     __v: number;
 };
 

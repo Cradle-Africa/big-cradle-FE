@@ -37,7 +37,7 @@ export default function Home() {
 					/>
 				)}
 
-				{user?.kycStatus === 'not-submitted' && (
+				{user?.kycStatus === 'not-submitted' && user?.certificateOfIncorporation === '' && (
 					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-red-400 text-white px-5 py-3 rounded-md mb-4'>
 						<div className='text-sm'>Upload your certificate for KYC verification</div>
 						<button
@@ -49,7 +49,7 @@ export default function Home() {
 						</button>
 					</div>
 				)}
-				{user?.kycStatus == 'pending' && (
+				{user?.kycStatus == 'pending' && user?.certificateOfIncorporation !== '' && (
 					<div className='mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90 px-5 py-3 rounded-md mb-4'>
 						<div className='text-sm'>Your KYC has been submitted and is under review</div>
 					</div>

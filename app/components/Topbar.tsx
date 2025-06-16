@@ -72,11 +72,11 @@ const Topbar = () => {
                         >Profile</Link>
                         <button
                             className='w-full px-2 py-1 bg-gray-100 rounded-md mt-2 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
+                            onClick={() => removeUser()}    
                         >
                             <LogOut
                                 size={12}
                                 className='inline mr-1'
-                                onClick={() => removeUser()}
                             />
                             Logout
                         </button>
