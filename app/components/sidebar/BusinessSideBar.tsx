@@ -87,7 +87,7 @@ export default function BusinessSideBar() {
           </li>
           <li>
             <Link
-              href="/pages/user/flywheel"
+              href="/pages/user/survey"
               className="block py-2 px-3 rounded hover:bg-gray-200 transition"
             >
               <div className="flex gap-1 items-center">
