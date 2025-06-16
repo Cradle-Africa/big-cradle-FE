@@ -18,7 +18,7 @@ const Topbar = () => {
     return (
         <>
             <div className=''>
-                <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pl-5 pt-5 pb-4">
+                <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
                     <form className="hidden relative md:flex items-center">
                         <Search className="absolute left-3 text-gray-300 w-4 h-4 pointer-events-none" />
                         <input
@@ -28,7 +28,7 @@ const Topbar = () => {
                         />
                     </form>
 
-                    <div className='flex justify-between gap-3 items-center'>
+                    <div className='flex justify-between gap-2 md:gap-3 items-center'>
                         <Bell className="hidden md:block w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
 
                         {user?.profilePicture ?
@@ -39,9 +39,15 @@ const Topbar = () => {
 
                         <div className='flex flex-col hover:cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
                             <span className='hidden lg:inline text-xs font-semibold'>
-                                {user?.fullName ?? (user?.contactPersonFirstName + ' ' + user?.contactPersonLastName)}
+                                {user?.fullName ?? user?.fullName } 
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                {user?.firstName ?? user?.firstName}  {user?.lastName ?? user?.lastName}
                             </span>
-                            <span className='inline lg:hidden text-xs font-semibold'>{user?.fullName?.slice(0, 12) + '...'}</span>
+                            <span className='inline lg:hidden text-xs font-semibold'>
+                                {user?.fullName ?? user?.fullName?.slice(0, 12)}
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName}
+                                {user?.firstName ?? user?.firstName} 
+                            </span>
                             <span className='text-xs text-gray-500'>{user?.role}</span>
                         </div>
                         <ChevronRight
@@ -50,7 +56,7 @@ const Topbar = () => {
                     </div>
                 </div>
                 {openProfile && (
-                    <div className='absolute md:w-62 z-20 right-5 md:right-10 showdow-md bg-white px-2 py-2 md:px-5 md:py-5 rounded-md border border-gray-100'>
+                    <div className='absolute md:w-62 z-20 right-5 md:right-10 showdow-md bg-white px-3 py-2 md:px-5 md:py-5 rounded-md border border-gray-100'>
                         <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer' color='red' />
                         <div className='flex justify-center mt-5'>
                             {user?.profilePicture ?
@@ -61,9 +67,15 @@ const Topbar = () => {
                         </div>
                         <div className='flex flex-col mt-5 md:mt-10 text-blue-600'>
                             <span className='hidden lg:inline text-sm font-semibold '>
-                                {user?.fullName ?? (user?.contactPersonFirstName + ' ' + user?.contactPersonLastName)}
+                                {user?.fullName ?? user?.fullName }
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} { user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName} 
                             </span>
-                            <span className='inline lg:hidden text-sm font-semibold'>{user?.fullName}</span>
+                            <span className='inline lg:hidden text-sm font-semibold'>
+                                {user?.fullName ?? user?.fullName }
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} { user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName} 
+                            </span>
                             <span className='text-xs'>{user?.role}</span>
                         </div>
                         <Link

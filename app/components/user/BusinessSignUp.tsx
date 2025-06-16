@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessForm } from '@/app/pages/user/types/User';
@@ -12,13 +12,11 @@ import { BusinessSignUpService } from '../../services/user/userService';
 import SearchSelect from '../form/SearchSelect';
 import cities from '../../utils/data/cities.json';
 import ImageUploader from '../form/ImageUploader';
-
+import CredentialDetails from '../../components/form/CredentialDetails'
 
 export default function BusinessSignUp() {
     const [step, setStep] = useState<number>(1);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [showVerification, setShowVerification] = useState<boolean>(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -67,6 +65,10 @@ export default function BusinessSignUp() {
         }));
     };
 
+    const handleCredentialChange = (field: string, value: string) => {
+        setForm(prev => ({ ...prev, [field]: value }));
+    };
+
     const next = () => {
         const validationErrors = validateBusinessStep(step, form);
         setErrors(validationErrors);
@@ -94,6 +96,7 @@ export default function BusinessSignUp() {
             toast.success('Business registered successfully!');
             setShowVerification(true);
         } catch (error) {
+            toast.dismiss();
             toast.error(error instanceof Error ? error.message : 'Registration failed');
         } finally {
             setIsSubmitting(false);
@@ -232,39 +235,8 @@ export default function BusinessSignUp() {
                         {/* Step 3 */}
                         {step === 3 && (
                             <>
-                                <div className='mt-5'>
-                                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                                </div>
+                                <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
 
-                                <div className="relative mt-5">
-                                    <input
-                                        name="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={form.password}
-                                        onChange={handleChange}
-                                        placeholder="Password"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none pr-10"
-                                    />
-                                    <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowPassword(v => !v)}>
-                                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                                    </div>
-                                    {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-                                </div>
-                                <div className="relative mt-5">
-                                    <input
-                                        name="confirmPassword"
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        value={form.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="Confirm Password"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none pr-10"
-                                    />
-                                    <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowConfirmPassword(v => !v)}>
-                                        {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                                    </div>
-                                    {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-                                </div>
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />
