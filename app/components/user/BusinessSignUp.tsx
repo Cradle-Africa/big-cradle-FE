@@ -5,7 +5,7 @@ import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessForm } from '@/app/pages/user/types/User';
-import { validateBusinessSignUp, validateBusinessStep } from '../../utils/user/userValidation';
+import { validateBusinessSignUp, validateBusinessStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
 import CountrySelect from '@/app/components/form/CountrySelect';
 import { BusinessSignUpService } from '../../services/user/userService';
@@ -39,7 +39,6 @@ export default function BusinessSignUp() {
         password: '',
         confirmPassword: '',
         businessLogo: '',
-        certificateOfIncorporation: '',
         role: 'business',
     });
 
@@ -282,11 +281,6 @@ export default function BusinessSignUp() {
                             <>
                                 <div className='relative mt-5'>
                                     <label>Business Logo</label>
-                                    {/* <div className='bg-gray-100 rounded-md'>
-                                        <input name="businessLogo" type="file" accept="image/*" onChange={handleChange}
-                                            className="w-full rounded-md px-3 py-2 ml-4 outline-non hover:cursor-pointer" />
-                                        <FileImage size={16} className='absolute top-1/3 ml-2 mt-[10px]'/>
-                                    </div> */}
                                     <ImageUploader
                                         onChange={handleInputChange}
                                         text="Upload Business Logo"
@@ -294,24 +288,6 @@ export default function BusinessSignUp() {
                                         name="businessLogo"
                                     />
                                     {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
-                                </div>
-                                <div className='relative mt-5'>
-                                    <label>Certificate of Incorporation</label>
-                                    {/* <div className='bg-gray-100 rounded-md'>
-                                        <input name="certificateOfIncorporation" type="file" accept="application/pdf,image/*" onChange={handleChange}
-                                            className="w-fullrounded-md px-3 py-2 ml-4 outline-none hover:cursor-pointer" />
-                                        <File size={16}
-                                            className='absolute top-1/3 ml-2 mt-[10px]'
-                                        />
-                                    </div> */}
-
-                                    <ImageUploader
-                                        onChange={handleInputChange}
-                                        text="Upload Business Certificate"
-                                        id="certificateOfIncorporation"
-                                        name="certificateOfIncorporation"
-                                    />
-                                    {errors.certificateOfIncorporation && <p className="text-red-500 text-xs">{errors.certificateOfIncorporation}</p>}
                                 </div>
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">

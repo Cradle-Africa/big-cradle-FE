@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { validateEmployeeSignUp } from '../../utils/user/userValidation';
+import { validateEmployeeSignUp } from '../../pages/user/validation/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';

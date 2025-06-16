@@ -33,7 +33,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     businessUserId: businessId
                 });
                 setTableData(response.data || response.department || response.employeeUser);
-                setTotalItems(response.total || response.data.length);
+                setTotalItems(response.pagination.total || response.total || response.data.length);
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     if (err.message === 'Unauthorized') {

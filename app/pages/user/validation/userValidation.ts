@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../../pages/user/types/User';
+import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
 
 
 export interface ResetPasswordFormData {
@@ -40,9 +40,6 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    // if (!data.businessLogo.trim()) errors.businessLogo = 'Business logo is required';
-    // if (!data.certificateOfIncorporation.trim()) errors.certificateOfIncorporation = 'Certificate of incorporation is required';
-
     return errors;
 };
 
@@ -122,8 +119,7 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    // if (!data.image.trim()) errors.image = 'Image is required';
-
+    
     return errors;
 };
 

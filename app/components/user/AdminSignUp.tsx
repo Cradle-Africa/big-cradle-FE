@@ -5,7 +5,7 @@ import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { AdminForm } from '@/app/pages/user/types/User';
-import { validateAdminSignUp, validateAdminStep } from '../../utils/user/userValidation';
+import { validateAdminSignUp, validateAdminStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
 import CountrySelect from '@/app/components/form/CountrySelect';
 import { AdminSignUpService } from '../../services/user/userService';

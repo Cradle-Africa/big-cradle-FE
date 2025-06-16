@@ -60,7 +60,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
     return (
         <div>
             <div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
-            {!certificate && (
+            {!certificate && endPoint && (
                 <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
                     <div className='flex justify-center'>
                         <IconComponent
@@ -97,7 +97,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                 </div>
             )}
 
-            {setOpen && (
+            {setOpen && businessUserId && endPoint && (
                 <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
                     <FormPopup
                         setOpen={setOpen}
@@ -123,8 +123,8 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
             )}
 
             {certificate && (
-                <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
-                    <div>
+                <div className="bg-white p-6 rounded-md  shadow-md w-full z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                    <div className='w-full border border-gray-100 rounded-md'>
                         <iframe
                             src={typeof certificate === 'string' ? certificate : undefined}
                             className="w-full h-full"

@@ -20,12 +20,7 @@ const BusinessKyc = () => {
     ]
 
     const actionConfig = {
-        approve: {
-            endPoint: 'super-admin-auth/review-kyc',
-            method: 'POST',
-            payload: {}
-        },
-        reject: {
+        review: {
             endPoint: 'super-admin-auth/review-kyc',
             method: 'POST',
             payload: {}

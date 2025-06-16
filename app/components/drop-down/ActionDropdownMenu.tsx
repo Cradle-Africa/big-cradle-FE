@@ -237,7 +237,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 							</li>
 						)}
 
-						{openReview && (
+						{reviewAction && (
 							<li className="px-1">
 								<button
 									onClick={() => {

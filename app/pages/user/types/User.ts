@@ -39,7 +39,6 @@ export interface BusinessForm {
     password: string;
     confirmPassword: string;
     businessLogo: string;
-    certificateOfIncorporation: string;
     role: string;
 }
 
