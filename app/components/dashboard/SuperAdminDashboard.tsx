@@ -1,73 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useUser } from "@/app/hooks/useUser";
+import { Banknote, CheckSquare, UsersRound } from "lucide-react";
+import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
-import { UploadCloud, UsersRound, Banknote, CheckSquare } from "lucide-react";
-import FormPopup from "../pop-up/PopUpForm";
-import { getUser } from "@/app/utils/user/userData";
-import { User } from "@/app/pages/user/types/User";
+import KycVerification from "../KycVerification";
+import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 
 const SuperAdminDashboard = () => {
-  const [openKycVerification, setOpenKycVerification] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false)
+	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false)
+  const user = useUser();
 
-  useEffect(() => {
-    const fetchUser = () => {
-      const currentUser = getUser(); // make sure this returns a promise if async
-      setUser(currentUser);
-    };
-
-    fetchUser();
-  }, []);
+	if (!user) {
+		return (
+			<DashboardSkeleton />
+		)
+	}
 
   return (
     <div>
-      {openKycVerification && (
-        <FormPopup
-          setOpen={setOpenKycVerification}
-          title="KYC Verification"
-          method={"POST"}
-          endPoint="business-auth/upload-certificate-of-incorporation"
-          fields={[
-            { name: "email", label: "", type: "hidden", required: true },
-            {
-              name: "certificateOfIncorporation",
-              label: "Certificate of Incorporation",
-              type: "file",
-              required: true,
-            },
-          ]}
-          defaultValues={{ email: user?.email }}
-        />
-      )}
-
-      {user?.kycStatus === "not-submitted" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-red-400 text-white px-5 py-3 rounded-md mb-4">
-          <div className="text-sm">
-            Upload your certificate for KYC verification
-          </div>
-          <button
-            onClick={() => {
-              setOpenKycVerification(true);
-            }}
-            className=" bg-red-700 text-white rounded-md mt-5 md:mt-0 px-5 py-1 h-8 text-sm hover:border hover:border-white hover:cursor-pointer"
-          >
-            <UploadCloud size={14} className="inline" />
-            <span className="ml-1">Verify KYC</span>
-          </button>
-        </div>
-      )}
-      {user?.kycStatus == "pending" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#578CFF] to-[#0546D2] hover:opacity-90 px-5 py-3 rounded-md mb-4">
-          <div className="text-sm">
-            Your KYC has been submitted and is under review
-          </div>
-        </div>
-      )}
-
-      {user?.kycStatus == "rejected" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#ff5762] to-[#d20505] hover:opacity-90 px-5 py-3 rounded-md mb-4">
-          <div className="text-sm">Your KYC has been Rejected</div>
-        </div>
-      )}
+      <KycVerification
+        openBusinessKycVerification={openBusinessKycVerification}
+        setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+        openAdminKycVerification={openAdminKycVerification}
+        setOpenAdminKycVerification={setOpenAdminKycVerification}
+        user={user}
+      />
       <div className="w-full">
         <p className="font-semibold text-md space-y-1">
           Hi Esther, here’s your platform overview for today
