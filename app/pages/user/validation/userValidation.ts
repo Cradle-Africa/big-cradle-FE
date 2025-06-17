@@ -13,7 +13,7 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
     if (!data.contactPersonFirstName.trim()) errors.contactPersonFirstName = 'First name is required';
     if (!data.contactPersonLastName.trim()) errors.contactPersonLastName = 'Last name is required';
     if (!data.contactName.trim()) errors.contactName = 'Contact name is required';
-    if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
+    // if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
     if (!data.contactNumber.trim()) errors.contactNumber = 'Phone number is required';
     if (!data.businessAddress.trim()) errors.businessAddress = 'Address is required';
     if (!data.businessCountry.trim()) errors.businessCountry = 'Country is required';
@@ -99,7 +99,7 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
         if (!data.lastName.trim()) errors.lastName = 'Last name is required';
         console.log('**', errors)
     }
-    if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
+    // if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
     if (!data.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required';
     if (!data.address.trim()) errors.address = 'Address is required';
     if (!data.country.trim()) errors.country = 'Country is required';
