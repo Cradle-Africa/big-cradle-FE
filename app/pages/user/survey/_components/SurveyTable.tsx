@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { MoreVertical } from "lucide-react";
 
 const SurveyTable = () => {
