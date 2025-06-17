@@ -1,4 +1,4 @@
-import { Album, UserRound } from "lucide-react";
+import { Album } from "lucide-react";
 import classNames from "classnames";
 
 const SurveyCard = ({ isHighLighted }: { isHighLighted: boolean }) => {

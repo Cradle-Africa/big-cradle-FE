@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useState } from "react";
 export default function LoadingSidebar() {
   const [open, setOpen] = useState(false);
-  const [usersMenuOpen, setUsersMenuOpen] = useState(false);
 
   return (
     <div
