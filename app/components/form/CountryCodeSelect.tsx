@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, useRef } from "react";
 import countryCodes from "../../utils/data/countryCodes.json";
 
 type Country = {
@@ -23,13 +23,35 @@ const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
     name = "countryCode",
     className = "",
     showLabel = false,
-    // defaultOption = "+234 Nigerian"
+    defaultOption = "+234", 
 }) => {
     const [countries, setCountries] = useState<Country[]>([]);
+    const [defaultCountry, setDefaultCountry] = useState<Country | null>(null);
+
+    const didSetDefault = useRef(false); 
 
     useEffect(() => {
-        setCountries(countryCodes as Country[]);
-    }, []);
+        const allCountries = countryCodes as Country[];
+        setCountries(allCountries);
+
+        const matchDefault = allCountries.find((c) => c.dial_code === defaultOption);
+        if (matchDefault) {
+            setDefaultCountry(matchDefault);
+        }
+    }, [defaultOption]);
+
+    useEffect(() => {
+        if (!value && defaultCountry && !didSetDefault.current) {
+            const syntheticEvent = {
+                target: {
+                    name,
+                    value: defaultCountry.dial_code,
+                },
+            } as unknown as ChangeEvent<HTMLSelectElement>;
+            onChange(syntheticEvent);
+            didSetDefault.current = true;
+        }
+    }, [value, defaultCountry, onChange, name]);
 
     return (
         <div className={className}>
@@ -38,19 +60,27 @@ const CountryCodeSelect: React.FC<CountryCodeSelectProps> = ({
                     Country Code
                 </label>
             )}
+
             <select
                 id={name}
                 name={name}
-                value={value}
+                value={value || defaultOption}
                 onChange={onChange}
-                className='outline-none w-full hover:cursor-pointer'
+                className="outline-none w-full hover:cursor-pointer"
             >
-                <option value="">{countryCodes[124].flag} {countryCodes[124].dial_code} ({countryCodes[124].name}) </option>
-                {countries.map((country) => (
-                    <option key={country.code} value={country.dial_code}>
-                        {country.flag} {country.dial_code} ({country.name}) 
+                {defaultCountry && (
+                    <option value={defaultCountry.dial_code}>
+                        {defaultCountry.flag} {defaultCountry.dial_code} ({defaultCountry.name})
                     </option>
-                ))}
+                )}
+
+                {countries
+                    .filter((c) => c.dial_code !== defaultOption)
+                    .map((country) => (
+                        <option key={country.code} value={country.dial_code}>
+                            {country.flag} {country.dial_code} ({country.name})
+                        </option>
+                    ))}
             </select>
         </div>
     );

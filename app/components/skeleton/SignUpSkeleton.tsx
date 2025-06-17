@@ -4,7 +4,7 @@ const SignUpSkeleton = () => {
     return (
         <div>
             <div className="flex w-full h-screen justify-between gap-5 px-5 py-5 bg-gray-50">
-                <div className='md:w-1/2 px-5 py-5 rounded-md bg-gray-100'>
+                <div className='lg:w-1/2 px-5 py-5 rounded-md bg-gray-100'>
                     <div className='bg-gray-100 rounded-md'>
                         <div className='bg-gray-200 w-18 h-18 flex justify-center items-center rounded-md'>
                             <div className='bg-gray-300 w-12 h-12 rounded-md' />
@@ -38,7 +38,7 @@ const SignUpSkeleton = () => {
                     </div>
 
                 </div>
-                <div className='hidden md:block md:w-1/2 px-5 py-5 rounded-md bg-gray-100'>
+                <div className='hidden md:block lg:w-1/2 px-5 py-5 rounded-md bg-gray-100'>
 
                 </div>
             </div>
