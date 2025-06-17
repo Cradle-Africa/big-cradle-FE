@@ -137,6 +137,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                                     <ActionDropdownMenu
                                                         Id={item.id}
                                                         businessUserId={item.id}
+                                                        adminUserId={item.id}
                                                         certificate={item.certificateOfIncorporation}
                                                         suspendAction={actionConfig.suspend}
                                                         deleteAction={actionConfig.delete}

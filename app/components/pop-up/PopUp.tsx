@@ -17,10 +17,11 @@ interface PopUpProps {
     Id: string | number;
     certificate?: string | number | boolean | null | undefined;
     businessUserId?: string | number | boolean | null | undefined;
+    adminUserId?: string | number | boolean | null | undefined;
     payload: Record<string, unknown>;
 }
 
-const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message, endPoint, method, Id, certificate, businessUserId, payload }) => {
+const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message, endPoint, method, Id, certificate, businessUserId, adminUserId, payload }) => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -98,28 +99,61 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
             )}
 
             {setOpen && businessUserId && endPoint && (
-                <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
-                    <FormPopup
-                        setOpen={setOpen}
-                        title={title}
-                        method={method || 'POST'}
-                        endPoint={endPoint}
-                        fields={[
-                            { name: 'businessUserId', label: '', type: 'hidden', required: true },
-                            {
-                                name: 'action', label: 'Action', type: 'select', required: true,
-                                options: [
-                                    { label: 'Approved', value: 'approved' },
-                                    { label: 'Rejected', value: 'rejected' },
-                                ]
-                            },
-                            { name: 'reason', label: 'Reason', type: 'text', required: true },
+                <>
+                    {!adminUserId && (
+                        <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                            <FormPopup
+                                setOpen={setOpen}
+                                title={title}
+                                method={method || 'POST'}
+                                endPoint={endPoint}
+                                fields={[
+                                    { name: 'businessUserId', label: '', type: 'hidden', required: true },
+                                    {
+                                        name: 'action', label: 'Action', type: 'select', required: true,
+                                        options: [
+                                            { label: 'Approved', value: 'approved' },
+                                            { label: 'Rejected', value: 'rejected' },
+                                        ]
+                                    },
+                                    { name: 'reason', label: 'Reason', type: 'text', required: true },
 
 
-                        ]}
-                        defaultValues={{ businessUserId: businessUserId || '' }}
-                    />
-                </div>
+                                ]}
+                                defaultValues={{ businessUserId: businessUserId || '' }}
+                            />
+                        </div>
+                    )}
+
+                    {adminUserId && (
+                        <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+                            <FormPopup
+                                setOpen={setOpen}
+                                title={title}
+                                method={method || 'POST'}
+                                endPoint={endPoint}
+                                fields={[
+                                    { name: 'businessUserId', label: '', type: 'hidden', required: true },
+                                    { name: 'adminUserId', label: '', type: 'hidden', required: true },
+                                    {
+                                        name: 'action', label: 'Action', type: 'select', required: true,
+                                        options: [
+                                            { label: 'Approved', value: 'approved' },
+                                            { label: 'Rejected', value: 'rejected' },
+                                        ]
+                                    },
+                                    { name: 'reason', label: 'Reason', type: 'text', required: true },
+
+
+                                ]}
+                                defaultValues={{ 
+                                    businessUserId: businessUserId || '',
+                                    adminUserId: adminUserId || '',
+                                }}
+                            />
+                        </div>
+                    )}
+                </>
             )}
 
             {certificate && (

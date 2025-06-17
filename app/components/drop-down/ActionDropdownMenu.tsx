@@ -9,6 +9,7 @@ interface ActionDropdownMenuProps {
 	Id: string | number;
 	certificate?: string | number | boolean | null | undefined;
 	businessUserId?: string | number | boolean | null | undefined;
+	adminUserId?: string | number | boolean | null | undefined;
 	onViewProfile?: () => void;
 	suspendAction?: {
 		endPoint: string;
@@ -46,6 +47,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 	{	Id, 
 		certificate, 
 		businessUserId,
+		adminUserId,
 		onViewProfile, 
 		suspendAction, 
 		deleteAction, 
@@ -148,6 +150,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 					method={reviewAction.method}
 					Id={Id}
 					businessUserId={businessUserId}
+					adminUserId={adminUserId}
 					payload={reviewAction.payload}
 				/>
 			)}
