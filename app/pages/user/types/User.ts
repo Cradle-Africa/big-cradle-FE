@@ -7,6 +7,8 @@ export interface ApiRequestOptions {
 export interface User {
     id: string;
     fullName: string;
+    firstName: string;
+    lastName: string;
     email: string;
     role: string;
     createdAt: string;
@@ -18,6 +20,7 @@ export interface User {
     contactPersonFirstName: string;
     contactPersonLastName: string;
     kycStatus: string;
+    certificateOfIncorporation: string;
     __v: number;
 };
 
@@ -38,7 +41,6 @@ export interface BusinessForm {
     password: string;
     confirmPassword: string;
     businessLogo: string;
-    certificateOfIncorporation: string;
     role: string;
 }
 

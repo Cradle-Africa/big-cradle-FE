@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { validateEmployeeSignUp } from '../../utils/user/userValidation';
+import { validateEmployeeSignUp } from '../../pages/user/validation/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff } from 'lucide-react';
 import { EmployeeSignUpPayload } from '@/app/pages/user/types/User';
 import AccountVerification from '../../components/user/AccountVerification';
 import ImageUploader from '../form/ImageUploader';
+import CredentialDetails from '../../components/form/CredentialDetails'
 
 interface EmployeeSignUpProps {
     signUpToken: any;
@@ -30,8 +30,6 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [showVerification, setShowVerification] = useState<boolean>(false);
 
     const handleChange = (
@@ -55,6 +53,10 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
         }));
     };
 
+    const handleCredentialChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -65,6 +67,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
         setIsSubmitting(true);
 
         try {
+            toast.loading('Loading...');
             await EmployeeSignUpService(formData, signUpToken);
             toast.dismiss();
             toast.success('Signed up successfully!');
@@ -141,7 +144,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                             />
                             {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
                         </div>
-
+                        {/* 
                         <div className="relative">
                             <input
                                 type={showPassword ? 'text' : 'password'}
@@ -170,7 +173,8 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                                 {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </div>
                             {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-                        </div>
+                        </div> */}
+                        <CredentialDetails formData={formData} onChange={handleCredentialChange} errors={errors} />
 
                         <button
                             type="submit"

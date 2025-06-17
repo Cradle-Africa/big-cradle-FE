@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { resetPasswordService } from '../../services/user/userService';
-import { validateResetPassword } from '../../utils/user/userValidation';
+import { validateResetPassword } from '../../pages/user/validation/userValidation';
 
 interface ResetPasswordProps {
     email: string;

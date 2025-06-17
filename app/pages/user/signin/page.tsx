@@ -7,7 +7,7 @@ import ForgotPassword from '@/app/components/user/ForgotPassword';
 import ForgotPasswordCode from '../../../components/user/ForgotPasswordCode';
 import ResetPassword from '../../../components/user/ResetPassword';
 import { Eye, EyeOff } from 'lucide-react';
-import { validateSignIn } from '../../../utils/user/userValidation';
+import { validateSignIn } from '../validation/userValidation';
 import toast from 'react-hot-toast';
 import { signInService } from '../../../services/user/userService';
 import { addUser, addToken } from '@/app/utils/user/userData';
@@ -51,12 +51,15 @@ export default function SignInPage() {
         };
 
         try {
+            toast.loading('Loading...');
             const response = await signInService(payload);
+            toast.dismiss()
             addUser(response.data);
             addToken(response.accessToken);
-            localStorage.setItem('businessId', response.data.id);
+            if (response.data.role === 'business') {
+                localStorage.setItem('businessId', response.data.id);
+            }
             toast.success('Signed in successfully!');
-            // router.push('/');
             window.location.href = '/'
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -102,7 +105,7 @@ export default function SignInPage() {
                 )}
 
                 <div className="w-full max-w-md space-y-6 text-sm">
-                    <Image src='/auth-logo.png' width={8} height={5} alt="Big Cradle Logo" className="w-8 mr-auto mb-4" />
+                    <Image src="/auth-logo.png" width={32} height={32} alt="Big Cradle Logo" className="w-8 mb-4" />
                     <h3 className="text-lg font-semibold text-gray-700">Welcome to Big Cradle</h3>
                     <p className='text-gray-700 text-sm'>Do not have an account with us?
                         <Link href="/pages/user/signup" className="underline ml-1">Sign up</Link>

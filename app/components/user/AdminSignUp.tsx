@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { Eye, EyeOff, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { AdminForm } from '@/app/pages/user/types/User';
-import { validateAdminSignUp, validateAdminStep } from '../../utils/user/userValidation';
+import { validateAdminSignUp, validateAdminStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
 import CountrySelect from '@/app/components/form/CountrySelect';
 import { AdminSignUpService } from '../../services/user/userService';
@@ -13,12 +13,11 @@ import SearchSelect from '../form/SearchSelect';
 import cities from '../../utils/data/cities.json';
 import { removeEmptyProperties } from '../../utils/clean-data';
 import ImageUploader from '../form/ImageUploader';
+import CredentialDetails from '../form/CredentialDetails';
 
 export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
     const [showVerification, setShowVerification] = useState<boolean>(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -65,6 +64,10 @@ export default function AdminSignUp() {
         }));
     };
 
+    const handleCredentialChange = (field: string, value: string) => {
+        setForm(prev => ({ ...prev, [field]: value }));
+    };
+
     const next = () => {
         const validationErrors = validateAdminStep(step, form);
         setErrors(validationErrors);
@@ -88,10 +91,13 @@ export default function AdminSignUp() {
         setIsSubmitting(true);
         try {
             const clean_form = removeEmptyProperties(form) as AdminForm;
+            toast.loading('Loading...');
             await AdminSignUpService(clean_form);
+            toast.dismiss()
             toast.success('Admin registered successfully!');
             setShowVerification(true);
         } catch (error) {
+            toast.dismiss();
             toast.error(error instanceof Error ? error.message : 'Registration failed');
         } finally {
             setIsSubmitting(false);
@@ -127,20 +133,26 @@ export default function AdminSignUp() {
                                     </select>
                                     {errors.userType && <p className="text-red-500 text-xs">{errors.userType}</p>}
                                 </div>
-                                <div className='mt-5'>
-                                    <input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.businessName && <p className="text-red-500 text-xs">{errors.businessName}</p>}
-                                </div>
+                                {form.userType === 'corporate' && (
+                                    <div className='mt-5'>
+                                        <input name="businessName" value={form.businessName} onChange={handleChange} placeholder="Business Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        {errors.businessName && <p className="text-red-500 text-xs">{errors.businessName}</p>}
+                                    </div>
+                                )}
 
-                                <div className='mt-5'>
-                                    <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
-                                </div>
+                                {form.userType === 'individual' && (
+                                    <>
+                                        <div className='mt-5'>
+                                            <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                            {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
+                                        </div>
 
-                                <div className='mt-5'>
-                                    <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
-                                </div>
+                                        <div className='mt-5'>
+                                            <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                            {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
+                                        </div>
+                                    </>
+                                )}
                                 <div className="md:flex w-full gap-2 mt-5">
                                     <div className='md:w-2/3'>
                                         <CountryCodeSelect
@@ -218,39 +230,9 @@ export default function AdminSignUp() {
                         {/* Step 3 */}
                         {step === 3 && (
                             <>
-                                <div className='mt-5'>
-                                    <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                                </div>
-
-                                <div className="relative mt-5">
-                                    <input
-                                        name="password"
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={form.password}
-                                        onChange={handleChange}
-                                        placeholder="Password"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none pr-10"
-                                    />
-                                    <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowPassword(v => !v)}>
-                                        {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                                    </div>
-                                    {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-                                </div>
-                                <div className="relative mt-5">
-                                    <input
-                                        name="confirmPassword"
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        value={form.confirmPassword}
-                                        onChange={handleChange}
-                                        placeholder="Confirm Password"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none pr-10"
-                                    />
-                                    <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowConfirmPassword(v => !v)}>
-                                        {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                                    </div>
-                                    {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-                                </div>
+                                
+                                <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
+                                
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />

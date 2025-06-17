@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../../pages/user/types/User';
+import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
 
 
 export interface ResetPasswordFormData {
@@ -40,9 +40,6 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    // if (!data.businessLogo.trim()) errors.businessLogo = 'Business logo is required';
-    // if (!data.certificateOfIncorporation.trim()) errors.certificateOfIncorporation = 'Certificate of incorporation is required';
-
     return errors;
 };
 
@@ -94,9 +91,14 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
 
     if (data.userType === 'corporate' && !data.businessName.trim()) {
         errors.businessName = 'Admin name is required';
+        console.log('**', errors)
+
     }
-    if (!data.firstName.trim()) errors.firstName = 'First name is required';
-    if (!data.lastName.trim()) errors.lastName = 'Last name is required';
+    if (data.userType === 'individual') {
+        if (!data.firstName.trim()) errors.firstName = 'First name is required';
+        if (!data.lastName.trim()) errors.lastName = 'Last name is required';
+        console.log('**', errors)
+    }
     if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
     if (!data.phoneNumber.trim()) errors.phoneNumber = 'Phone number is required';
     if (!data.address.trim()) errors.address = 'Address is required';
@@ -122,7 +124,6 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
         errors.confirmPassword = 'Passwords do not match';
-    // if (!data.image.trim()) errors.image = 'Image is required';
 
     return errors;
 };
@@ -134,9 +135,15 @@ export const validateAdminStep = (step: number, form: AdminForm) => {
         if (!form.userType) errors.userType = 'User type is required';
         if (form.userType === 'corporate' && !form.businessName) {
             errors.businessName = 'Business name is required';
+            console.log('***', errors)
+
         }
-        if (!form.firstName) errors.firstName = 'First name is required';
-        if (!form.lastName) errors.lastName = 'Last name is required';
+        if (form.userType === 'individual' ) {
+            if (!form.firstName) errors.firstName = 'First name is required';
+            if (!form.lastName) errors.lastName = 'Last name is required';
+            console.log('***', errors)
+
+        }
         if (!form.phoneNumber) errors.phoneNumber = 'Phone number is required';
     }
 
@@ -175,7 +182,7 @@ export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: 
     if (!data.firstName.trim()) errors.firstName = 'First name is required';
     if (!data.lastName.trim()) errors.lastName = 'Last name is required';
     if (!data.email.trim()) errors.email = 'Email is required';
-    
+
 
     if (!data.password) {
         errors.password = 'Password is required';
@@ -224,7 +231,7 @@ export const validateEmployeeSignUp = (data: EmployeeSignUpPayload): { [key: str
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-    
+
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)
@@ -259,7 +266,7 @@ export const validateResetPassword = (data: ResetPasswordFormData): { [key: stri
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-    
+
     if (!data.confirmPassword)
         errors.confirmPassword = 'Please confirm your password';
     else if (data.password !== data.confirmPassword)

@@ -22,7 +22,6 @@ const FormPopup: React.FC<FormPopupProps> = ({
     const [dynamicOptions, setDynamicOptions] = useState<Record<string, OptionType[]>>({});
 
     useEffect(() => {
-        // setFormData({ ...defaultValues });
         setFormData(prev => {
             const isSame = JSON.stringify(prev) === JSON.stringify(defaultValues);
             return isSame ? prev : { ...defaultValues };

@@ -33,7 +33,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     businessUserId: businessId
                 });
                 setTableData(response.data || response.department || response.employeeUser);
-                setTotalItems(response.total || response.data.length);
+                setTotalItems(response.pagination.total || response.total || response.data.length);
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     if (err.message === 'Unauthorized') {
@@ -71,24 +71,24 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     <>
                         <table className="relative w-full" key="data-table">
                             <thead key="table-head">
-                                <tr className="bg-gray-100" key="header-row">
+                                <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                     <th
                                         key="header-index"
-                                        className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-r border-gray-200 rounded-tl-lg"
+                                        className="px-3 py-3 text-left text-sm font-bold text-gray-600 rounded-tl-lg"
                                     >
                                         #
                                     </th>
                                     {fields.map((field, index) => (
                                         <th
                                             key={`header-${field.key}-${index}`}
-                                            className={`px-3 py-2 text-left text-sm font-medium text-gray-700 border-r border-gray-200 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
+                                            className={`px-3 py-3 text-left text-sm font-bold text-gray-600 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
                                             {field.label}
                                         </th>
                                     ))}
                                     {actionConfig && (
                                         <th
                                             key="actions-header"
-                                            className="rounded-tr-lg border-l border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700"
+                                            className="rounded-tr-lg px-3 py-3 text-left text-sm font-bold text-gray-600"
                                         >
                                             Actions
                                         </th>
@@ -97,7 +97,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                             </thead>
 
 
-                            <tbody className="bg-white divide-y divide-gray-200" key="table-body">
+                            <tbody className="bg-white divide-y divide-gray-100" key="table-body">
                                 {loading ? (
                                     <tr key="loading-state">
                                         <td
@@ -110,19 +110,19 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                 ) : tableData?.length > 0 ? (
                                     tableData.map((item, rowIndex) => (
                                         <tr key={`row-${item.id}`}>
-                                            <td className="border border-gray-100 px-3 py-2 whitespace-nowrap text-sm">
+                                            <td className=" border-l border-gray-100 px-3 py-2 whitespace-nowrap text-sm">
                                                 {rowIndex + 1}
                                             </td>
                                             {fields.map((field, idx) => (
                                                 <td
                                                     key={`cell-${item.id}-${field.key}-${idx}`}
-                                                    className={`border border-gray-100 px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
+                                                    className={`px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
                                                 >
                                                     <span 
                                                         className={` 
-                                                            ${field.label === 'Status' && item[field.key] === 'pending' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-2 py-[2px]'} 
-                                                            ${field.label === 'Status' && item[field.key] === 'rejected' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-2 py-[2px]'} 
-                                                            ${field.label === 'Status' && item[field.key] !== 'pending' && 'text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-1 py-[2px]'} 
+                                                            ${field.label === 'Status' && item[field.key] === 'pending' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
+                                                            ${field.label === 'Status' && item[field.key] === 'rejected' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
+                                                            ${field.label === 'Status' && item[field.key] !== 'pending' && 'text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-3 py-[3px]'} 
                                                             
                                                         }`}>
                                                         {item[field.key]}                                              
@@ -132,11 +132,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                             {actionConfig && (
                                                 <td
                                                     key={`actions-${item.id}`}
-                                                    className="border border-gray-100 px-6 py-2 whitespace-nowrap"
+                                                    className="border-b border-r border-gray-100 px-6 py-2 whitespace-nowrap"
                                                 >
                                                     <ActionDropdownMenu
                                                         Id={item.id}
                                                         businessUserId={item.id}
+                                                        adminUserId={item.id}
                                                         certificate={item.certificateOfIncorporation}
                                                         suspendAction={actionConfig.suspend}
                                                         deleteAction={actionConfig.delete}
@@ -153,7 +154,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                         <td
                                             key="no-data-cell"
                                             colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
-                                            className="px-3 py-4 text-center text-sm text-gray-700"
+                                            className="px-3 py-4 border-b border-gray-100 text-center text-sm text-gray-700"
                                         >
                                             No data available
                                         </td>

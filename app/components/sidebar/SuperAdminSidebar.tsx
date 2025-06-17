@@ -12,13 +12,13 @@ export default function SuperAdminSidebar() {
 
     return (
         <div className={`z-10 md:fixed md:h-screen lg:w-64 flex flex-col px-3 py-2 rounded-br md:bg-white rounded-md md:border-b border-gray-200 ${open ? 'fixed shadow bg-white' : 'absolute '} `}>
-            {/* Mobile toggle - unchanged */}
+            {/* Mobile toggle */}
             <div className={` ${open ? '' : 'border border-gray-200'} md:hidden rounded-md mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}>
                 <button onClick={() => setOpen(!open)} className="text-gray-500 hover:cursor-pointer">
                     {open ? (
                         <div className='flex items-center justify-between'>
                             <Link href='/'>
-                                <Image src={"/logo.png"} width={150} height={13} alt="Logo" className='' />
+                                <Image src="/auth-logo.png" width={32} height={32} alt="Big Cradle Logo" className="w-8 mb-4" />        
                             </Link>
                             <X size={15} className='text-red-500' />
                         </div>
@@ -102,6 +102,13 @@ export default function SuperAdminSidebar() {
                                 >
                                     <Building2 size={14} />
                                     Businesses KYC
+                                </Link>
+                                <Link
+                                    href='/pages/user/admin/admin-kyc/'
+                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
+                                >
+                                    <Building2 size={14} />
+                                    Investors KYC
                                 </Link>
                                 <Link
                                     href='/pages/user/employee/'
