@@ -2,13 +2,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { apiPostService } from '../../services/apiService';
-import { UserRoundX } from 'lucide-react';
+import { LucideIcon, UserRoundX } from 'lucide-react';
 import IconComponent from './IconComponent';
 import FormPopup from '../../components/pop-up/PopUpForm';
 
 interface PopUpProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     title: string;
+    Icon: LucideIcon,
     label: string;
     subTitle: string;
     message: string;
@@ -18,10 +19,10 @@ interface PopUpProps {
     certificate?: string | number | boolean | null | undefined;
     businessUserId?: string | number | boolean | null | undefined;
     adminUserId?: string | number | boolean | null | undefined;
-    payload: Record<string, unknown>;
+    payload?: Record<string, unknown> | undefined;
 }
 
-const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message, endPoint, method, Id, certificate, businessUserId, adminUserId, payload }) => {
+const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, message, endPoint, method, Id, certificate, businessUserId, adminUserId, payload }) => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -42,7 +43,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
         const endPoint_ = endPoint + '/' + Id;
         try {
             toast.loading('Loading...');
-            await apiPostService(endPoint_, method, payload);
+            await apiPostService(endPoint_, method, payload || {});
             toast.dismiss();
             toast.success(message);
             setOpen(false);
@@ -65,7 +66,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                 <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
                     <div className='flex justify-center'>
                         <IconComponent
-                            Icon={UserRoundX}
+                            Icon={Icon}
                             label={label}
                         />
                     </div>
@@ -93,8 +94,6 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, label, subTitle, message,
                             </button>
                         </div>
                     </form>
-
-
                 </div>
             )}
 

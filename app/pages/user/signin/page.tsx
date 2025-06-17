@@ -53,12 +53,14 @@ export default function SignInPage() {
         try {
             toast.loading('Loading...');
             const response = await signInService(payload);
-            toast.dismiss()
             addUser(response.data);
             addToken(response.accessToken);
             if (response.data.role === 'business') {
                 localStorage.setItem('businessId', response.data.id);
+            } else if (response.data.role === 'admin') {
+                localStorage.setItem('adminUserId', response.data.id);
             }
+            toast.dismiss()
             toast.success('Signed in successfully!');
             window.location.href = '/'
         } catch (error: unknown) {

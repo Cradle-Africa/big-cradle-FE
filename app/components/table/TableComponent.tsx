@@ -1,11 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import ActionDropdownMenu from '../../components/drop-down/ActionDropdownMenu'
-import DashboardLayout from '@/app/DashboardLayout'
 import { apiGetPaginateService } from '../../services/apiService'
 import { removeUser } from '@/app/utils/user/userData';
 import Pagination from '@/app/components/table/Pagination';
-import { getBusinessId } from '../../utils/user/userData'
+import { getBusinessId, getAdminUserId } from '../../utils/user/userData'
 import { TableData, TableComponentProps } from './types/Table';
 import BreadsCrumps from './BreadsCrumps'
 
@@ -20,7 +19,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
     const totalPages = Math.ceil(totalItems / limit);
     const [openDepartment, setOpenDepartment] = useState<boolean>(false);
     const [openEmployee, setOpenEmployee] = useState<boolean>(false);
+    const [openBusiness, setOpenBusiness] = useState<boolean>(false);
     const businessId = getBusinessId();
+    const adminUserId = getAdminUserId();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,9 +31,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                 const response = await apiGetPaginateService(endpoint, {
                     page: currentPage,
                     limit,
-                    businessUserId: businessId
+                    businessUserId: businessId,
+                    adminUserId: adminUserId
                 });
-                setTableData(response.data || response.department || response.employeeUser);
+                setTableData(response.data || response.department || response.employeeUser || response.businessUser);
                 setTotalItems(response.pagination.total || response.total || response.data.length);
             } catch (err: unknown) {
                 if (err instanceof Error) {
@@ -46,16 +48,18 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
         };
 
         fetchData();
-    }, [currentPage, limit, endpoint, businessId]);
+    }, [currentPage, limit, endpoint, businessId, adminUserId]);
 
     return (
-        <DashboardLayout>
+        <>
             <BreadsCrumps
                 title={title}
                 openDepartment={openDepartment}
-                openEmployee={openEmployee}
                 setOpenDepartment={setOpenDepartment}
+                openEmployee={openEmployee}
                 setOpenEmployee={setOpenEmployee}
+                openBusiness={openBusiness}
+                setOpenBusiness={setOpenBusiness}
                 rightAction={rightAction}
                 breadcrumbs={breadcrumbs}
             />
@@ -96,7 +100,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                 </tr>
                             </thead>
 
-
                             <tbody className="bg-white divide-y divide-gray-100" key="table-body">
                                 {loading ? (
                                     <tr key="loading-state">
@@ -110,22 +113,21 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                 ) : tableData?.length > 0 ? (
                                     tableData.map((item, rowIndex) => (
                                         <tr key={`row-${item.id}`}>
-                                            <td className=" border-l border-gray-100 px-3 py-2 whitespace-nowrap text-sm">
+                                            <td className=" border-l border-b border-gray-100 px-3 py-2 whitespace-nowrap text-sm">
                                                 {rowIndex + 1}
                                             </td>
                                             {fields.map((field, idx) => (
                                                 <td
                                                     key={`cell-${item.id}-${field.key}-${idx}`}
-                                                    className={`px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
+                                                    className={`border-b border-gray-100 px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
                                                 >
-                                                    <span 
+                                                    <span
                                                         className={` 
                                                             ${field.label === 'Status' && item[field.key] === 'pending' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
                                                             ${field.label === 'Status' && item[field.key] === 'rejected' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
                                                             ${field.label === 'Status' && item[field.key] !== 'pending' && 'text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-3 py-[3px]'} 
-                                                            
                                                         }`}>
-                                                        {item[field.key]}                                              
+                                                        {item[field.key]}
                                                     </span>
                                                 </td>
                                             ))}
@@ -144,6 +146,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                                         editAction={actionConfig.edit}
                                                         viewAction={actionConfig.view}
                                                         reviewAction={actionConfig.review}
+                                                        resetPasswordAction={actionConfig.resetPassword}
+
                                                     />
                                                 </td>
                                             )}
@@ -178,7 +182,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     </>
                 </div>
             </div>
-        </DashboardLayout>
+        </>
     )
 
 }

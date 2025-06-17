@@ -5,19 +5,19 @@ import DashboardSkeleton from "./components/skeleton/Dashboardskeleton";
 import { useUser } from "./hooks/useUser";
 
 export default function Home() {
-  const user = useUser();
+	const user = useUser();
 
-  if (!user) {
-    return (
-      <DashboardLayout>
-        <DashboardSkeleton />
-      </DashboardLayout>
-    );
-  }
+	if (!user) {
+		return (
+			<DashboardLayout>
+				<DashboardSkeleton />
+			</DashboardLayout>
+		);
+	}
 
-  return (
-    <DashboardLayout>
-      <Dashboard />
-    </DashboardLayout>
-  );
+	return (
+		<DashboardLayout>
+			<Dashboard />
+		</DashboardLayout>
+	);
 }

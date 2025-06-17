@@ -77,6 +77,7 @@ const KycVerification: React.FC<KycVerificationProps> = ({
                     ]}
                     defaultValues={{ email: user?.email }}
                 />
+            
             )}
 
             {user?.kycStatus === 'not-submitted' && (

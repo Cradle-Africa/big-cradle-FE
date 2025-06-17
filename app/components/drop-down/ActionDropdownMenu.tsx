@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { UserRoundMinus, UserRoundX, Eye, Check } from 'lucide-react';
+import { UserRoundMinus, UserRoundX, Eye, Check, LockKeyhole, Trash2Icon, Pencil, PenLine } from 'lucide-react';
 import PopUp from '../pop-up/PopUp';
 import Link from 'next/link'
 
@@ -11,6 +11,12 @@ interface ActionDropdownMenuProps {
 	businessUserId?: string | number | boolean | null | undefined;
 	adminUserId?: string | number | boolean | null | undefined;
 	onViewProfile?: () => void;
+	resetPasswordAction?: {
+		endPoint: string;
+		method: string;
+		payload?: Record<string, unknown>;
+		message?: string;
+	};
 	suspendAction?: {
 		endPoint: string;
 		method: string;
@@ -53,7 +59,8 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 		deleteAction, 
 		editAction, 
 		viewAction, 
-		reviewAction
+		reviewAction,
+		resetPasswordAction,
 	}: ActionDropdownMenuProps) => {
 	const [open, setOpen] = useState(false);
 	const [openSuspend, setOpenSuspend] = useState(false);
@@ -61,7 +68,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 	const [openEdit, setOpenEdit] = useState(false);
 	const [openView, setOpenView] = useState(false);
 	const [openReview, setOpenReview] = useState(false);
-
+	const [openResetPassword, setOpenResetPassword] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -87,6 +94,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				<PopUp
 					setOpen={setOpenSuspend}
 					title="Suspend"
+					Icon={ UserRoundX }
 					label="Suspend"
 					subTitle="Are you sure you want to suspend?"
 					message={suspendAction.message || 'Suspended successfully'}
@@ -97,10 +105,26 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				/>
 			)}
 
+			{openResetPassword && resetPasswordAction && (
+				<PopUp
+					setOpen={setOpenResetPassword}
+					title="Reset Password"
+					Icon={ LockKeyhole }
+					label="Reset Password"
+					subTitle="Are you sure you want to reset the password?"
+					message={resetPasswordAction.message || 'Paaword Reset successfully'}
+					endPoint={resetPasswordAction.endPoint}
+					method={resetPasswordAction.method}
+					Id={Id}
+					// payload={resetPasswordAction.payload}
+				/>
+			)}
+
 			{openDelete && deleteAction && (
 				<PopUp
 					setOpen={setOpenDelete}
 					title="Delete"
+					Icon={ Trash2Icon }
 					label="Delete"
 					subTitle="Are you sure you want to delete?"
 					message={deleteAction.message || 'Deleted successfully'}
@@ -115,6 +139,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				<PopUp
 					setOpen={setOpenEdit}
 					title="Edit"
+					Icon={ Pencil }
 					label="Edit"
 					subTitle="Are you sure you want to edit?"
 					message={editAction.message || 'Edited successfully'}
@@ -129,6 +154,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				<PopUp
 					setOpen={setOpenView}
 					title="View"
+					Icon={Eye}
 					label="View"
 					subTitle="View information"
 					message={viewAction.message || 'View'}
@@ -143,6 +169,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 				<PopUp
 					setOpen={setOpenReview}
 					title="KYC Review"
+					Icon={ PenLine }
 					label="Review"
 					subTitle="KYC Review"
 					message={reviewAction.message || ''}
@@ -169,6 +196,23 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 										View Profile
 									</div>
 								</Link>
+							</li>
+						)}
+
+						{resetPasswordAction && (
+							<li className="px-1">
+								<button
+									onClick={() => {
+										setOpenResetPassword(true);
+										setOpen(false);
+									}}
+									className="w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-100 hover:cursor-pointer"
+								>
+									<div className="flex items-center gap-1">
+										<LockKeyhole size={13} />
+										Reset Password
+									</div>
+								</button>
 							</li>
 						)}
 

@@ -11,7 +11,8 @@ import SuperAdminSignUp from '@/app/components/user/SuperadminSignUp';
 import BusinessSignUp from '../../../components/user/BusinessSignUp';
 import EmployeeSignUp from '../../../components/user/EmployeeSignUp';
 import AdminSignUp from '../../../components/user/AdminSignUp';
-import { DepartmentPayload } from '../types/User';
+import { DecodedPayload } from '../types/User';
+import BusinessSignUpLink from '@/app/components/user/BusinessSignUpLink';
 
 
 export default function SignUpContent() {
@@ -19,10 +20,13 @@ export default function SignUpContent() {
     const [showVerification, setShowVerification] = useState(false);
     const [superAdminSignUp, setSuperAdminSignUp] = useState(false);
     const [businessSignUp, setBusinessSignUp] = useState(true);
+    const [businessSignUpLink, setBusinessSignUpLink] = useState(false);
     const [employeeSignUp, setEmployeeSignUp] = useState(false);
     const [adminSignUp, setAdminSignUp] = useState(false);
     const [departmentId, setDepartmentId] = useState<string | null>(null);
+    const [adminBusinessUserId, setAdminBusinessUserId] = useState<string | null>(null)
     const [employeeEmail, setEmployeeEmail] = useState<string | null>(null);
+    const [businessEmail, setBusinessEmail] = useState<string | null>(null);
     const [businessUserId, setBusinessUserId] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null)
 
@@ -34,16 +38,23 @@ export default function SignUpContent() {
 
         if (encrypted) {
             try {
-                const decodedData = jwtDecode<DepartmentPayload>(encrypted);
+                const decodedData = jwtDecode<DecodedPayload>(encrypted);
                 setDepartmentId(decodedData.departmentId);
                 setEmployeeEmail(decodedData.email);
+                setBusinessEmail(decodedData.email);
                 setBusinessUserId(decodedData.businessUserId);
-                setEmployeeSignUp(true);
+                setAdminBusinessUserId(decodedData.adminBusinessUserId);
+                if (decodedData.departmentId) {
+                    setEmployeeSignUp(true);
+                }
+                if (decodedData.adminBusinessUserId) {
+                    setBusinessSignUpLink(true);
+                }
                 setBusinessSignUp(false);
                 setSuperAdminSignUp(false);
                 setAdminSignUp(false);
             } catch (error) {
-                console.error('Invalid departmentId token:', error);
+                console.error('Invalid token:', error);
             }
         }
     }, [searchParams]);
@@ -66,6 +77,7 @@ export default function SignUpContent() {
                     {adminSignUp && <h3 className="text-lg font-semibold text-gray-700">Sign up as an Investor</h3>}
                     {businessSignUp && <h3 className="text-lg font-semibold text-gray-700">Sign up as a Business</h3>}
                     {employeeSignUp && <h3 className="text-lg font-semibold text-gray-700">Sign up as an Employee</h3>}
+                    {businessSignUpLink && <h3 className="text-lg font-semibold text-gray-700">Sign up as a Business </h3>}
 
                     <p className="text-gray-700 text-sm">
                         Already have an account?
@@ -81,7 +93,7 @@ export default function SignUpContent() {
                         <hr className="flex-grow border-gray-300" />
                     </div>
 
-                    {!departmentId && (
+                    {superAdminSignUp || adminSignUp || businessSignUp && (
                         <div className='overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700'>
                             <button onClick={() => { setSuperAdminSignUp(true); setBusinessSignUp(false); setEmployeeSignUp(false); setAdminSignUp(false); }} className={`py-2 px-2 rounded-md hover:cursor-pointer ${superAdminSignUp ? 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white' : ' text-gray-700'}`}>
                                 Super admin
@@ -93,11 +105,12 @@ export default function SignUpContent() {
                                 Business
                             </button>
                         </div>
-                    )} 
+                    )}
 
                     <div>
                         {superAdminSignUp && <SuperAdminSignUp />}
                         {businessSignUp && <BusinessSignUp />}
+                        {adminSignUp && <AdminSignUp />}
                         {employeeSignUp && departmentId &&
                             <EmployeeSignUp
                                 signUpToken={token}
@@ -105,7 +118,14 @@ export default function SignUpContent() {
                                 businessUserId={businessUserId}
                             />
                         }
-                        {adminSignUp && <AdminSignUp />}
+
+                        {businessSignUpLink && adminBusinessUserId &&
+                            <BusinessSignUpLink
+                                signUpToken={token}
+                                businessEmail={businessEmail}
+                                adminBusinessUserId={adminBusinessUserId}
+                            />
+                        }
                     </div>
                 </div>
 

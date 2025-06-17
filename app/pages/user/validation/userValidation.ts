@@ -1,4 +1,4 @@
-import { SuperAdminSignUpPayload, BusinessForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
+import { SuperAdminSignUpPayload, BusinessForm, BusinessLinkForm, AdminForm, EmployeeSignUpPayload, SignInPayload } from '../types/User';
 
 
 export interface ResetPasswordFormData {
@@ -13,7 +13,6 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
     if (!data.contactPersonFirstName.trim()) errors.contactPersonFirstName = 'First name is required';
     if (!data.contactPersonLastName.trim()) errors.contactPersonLastName = 'Last name is required';
     if (!data.contactName.trim()) errors.contactName = 'Contact name is required';
-    // if (!data.countryCode.trim()) errors.countryCode = 'Country code is required';
     if (!data.contactNumber.trim()) errors.contactNumber = 'Phone number is required';
     if (!data.businessAddress.trim()) errors.businessAddress = 'Address is required';
     if (!data.businessCountry.trim()) errors.businessCountry = 'Country is required';
@@ -42,7 +41,6 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
         errors.confirmPassword = 'Passwords do not match';
     return errors;
 };
-
 
 export const validateBusinessStep = (step: number, form: BusinessForm) => {
     const errors: { [key: string]: string } = {};
@@ -85,6 +83,86 @@ export const validateBusinessStep = (step: number, form: BusinessForm) => {
 
     return errors;
 };
+
+
+export const validateBusinessLinkSignUp = (data: BusinessLinkForm): { [key: string]: string } => {
+    const errors: { [key: string]: string } = {};
+
+    if (!data.businessName.trim()) errors.businessName = 'Business name is required';
+    if (!data.contactPersonFirstName.trim()) errors.contactPersonFirstName = 'First name is required';
+    if (!data.contactPersonLastName.trim()) errors.contactPersonLastName = 'Last name is required';
+    if (!data.contactName.trim()) errors.contactName = 'Contact name is required';
+    if (!data.contactNumber.trim()) errors.contactNumber = 'Phone number is required';
+    if (!data.businessAddress.trim()) errors.businessAddress = 'Address is required';
+    if (!data.businessCountry.trim()) errors.businessCountry = 'Country is required';
+    if (!data.businessCity.trim()) errors.businessCity = 'City is required';
+    if (!data.businessState.trim()) errors.businessState = 'State is required';
+    if (!data.sector.trim()) errors.sector = 'Sector is required';
+    if (!data.organizationSize.trim()) errors.organizationSize = 'Organization size is required';
+    if (!data.email.trim()) errors.email = 'Email is required';
+
+    if (!data.password) {
+        errors.password = 'Password is required';
+    } else if (data.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
+    } else if (data.password.length > 15) {
+        errors.password = 'Password must not exceed 15 characters';
+    } else if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(data.password)
+    ) {
+        errors.password =
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+    }
+
+    if (!data.confirmPassword)
+        errors.confirmPassword = 'Please confirm your password';
+    else if (data.password !== data.confirmPassword)
+        errors.confirmPassword = 'Passwords do not match';
+    return errors;
+};
+
+export const validateBusinessLinkStep = (step: number, form: BusinessLinkForm) => {
+    const errors: { [key: string]: string } = {};
+
+    if (step === 1) {
+        if (!form.businessName) errors.businessName = 'Business name is required';
+        if (!form.contactName) errors.contactName = 'Contact name is required';
+        if (!form.contactPersonFirstName) errors.contactPersonFirstName = 'First name is required';
+        if (!form.contactPersonLastName) errors.contactPersonLastName = 'Last name is required';
+        if (!form.contactNumber) errors.contactNumber = 'Contact number is required';
+    }
+
+    if (step === 2) {
+        if (!form.businessCountry) errors.businessCountry = 'Country is required';
+        if (!form.businessState) errors.businessState = 'State is required';
+        if (!form.businessAddress) errors.businessAddress = 'Address is required';
+        if (!form.businessCity) errors.businessCity = 'City is required';
+        if (!form.sector) errors.sector = 'Sector is required';
+        if (!form.organizationSize) errors.organizationSize = 'Organization size is required';
+    }
+
+    if (step === 3) {
+        if (!form.email) errors.email = 'Email is required';
+        else if (!/\S+@\S+\.\S+/.test(form.email)) errors.email = 'Email is invalid';
+
+        if (!form.password) {
+            errors.password = 'Password is required';
+        } else if (form.password.length < 8) {
+            errors.password = 'Password must be at least 8 characters';
+        } else if (form.password.length > 15) {
+            errors.password = 'Password must not exceed 15 characters';
+        } else if (
+            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,15}$/.test(form.password)
+        ) {
+            errors.password =
+                'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
+        }
+        if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
+    }
+
+    return errors;
+};
+
 
 export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } => {
     const errors: { [key: string]: string } = {};

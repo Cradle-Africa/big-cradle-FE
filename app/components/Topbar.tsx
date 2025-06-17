@@ -42,6 +42,7 @@ const Topbar = () => {
                                 {user?.fullName ?? user?.fullName } 
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
                                 {user?.firstName ?? user?.firstName}  {user?.lastName ?? user?.lastName}
+                                {user?.businessName ?? user?.businessName}
                             </span>
                             <span className='inline lg:hidden text-xs font-semibold'>
                                 {user?.fullName ?? user?.fullName?.slice(0, 12)}

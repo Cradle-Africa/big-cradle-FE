@@ -26,7 +26,12 @@ export const getBusinessId = (): string | null => {
     return null;
 };
 
-
+export const getAdminUserId = (): string | null => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('adminUserId');
+    }
+    return null;
+};
 
 // Add user data to local storage
 export const addUser = (user: User) => {
@@ -40,9 +45,7 @@ export const addToken = (token: string) => {
 
 // Remove user data from local storage
 export const removeUser = (): void => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('businessId');
+    localStorage.clear(); // Clears all keys and values in localStorage
     window.location.href = '/pages/user/signin';
 };
 

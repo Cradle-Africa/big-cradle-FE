@@ -4,6 +4,7 @@ import { BASE_URL } from "../base";
 import {
     SuperAdminSignUpPayload,
     BusinessSignUpPayload,
+    BusinessSignUpLinkPayload,
     EmployeeSignUpPayload,
     AdminForm,
     SignInPayload,
@@ -31,6 +32,19 @@ export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) 
 export const BusinessSignUpService = async (payload: BusinessSignUpPayload) => {
     try {
         const response = await axios.post(`${BASE_URL}/business-auth/sign-up`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw new Error(error.response?.data?.message || 'Signup failed');
+    }
+};
+
+export const BusinessSignUpLinkService = async (payload: BusinessSignUpLinkPayload, signUpToken: string) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/manage-business/complete-business-signup?token=${signUpToken}`, payload, {
             headers: {
                 'Content-Type': 'application/json',
             },

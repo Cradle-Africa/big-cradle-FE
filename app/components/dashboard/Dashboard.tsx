@@ -6,26 +6,29 @@ import React, { useEffect, useState } from "react";
 import BusinessDashboard from "./BusinessDashboard";
 import SuperAdminDashboard from "./SuperAdminDashboard";
 import LoadingDashboard from "./LoadingDashboard";
+import AdminDashboard from "./AdminDashboard";
 
 const Dashboard = () => {
-  const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchUser = () => {
-      const currentUser = getUser(); // make sure this returns a promise if async
-      setUser(currentUser);
-    };
+	useEffect(() => {
+		const fetchUser = () => {
+			const currentUser = getUser(); // make sure this returns a promise if async
+			setUser(currentUser);
+		};
 
-    fetchUser();
-  }, []);
+		fetchUser();
+	}, []);
 
-  if (user?.role === "business") {
-    return <BusinessDashboard />;
-  } else if (user?.role === "super admin") {
-    return <SuperAdminDashboard />;
-  }
+	if (user?.role === "business") {
+		return <BusinessDashboard />;
+	} else if (user?.role === "super admin") {
+		return <SuperAdminDashboard />;
+	} else if (user?.role === "admin") {
+		return <AdminDashboard />
+	}
 
-  return <LoadingDashboard />;
+	return <LoadingDashboard />;
 };
 
 export default Dashboard;

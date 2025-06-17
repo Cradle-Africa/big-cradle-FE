@@ -1,15 +1,16 @@
 'use client'
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
+import DashboardLayout from '@/app/DashboardLayout';
 const Admin = () => {
-    
+
     const employeeFields = [
         { key: 'firstName', label: 'First Name', className: '' },
         { key: 'LastName', label: 'Last Name', className: '' },
         { key: 'email', label: 'Email', className: '' },
         { key: 'phoneNumber', label: 'Phone Number', className: '' },
-        { key: 'role', label: 'Role', className: ''},
-        { key: 'invitationStatus', label: 'Invitation Status', className: ''}
+        { key: 'role', label: 'Role', className: '' },
+        { key: 'invitationStatus', label: 'Invitation Status', className: '' }
     ]
 
     const actionConfig = {
@@ -37,7 +38,7 @@ const Admin = () => {
     }
 
     return (
-        <>
+        <DashboardLayout>
             <TableComponent
                 title="Employees"
                 endpoint="manage-employee/all-business-user-employeees"
@@ -49,7 +50,7 @@ const Admin = () => {
                 actionConfig={actionConfig}
                 rightAction={rightAction}
             />
-        </>
+        </DashboardLayout>
 
     )
 }

@@ -21,10 +21,32 @@ export interface User {
     contactPersonLastName: string;
     kycStatus: string;
     certificateOfIncorporation: string;
+    businessName: string;
     __v: number;
 };
 
 export interface BusinessForm {
+    businessName: string;
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactName: string;
+    countryCode: string;
+    contactNumber: string;
+    businessAddress: string;
+    businessCity: string;
+    businessState: string;
+    businessCountry: string;
+    sector: string;
+    organizationSize: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    businessLogo: string;
+    role: string;
+}
+
+export interface BusinessLinkForm {
+    adminBusinessUserId: string;
     businessName: string;
     contactPersonFirstName: string;
     contactPersonLastName: string;
@@ -103,6 +125,27 @@ export interface BusinessSignUpPayload {
     certificateOfIncorporation?: string;
 }
 
+export interface BusinessSignUpLinkPayload {
+    businessName: string;
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactName: string;
+    countryCode: string;
+    contactNumber: string;
+    businessAddress: string;
+    businessCity: string;
+    businessState: string;
+    businessCountry: string;
+    sector: string;
+    organizationSize: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    businessLogo?: string;
+    certificateOfIncorporation?: string;
+    role?: string;
+}
+
 export interface SignInPayload {
     email: string;
     password: string;
@@ -135,8 +178,9 @@ export interface ResetPassswordPayload {
     newPassword: string;
 }
 
-export interface DepartmentPayload {
+export interface DecodedPayload {
     departmentId: string;
     email: string;
-    businessUserId: string
+    businessUserId: string;
+    adminBusinessUserId: string;
 }

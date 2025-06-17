@@ -73,13 +73,18 @@ export const apiGetService = async (endPoint: string) => {
 // GET with pagination
 export const apiGetPaginateService = async (
     endpoint: string,
-    queryParams?: { page?: number; limit?: number; businessUserId?: string | null }
+    queryParams?: { page?: number; 
+        limit?: number; 
+        businessUserId?: string | null 
+        adminUserId?: string | null
+    }
 ) => {
     try {
         const params = {
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
             businessUserId: queryParams?.businessUserId || undefined,
+            adminUserId:  queryParams?.adminUserId || undefined
         };
 
         const response = await apiClient.get(endpoint, { params });

@@ -1,10 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import {
-    Menu, X, Settings, Headset, House, UsersRound, ChevronDown,
-    ChevronUp, User, Building2, Users
-} from 'lucide-react';
+import { Menu, X, Settings, Headset, House, UsersRound, ChevronDown, ChevronUp, Building2 } from 'lucide-react';
 import Image from 'next/image';
 export default function SuperAdminSidebar() {
     const [open, setOpen] = useState(false);
@@ -47,17 +44,6 @@ export default function SuperAdminSidebar() {
                             </div>
                         </Link>
                     </li>
-                    {/* <li>
-                        <Link
-                            href='/system-config'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
-                        >
-                            <div className='flex gap-1 items-center'>
-                                <MonitorCog size={15} />
-                                System Config
-                            </div>
-                        </Link>
-                    </li> */}
 
                     <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">People</span>
                     <li>
@@ -76,90 +62,15 @@ export default function SuperAdminSidebar() {
                         {usersMenuOpen && (
                             <div className="ml-6 mt-1 space-y-1">
                                 <Link
-                                    href='/pages/user/user-management/'
-                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
-                                >
-                                    <User size={14} />
-                                    User management
-                                </Link>
-                                <Link
                                     href='/pages/user/business/'
                                     className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
                                 >
                                     <Building2 size={14} />
                                     Businesses
                                 </Link>
-                                <Link
-                                    href='/pages/user/business/business-kyc/'
-                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
-                                >
-                                    <Building2 size={14} />
-                                    Businesses KYC
-                                </Link>
-                                <Link
-                                    href='/pages/user/admin/admin-kyc/'
-                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
-                                >
-                                    <Building2 size={14} />
-                                    Investors KYC
-                                </Link>
-                                <Link
-                                    href='/pages/user/employee/'
-                                    className="py-1 px-3 rounded hover:bg-gray-200 transition text-sm flex items-center gap-2"
-                                >
-                                    <Users size={14} />
-                                    Employees
-                                </Link>
-                               
                             </div>
                         )}
                     </li>
-                    {/* <li>
-                        <Link
-                            href='/pages/user/department'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
-                        >
-                            <div className='flex gap-1 items-center'>
-                                <MonitorCog size={15} />
-                                Department
-                            </div>
-                        </Link>
-                    </li> */}
-                    {/* <li>
-                        <Link
-                            href='/ecosystem'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
-                        >
-                            <div className='flex gap-1 items-center'>
-                                <Layers size={15} />
-                                Ecosystem
-                            </div>
-                        </Link>
-                    </li>
-
-                    <span className="flex md:py-1 px-3 border-t border-gray-100 text-xs text-gray-400">Intelligence & Insights</span>
-                    <li>
-                        <Link
-                            href='/analytics'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
-                        >
-                            <div className='flex gap-1 items-center'>
-                                <BarChart size={15} />
-                                Analytics
-                            </div>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href='/billing'
-                            className="block py-2 px-3 rounded hover:bg-gray-200 transition"
-                        >
-                            <div className='flex gap-1 items-center'>
-                                <Banknote size={15} />
-                                Billing
-                            </div>
-                        </Link>
-                    </li> */}
                 </ul>
 
                 {/* Bottom items - unchanged */}

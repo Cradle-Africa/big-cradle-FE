@@ -1,14 +1,16 @@
-import { useUser } from "@/app/hooks/useUser";
-import { Banknote, CheckSquare, UsersRound } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
+import { UsersRound, Banknote, CheckSquare } from "lucide-react";
+// import FormPopup from "../pop-up/PopUpForm";
+import { getUser } from "@/app/utils/user/userData";
+// import { User } from "@/app/pages/user/types/User";
+import KycVerification from "../KycVerification";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
-import FormPopup from "../pop-up/PopUpForm";
 
-const SuperAdminDashboard = () => {
-	const [openKycVerification, setOpenKycVerification] = useState(false);
-	const user = useUser();
-
+const BusinessDashboard = () => {
+	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false)
+	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false)
+	const user = getUser()
 	if (!user) {
 		return (
 			<DashboardSkeleton />
@@ -16,26 +18,16 @@ const SuperAdminDashboard = () => {
 	}
 
 	return (
-		<div>
 
-			{openKycVerification && (
-				<FormPopup
-					setOpen={setOpenKycVerification}
-					title="KYC Verification"
-					method={"POST"}
-					endPoint="business-auth/upload-certificate-of-incorporation"
-					fields={[
-						{ name: "email", label: "", type: "hidden", required: true },
-						{
-							name: "certificateOfIncorporation",
-							label: "Certificate of Incorporation",
-							type: "file",
-							required: true,
-						},
-					]}
-					defaultValues={{ email: user?.email }}
-				/>
-			)}
+		<div>
+			<KycVerification
+				openBusinessKycVerification={openBusinessKycVerification}
+				setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+				openAdminKycVerification={openAdminKycVerification}
+				setOpenAdminKycVerification={setOpenAdminKycVerification}
+				user={user}
+			/>
+
 			<div className="w-full">
 				<p className="font-semibold text-md space-y-1">
 					Hi Esther, here’s your platform overview for today
@@ -88,7 +80,8 @@ const SuperAdminDashboard = () => {
 			</div>
 			<DashboardCharts />
 		</div>
+
 	);
 };
 
-export default SuperAdminDashboard;
+export default BusinessDashboard;

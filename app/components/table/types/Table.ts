@@ -19,6 +19,11 @@ export interface TableComponentProps {
         current: string
     }
     actionConfig?: {
+        resetPassword?: {
+            endPoint: string
+            method: string
+            payload?: Record<string, unknown>
+        },
         suspend?: {
             endPoint: string
             method: string
@@ -69,9 +74,11 @@ export interface Department {
 export interface BreadsCrumpsProps {
     title: string
     openEmployee: boolean
-    openDepartment: boolean
     setOpenEmployee: React.Dispatch<React.SetStateAction<boolean>>
+    openDepartment: boolean
     setOpenDepartment: React.Dispatch<React.SetStateAction<boolean>>
+    openBusiness: boolean
+    setOpenBusiness: React.Dispatch<React.SetStateAction<boolean>>
     breadcrumbs: {
         parent: { path: string; label: string }
         current: string

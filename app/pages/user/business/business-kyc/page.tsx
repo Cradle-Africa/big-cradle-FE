@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
+import DashboardLayout from '@/app/DashboardLayout';
 
 const BusinessKyc = () => {
 
@@ -36,7 +37,7 @@ const BusinessKyc = () => {
 
 
     return (
-        <>
+        <DashboardLayout>
             <TableComponent
                 title="Business KYC"
                 endpoint="super-admin-auth/all-businesses-kyc-review"
@@ -47,7 +48,7 @@ const BusinessKyc = () => {
                 }}
                 actionConfig={actionConfig}
             />
-        </>
+        </DashboardLayout>
 
     )
 }

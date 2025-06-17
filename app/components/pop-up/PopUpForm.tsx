@@ -155,8 +155,6 @@ const FormPopup: React.FC<FormPopupProps> = ({
                             {errors[field.name] && (
                                 <p className="text-red-500 text-xs mt-1">{errors[field.name]}</p>
                             )}
-
-
                         </div>
                     ))}
 

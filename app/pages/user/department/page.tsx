@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
+import DashboardLayout from '@/app/DashboardLayout';
 
 const Department = () => {
     const fields = [
@@ -26,9 +27,9 @@ const Department = () => {
             payload: {}
         }
     }
-        
+
     return (
-        <>
+        <DashboardLayout>
             <TableComponent
                 title='Departments'
                 endpoint='department-mgt/all-business-departments'
@@ -40,7 +41,7 @@ const Department = () => {
                 actionConfig={actionConfig}
                 rightAction={rightAction}
             />
-        </>
+        </DashboardLayout>
 
     )
 }
