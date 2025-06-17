@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { apiPostService } from '../../services/apiService';
-import { LucideIcon, UserRoundX } from 'lucide-react';
+import { LucideIcon } from 'lucide-react';
 import IconComponent from './IconComponent';
 import FormPopup from '../../components/pop-up/PopUpForm';
 
