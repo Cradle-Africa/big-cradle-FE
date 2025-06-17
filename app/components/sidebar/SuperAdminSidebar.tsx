@@ -18,7 +18,8 @@ export default function SuperAdminSidebar() {
                     {open ? (
                         <div className='flex items-center justify-between'>
                             <Link href='/'>
-                                <Image src={"/logo.png"} width={150} height={13} alt="Logo" className='' />
+                                {/* <Image src={"/logo.png"} width={150} height={13} alt="Logo" className='' /> */}
+                                <Image src="/auth-logo.png" width={32} height={32} alt="Big Cradle Logo" className="w-8 mb-4" />        
                             </Link>
                             <X size={15} className='text-red-500' />
                         </div>

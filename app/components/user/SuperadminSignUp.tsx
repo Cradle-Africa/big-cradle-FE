@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import { validateSignUp } from '../../pages/user/validation/userValidation';
 import { SuperAdminSignUpService } from '../../services/user/userService';
 import AccountVerification from '@/app/components/user/AccountVerification';
