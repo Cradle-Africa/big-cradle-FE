@@ -47,7 +47,7 @@ export const removeUser = (): void => {
 };
 
 export const updateUserKycStatus = (endPoint: string): void => {
-    if (endPoint === 'business-auth/upload-certificate-of-incorporation') {
+    if (endPoint === 'business-auth/upload-certificate-of-incorporation' || endPoint === 'admin-auth/upload-kyc' ) {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             try {
