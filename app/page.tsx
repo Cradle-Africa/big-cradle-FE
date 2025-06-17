@@ -2,9 +2,8 @@
 import { useState } from "react";
 import DashboardCharts from "./components/charts/DashboardCharts";
 import UserRoleTable from "./components/dashboard/UserRoleTable";
-import { UsersRound, CheckSquare, Banknote, UploadCloud } from "lucide-react";
+import { UsersRound, CheckSquare, Banknote } from "lucide-react";
 import DashboardLayout from "./DashboardLayout";
-import FormPopup from '@/app/components/pop-up/PopUpForm';
 import { useUser } from './hooks/useUser';
 import DashboardSkeleton from './components/skeleton/Dashboardskeleton';
 import KycVerification from "./components/KycVerification";
