@@ -1,0 +1,195 @@
+"use client";
+
+import { useState } from "react";
+import { toCamelCase } from '@/app/utils/toCamelCase';
+import SelectOptionManager from "./SelectOptionManager";
+
+type FieldType = "text" | "select";
+
+type Field = {
+    label: string;
+    key: string;
+    type: FieldType;
+    required: boolean;
+    options?: string[];
+};
+
+interface PipelineForm {
+    dataPointId: string;
+    field: Field[];
+}
+
+const mockDataPoints = [
+    { id: "65f0f0d2d1a1e3b4a2b7e1c2", name: "Data Point 1" },
+    { id: "65f0f0d2d1a1e3b4a2b7e1c9", name: "Data Point 2" },
+];
+
+const Pipeline = () => {
+    const [newOptions, setNewOptions] = useState<string[]>([]);
+    const [form, setForm] = useState<PipelineForm>({
+        dataPointId: "",
+        field: [],
+    });
+
+    const handleFieldChange = <K extends keyof Field>(index: number, key: K, value: Field[K]) => {
+        const updatedFields = [...form.field];
+        updatedFields[index][key] = value;
+
+        // Auto-generate `key` from `label`
+        if (key === "label") {
+            updatedFields[index]["key"] = toCamelCase(value as string);
+        }
+
+        if (key === "type" && value !== "select") {
+            delete updatedFields[index].options;
+        }
+        setForm((prev) => ({ ...prev, field: updatedFields }));
+    };
+
+
+    const removeField = (index: number) => {
+        const updatedFields = form.field.filter((_, i) => i !== index);
+        const updatedOptions = newOptions.filter((_, i) => i !== index);
+        setForm((prev) => ({ ...prev, field: updatedFields }));
+        setNewOptions(updatedOptions);
+    };
+
+    const addField = () => {
+        setForm((prev) => ({
+            ...prev,
+            field: [
+                ...prev.field,
+                {
+                    label: "",
+                    key: "",
+                    type: "text",
+                    required: false,
+                    options: [],
+                },
+            ],
+        }));
+        setNewOptions((prev) => [...prev, ""]);
+    };
+
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Submitted Data:", form);
+    };
+
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="w-1/2 bg-white py-6 rounded-md space-y-6"
+        >
+            <h2 className="text-xl font-semibold text-blue-600 mb-4">New Pipeline</h2>
+
+            {/* DataPoint Selector */}
+            <div className="">
+                <select
+                    value={form.dataPointId}
+                    onChange={(e) =>
+                        setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
+                    }
+                    required
+                    className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
+                >
+                    <option value="">Select Data Point</option>
+                    {mockDataPoints.map((dp) => (
+                        <option key={dp.id} value={dp.id}>
+                            {dp.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Dynamic Fields */}
+            {form.field.map((field, index) => (
+                <div
+                    key={index}
+                    className="p-4 border border-gray-200 rounded space-y-3 mb-2"
+                >
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <input
+                                type="text"
+                                placeholder="Label"
+                                value={field.label}
+                                onChange={(e) =>
+                                    handleFieldChange(index, "label", e.target.value)
+                                }
+                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <select
+                                value={field.type}
+                                onChange={(e) =>
+                                    handleFieldChange(index, "type", e.target.value as FieldType)
+                                }
+                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1"
+                            >
+                                <option >Select Type</option>
+                                <option value="text">Text</option>
+                                <option value="select">Select</option>
+                            </select>
+                        </div>
+
+                        <div className="flex items-center mt-6">
+                            <input
+                                type="checkbox"
+                                checked={field.required}
+                                onChange={(e) =>
+                                    handleFieldChange(index, "required", e.target.checked)
+                                }
+                                className="mr-2"
+                            />
+                            <span className="text-sm">Required</span>
+                        </div>
+                    </div>
+
+                    <SelectOptionManager
+                        index={index}
+                        newOptions={newOptions}
+                        setNewOptions={setNewOptions}
+                        formFields={form.field}
+                        setFormFields={setForm}
+                    />
+
+                    <div className="flex justify-end">
+                        <button
+                            type="button"
+                            onClick={() => removeField(index)}
+                            className="text-red-500 text-sm border border-red-300 px-3 py-1 rounded hover:bg-red-50 cursor-pointer"
+                        >
+                            Remove Field
+                        </button>
+                    </div>
+                </div>
+            ))}
+
+
+            <div className="flex gap-3 mt-5">
+                <button
+                    type="button"
+                    onClick={addField}
+                    className="text-blue-600 border border-blue-600 px-4 py-1 cursor-pointer rounded-lg hover:bg-blue-50"
+                >
+                    + Add Field
+                </button>
+
+                <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 cursor-pointer"
+                >
+                Submit
+                </button>
+            </div>
+        </form>
+    );
+};
+
+export default Pipeline;

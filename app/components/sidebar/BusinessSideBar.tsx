@@ -92,7 +92,12 @@ const sideBarLinks: {
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
   {
     label: "Survey",
-    href: "/pages/user/survey",
+    href: "/pages/survey",
+    icon: <File size={15} />,
+  },
+  {
+    label: "Data Flywheel",
+    href: "/pages/flywheel",
     icon: <File size={15} />,
   },
   {
