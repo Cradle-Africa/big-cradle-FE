@@ -43,7 +43,7 @@ export default function SuperAdminSidebar() {
         <li>
           <div
             onClick={() => setUsersMenuOpen(!usersMenuOpen)}
-            className="block py-2 px-3 rounded hover:bg-gray-200 transition cursor-pointer"
+            className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
           >
             <div className="flex gap-1 items-center justify-between">
               <div className="flex gap-1 items-center">
