@@ -10,7 +10,7 @@ interface SelectOptionManagerProps {
 	setFormFields: React.Dispatch<React.SetStateAction<PipelineForm>>;
 }
 
-export type FieldType = "text" | "select";
+export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect";
 
 export type Field = {
 	label: string;
