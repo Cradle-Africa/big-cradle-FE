@@ -1,10 +1,10 @@
 import { useUser } from "@/app/hooks/useUser";
-import { Banknote, CheckSquare, UsersRound } from "lucide-react";
+import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import { UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
-import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 import FormPopup from "../pop-up/PopUpForm";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 
 const SuperAdminDashboard = () => {
   const [openKycVerification, setOpenKycVerification] = useState(false);

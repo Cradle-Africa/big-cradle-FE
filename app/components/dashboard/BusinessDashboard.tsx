@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import DashboardCharts from "../charts/DashboardCharts";
-import { UsersRound, Banknote, CheckSquare } from "lucide-react";
+import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
 import { getUser } from "@/app/utils/user/userData";
+import { UsersRound } from "lucide-react";
+import { useState } from "react";
+import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =

@@ -1,17 +1,16 @@
 "use client";
-import axios from "@/app/lib/axios";
-import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { DataPoint, DataPointSchema } from "@/app/lib/type";
-import { useForm, SubmitHandler } from "react-hook-form"
-import { getBusinessId } from "@/app/utils/user/userData";
-import { getEmployeeUserId } from "@/app/utils/user/userData";
-import { useCreateDataPoint } from "../_features/hook";
-import { dataPointSchema } from "@/app/lib/validationSchemas";
-import { zodResolver } from "@hookform/resolvers/zod";
 import ErrorMessage from "@/app/components/form/ErrorMessage";
+import axios from "@/app/lib/axios";
+import { DataPointSchema } from "@/app/lib/type";
+import { dataPointSchema } from "@/app/lib/validationSchemas";
+import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { Check } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useCreateDataPoint } from "../_features/hook";
 
 const NewDataPoint = () => {
 
@@ -30,7 +29,7 @@ const NewDataPoint = () => {
 
     const {
         mutateAsync: createDataPoint,
-        error: createError,
+        // error: createError,
         isSuccess: isCreateSuccess,
     } = useCreateDataPoint({
         axios,
@@ -53,7 +52,7 @@ const NewDataPoint = () => {
             toast.success(`New data point created successfully`);
             // router.back();
         }
-    }, [isCreateSuccess]);
+    }, [isCreateSuccess, queryClient]);
 
     return (
         <div className="mt-10">
