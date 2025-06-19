@@ -33,6 +33,13 @@ export const getAdminUserId = (): string | null => {
     return null;
 };
 
+export const getEmployeeUserId = (): string | null => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem('employeeId');
+    }
+    return null;
+};
+
 // Add user data to local storage
 export const addUser = (user: User) => {
     localStorage.setItem(key, JSON.stringify(user));

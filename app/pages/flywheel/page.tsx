@@ -1,14 +1,18 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
 import { List, Plus } from "lucide-react";
-import FlywheelTabs from "./_components/FlywheelTabs";
 import { useEffect, useRef, useState } from "react";
-import DataPoint from "./_components/DataPoint";
+import DataPoints from "./_components/DataPoints";
+import FlywheelTabs from "./_components/FlywheelTabs";
+import NewDataPoint from "./_components/NewDataPoint";
+import NewPipeLine from "./_components/NewPipeline";
 import Overview from "./_components/Overview";
 import Pipeline from "./_components/Pipeline";
-import NewPipeLine from "./_components/NewPipeline"
+import axios from "@/app/lib/axios"
 import PopUp from "./_components/Popup";
-import NewDataPoint from "./_components/NewDataPoint";
+import FlyWheelPageLoading from "./loading";
+import { useFetchDataTypes } from "./_features/hook";
+import { getBusinessId } from "@/app/utils/user/userData";
 
 const SurveyCard = () => {
 	const [open, setOpen] = useState(false)
@@ -17,9 +21,17 @@ const SurveyCard = () => {
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 	const [newPipeLine, setNewPipeline] = useState(false)
 	const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
+	const businessUserId = getBusinessId()
+
+	const { isLoading, data: dataTypes } = useFetchDataTypes({
+		axios,
+		queryParams: {
+			page: 1,
+			limit: 10
+		}
+	})
 
 	useEffect(() => {
-
 		const handler = (e: MouseEvent) => {
 			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
 				setOpen(false);
@@ -29,6 +41,8 @@ const SurveyCard = () => {
 
 		return () => document.removeEventListener('mousedown', handler);
 	}, [setOpen]);
+
+	if(isLoading) return <FlyWheelPageLoading/>
 
 	return (
 		<DashboardLayout>
@@ -73,7 +87,7 @@ const SurveyCard = () => {
 								<List size={18} color="white" className="mr-1" />
 								Data Points
 							</button>
-						):(
+						) : (
 							<button
 								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
 								onClick={() => setOpenNewDataPoint(true)}
@@ -82,10 +96,10 @@ const SurveyCard = () => {
 								New Data Point
 							</button>
 						)}
-						{ openNewDataPoint ? (
-							<NewDataPoint/>
-						): (
-							<DataPoint />							
+						{openNewDataPoint ? (
+							<NewDataPoint />
+						) : (
+							<DataPoints data={dataTypes ?? []} />
 						)}
 					</div>
 				)}

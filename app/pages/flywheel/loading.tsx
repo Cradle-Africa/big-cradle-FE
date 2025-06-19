@@ -2,7 +2,7 @@ import React from 'react'
 
 const FlyWheelPageLoading = () => {
   return (
-    <div>FlyWheelPageLoading</div>
+    <div>FlyWheelPageLoading ...</div>
   )
 }
 

@@ -4,8 +4,9 @@ import { useState } from "react";
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import SelectOptionManager from "./SelectOptionManager";
 import { Check } from "lucide-react";
+import FieldPreview from "./FieldPreview";
 
-type FieldType = "text" | "select";
+type FieldType = "text" | "select" | "date" | "textarea" | "multiselect";
 
 type Field = {
     label: string;
@@ -36,17 +37,16 @@ const Pipeline = () => {
         const updatedFields = [...form.field];
         updatedFields[index][key] = value;
 
-        // Auto-generate `key` from `label`
         if (key === "label") {
             updatedFields[index]["key"] = toCamelCase(value as string);
         }
 
-        if (key === "type" && value !== "select") {
+        if (key === "type" && value !== "select" && value !== "multiselect") {
             delete updatedFields[index].options;
         }
+
         setForm((prev) => ({ ...prev, field: updatedFields }));
     };
-
 
     const removeField = (index: number) => {
         const updatedFields = form.field.filter((_, i) => i !== index);
@@ -72,7 +72,6 @@ const Pipeline = () => {
         setNewOptions((prev) => [...prev, ""]);
     };
 
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Submitted Data:", form);
@@ -85,7 +84,6 @@ const Pipeline = () => {
         >
             <h2 className="text-md text-black mb-4">New Pipeline</h2>
 
-            {/* DataPoint Selector */}
             <div className="w-full">
                 <select
                     value={form.dataPointId}
@@ -104,8 +102,7 @@ const Pipeline = () => {
                 </select>
             </div>
 
-            {/* Dynamic Fields */}
-            {form.field.map((field, index) => (
+            {form.field.map((field, index: any) => (
                 <div
                     key={index}
                     className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2"
@@ -118,7 +115,7 @@ const Pipeline = () => {
                             onChange={(e) =>
                                 handleFieldChange(index, "label", e.target.value)
                             }
-                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none "
+                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
                         />
                         <select
                             value={field.type}
@@ -127,9 +124,12 @@ const Pipeline = () => {
                             }
                             className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
                         >
-                            <option >Select Type</option>
+                            <option value="">Select Type</option>
                             <option value="text">Text</option>
                             <option value="select">Select</option>
+                            <option value="multiselect">Multi-Select</option>
+                            <option value="date">Date</option>
+                            <option value="textarea">Textarea</option>
                         </select>
                     </div>
 
@@ -144,6 +144,9 @@ const Pipeline = () => {
                         />
                         <span className="text-sm">Required</span>
                     </div>
+
+                    {/* Field Preview */}
+                    <FieldPreview field={field} />
 
                     <SelectOptionManager
                         index={index}
@@ -164,7 +167,6 @@ const Pipeline = () => {
                     </div>
                 </div>
             ))}
-
 
             <div className="flex gap-3 mt-5">
                 <button
