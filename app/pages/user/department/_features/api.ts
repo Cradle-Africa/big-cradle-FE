@@ -1,28 +1,27 @@
 import { removeUser } from '@/app/utils/user/userData';
-import { DataPoint } from './../../../lib/type';
-import { getBusinessId } from '@/app/utils/user/userData';
+import { Department } from './../../../../lib/type';
 import { AxiosInstance } from "axios";
 
-const getBusinessUserId = getBusinessId()
-
-
-export const fetchDataPoints = async (
+export const fetchDepartments = async (
     axios: AxiosInstance,
     queryParams?: { 
         page?: number; 
         limit?: number; 
+        businessUserId?: string;
     }
 ) => {
     try {
         const params = {
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
+            businessUserId: queryParams?.businessUserId || null
         };
-        const res = await axios.get(`/data-point-mgt/data-point/${getBusinessUserId}`, {params});
+        const res = await axios.get(`/department-mgt/all-business-departments`, {params});
         if (res?.status === 401){
             removeUser();
         } 
-        return res.data;
+
+        return res.data.department;
     } catch (error: any) {
         console.log(JSON.stringify(error));
         // toast.error(JSON.stringify(error))
@@ -31,20 +30,21 @@ export const fetchDataPoints = async (
     }
 };
 
-export const createDataPoint = async (
+export const createDepartment = async (
     axios: AxiosInstance,
-    data: DataPoint
+    data: Department
 ) => {
     try {
-        const res = await axios.post(`/data-point-mgt/data-point`, data);
+        const res = await axios.post(`/department-mgt/create-department`, data);
         return res.data;
     } catch (error: any) {
         const statusCode = error?.response?.status;
         let message = error?.response?.message;
 
+        console.log(error.response.data.message)
         switch (statusCode) {
             case 400:
-                message = Array.isArray(message) ? message.join('\n') : message;
+                message = error?.response?.data?.message;
                 break;
 
             case 401:

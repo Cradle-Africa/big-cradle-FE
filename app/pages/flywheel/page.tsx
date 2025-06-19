@@ -12,16 +12,14 @@ import axios from "@/app/lib/axios"
 import PopUp from "./_components/Popup";
 import FlyWheelPageLoading from "./loading";
 import { useFetchDataTypes } from "./_features/hook";
-import { getBusinessId } from "@/app/utils/user/userData";
 
-const SurveyCard = () => {
+const Flywheel = () => {
 	const [open, setOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null);
 	const tabs = ["Overview", "Data Points", "Pipelines"];
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 	const [newPipeLine, setNewPipeline] = useState(false)
 	const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
-	const businessUserId = getBusinessId()
 
 	const { isLoading, data: dataTypes } = useFetchDataTypes({
 		axios,
@@ -143,4 +141,4 @@ const SurveyCard = () => {
 	);
 };
 
-export default SurveyCard;
+export default Flywheel;
