@@ -3,9 +3,6 @@ import DashboardLayout from "@/app/DashboardLayout";
 import { List, Plus } from "lucide-react";
 import FlywheelTabs from "./_components/FlywheelTabs";
 import { useEffect, useRef, useState } from "react";
-import api_icon from '@/public/icons/api_icon.png'
-import build_pipeline from '@/public/icons/build_pipeline.png'
-import Image from 'next/image'
 import DataPoint from "./_components/DataPoint";
 import Overview from "./_components/Overview";
 import Pipeline from "./_components/Pipeline";
