@@ -30,14 +30,12 @@ const Department = () => {
             }
         };
         document.addEventListener('mousedown', handler);
-
         return () => document.removeEventListener('mousedown', handler);
     }, [setOpen]);
 
     { isLoading ?? <DepartmentLosding /> }
     return (
         <DashboardLayout>
-
             <div className="flex justify-between">
                 <div className="flex flex-col gap-2">
                     <p className="font-medium text-black">Departments</p>
@@ -46,9 +44,7 @@ const Department = () => {
                     className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
                     onClick={() => setOpen(true)}
                 >
-                    <div className="flex fgap2 items-center gap-2"
-                        onClick={() => setOpen(true)}
-                    >
+                    <div className="flex fgap2 items-center gap-2">
                         <Plus size={18} color="white" />
                         <span className="text-white">Create Department</span>
                     </div>
@@ -61,14 +57,14 @@ const Department = () => {
 
                 {open && <NewDepartment setOpen={setOpen} />}
 
-                <DepartmentTable
-                    data={departments ?? []}
-                />
-
+                {isLoading ? (
+                    <DepartmentLosding />
+                ) : (
+                    <DepartmentTable data={departments ?? []} />
+                )}
             </div>
-
         </DashboardLayout>
     );
 };
 
-export default Department
+export default Department;

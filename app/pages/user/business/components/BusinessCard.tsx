@@ -1,5 +1,5 @@
-import { Album } from "lucide-react";
 import classNames from "classnames";
+import { Album } from "lucide-react";
 import { JSX } from "react";
 
 type Props = {
@@ -16,7 +16,6 @@ const BusinessCard = ({
   value,
   subTitle,
   percentage,
-  icon,
   isHighLighted,
 }: Props) => {
   return (
