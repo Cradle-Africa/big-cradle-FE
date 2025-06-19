@@ -1,4 +1,4 @@
-import whiteLogo from "@/public/images/white-logo.png";
+import LogoWithText from "@/public/images/logo-with-text.png";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
             <div className="flex items-center justify-between">
               <Link href="/">
                 <Image
-                  src={whiteLogo}
+                  src={LogoWithText}
                   width={150}
                   height={13}
                   alt="Logo"
@@ -49,7 +49,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
         <div className="flex flex-col space-y-2 mt-2 px-4">
           <Link href="/">
             <Image
-              src={whiteLogo}
+              src={LogoWithText}
               width={100}
               height={13}
               alt="Logo"
