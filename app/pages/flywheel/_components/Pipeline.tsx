@@ -1,6 +1,7 @@
 "use client";
 
 import { MoreVertical } from "lucide-react";
+import { useState } from "react";
 const Pipeline = () => {
     return (
         <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">

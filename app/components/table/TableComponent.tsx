@@ -78,7 +78,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                 <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                     <th
                                         key="header-index"
+<<<<<<< HEAD
                                         className="px-6 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
+=======
+                                        className="px-3 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
+>>>>>>> 89d2769 (Merging remote branch into local branch)
                                     >
                                         #
                                     </th>
