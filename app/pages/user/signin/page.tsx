@@ -12,6 +12,7 @@ import ForgotPasswordCode from "../../../components/user/ForgotPasswordCode";
 import ResetPassword from "../../../components/user/ResetPassword";
 import { signInService } from "../../../services/user/userService";
 import { validateSignIn } from "../validation/userValidation";
+import LogoWithText from "@/public/images/logo-with-text.png"
 
 export default function SignInPage() {
   const [openReset, setOpenReset] = useState(false);
@@ -110,11 +111,11 @@ export default function SignInPage() {
 
         <div className="w-full max-w-md space-y-6 text-sm">
           <Image
-            src="/auth-logo.png"
-            width={32}
-            height={32}
+            src={LogoWithText}
+            width={200}
+            height={200}
             alt="Big Cradle Logo"
-            className="w-8 mb-4"
+            className="mb-4"
           />
           <h3 className="text-lg font-semibold text-gray-700">
             Welcome to Big Cradle

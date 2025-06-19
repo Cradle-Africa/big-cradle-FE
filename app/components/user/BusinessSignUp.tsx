@@ -129,12 +129,12 @@ export default function BusinessSignUp() {
                                     {errors.contactName && <p className="text-red-500 text-xs">{errors.contactName}</p>}
                                 </div>
                                 <div className='mt-5'>
-                                    <input name="contactPersonFirstName" value={form.contactPersonFirstName} onChange={handleChange} placeholder="First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    <input name="contactPersonFirstName" value={form.contactPersonFirstName} onChange={handleChange} placeholder="Contact First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                     {errors.contactPersonFirstName && <p className="text-red-500 text-xs">{errors.contactPersonFirstName}</p>}
                                 </div>
 
                                 <div className='mt-5'>
-                                    <input name="contactPersonLastName" value={form.contactPersonLastName} onChange={handleChange} placeholder="Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    <input name="contactPersonLastName" value={form.contactPersonLastName} onChange={handleChange} placeholder="Contact Last Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                     {errors.contactPersonLastName && <p className="text-red-500 text-xs">{errors.contactPersonLastName}</p>}
                                 </div>
                                 <div className="md:flex w-full gap-2 mt-5">

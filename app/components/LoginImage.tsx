@@ -22,9 +22,9 @@ const LoginImage = () => {
         <motion.div
           key={currentIndex}
           initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
+          animate={{ opacity: 1, x: 0.6 }}
           exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
           className="relative w-full h-full"
         >
           <LoginImageItem

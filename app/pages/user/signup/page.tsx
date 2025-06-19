@@ -14,6 +14,7 @@ import AdminSignUp from "../../../components/user/AdminSignUp";
 import { DecodedPayload } from "../types/User";
 import BusinessSignUpLink from "@/app/components/user/BusinessSignUpLink";
 import LoginImage from "@/app/components/LoginImage";
+import LogoWithText from "@/public/images/logo-with-text.png"
 
 export default function SignUpPage() {
   const searchParams = useSearchParams();
@@ -73,11 +74,11 @@ export default function SignUpPage() {
        <div className="flex items-center justify-center w-full max-w-[400px] md:px-12 py-4 bg-white">
         <div className="w-full md:w-[500px] space-y-3 py-10">
           <Image
-            src="/auth-logo.png"
-            width={32}
-            height={32}
-            alt="Logo"
-            className="w-8 mb-4"
+            src={LogoWithText}
+            width={200}
+            height={200}
+            alt="Big Cradle Logo"
+            className="mb-4"
           />
 
           {superAdminSignUp && (
