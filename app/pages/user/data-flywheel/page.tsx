@@ -1,6 +1,6 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
-import { PenBox, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import Card from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";

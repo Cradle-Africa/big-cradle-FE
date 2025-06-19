@@ -18,7 +18,6 @@ const SurveyCard = () => {
 	const [newPipeLine, setNewPipeline] = useState(false)
 	const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
 
-	setOpenNewDataPoint
 	useEffect(() => {
 
 		const handler = (e: MouseEvent) => {
