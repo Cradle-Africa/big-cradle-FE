@@ -8,7 +8,7 @@ import {
   House,
   User,
   Users,
-  UsersRound
+  UsersRound,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,7 +21,10 @@ export default function SuperAdminSidebar() {
 
   return (
     <SideBarWrapper>
-      <ul className="flex flex-col space-y-2 mt-2 px-4">
+      <ul
+        className="bg-[#004484] rounded-lg mt-4 text-[#C1C1C1] p-4 flex flex-col gap-4
+          "
+      >
         {sideBarLinks.map((link) => (
           <li key={link.label}>
             <Link
@@ -39,7 +42,7 @@ export default function SuperAdminSidebar() {
             </Link>
           </li>
         ))}
-      
+
         <li>
           <div
             onClick={() => setUsersMenuOpen(!usersMenuOpen)}
@@ -110,7 +113,7 @@ const sideBarLinks: {
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
   {
     label: "Survey",
-    href: "/pages/user/survey",
+    href: "/pages/survey",
     icon: <File size={15} />,
-  }
+  },
 ];
