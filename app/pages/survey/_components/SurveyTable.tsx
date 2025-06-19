@@ -40,7 +40,7 @@ const SurveyTable = () => {
               <td className="px-6 py-4">212 / 500</td>
               <td className="px-6 py-4">87%</td>
               <td className="px-6 py-4">
-                <MoreVertical size={18}/>
+                <MoreVertical size={18} />
               </td>
             </tr>
           ))}

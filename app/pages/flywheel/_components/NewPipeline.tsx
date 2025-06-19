@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/toCamelCase';
 import SelectOptionManager from "./SelectOptionManager";
+import { Check } from "lucide-react";
 
 type FieldType = "text" | "select";
 
@@ -80,12 +81,12 @@ const Pipeline = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-1/2 bg-white py-6 rounded-md space-y-6"
+            className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
         >
-            <h2 className="text-xl font-semibold text-blue-600 mb-4">New Pipeline</h2>
+            <h2 className="text-md text-black mb-4">New Pipeline</h2>
 
             {/* DataPoint Selector */}
-            <div className="">
+            <div className="w-full">
                 <select
                     value={form.dataPointId}
                     onChange={(e) =>
@@ -107,48 +108,41 @@ const Pipeline = () => {
             {form.field.map((field, index) => (
                 <div
                     key={index}
-                    className="p-4 border border-gray-200 rounded space-y-3 mb-2"
+                    className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2"
                 >
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Label"
-                                value={field.label}
-                                onChange={(e) =>
-                                    handleFieldChange(index, "label", e.target.value)
-                                }
-                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1"
-                            />
-                        </div>
+                    <div className="w-full grid grid-cols-2 gap-2">
+                        <input
+                            type="text"
+                            placeholder="Label"
+                            value={field.label}
+                            onChange={(e) =>
+                                handleFieldChange(index, "label", e.target.value)
+                            }
+                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none "
+                        />
+                        <select
+                            value={field.type}
+                            onChange={(e) =>
+                                handleFieldChange(index, "type", e.target.value as FieldType)
+                            }
+                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
+                        >
+                            <option >Select Type</option>
+                            <option value="text">Text</option>
+                            <option value="select">Select</option>
+                        </select>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <select
-                                value={field.type}
-                                onChange={(e) =>
-                                    handleFieldChange(index, "type", e.target.value as FieldType)
-                                }
-                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1"
-                            >
-                                <option >Select Type</option>
-                                <option value="text">Text</option>
-                                <option value="select">Select</option>
-                            </select>
-                        </div>
-
-                        <div className="flex items-center mt-6">
-                            <input
-                                type="checkbox"
-                                checked={field.required}
-                                onChange={(e) =>
-                                    handleFieldChange(index, "required", e.target.checked)
-                                }
-                                className="mr-2"
-                            />
-                            <span className="text-sm">Required</span>
-                        </div>
+                    <div className="flex items-center mt-6">
+                        <input
+                            type="checkbox"
+                            checked={field.required}
+                            onChange={(e) =>
+                                handleFieldChange(index, "required", e.target.checked)
+                            }
+                            className="mr-2 cursor-pointer outline-none"
+                        />
+                        <span className="text-sm">Required</span>
                     </div>
 
                     <SelectOptionManager
@@ -165,7 +159,7 @@ const Pipeline = () => {
                             onClick={() => removeField(index)}
                             className="text-red-500 text-sm border border-red-300 px-3 py-1 rounded hover:bg-red-50 cursor-pointer"
                         >
-                            Remove Field
+                            - Remove
                         </button>
                     </div>
                 </div>
@@ -178,14 +172,15 @@ const Pipeline = () => {
                     onClick={addField}
                     className="text-blue-600 border border-blue-600 px-4 py-1 cursor-pointer rounded-lg hover:bg-blue-50"
                 >
-                    + Add Field
+                    + Add
                 </button>
 
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-700 cursor-pointer"
+                    className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer"
                 >
-                Submit
+                    <Check size={16} className="mr-1" />
+                    Submit
                 </button>
             </div>
         </form>
