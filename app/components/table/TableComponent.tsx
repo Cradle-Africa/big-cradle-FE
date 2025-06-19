@@ -71,28 +71,28 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     </h2>
                 </div>
 
-                <div className='relative overflow-x-auto whitespace-nowrap ' key="table-wrapper">
+                <div className='relative overflow-x-auto whitespace-nowrap rounded-[8px]' key="table-wrapper">
                     <>
-                        <table className="relative w-full" key="data-table">
+                        <table className="relative w-full rounded-[8px]" key="data-table">
                             <thead key="table-head">
                                 <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                     <th
                                         key="header-index"
-                                        className="px-3 py-3 text-left text-sm font-bold text-gray-600 rounded-tl-lg"
+                                        className="px-6 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
                                     >
                                         #
                                     </th>
                                     {fields.map((field, index) => (
                                         <th
                                             key={`header-${field.key}-${index}`}
-                                            className={`px-3 py-3 text-left text-sm font-bold text-gray-600 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
+                                            className={`px-3 py-3 text-left text-sm font-bold text-gray-500 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
                                             {field.label}
                                         </th>
                                     ))}
                                     {actionConfig && (
                                         <th
                                             key="actions-header"
-                                            className="rounded-tr-lg px-3 py-3 text-left text-sm font-bold text-gray-600"
+                                            className="rounded-tr-lg px-3 py-3 text-left text-sm font-bold text-gray-500"
                                         >
                                             Actions
                                         </th>
