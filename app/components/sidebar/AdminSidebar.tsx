@@ -73,6 +73,13 @@ export default function AdminSidebar() {
                 <Building2 size={14} />
                 Businesses
               </Link>
+              <Link
+                href="/pages/user/business/business-kyc/"
+                className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+              >
+                <Building2 size={14} />
+                Businesses KYC
+              </Link>
             </div>
           )}
         </li>
