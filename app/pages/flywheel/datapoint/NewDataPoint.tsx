@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/toCamelCase';
-import SelectOptionManager from "./SelectOptionManager";
+import SelectOptionManager from "../_components/SelectOptionManager";
 import { Check } from "lucide-react";
-import FieldPreview from "./FieldPreview";
-import { FieldType, Field, PipelineForm, Pipeline } from "@/app/lib/type";
-import { useCreatePipeline } from '../_features/hook';
+import FieldPreview from "../_components/FieldPreview";
+import { FieldType, Field, PipelineForm, DataPoint } from "@/app/lib/type";
+import { useCreateDataPoint } from '../_features/hook';
 import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
@@ -16,7 +16,7 @@ const mockDataPoints = [
     { id: "65f0f0d2d1a1e3b4a2b7e1c9", name: "Data Point 2" },
 ];
 
-const NewPipeline = () => {
+const NewDataPoint = () => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<PipelineForm>({
         dataPointId: "",
@@ -24,7 +24,7 @@ const NewPipeline = () => {
     });
     const businessUserId = getBusinessId();
     const employeeUserId = getEmployeeUserId();
-    const { mutate, isPending } = useCreatePipeline({ axios });
+    const { mutate, isPending } = useCreateDataPoint({ axios });
 
     const handleFieldChange = <K extends keyof Field>(index: number, key: K, value: Field[K]) => {
         const updatedFields = [...form.field];
@@ -69,7 +69,7 @@ const NewPipeline = () => {
         e.preventDefault();
 
         // Build full payload
-        const payload: Pipeline = {
+        const payload: DataPoint = {
             businessUserId,
             employeeUserId,
             dataPointId: form.dataPointId,
@@ -95,7 +95,7 @@ const NewPipeline = () => {
             onSubmit={handleSubmit}
             className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
         >
-            <h2 className="text-md text-black mb-4">New Pipeline</h2>
+            <h2 className="text-md text-black mb-4">Build a New Data Point</h2>
 
             <div className="w-full">
                 <select
@@ -106,7 +106,7 @@ const NewPipeline = () => {
                     required
                     className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
                 >
-                    <option value="">Select Data Point</option>
+                    <option value="">Select a pipeline</option>
                     {mockDataPoints.map((dp) => (
                         <option key={dp.id} value={dp.id}>
                             {dp.name}
@@ -204,4 +204,4 @@ const NewPipeline = () => {
     );
 };
 
-export default NewPipeline;
+export default NewDataPoint;

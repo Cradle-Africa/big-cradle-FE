@@ -1,8 +1,8 @@
 "use client";
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios from "@/app/lib/axios";
-import { DataPointSchema } from "@/app/lib/type";
-import { dataPointSchema } from "@/app/lib/validationSchemas";
+import { PipeLineSchema } from "@/app/lib/type";
+import { pipeLineSchema } from "@/app/lib/validationSchemas";
 import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,7 +10,7 @@ import { Check } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useCreateDataPoint } from "../_features/hook";
+import { useCreatePipeline } from "../_features/hook";
 
 const NewDataPoint = () => {
 
@@ -21,23 +21,23 @@ const NewDataPoint = () => {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<DataPointSchema>({
-        resolver: zodResolver(dataPointSchema),
+    } = useForm<PipeLineSchema>({
+        resolver: zodResolver(pipeLineSchema),
     });
 
     const queryClient = useQueryClient()
 
     const {
-        mutateAsync: createDataPoint,
+        mutateAsync: createPipeline,
         // error: createError,
         isSuccess: isCreateSuccess,
-    } = useCreateDataPoint({
+    } = useCreatePipeline({
         axios,
     });
 
-    const onButtonClick = async (data: DataPointSchema) => {
+    const onButtonClick = async (data: PipeLineSchema) => {
         try {
-            await createDataPoint(
+            await createPipeline(
                 {...data, businessUserId, employeeUserId }
             );
         } catch (error: any) {
@@ -47,8 +47,8 @@ const NewDataPoint = () => {
 
     useEffect(() => {
         if (isCreateSuccess) {
-            queryClient.invalidateQueries({ queryKey: ["data-points"] });
-            toast.success(`New data point created successfully`);
+            queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+            toast.success(`New data pipeline created successfully`);
             // router.back();
         }
     }, [isCreateSuccess, queryClient]);
@@ -56,26 +56,26 @@ const NewDataPoint = () => {
     return (
         <div className="mt-10">
             <h2 className="text-gray-800 text-lg font-normal">
-                New Data Point
+                New Data Pipeline
             </h2>
             <form onSubmit={handleSubmit(onButtonClick)} className="lg:w-3/4">
                 <input
-                {...register("dataPointName")}
+                {...register("pipelineName")}
                     type="text"
-                    placeholder="Data point name"
+                    placeholder="Data pipeline name"
                     name="dataPointName"
                     className="mt-5 w-full border border-gray-200 rounded px-3 py-2 outline-none"
                 />
-                <ErrorMessage>{errors.dataPointName?.message}</ErrorMessage>
+                <ErrorMessage>{errors.pipelineName?.message}</ErrorMessage>
 
                 <input
-                {...register("dataPointDescription")}
+                {...register("pipelineDescription")}
                     type="text"
-                    placeholder="Data point Description"
-                    name="dataPointDescription"
+                    placeholder="Data pipeline Description"
+                    name="pipelineDescription"
                     className="mt-5 w-full border border-gray-200 rounded px-3 py-2 outline-none"
                 />
-                <ErrorMessage>{errors.dataPointDescription?.message}</ErrorMessage>
+                <ErrorMessage>{errors.pipelineDescription?.message}</ErrorMessage>
 
                 <button
                     disabled={isSubmitting}
@@ -92,3 +92,12 @@ const NewDataPoint = () => {
 };
 
 export default NewDataPoint;
+
+
+
+
+
+
+
+
+

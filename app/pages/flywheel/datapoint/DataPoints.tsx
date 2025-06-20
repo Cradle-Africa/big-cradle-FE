@@ -1,24 +1,23 @@
 "use client";
 
-import { Pipeline } from "@/app/lib/type";
+import { DataPoint } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { MoreVertical } from "lucide-react";
-import { useState } from "react";
-import Pagination from "./Pagination";
+import Pagination from "../_components/Pagination";
 
-const PipelinePage = ({
+const DataPoints = ({
     data,
     pagination,
     onPageChange,
     onLimitChange,
 }: {
-    data: Pipeline[];
+    data: DataPoint[];
     pagination: { page: number; limit: number; pages: number };
     onPageChange: (page: number) => void;
     onLimitChange: (limit: number) => void;
 }) => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
+    // const [page, setPage] = useState(1);
+    // const [limit, setLimit] = useState(10);
 
     return (
         <div>
@@ -108,4 +107,4 @@ const PipelinePage = ({
     )
 };
 
-export default PipelinePage;
+export default DataPoints;

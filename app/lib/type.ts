@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { dataPointSchema, departmentSchema } from "./validationSchemas";
+import { pipeLineSchema, departmentSchema } from "./validationSchemas";
 
 export interface PaginationMeta {
   total: number;
@@ -22,15 +22,6 @@ export type BusinessKyc = {
   departmentDescription: string;
 }
 
-export type DataPoint = {
-  businessUserId?: string | null;
-  employeeUserId?: string | null;
-  dataPointName: string;
-  dataPointDescription: string;
-}
-export type DataPointSchema = z.infer<typeof dataPointSchema>;
-
-
 export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect" | "radio";
 
 export type Field = {
@@ -46,10 +37,18 @@ export interface PipelineForm {
   field: Field[];
 }
 
-export interface Pipeline {
+export interface DataPoint {
   businessUserId: string | null;
   employeeUserId: string | null;
   dataPointId: string;
   field: Field[];
   createdAt?: string;
 }
+
+export type Pipeline = {
+  businessUserId?: string | null;
+  employeeUserId?: string | null;
+  pipelineName: string;
+  pipelineDescription: string;
+}
+export type PipeLineSchema = z.infer<typeof pipeLineSchema>;

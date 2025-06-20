@@ -6,7 +6,7 @@ import { AxiosInstance } from "axios";
 const getBusinessUserId = getBusinessId()
 
 
-export const fetchDataPoints = async (
+export const fetchPipelines = async (
     axios: AxiosInstance,
     queryParams?: { 
         page?: number; 
@@ -31,9 +31,9 @@ export const fetchDataPoints = async (
     }
 };
 
-export const createDataPoint = async (
+export const createPipeline = async (
     axios: AxiosInstance,
-    data: DataPoint
+    data: Pipeline
 ) => {
     try {
         const res = await axios.post(`/data-point-mgt/data-point`, data);
@@ -62,7 +62,7 @@ export const createDataPoint = async (
 
 
 
-export const fetchPipelines = async (
+export const fetchDataPoints = async (
     axios: AxiosInstance,
     queryParams?: { 
         page?: number; 
@@ -85,9 +85,9 @@ export const fetchPipelines = async (
     }
 };
 
-export const createPipeline = async (
+export const createDataPoint = async (
     axios: AxiosInstance,
-    data: Pipeline
+    data: DataPoint
 ) => {
     try {
         const res = await axios.post(`/data-point-mgt/create-pipeline-via-fields`, data);

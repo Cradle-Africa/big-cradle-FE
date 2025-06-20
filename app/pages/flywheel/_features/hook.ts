@@ -11,31 +11,6 @@ type UseFetchDataPoints = {
 	};
 }
 
-interface PaginationMeta {
-	total: number;
-	page: number;
-	limit: number;
-	pages: number;
-}
-
-export const useFetchDataTypes = ({
-	axios, queryParams
-}: UseFetchDataPoints) => {
-	return useQuery<DataPoint[]>({
-		queryKey: ["data-points", queryParams],
-		queryFn: () => fetchDataPoints(axios, queryParams),
-		staleTime: 60 * 1000 * 5,
-		// retry: 3,
-	});
-};
-
-export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
-	return useMutation<void, Error, DataPoint>({
-		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
-	});
-};
-
-
 type UseFetchPipelines = {
 	axios: AxiosInstance;
 	queryParams?: {
@@ -44,23 +19,49 @@ type UseFetchPipelines = {
 	};
 }
 
+interface PaginationMeta {
+	total: number;
+	page: number;
+	limit: number;
+	pages: number;
+}
+
 export const useFetchPipelines = ({
+	axios, queryParams
+}: UseFetchPipelines) => {
+	return useQuery<Pipeline[]>({
+		queryKey: ["pipelines", queryParams],
+		queryFn: () => fetchPipelines(axios, queryParams),
+		staleTime: 60 * 1000 * 5,
+		// retry: 3,
+	});
+};
+
+export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, Pipeline>({
+		mutationFn: (data: Pipeline) => createPipeline(axios, data),
+	});
+};
+
+
+
+export const useFetchDataPoints = ({
   axios,
   queryParams
-}: UseFetchPipelines) => {
+}: UseFetchDataPoints) => {
   return useQuery<{
-    data: Pipeline[];
+    data: DataPoint[];
     pagination: PaginationMeta;
   }>({
-    queryKey: ["pipelines", queryParams],
-    queryFn: () => fetchPipelines(axios, queryParams),
+    queryKey: ["data-points", queryParams],
+    queryFn: () => fetchDataPoints(axios, queryParams),
     staleTime: 60 * 1000 * 5,
   });
 };
 
 
-export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
-	return useMutation<void, Error, Pipeline>({
-		mutationFn: (data: Pipeline) => createPipeline(axios, data),
+export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, DataPoint>({
+		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
 	});
 };
