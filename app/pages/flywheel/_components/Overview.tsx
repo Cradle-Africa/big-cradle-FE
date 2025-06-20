@@ -2,16 +2,20 @@ import React from 'react'
 import FlywheelCard from './FlywheelCard'
 import { Album } from 'lucide-react'
 
-const Overview = () => {
+interface PipelineProps {
+    pipelines: number
+}
+
+const Overview:React.FC<PipelineProps> = ({pipelines}) => {
     return (
-        <div className="flex w-full gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid md:grid-cols-2 xl:grid xl-grid-cols-3 w-full gap-6 mt-8">
             <FlywheelCard
                 isHighLighted={true}
-                title="Data points"
+                title="Data Pipelines"
                 icon={Album}
-                value={67}
-                percentage="10"
-                description="Activated"
+                value={pipelines}
+                percentage=""
+                description="Registered"
             />
 
             <FlywheelCard

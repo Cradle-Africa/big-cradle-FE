@@ -5,18 +5,17 @@ import { toCamelCase } from '@/app/utils/toCamelCase';
 import SelectOptionManager from "../_components/SelectOptionManager";
 import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
-import { FieldType, Field, PipelineForm, DataPoint } from "@/app/lib/type";
+import { FieldType, Field, PipelineForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
 import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 
-const mockDataPoints = [
-    { id: "65f0f0d2d1a1e3b4a2b7e1c2", name: "Data Point 1" },
-    { id: "65f0f0d2d1a1e3b4a2b7e1c9", name: "Data Point 2" },
-];
+interface DataPointProps {
+    pipelines: Pipeline[]
+}
 
-const NewDataPoint = () => {
+const NewDataPoint:React.FC<DataPointProps> = ({ pipelines }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<PipelineForm>({
         dataPointId: "",
@@ -79,7 +78,7 @@ const NewDataPoint = () => {
         console.log(JSON.stringify(payload));
         mutate(payload, {
             onSuccess: () => {
-                setForm({dataPointId: "", field: [],}); // clear the form
+                setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Pipeline created successfully");
                 console.log("Pipeline successfully submitted");
@@ -107,9 +106,9 @@ const NewDataPoint = () => {
                     className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
                 >
                     <option value="">Select a pipeline</option>
-                    {mockDataPoints.map((dp) => (
+                    {pipelines.map((dp: any) => (
                         <option key={dp.id} value={dp.id}>
-                            {dp.name}
+                            { dp.dataPointName }
                         </option>
                     ))}
                 </select>

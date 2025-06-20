@@ -29,7 +29,10 @@ interface PaginationMeta {
 export const useFetchPipelines = ({
 	axios, queryParams
 }: UseFetchPipelines) => {
-	return useQuery<Pipeline[]>({
+	return useQuery<{
+	    	data: DataPoint[]
+			pagination: PaginationMeta;
+		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
 		staleTime: 60 * 1000 * 5,
@@ -50,7 +53,7 @@ export const useFetchDataPoints = ({
   queryParams
 }: UseFetchDataPoints) => {
   return useQuery<{
-    data: DataPoint[];
+    dataPoint: Pipeline[];
     pagination: PaginationMeta;
   }>({
     queryKey: ["data-points", queryParams],

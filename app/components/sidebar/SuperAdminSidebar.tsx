@@ -4,6 +4,7 @@ import {
   Building2,
   ChevronDown,
   ChevronUp,
+  Database,
   File,
   House,
   User,
@@ -114,5 +115,10 @@ const sideBarLinks: {
     label: "Survey",
     href: "/pages/survey",
     icon: <File size={15} />,
+  },
+  {
+    label: "Data Flywheel",
+    href: "/pages/flywheel",
+    icon: <Database size={15} />,
   },
 ];

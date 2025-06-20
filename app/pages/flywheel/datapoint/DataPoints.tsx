@@ -16,8 +16,6 @@ const DataPoints = ({
     onPageChange: (page: number) => void;
     onLimitChange: (limit: number) => void;
 }) => {
-    // const [page, setPage] = useState(1);
-    // const [limit, setLimit] = useState(10);
 
     return (
         <div>

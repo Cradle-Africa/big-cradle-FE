@@ -15,13 +15,8 @@ import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
-	const tabs = ["Overview", "Data Points", "Data Pipelines"];
+	const tabs = ["Overview", "Data Pipelines", "Data Points"];
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
-
-	// const [newPipeLine, setNewPipeline] = useState(false)
-	// const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
-	// const [open, setOpen] = useState(false)
-
 	const [popupOpen, setPopupOpen] = useState(false); // Controls main popup
 	const [creatingPipeline, setCreatingPipeline] = useState(false); // Toggles NewPipeline view
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false); // Toggles NewDataPoint view
@@ -29,7 +24,7 @@ const Flywheel = () => {
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 
-	const { isLoading: isloadingDataPoints, data: dataPoints } = useFetchPipelines({
+	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchDataPoints({
 		axios,
 		queryParams: {
 			page: 1,
@@ -37,16 +32,18 @@ const Flywheel = () => {
 		}
 	})
 
-	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchDataPoints({
+	const pipelines = pipelinesData?.dataPoint ?? [];
+	const paginationPipelines = pipelinesData?.pagination;
+
+	const { data: dataPoints } = useFetchPipelines({
 		axios,
 		queryParams: {
 			page,
 			limit,
 		},
 	});
-
-	const pipelines = pipelinesData?.data ?? [];
-	const pagination = pipelinesData?.pagination;
+	const datapoints = dataPoints?.data ?? []
+	const paginationDataPoints = dataPoints?.pagination
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -57,8 +54,6 @@ const Flywheel = () => {
 		document.addEventListener('mousedown', handler);
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
-
-	if (isloadingDataPoints || isLoadingPipelines) return <FlyWheelPageLoading />
 
 	return (
 		<DashboardLayout>
@@ -94,7 +89,9 @@ const Flywheel = () => {
 					))}
 				</div>
 				{selectedTab === 'Overview' && (
-					<Overview />
+					<Overview 
+						pipelines={pipelines?.length}
+					/>
 				)}
 
 				{selectedTab === 'Data Pipelines' && (
@@ -117,9 +114,14 @@ const Flywheel = () => {
 									onClick={() => setPopupOpen(true)}
 								>
 									<Plus size={18} color="white" className="mr-1" />
-									Build a Pipeline
+									Build a new Pipeline
 								</button>
-								<Pipeline data={dataPoints ?? []} />
+								<Pipeline
+									data={pipelines ?? []}
+									pagination={paginationDataPoints ?? { page: 1, limit: 10, pages: 1 }}
+									onPageChange={setPage}
+									onLimitChange={setLimit}
+								/>
 							</>
 						)}
 					</div>
@@ -151,14 +153,25 @@ const Flywheel = () => {
 						</div>
 
 						{creatingDataPoint ? (
-							<NewDataPoint />
-						) : (
-							<DataPoints
-								data={pipelines ?? []}
-								pagination={pagination ?? { page: 1, limit: 10, pages: 1 }}
-								onPageChange={setPage}
-								onLimitChange={setLimit}
+							<NewDataPoint
+								pipelines={pipelines ?? []}
 							/>
+						) : (
+							<>
+								{ isLoadingPipelines ? (
+									<FlyWheelPageLoading/>
+									
+								): (
+									<DataPoints
+									data={datapoints ?? []}
+									pagination={paginationPipelines ?? { page: 1, limit: 10, pages: 1 }}
+									onPageChange={setPage}
+									onLimitChange={setLimit}
+								/>
+								) }
+								
+							</>
+
 						)}
 					</>
 				)}

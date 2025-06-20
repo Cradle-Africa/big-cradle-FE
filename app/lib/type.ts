@@ -48,7 +48,8 @@ export interface DataPoint {
 export type Pipeline = {
   businessUserId?: string | null;
   employeeUserId?: string | null;
-  pipelineName: string;
-  pipelineDescription: string;
+  dataPointName: string;
+  dataPointDescription: string;
+  createdAt?: string | undefined;
 }
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;

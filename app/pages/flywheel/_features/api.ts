@@ -18,16 +18,14 @@ export const fetchPipelines = async (
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
         };
-        const res = await axios.get(`/data-point-mgt/data-point/${getBusinessUserId}`, {params});
+        const res = await axios.get(`/data-point-mgt/pipeline-fields-business?businessUserId=${getBusinessUserId}`, {params});
         if (res?.status === 401){
             removeUser();
         } 
         return res.data;
     } catch (error: any) {
         console.log(JSON.stringify(error));
-        // toast.error(JSON.stringify(error))
         return []; // fallback return
-
     }
 };
 
@@ -60,8 +58,6 @@ export const createPipeline = async (
 };
 
 
-
-
 export const fetchDataPoints = async (
     axios: AxiosInstance,
     queryParams?: { 
@@ -74,7 +70,7 @@ export const fetchDataPoints = async (
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
         };
-        const res = await axios.get(`/data-point-mgt/pipeline-fields/business/${getBusinessUserId}`, {params});
+        const res = await axios.get(`/data-point-mgt/data-point?businessUserId=${getBusinessUserId}`, {params});
         if (res?.status === 401){
             removeUser();
         } 
