@@ -29,8 +29,6 @@ const SideBar = () => {
     return <EmployeeSidebar />;
   }
   
-  
-
   return <LoadingSidebar />;
 };
 

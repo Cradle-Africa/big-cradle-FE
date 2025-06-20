@@ -28,7 +28,7 @@ const EmployeeDashboard = () => {
 
       <div className="w-full">
         <p className="font-semibold text-md space-y-1">
-          Hi Esther, here’s your platform overview for today
+          Hi Esther employee, here’s your platform overview for today
         </p>
         <p className="text-sm">
           All systems operational. Last sync: 10 mins ago

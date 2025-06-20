@@ -41,38 +41,6 @@ export default function EmployeeSidebar() {
             </Link>
           </li>
         ))}
-        <li>
-          <div
-            onClick={() => setUsersMenuOpen(!usersMenuOpen)}
-            className={classNames({
-              "block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition":
-                true,
-            })}
-          >
-            <div className="flex gap-1 items-center justify-between">
-              <div className="flex gap-1 items-center">
-                <UsersRound size={15} />
-                Users & Access
-              </div>
-              {usersMenuOpen ? (
-                <ChevronUp size={15} />
-              ) : (
-                <ChevronDown size={15} />
-              )}
-            </div>
-          </div>
-          {usersMenuOpen && (
-            <div className="ml-6 mt-1 space-y-1">
-              <Link
-                href="/pages/user/business/"
-                className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition text-sm flex items-center gap-2"
-              >
-                <Building2 size={14} />
-                Businesses
-              </Link>
-            </div>
-          )}
-        </li>
       </ul>
     </SideBarWrapper>
   );

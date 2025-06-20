@@ -134,7 +134,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
                         </div>
 
-                        <div className='relative mt-5'>
+                        {/* <div className='relative mt-5'>
                             <label>Profile picture</label>
                             <ImageUploader
                                 onChange={handleFileChange}
@@ -143,7 +143,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                                 name="image"
                             />
                             {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
-                        </div>
+                        </div> */}
                         {/* 
                         <div className="relative">
                             <input
