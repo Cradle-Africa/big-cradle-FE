@@ -14,7 +14,7 @@ import { useCreateDataPoint } from "../_features/hook";
 
 const NewDataPoint = () => {
 
-    const businessusinessUserId = getBusinessId()
+    const businessUserId = getBusinessId()
     const employeeUserId = getEmployeeUserId()
 
     const {
@@ -37,12 +37,11 @@ const NewDataPoint = () => {
 
     const onButtonClick = async (data: DataPointSchema) => {
         try {
-            console.log(JSON.stringify(data))
             await createDataPoint(
-                {...data, businessusinessUserId, employeeUserId }
+                {...data, businessUserId, employeeUserId }
             );
         } catch (error: any) {
-            toast.error(JSON.stringify(error));
+            console.log(JSON.stringify(error));
         }
     }
 

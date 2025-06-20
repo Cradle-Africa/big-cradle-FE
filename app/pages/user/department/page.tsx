@@ -20,8 +20,8 @@ const Department = () => {
             page: 1,
             limit: 10,
             businessUserId: businessUserId || undefined,
-        },
-    });
+        }
+    })
 
     useEffect(() => {
         const handler = (e: MouseEvent) => {
@@ -33,6 +33,7 @@ const Department = () => {
         return () => document.removeEventListener('mousedown', handler);
     }, [setOpen]);
 
+    { isLoading ?? <DepartmentLosding /> }
     return (
         <DashboardLayout>
             <div className="flex justify-between">

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-type FieldType = "text" | "select" | "date" | "textarea" | "multiselect";
+type FieldType = "text" | "select" | "date" | "radio" | "textarea" | "multiselect";
 
 type Field = {
     label: string;
@@ -38,6 +38,20 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
                 />
             );
 
+        case "radio":
+            if ((field.options?.length ?? 0) === 0) return null;
+            return (
+                <div className="space-y-2">
+                    {(field.options ?? []).map((opt, i) => (
+                        <label key={i} className="flex items-center space-x-2">
+                            <input type="radio" name={field.key} disabled />
+                            <span>{opt}</span>
+                        </label>
+                    ))}
+                </div>
+            );
+
+
         case "textarea":
             return (
                 <textarea
@@ -45,7 +59,7 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
                     className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
                     rows={3}
                     disabled
-                     
+
                 />
             );
 

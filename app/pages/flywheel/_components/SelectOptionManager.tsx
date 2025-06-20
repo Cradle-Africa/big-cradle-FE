@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { PipelineForm } from "@/app/lib/type";
 
 interface SelectOptionManagerProps {
 	index: number;
@@ -10,7 +11,7 @@ interface SelectOptionManagerProps {
 	setFormFields: React.Dispatch<React.SetStateAction<PipelineForm>>;
 }
 
-export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect";
+export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect" | "radio";
 
 export type Field = {
 	label: string;
@@ -20,10 +21,6 @@ export type Field = {
 	options?: string[];
 };
 
-export interface PipelineForm {
-	dataPointId: string;
-	field: Field[];
-}
 
 const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 	index,
@@ -34,7 +31,7 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 }) => {
 	const field = formFields[index];
 
-	if (field.type !== "select") return null;
+	if (!["select", "multiselect", "radio"].includes(field.type)) return null;
 
 	const handleAddOption = () => {
 		const option = newOptions[index]?.trim();

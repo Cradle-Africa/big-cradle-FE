@@ -1,45 +1,66 @@
-import { DataPoint } from "@/app/lib/type";
+import { DataPoint, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataPoint, fetchDataPoints } from "./api";
+import { createDataPoint, createPipeline, fetchDataPoints, fetchPipelines } from "./api";
 
-type UseFetchDataTypes = {
-  axios: AxiosInstance;
-  queryParams?: {
-    page?: number;
-    limit?: number;
-  };
+type UseFetchDataPoints = {
+	axios: AxiosInstance;
+	queryParams?: {
+		page?: number;
+		limit?: number;
+	};
+}
+
+interface PaginationMeta {
+	total: number;
+	page: number;
+	limit: number;
+	pages: number;
 }
 
 export const useFetchDataTypes = ({
-  axios, queryParams
-}: UseFetchDataTypes) => {
-  return useQuery<DataPoint[]>({
-    queryKey: ["data-points", queryParams],
-    queryFn: () => fetchDataPoints(axios, queryParams),
+	axios, queryParams
+}: UseFetchDataPoints) => {
+	return useQuery<DataPoint[]>({
+		queryKey: ["data-points", queryParams],
+		queryFn: () => fetchDataPoints(axios, queryParams),
+		staleTime: 60 * 1000 * 5,
+		// retry: 3,
+	});
+};
+
+export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, DataPoint>({
+		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
+	});
+};
+
+
+type UseFetchPipelines = {
+	axios: AxiosInstance;
+	queryParams?: {
+		page?: number;
+		limit?: number;
+	};
+}
+
+export const useFetchPipelines = ({
+  axios,
+  queryParams
+}: UseFetchPipelines) => {
+  return useQuery<{
+    data: Pipeline[];
+    pagination: PaginationMeta;
+  }>({
+    queryKey: ["pipelines", queryParams],
+    queryFn: () => fetchPipelines(axios, queryParams),
     staleTime: 60 * 1000 * 5,
-    // retry: 3,
   });
 };
 
 
-// interface CreateDataPointProps {
-//   axios: AxiosInstance;
-// }
-
-
-
-// export const useCreateDataPoint = ({ axios }: CreateDataPointProps) => {
-//   return useMutation({
-//     mutationFn: async (DataPoint) => {
-//       const response = await axios.post("/data-point-mgt/data-point", data);
-//       return response.data;
-//     },
-//   });
-// };
-
-export const useCreateDataPoint = ({ axios }: {axios: AxiosInstance}) => {
-  return useMutation<void, Error, DataPoint>({
-    mutationFn: (data: DataPoint) => createDataPoint(axios, data),
-  });
+export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, Pipeline>({
+		mutationFn: (data: Pipeline) => createPipeline(axios, data),
+	});
 };

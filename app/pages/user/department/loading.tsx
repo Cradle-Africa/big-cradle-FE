@@ -2,9 +2,7 @@ import React from 'react'
 
 const DepartmentLosding = () => {
   return (
-    <div>
-        loading ...
-    </div>
+    <div className='flex items-center justify-center'>Loading ...</div>
   )
 }
 

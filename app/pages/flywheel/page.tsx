@@ -11,7 +11,7 @@ import Pipeline from "./_components/Pipeline";
 import axios from "@/app/lib/axios"
 import PopUp from "./_components/Popup";
 import FlyWheelPageLoading from "./loading";
-import { useFetchDataTypes } from "./_features/hook";
+import { useFetchDataTypes, useFetchPipelines } from "./_features/hook";
 
 const Flywheel = () => {
 	const [open, setOpen] = useState(false)
@@ -20,14 +20,27 @@ const Flywheel = () => {
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 	const [newPipeLine, setNewPipeline] = useState(false)
 	const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
+	const [page, setPage] = useState(1);
+	const [limit, setLimit] = useState(10);
 
-	const { isLoading, data: dataTypes } = useFetchDataTypes({
+	const { isLoading: isloadingDataPoints, data: dataPoints } = useFetchDataTypes({
 		axios,
 		queryParams: {
 			page: 1,
 			limit: 10
 		}
 	})
+
+	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchPipelines({
+		axios,
+		queryParams: {
+			page,
+			limit,
+		},
+	});
+
+	const pipelines = pipelinesData?.data ?? [];
+	const pagination = pipelinesData?.pagination;
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -40,7 +53,7 @@ const Flywheel = () => {
 		return () => document.removeEventListener('mousedown', handler);
 	}, [setOpen]);
 
-	if(isLoading) return <FlyWheelPageLoading/>
+	if (isloadingDataPoints || isLoadingPipelines) return <FlyWheelPageLoading />
 
 	return (
 		<DashboardLayout>
@@ -97,7 +110,7 @@ const Flywheel = () => {
 						{openNewDataPoint ? (
 							<NewDataPoint />
 						) : (
-							<DataPoints data={dataTypes ?? []} />
+							<DataPoints data={dataPoints ?? []} />
 						)}
 					</div>
 				)}
@@ -130,7 +143,15 @@ const Flywheel = () => {
 						{newPipeLine ? (
 							<NewPipeLine />
 						) : (
-							<Pipeline />
+							<>
+								<Pipeline
+									data={pipelines ?? []}
+									pagination={pagination ?? { page: 1, limit: 10, pages: 1 }}
+									onPageChange={setPage}
+									onLimitChange={setLimit}
+								/>
+							</>
+
 						)}
 					</>
 				)}
