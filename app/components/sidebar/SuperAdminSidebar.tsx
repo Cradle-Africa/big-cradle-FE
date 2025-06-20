@@ -15,7 +15,6 @@ import { usePathname } from "next/navigation";
 import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
 export default function SuperAdminSidebar() {
-  const [open, setOpen] = useState(false);
   const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
 

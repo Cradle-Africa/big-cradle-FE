@@ -1,23 +1,19 @@
 "use client";
 
+import classNames from "classnames";
 import {
   Building2,
   ChevronDown,
   ChevronUp,
-  File,
   House,
-  MonitorCog,
-  UsersRound,
+  UsersRound
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
-import { usePathname } from "next/navigation";
-import classNames from "classnames";
 
 export default function AdminSidebar() {
-  const [open, setOpen] = useState(false);
   const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
 

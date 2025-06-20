@@ -1,49 +1,70 @@
-'use client'
-import React from 'react'
-import TableComponent from '@/app/components/table/TableComponent';
-import DashboardLayout from '@/app/DashboardLayout';
+'use client';
+import DashboardLayout from "@/app/DashboardLayout";
+import { Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import DepartmentTable from "./_components/DepartmentTable";
+import axios from "@/app/lib/axios";
+import { useFetchDepartments } from './_features/hook'
+import DepartmentLosding from "./loading";
+import { getBusinessId } from "@/app/utils/user/userData";
+import NewDepartment from "./_components/NewDepartment";
 
 const Department = () => {
-    const fields = [
-        { key: 'departmentName', label: 'Name', className: '' },
-        { key: 'departmentDescription', label: 'Description', className: '' }
-    ]
+    const [open, setOpen] = useState(false)
+    const menuRef = useRef<HTMLDivElement>(null);
+    const businessUserId = getBusinessId()
 
-    const actionConfig = {
-        edit: {
-            endPoint: '/api/user/delete',
-            method: 'DELETE',
-            payload: {}
+    const { isLoading, data: departments } = useFetchDepartments({
+        axios,
+        queryParams: {
+            page: 1,
+            limit: 10,
+            businessUserId: businessUserId || undefined,
         }
-    }
+    })
 
-    const rightAction = {
-        add: {
-            label: 'Add Department',
-            endpoint: 'department-mgt/create-department',
-            method: 'POST',
-            icon: '',
-            className: 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] opacity-90 text-white px-2 py-1 rounded-sm cursor-pointer',
-            payload: {}
-        }
-    }
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, [setOpen]);
 
+    { isLoading ?? <DepartmentLosding /> }
     return (
         <DashboardLayout>
-            <TableComponent
-                title='Departments'
-                endpoint='department-mgt/all-business-departments'
-                fields={fields}
-                breadcrumbs={{
-                    parent: { path: '/user/user-management', label: 'User' },
-                    current: 'Department'
-                }}
-                actionConfig={actionConfig}
-                rightAction={rightAction}
-            />
+            <div className="flex justify-between">
+                <div className="flex flex-col gap-2">
+                    <p className="font-medium text-black">Departments</p>
+                </div>
+                <button
+                    className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
+                    onClick={() => setOpen(true)}
+                >
+                    <div className="flex fgap2 items-center gap-2">
+                        <Plus size={18} color="white" />
+                        <span className="text-white">Create Department</span>
+                    </div>
+                </button>
+            </div>
+
+            {/* department table  */}
+            <div className="flex flex-col bg-white p-4 mt-8">
+                <p className="font-bold text-black mb-5">Departments</p>
+
+                {open && <NewDepartment setOpen={setOpen} />}
+
+                {isLoading ? (
+                    <DepartmentLosding />
+                ) : (
+                    <DepartmentTable data={departments ?? []} />
+                )}
+            </div>
         </DashboardLayout>
+    );
+};
 
-    )
-}
-
-export default Department
+export default Department;

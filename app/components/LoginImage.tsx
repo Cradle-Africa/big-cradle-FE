@@ -14,7 +14,7 @@ const LoginImage = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [imagesList.length]);
+  });
 
   return (
     <div className="hidden md:block w-3/4 relative m-8 rounded-[16px]">
