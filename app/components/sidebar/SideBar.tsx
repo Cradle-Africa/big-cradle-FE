@@ -5,6 +5,7 @@ import SuperAdminSidebar from "./SuperAdminSidebar";
 import { useEffect, useState } from "react";
 import LoadingSidebar from "./LoadingSideBar";
 import AdminSidebar from "./AdminSidebar";
+import EmployeeSidebar from "./EmployeeSidebar";
 
 const SideBar = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -24,7 +25,10 @@ const SideBar = () => {
     return <SuperAdminSidebar />;
   } else if (user?.role === "admin") {
     return <AdminSidebar />;
+  } else if (user?.role === "employee") {
+    return <EmployeeSidebar />;
   }
+  
   
 
   return <LoadingSidebar />;

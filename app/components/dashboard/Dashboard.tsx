@@ -7,6 +7,7 @@ import BusinessDashboard from "./BusinessDashboard";
 import SuperAdminDashboard from "./SuperAdminDashboard";
 import LoadingDashboard from "./LoadingDashboard";
 import AdminDashboard from "./AdminDashboard";
+import EmployeeDashboard from "./EmployeeDashboard";
 
 const Dashboard = () => {
 	const [user, setUser] = useState<User | null>(null);
@@ -26,6 +27,8 @@ const Dashboard = () => {
 		return <SuperAdminDashboard />;
 	} else if (user?.role === "admin") {
 		return <AdminDashboard />
+	} else if (user?.role === "employee") {
+		return <EmployeeDashboard />
 	}
 
 	return <LoadingDashboard />;
