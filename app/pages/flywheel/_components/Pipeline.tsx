@@ -3,7 +3,6 @@
 import { Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { MoreVertical } from "lucide-react";
-import { useState } from "react";
 import Pagination from "./Pagination";
 
 const PipelinePage = ({
@@ -17,8 +16,6 @@ const PipelinePage = ({
     onPageChange: (page: number) => void;
     onLimitChange: (limit: number) => void;
 }) => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
 
     return (
         <div>

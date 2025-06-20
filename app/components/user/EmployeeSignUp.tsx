@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { EmployeeSignUpPayload } from '@/app/pages/user/types/User';
+import { ChangeEvent, useState } from 'react';
+import toast from 'react-hot-toast';
+import CredentialDetails from '../../components/form/CredentialDetails';
+import AccountVerification from '../../components/user/AccountVerification';
 import { validateEmployeeSignUp } from '../../pages/user/validation/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
-import toast from 'react-hot-toast';
-import { EmployeeSignUpPayload } from '@/app/pages/user/types/User';
-import AccountVerification from '../../components/user/AccountVerification';
-import ImageUploader from '../form/ImageUploader';
-import CredentialDetails from '../../components/form/CredentialDetails'
 
 interface EmployeeSignUpProps {
     signUpToken: any;
@@ -44,13 +43,6 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
-    };
-
-    const handleFileChange = (name: string, value: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
     };
 
     const handleCredentialChange = (field: string, value: string) => {

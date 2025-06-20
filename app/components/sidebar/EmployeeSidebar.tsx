@@ -2,20 +2,14 @@
 
 import classNames from "classnames";
 import {
-  Building2,
-  ChevronDown,
-  ChevronUp,
-  House,
-  UsersRound
+  House
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { JSX, useState } from "react";
+import { JSX } from "react";
 import SideBarWrapper from "./SideBarWrapper";
 
 export default function EmployeeSidebar() {
-  const [open, setOpen] = useState(false);
-  const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
 
   return (

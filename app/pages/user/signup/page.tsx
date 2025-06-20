@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { FcGoogle } from "react-icons/fc";
@@ -14,9 +14,9 @@ import AdminSignUp from "../../../components/user/AdminSignUp";
 import { DecodedPayload } from "../types/User";
 import BusinessSignUpLink from "@/app/components/user/BusinessSignUpLink";
 import LoginImage from "@/app/components/LoginImage";
-import LogoWithText from "@/public/images/logo-with-text.png"
+import LogoWithText from "@/public/images/logo-with-text.png";
 
-export default function SignUpPage() {
+const SignUpPageBuilder = ()=> {
   const searchParams = useSearchParams();
   const [showVerification, setShowVerification] = useState(false);
   const [superAdminSignUp, setSuperAdminSignUp] = useState(false);
@@ -71,7 +71,7 @@ export default function SignUpPage() {
           email={formData.email}
         />
       )}
-       <div className="flex items-center justify-center w-full max-w-[400px] md:px-12 py-4 bg-white">
+      <div className="flex items-center justify-center w-full max-w-[400px] md:px-12 py-4 bg-white">
         <div className="w-full md:w-[500px] space-y-3 py-10">
           <Image
             src={LogoWithText}
@@ -201,3 +201,13 @@ export default function SignUpPage() {
     </div>
   );
 }
+
+const SignupPage = () => {
+  return (
+    <Suspense>
+      <SignUpPageBuilder />
+    </Suspense>
+  );
+};
+
+export default SignupPage;
