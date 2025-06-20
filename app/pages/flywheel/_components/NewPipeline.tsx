@@ -5,33 +5,26 @@ import { toCamelCase } from '@/app/utils/toCamelCase';
 import SelectOptionManager from "./SelectOptionManager";
 import { Check } from "lucide-react";
 import FieldPreview from "./FieldPreview";
-
-type FieldType = "text" | "select" | "date" | "textarea" | "multiselect";
-
-type Field = {
-    label: string;
-    key: string;
-    type: FieldType;
-    required: boolean;
-    options?: string[];
-};
-
-interface PipelineForm {
-    dataPointId: string;
-    field: Field[];
-}
+import { FieldType, Field, PipelineForm, Pipeline } from "@/app/lib/type";
+import { useCreatePipeline } from '../_features/hook';
+import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
+import axios from "@/app/lib/axios";
+import toast from "react-hot-toast";
 
 const mockDataPoints = [
     { id: "65f0f0d2d1a1e3b4a2b7e1c2", name: "Data Point 1" },
     { id: "65f0f0d2d1a1e3b4a2b7e1c9", name: "Data Point 2" },
 ];
 
-const Pipeline = () => {
+const NewPipeline = () => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<PipelineForm>({
         dataPointId: "",
         field: [],
     });
+    const businessUserId = getBusinessId();
+    const employeeUserId = getEmployeeUserId();
+    const { mutate, isPending } = useCreatePipeline({ axios });
 
     const handleFieldChange = <K extends keyof Field>(index: number, key: K, value: Field[K]) => {
         const updatedFields = [...form.field];
@@ -41,7 +34,7 @@ const Pipeline = () => {
             updatedFields[index]["key"] = toCamelCase(value as string);
         }
 
-        if (key === "type" && value !== "select" && value !== "multiselect") {
+        if (key === "type" && typeof value === "string" && !["select", "multiselect", "radio"].includes(value)) {
             delete updatedFields[index].options;
         }
 
@@ -74,7 +67,27 @@ const Pipeline = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Submitted Data:", form);
+
+        // Build full payload
+        const payload: Pipeline = {
+            businessUserId,
+            employeeUserId,
+            dataPointId: form.dataPointId,
+            field: form.field,
+        };
+
+        console.log(JSON.stringify(payload));
+        mutate(payload, {
+            onSuccess: () => {
+                setForm({dataPointId: "", field: [],}); // clear the form
+                setNewOptions([]);
+                toast.success("Pipeline created successfully");
+                console.log("Pipeline successfully submitted");
+            },
+            onError: (error: any) => {
+                console.log("Pipeline submission failed:", error.message);
+            },
+        });
     };
 
     return (
@@ -128,6 +141,7 @@ const Pipeline = () => {
                             <option value="text">Text</option>
                             <option value="select">Select</option>
                             <option value="multiselect">Multi-Select</option>
+                            <option value="radio">Radio</option>
                             <option value="date">Date</option>
                             <option value="textarea">Textarea</option>
                         </select>
@@ -179,14 +193,15 @@ const Pipeline = () => {
 
                 <button
                     type="submit"
-                    className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer"
+                    disabled={isPending}
+                    className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
                 >
                     <Check size={16} className="mr-1" />
-                    Submit
+                    {isPending ? "Submitting..." : "Submit"}
                 </button>
             </div>
         </form>
     );
 };
 
-export default Pipeline;
+export default NewPipeline;

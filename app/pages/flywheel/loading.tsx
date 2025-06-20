@@ -2,7 +2,7 @@ import React from 'react'
 
 const FlyWheelPageLoading = () => {
   return (
-    <div>FlyWheelPageLoading ...</div>
+    <div className='flex items-center justify-center'>Loading ...</div>
   )
 }
 
