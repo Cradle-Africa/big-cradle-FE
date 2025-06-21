@@ -11,12 +11,14 @@ export const fetchPipelines = async (
     queryParams?: { 
         page?: number; 
         limit?: number; 
+        total?: number;
     }
 ) => {
     try {
         const params = {
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
+            total: queryParams?.total
         };
         const res = await axios.get(`/data-point-mgt/pipeline-fields-business?businessUserId=${getBusinessUserId}`, {params});
         if (res?.status === 401){
@@ -29,31 +31,15 @@ export const fetchPipelines = async (
     }
 };
 
-export const createPipeline = async (
-    axios: AxiosInstance,
-    data: Pipeline
-) => {
+export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
     try {
-        const res = await axios.post(`/data-point-mgt/data-point`, data);
-        return res.data;
-    } catch (error: any) {
-        const statusCode = error?.response?.status;
-        let message = error?.response?.message;
-
-        switch (statusCode) {
-            case 400:
-                message = Array.isArray(message) ? message.join('\n') : message;
-                break;
-
-            case 401:
-                removeUser();
-                        
-            default:
-                message = "An unexpected error occurred";
+        const res = await axios.get(`/data-point-mgt/pipeline-fields/${id}`);
+        if (res.status === 401) {
+            removeUser();
         }
-
-        const customError = new Error(message);
-        throw customError;
+        return res.data.data; 
+    } catch (error: any) {
+        console.error("Fetch single data type error:", error);
     }
 };
 
@@ -81,6 +67,40 @@ export const fetchDataPoints = async (
     }
 };
 
+
+export const createPipeline = async (
+    axios: AxiosInstance,
+    data: Pipeline
+) => {
+    try {
+        const res = await axios.post(`/data-point-mgt/data-point`, data);
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message =
+            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+
+        switch (statusCode) {
+            case 400:
+                if (Array.isArray(message)) {
+                    message = message.join('\n');
+                }
+                break;
+
+            case 401:
+                removeUser();
+                message = "Unauthorized access. Please log in again.";
+                break;
+
+            default:
+                message = typeof message === 'string' ? message : "An unexpected error occurred";
+        }
+
+        return Promise.reject({ message }); 
+    }
+};
+
+
 export const createDataPoint = async (
     axios: AxiosInstance,
     data: DataPoint
@@ -94,17 +114,52 @@ export const createDataPoint = async (
 
         switch (statusCode) {
             case 400:
-                message =  message;
+                if (Array.isArray(message)) {
+                    message = message.join('\n');
+                }
                 break;
 
             case 401:
                 removeUser();
-                        
+                message = "Unauthorized access. Please log in again.";
+                break;
+
             default:
-                message = "An unexpected error occurred";
+                message = typeof message === 'string' ? message : "An unexpected error occurred";
+        }
+        return Promise.reject({ message }); 
+    }
+};
+
+export const editPipeline = async (
+    axios: AxiosInstance,
+    id: string,
+    data: Pipeline
+) => {
+    try {
+        const res = await axios.put(`/data-point-mgt/data-point/${id}`, data);
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message =
+            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+
+        switch (statusCode) {
+            case 400:
+                if (Array.isArray(message)) {
+                    message = message.join('\n');
+                }
+                break;
+
+            case 401:
+                removeUser();
+                message = "Unauthorized access. Please log in again.";
+                break;
+
+            default:
+                message = typeof message === 'string' ? message : "An unexpected error occurred";
         }
 
-        const customError = new Error(message);
-        throw customError;
+        return Promise.reject({ message });
     }
 };

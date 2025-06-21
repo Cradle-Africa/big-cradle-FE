@@ -11,16 +11,14 @@ const PipelinePage = ({
     onLimitChange,
 }: {
     data: Pipeline[];
-    pagination: { page: number; limit: number; pages: number };
+    pagination: { page: number; limit: number; total: number };
     onPageChange: (page: number) => void;
     onLimitChange: (limit: number) => void;
 }) => {
     return (
         <div>
             <div className="grid grid-cols-1 md:grid md:grid-cols-2 xl:grid xl-grid-cols-3 w-full gap-5 mt-10">
-
                 {
-
                     data.map((pipeline, index) =>
                         <div key={index} className="border border-gray-200 rounded-lg px-6 py-6">
                             <div className="flex items-center ">
@@ -55,7 +53,7 @@ const PipelinePage = ({
             {pagination && (
                 <Pagination
                     currentPage={pagination.page}
-                    totalPages={pagination.pages}
+                    totalPages={pagination.total}
                     limit={pagination.limit}
                     onPageChange={onPageChange}
                     onLimitChange={onLimitChange}

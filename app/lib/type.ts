@@ -8,6 +8,13 @@ export interface PaginationMeta {
   pages: number;
 }
 
+export interface Pagination {
+	total: number;
+	page: number;
+	limit: number;
+}
+
+
 export type Department = {
   businessUserId: string | null;
   departmentName: string;
@@ -22,7 +29,7 @@ export type BusinessKyc = {
   departmentDescription: string;
 }
 
-export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect" | "radio";
+export type FieldType =  "text"| "email" | "tel" | "select" | "radio" | "checkbox" | "textarea" | "number" | "date";
 
 export type Field = {
   label: string;
@@ -38,6 +45,7 @@ export interface PipelineForm {
 }
 
 export interface DataPoint {
+  id?: string;
   businessUserId: string | null;
   employeeUserId: string | null;
   dataPointId: string;

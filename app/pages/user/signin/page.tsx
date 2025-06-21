@@ -5,7 +5,7 @@ import { addToken, addUser } from "@/app/utils/user/userData";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 import ForgotPasswordCode from "../../../components/user/ForgotPasswordCode";
@@ -13,6 +13,7 @@ import ResetPassword from "../../../components/user/ResetPassword";
 import { signInService } from "../../../services/user/userService";
 import { validateSignIn } from "../validation/userValidation";
 import LogoWithText from "@/public/images/logo-with-text.png"
+import { useRouter } from "next/navigation"
 
 export default function SignInPage() {
   const [openReset, setOpenReset] = useState(false);
@@ -23,7 +24,11 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [resetToken, setResetToken] = useState("");
+  const router = useRouter()
 
+  useEffect(() => {
+    router.prefetch('/');
+  }, []);
   const [formData, setFormData] = useState<{
     email: string;
     password: string;
@@ -65,7 +70,8 @@ export default function SignInPage() {
       }
       toast.dismiss();
       toast.success("Signed in successfully!");
-      window.location.href = "/";
+      // window.location.href = "/";
+      router.push('/')
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.dismiss();

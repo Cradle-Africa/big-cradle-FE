@@ -10,15 +10,22 @@ import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useCreatePipeline } from "../_features/hook";
+import { useState } from "react";
 
-const NewPipeline = () => {
+
+type Props = {
+	setCreatingPipeline: (value: boolean) => void;
+};
+
+const NewPipeline = ({ setCreatingPipeline }: Props) => {
+
 	const businessUserId = getBusinessId();
 	const employeeUserId = getEmployeeUserId();
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors, isSubmitting },
+		formState: { errors },
 		reset,
 	} = useForm<PipeLineSchema>({
 		resolver: zodResolver(pipeLineSchema),
@@ -26,28 +33,26 @@ const NewPipeline = () => {
 
 	const queryClient = useQueryClient();
 
-	const { mutateAsync: createPipeline } = useCreatePipeline({ axios });
+	const { mutate: createPipeline, isPending } = useCreatePipeline({ axios });
 
-	const onButtonClick = async (data: PipeLineSchema) => {
-		try {
-			await createPipeline(
-				{ ...data, businessUserId, employeeUserId },
-				{
-					onSuccess: () => {
-						queryClient.invalidateQueries({ queryKey: ["pipelines"] });
-						toast.success("New data pipeline created successfully");
-						reset(); // clear form if needed
-					},
-					onError: (error: any) => {
-						console.error("Pipeline creation failed:", error?.message);
-						toast.error("Pipeline creation failed");
-					},
+	const onButtonClick = (data: PipeLineSchema) => {
+		createPipeline(
+			{ ...data, businessUserId, employeeUserId },
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({ queryKey: ["data-points"] });
+					toast.success("New data pipeline created successfully");
+					reset(); // clear form
+					setCreatingPipeline(false);
+				},
+				onError: (error: any) => {
+					toast.error(error.message || "Failed to create pipeline");
 				}
-			);
-		} catch (error: any) {
-			console.error("Unexpected error:", error);
-		}
+			}
+		);
 	};
+
+
 
 	return (
 		<div className="mt-10">
@@ -62,26 +67,26 @@ const NewPipeline = () => {
 				/>
 				<ErrorMessage>{errors.dataPointName?.message}</ErrorMessage>
 
-                
+
 				<textarea
 					{...register("dataPointDescription")}
 					placeholder="Data pipeline Description"
 					className="mt-5 w-full border border-gray-200 rounded px-3 py-2 outline-none"
 				/>
-                
+
 				<ErrorMessage>{errors.dataPointDescription?.message}</ErrorMessage>
 
 				<button
-					disabled={isSubmitting}
+					disabled={isPending}
 					type="submit"
 					className="mt-5 flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
 				>
 					<Check size={16} className="mr-1" />
-					{isSubmitting ? "Submitting..." : "Submit"}
+					{isPending ? "Submitting..." : "Submit"}
 				</button>
 			</form>
 		</div>
 	);
 };
 
-export default NewPipeline ;
+export default NewPipeline;

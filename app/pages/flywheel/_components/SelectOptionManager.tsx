@@ -2,7 +2,7 @@
 
 import React from "react";
 import { PipelineForm } from "@/app/lib/type";
-
+import { FieldType } from "@/app/lib/type";
 interface SelectOptionManagerProps {
 	index: number;
 	newOptions: string[];
@@ -11,7 +11,6 @@ interface SelectOptionManagerProps {
 	setFormFields: React.Dispatch<React.SetStateAction<PipelineForm>>;
 }
 
-export type FieldType = "text" | "select" | "date" | "textarea" | "multiselect" | "radio";
 
 export type Field = {
 	label: string;
@@ -31,7 +30,7 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 }) => {
 	const field = formFields[index];
 
-	if (!["select", "multiselect", "radio"].includes(field.type)) return null;
+	if (!["select", "checkbox", "radio"].includes(field.type)) return null;
 
 	const handleAddOption = () => {
 		const option = newOptions[index]?.trim();
@@ -79,9 +78,9 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 			</div>
 
 			{field.options && field.options.length > 0 && (
-				<ul className="list-disc pl-5 text-sm text-gray-600 space-y-1">
+				<ul className="list-disc text-sm text-gray-600 space-y-1">
 					{field.options.map((option, i) => (
-						<li key={i} className="flex justify-between items-center">
+						<li key={i} className="flex justify-between rounded-sm px-2 py-2 items-center bg-gray-100 border-b border-gray-100 pb-2">
 							{option}
 							<button
 								type="button"

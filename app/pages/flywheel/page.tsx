@@ -57,7 +57,6 @@ const Flywheel = () => {
 
 	return (
 		<DashboardLayout>
-
 			<PopUp
 				openPopup={popupOpen}
 				onClose={() => setPopupOpen(false)}
@@ -66,7 +65,6 @@ const Flywheel = () => {
 					setCreatingDataPoint(false);
 				}}
 			/>
-
 
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-2">
@@ -105,7 +103,7 @@ const Flywheel = () => {
 									<List size={18} color="white" className="mr-1" />
 									View Pipelines
 								</button>
-								<NewPipeLine />
+								<NewPipeLine setCreatingPipeline={setCreatingPipeline} />
 							</>
 						) : (
 							<>
@@ -118,7 +116,7 @@ const Flywheel = () => {
 								</button>
 								<Pipeline
 									data={pipelines ?? []}
-									pagination={paginationDataPoints ?? { page: 1, limit: 10, pages: 1 }}
+									pagination={paginationDataPoints ?? { page: 1, limit: 10, total: pipelines.length }}
 									onPageChange={setPage}
 									onLimitChange={setLimit}
 								/>
@@ -154,13 +152,13 @@ const Flywheel = () => {
 
 						{creatingDataPoint ? (
 							<NewDataPoint
+								setCreatingDataPoint={setCreatingDataPoint}
 								pipelines={pipelines ?? []}
 							/>
 						) : (
 							<>
 								{ isLoadingPipelines ? (
 									<FlyWheelPageLoading/>
-									
 								): (
 									<DataPoints
 									data={datapoints ?? []}

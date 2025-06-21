@@ -1,33 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { toCamelCase } from '@/app/utils/toCamelCase';
+import { useEffect, useState } from "react";
+import { toCamelCase } from "@/app/utils/toCamelCase";
 import SelectOptionManager from "../_components/SelectOptionManager";
-import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
-import { FieldType, Field, PipelineForm, DataPoint, Pipeline } from "@/app/lib/type";
-import { useCreateDataPoint } from '../_features/hook';
-import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
+import { Check } from "lucide-react";
+import { Field, PipelineForm, FieldType, DataPoint } from "@/app/lib/type";
+import { useEditPipeline, useFetchSinglePipeline } from "../_features/hook";
+import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
-interface DataPointProps {
-    pipelines: Pipeline[]
-    setCreatingDataPoint: (value: boolean) => void;
+interface EditDataPointProps {
+    editingDataPoint: boolean,
+    uniqueId: string;
+    setEditingDataPoint: (value: boolean) => void;
 }
 
-const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
+const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId, setEditingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    // const [isLoading, setIsLoading] = useState(false);
-    
-    const [form, setForm] = useState<PipelineForm>({
-        dataPointId: "",
-        field: [],
-    });
+    const [form, setForm] = useState<PipelineForm>({ dataPointId: '', field: [] });
+
     const businessUserId = getBusinessId();
     const employeeUserId = getEmployeeUserId();
-    const { mutate, isPending } = useCreateDataPoint({ axios });
+    const queryClient = useQueryClient();
+
+    const { data, isLoading } = useFetchSinglePipeline({ axios, id: uniqueId });
+    const { mutate, isPending } = useEditPipeline({ axios });
+
+    useEffect(() => {
+        if (data) {
+            setForm({
+                dataPointId: data.id || '',
+                field: data.field,
+            });
+            setNewOptions(data.field.map(() => ""));
+        }
+    }, [data]);
 
     const handleFieldChange = <K extends keyof Field>(index: number, key: K, value: Field[K]) => {
         const updatedFields = [...form.field];
@@ -68,12 +78,9 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
         setNewOptions((prev) => [...prev, ""]);
     };
 
-	const queryClient = useQueryClient();
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Build full payload
         const payload: DataPoint = {
             businessUserId,
             employeeUserId,
@@ -83,56 +90,36 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
 
         mutate(payload, {
             onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: ["pipelines"] });
-                setForm({ dataPointId: "", field: [], }); // clear the form
-                setNewOptions([]);
-                toast.success("Data point created successfully");
-                setCreatingDataPoint(false)
+                queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+                toast.success("Data point updated successfully");
+                setEditingDataPoint(false);
             },
             onError: (error: any) => {
-				toast.error(error.message || "Failed to create data point");
+                toast.error(error.message || "Failed to update data point");
             },
         });
     };
 
+    if (isLoading) {
+        return <p className="text-gray-500 text-sm mx-auto my-auto">Loading...</p>;
+    }
+
+    if (!editingDataPoint) return null;
     return (
         <form
             onSubmit={handleSubmit}
             className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
         >
-            <h2 className="text-md text-black mb-4">Build a New Data Point</h2>
+            <h2 className="text-md text-black mb-4">Edit Data Point</h2>
 
-            <div className="w-full">
-                <select
-                    value={form.dataPointId}
-                    onChange={(e) =>
-                        setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
-                    }
-                    required
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
-                >
-                    <option value="">Select a pipeline</option>
-                    {pipelines.map((dp: any) => (
-                        <option key={dp.id} value={dp.id}>
-                            {dp.dataPointName}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {form.field.map((field, index: any) => (
-                <div
-                    key={index}
-                    className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2"
-                >
+            {form.field.map((field, index) => (
+                <div key={index} className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2">
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
                             type="text"
                             placeholder="Label"
                             value={field.label}
-                            onChange={(e) =>
-                                handleFieldChange(index, "label", e.target.value)
-                            }
+                            onChange={(e) => handleFieldChange(index, "label", e.target.value)}
                             className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
                         />
                         <select
@@ -157,17 +144,14 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                     <div className="flex items-center mt-6 cursor-pointer">
                         <input
                             type="checkbox"
-                            id={`${field.type}-${index}` }
+                            id={`${field.type}-${index}`}
                             checked={field.required}
-                            onChange={(e) =>
-                                handleFieldChange(index, "required", e.target.checked)
-                            }
+                            onChange={(e) => handleFieldChange(index, "required", e.target.checked)}
                             className="mr-2 outline-none"
                         />
-                        <label htmlFor={`${field.type}-${index}`} className="text-sm" >Required</label>
+                        <label htmlFor={`${field.type}-${index}`} className="text-sm">Required</label>
                     </div>
 
-                    {/* Field Preview */}
                     <FieldPreview field={field} />
 
                     <SelectOptionManager
@@ -205,11 +189,11 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                     className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
                 >
                     <Check size={16} className="mr-1" />
-                    {isPending ? "Submitting..." : "Submit"}
+                    {isPending ? "Updating..." : "Update"}
                 </button>
             </div>
         </form>
     );
 };
 
-export default NewDataPoint;
+export default EditDataPoint;

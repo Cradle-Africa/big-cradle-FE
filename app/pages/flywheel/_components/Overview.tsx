@@ -15,7 +15,7 @@ const Overview:React.FC<PipelineProps> = ({pipelines}) => {
                 icon={Album}
                 value={pipelines}
                 percentage=""
-                description="Registered"
+                description="Built pipelines"
             />
 
             <FlywheelCard
@@ -23,7 +23,7 @@ const Overview:React.FC<PipelineProps> = ({pipelines}) => {
                 title="Data entries"
                 icon={Album}
                 value={1000}
-                description="Amount paid out to contributors"
+                description={`Data entries through ${pipelines} pipelines`}
             />
         </div>
     )

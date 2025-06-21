@@ -1,7 +1,7 @@
-import { DataPoint, Pipeline } from "@/app/lib/type";
+import { DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataPoint, createPipeline, fetchDataPoints, fetchPipelines } from "./api";
+import { createDataPoint, createPipeline, editPipeline, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -16,14 +16,8 @@ type UseFetchPipelines = {
 	queryParams?: {
 		page?: number;
 		limit?: number;
+		total?: number;
 	};
-}
-
-interface PaginationMeta {
-	total: number;
-	page: number;
-	limit: number;
-	pages: number;
 }
 
 export const useFetchPipelines = ({
@@ -31,7 +25,7 @@ export const useFetchPipelines = ({
 }: UseFetchPipelines) => {
 	return useQuery<{
 	    	data: DataPoint[]
-			pagination: PaginationMeta;
+			pagination: Pagination;
 		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
@@ -40,12 +34,32 @@ export const useFetchPipelines = ({
 	});
 };
 
-export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
-	return useMutation<void, Error, Pipeline>({
-		mutationFn: (data: Pipeline) => createPipeline(axios, data),
-	});
+
+export const useFetchSinglePipeline = ({
+    axios,
+    id,
+    enabled = true, //disable query if ID is undefined
+}: {
+    axios: AxiosInstance;
+    id: string;
+    enabled?: boolean;
+}) => {
+    return useQuery<DataPoint>({
+        queryKey: ["single-pipeline", id],
+        queryFn: () => fetchSinglePipeline(axios, id),
+        enabled: !!id && enabled,
+        staleTime: 1000 * 60 * 5,
+    });
 };
 
+export const useEditPipeline = ({ axios }: { axios: AxiosInstance }) => {
+    return useMutation({
+        mutationFn: async (payload: DataPoint) => {
+            const res = await axios.put(`/data-point-mgt/pipeline-fields/${payload.dataPointId}`, payload);
+            return res.data.data;
+        },
+    });
+};
 
 
 export const useFetchDataPoints = ({
@@ -60,6 +74,13 @@ export const useFetchDataPoints = ({
     queryFn: () => fetchDataPoints(axios, queryParams),
     staleTime: 60 * 1000 * 5,
   });
+};
+
+
+export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, Pipeline>({
+		mutationFn: (data: Pipeline) => createPipeline(axios, data),
+	});
 };
 
 
