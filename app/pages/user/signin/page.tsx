@@ -28,7 +28,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     router.prefetch('/');
-  }, []);
+  });
   const [formData, setFormData] = useState<{
     email: string;
     password: string;

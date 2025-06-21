@@ -1,7 +1,7 @@
 import { DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataPoint, createPipeline, editPipeline, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
+import { createDataPoint, createPipeline, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;

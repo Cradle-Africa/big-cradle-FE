@@ -10,8 +10,6 @@ import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useCreatePipeline } from "../_features/hook";
-import { useState } from "react";
-
 
 type Props = {
 	setCreatingPipeline: (value: boolean) => void;
