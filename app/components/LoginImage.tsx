@@ -11,21 +11,24 @@ const LoginImage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % imagesList.length);
-    }, 5000);
+    }, 8000);
 
     return () => clearInterval(interval);
   });
 
   return (
-    <div className="hidden md:block w-3/4 relative m-8 rounded-[16px]">
+    <div className="hidden md:block w-3/4 relative m-8 rounded-[16px] overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0.6 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.3 }}
-          className="relative w-full h-full"
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1.8,
+            ease: [0.25, 1, 0.5, 1],
+          }}
+          className="absolute top-0 left-0 w-full h-full"
         >
           <LoginImageItem
             imgPath={imagesList[currentIndex].imgPath}
