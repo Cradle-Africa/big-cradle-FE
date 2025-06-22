@@ -71,116 +71,112 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     </h2>
                 </div>
 
-                <div className='relative overflow-x-auto whitespace-nowrap rounded-[8px]' key="table-wrapper">
-                    <>
-                        <table className="relative w-full rounded-[8px]" key="data-table">
-                            <thead key="table-head">
-                                <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
+                <div className='relative overflow-x-auto whitespace-nowrap border border-gray-100 rounded-[8px]' key="table-wrapper">
+                    <table className="relative w-full rounded-[8px]" key="data-table">
+                        <thead key="table-head">
+                            <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
+                                <th
+                                    key="header-index"
+                                    className="px-6 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
+                                >
+                                    #
+                                </th>
+                                {fields.map((field, index) => (
                                     <th
-                                        key="header-index"
-                                        className="px-6 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
-                                    >
-                                        #
+                                        key={`header-${field.key}-${index}`}
+                                        className={`px-6 py-3 text-left text-sm font-bold text-gray-500 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
+                                        {field.label}
                                     </th>
-                                    {fields.map((field, index) => (
-                                        <th
-                                            key={`header-${field.key}-${index}`}
-                                            className={`px-3 py-3 text-left text-sm font-bold text-gray-500 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
-                                            {field.label}
-                                        </th>
-                                    ))}
-                                    {actionConfig && (
-                                        <th
-                                            key="actions-header"
-                                            className="rounded-tr-lg px-3 py-3 text-left text-sm font-bold text-gray-500"
-                                        >
-                                            Actions
-                                        </th>
-                                    )}
-                                </tr>
-                            </thead>
+                                ))}
+                                {actionConfig && (
+                                    <th
+                                        key="actions-header"
+                                        className="rounded-tr-lg px-6 py-3 text-left text-sm font-bold text-gray-500"
+                                    >
+                                        Actions
+                                    </th>
+                                )}
+                            </tr>
+                        </thead>
 
-                            <tbody className="bg-white divide-y divide-gray-100" key="table-body">
-                                {loading ? (
-                                    <tr key="loading-state">
-                                        <td
-                                            className="py-2 text-center text-sm text-gray-500"
-                                            colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
-                                        >
-                                            Loading...
+                        <tbody className="bg-white divide-y divide-gray-100" key="table-body">
+                            {loading ? (
+                                <tr key="loading-state">
+                                    <td
+                                        className="py-2 text-center text-sm text-gray-500"
+                                        colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
+                                    >
+                                        Loading...
+                                    </td>
+                                </tr>
+                            ) : tableData?.length > 0 ? (
+                                tableData.map((item, rowIndex) => (
+                                    <tr key={`row-${item.id}`}>
+                                        <td className=" border-l border-b border-gray-100 px-6 py-2 whitespace-nowrap text-sm">
+                                            {rowIndex + 1}
                                         </td>
-                                    </tr>
-                                ) : tableData?.length > 0 ? (
-                                    tableData.map((item, rowIndex) => (
-                                        <tr key={`row-${item.id}`}>
-                                            <td className=" border-l border-b border-gray-100 px-3 py-2 whitespace-nowrap text-sm">
-                                                {rowIndex + 1}
-                                            </td>
-                                            {fields.map((field, idx) => (
-                                                <td
-                                                    key={`cell-${item.id}-${field.key}-${idx}`}
-                                                    className={`border-b border-gray-100 px-3 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
-                                                >
-                                                    <span
-                                                        className={` 
+                                        {fields.map((field, idx) => (
+                                            <td
+                                                key={`cell-${item.id}-${field.key}-${idx}`}
+                                                className={`border-b border-gray-100 px-6 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
+                                            >
+                                                <span
+                                                    className={` 
                                                             ${field.label === 'Status' && item[field.key] === 'pending' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
                                                             ${field.label === 'Status' && item[field.key] === 'rejected' && 'text-xs text-[#ad0b0e] border border-[#ad0b0e] rounded-2xl px-3 py-[3px]'} 
                                                             ${field.label === 'Status' && item[field.key] !== 'pending' && 'text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-3 py-[3px]'} 
                                                         }`}>
-                                                        {item[field.key]}
-                                                    </span>
-                                                </td>
-                                            ))}
-                                            {actionConfig && (
-                                                <td
-                                                    key={`actions-${item.id}`}
-                                                    className="border-b border-r border-gray-100 px-6 py-2 whitespace-nowrap"
-                                                >
-                                                    <ActionDropdownMenu
-                                                        Id={item.id}
-                                                        businessUserId={item.id}
-                                                        adminUserId={item.id}
-                                                        certificate={item.certificateOfIncorporation}
-                                                        suspendAction={actionConfig.suspend}
-                                                        deleteAction={actionConfig.delete}
-                                                        editAction={actionConfig.edit}
-                                                        viewAction={actionConfig.view}
-                                                        reviewAction={actionConfig.review}
-                                                        resetPasswordAction={actionConfig.resetPassword}
+                                                    {item[field.key]}
+                                                </span>
+                                            </td>
+                                        ))}
+                                        {actionConfig && (
+                                            <td
+                                                key={`actions-${item.id}`}
+                                                className="border-b border-r border-gray-100 px-6 py-2 whitespace-nowrap"
+                                            >
+                                                <ActionDropdownMenu
+                                                    Id={item.id}
+                                                    businessUserId={item.id}
+                                                    adminUserId={item.id}
+                                                    certificate={item.certificateOfIncorporation}
+                                                    suspendAction={actionConfig.suspend}
+                                                    deleteAction={actionConfig.delete}
+                                                    editAction={actionConfig.edit}
+                                                    viewAction={actionConfig.view}
+                                                    reviewAction={actionConfig.review}
+                                                    resetPasswordAction={actionConfig.resetPassword}
 
-                                                    />
-                                                </td>
-                                            )}
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr key="no-data-row">
-                                        <td
-                                            key="no-data-cell"
-                                            colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
-                                            className="px-3 py-4 border-b border-gray-100 text-center text-sm text-gray-700"
-                                        >
-                                            No data available
-                                        </td>
+                                                />
+                                            </td>
+                                        )}
                                     </tr>
-                                )}
-                            </tbody>
-                        </table>
-
-
-                        <Pagination
-                            key="pagination"
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            limit={limit}
-                            onPageChange={setCurrentPage}
-                            onLimitChange={setLimit}
-                            className=""
-                            showPageInput={true}
-                            showLimitSelect={true}
-                        />
-                    </>
+                                ))
+                            ) : (
+                                <tr key="no-data-row">
+                                    <td
+                                        key="no-data-cell"
+                                        colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
+                                        className="px-3 py-4 border-b border-gray-100 text-center text-sm text-gray-700"
+                                    >
+                                        No data available
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
+                <Pagination
+                    key="pagination"
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    limit={limit}
+                    onPageChange={setCurrentPage}
+                    onLimitChange={setLimit}
+                    className=""
+                    showPageInput={true}
+                    showLimitSelect={true}
+                />
             </div>
         </>
     )
