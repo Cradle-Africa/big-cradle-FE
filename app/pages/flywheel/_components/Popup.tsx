@@ -30,8 +30,8 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                         Choose an integration method or build your own feedback tool
                     </p>
 
-                    <div className="flex justify-between gap-5 mt-10">
-                        <button className="w-1/2 px-6 py-6 bg-[#FCEBFF] rounded-lg cursor-pointer">
+                    <div className="md:flex justify-between gap-5 mt-10">
+                        <button className="md:w-1/2 px-6 py-6 bg-[#FCEBFF] hover:bg-blue-500 hover:text-white hover:transition rounded-lg cursor-pointer">
                             <div className="flex justify-center">
                                 <Image alt="api icon" src={api_icon} width={40} height={40} />
                             </div>
@@ -42,7 +42,7 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                         </button>
 
                         <button
-                            className="w-1/2 px-6 py-6 bg-[#E6E9FF] rounded-lg cursor-pointer"
+                            className="mt-5 md:mt-0 md:w-1/2 px-6 py-6 bg-[#E6E9FF] hover:bg-blue-500 hover:text-white hover:transition rounded-lg cursor-pointer"
                             onClick={() => {
                                 onBuildPipeline();
                                 onClose();

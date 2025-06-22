@@ -2,28 +2,29 @@
 import DashboardLayout from "@/app/DashboardLayout";
 import { List, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import DataPoints from "./_components/DataPoints";
+import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
-import NewDataPoint from "./_components/NewDataPoint";
-import NewPipeLine from "./_components/NewPipeline";
+import NewDataPoint from "./datapoint/NewDataPoint";
 import Overview from "./_components/Overview";
-import Pipeline from "./_components/Pipeline";
 import axios from "@/app/lib/axios"
 import PopUp from "./_components/Popup";
 import FlyWheelPageLoading from "./loading";
-import { useFetchDataTypes, useFetchPipelines } from "./_features/hook";
+import { useFetchDataPoints, useFetchPipelines } from "./_features/hook";
+import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline'
+import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
 
 const Flywheel = () => {
-	const [open, setOpen] = useState(false)
 	const menuRef = useRef<HTMLDivElement>(null);
-	const tabs = ["Overview", "Data Points", "Pipelines"];
+	const tabs = ["Overview", "Data Pipelines", "Data Points"];
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
-	const [newPipeLine, setNewPipeline] = useState(false)
-	const [openNewDataPoint, setOpenNewDataPoint] = useState(false)
+	const [popupOpen, setPopupOpen] = useState(false); // Controls main popup
+	const [creatingPipeline, setCreatingPipeline] = useState(false); // Toggles NewPipeline view
+	const [creatingDataPoint, setCreatingDataPoint] = useState(false); // Toggles NewDataPoint view
+
 	const [page, setPage] = useState(1);
 	const [limit, setLimit] = useState(10);
 
-	const { isLoading: isloadingDataPoints, data: dataPoints } = useFetchDataTypes({
+	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchDataPoints({
 		axios,
 		queryParams: {
 			page: 1,
@@ -31,37 +32,38 @@ const Flywheel = () => {
 		}
 	})
 
-	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchPipelines({
+	const pipelines = pipelinesData?.dataPoint ?? [];
+	const paginationPipelines = pipelinesData?.pagination;
+
+	const { data: dataPoints } = useFetchPipelines({
 		axios,
 		queryParams: {
 			page,
 			limit,
 		},
 	});
-
-	const pipelines = pipelinesData?.data ?? [];
-	const pagination = pipelinesData?.pagination;
+	const datapoints = dataPoints?.data ?? []
+	const paginationDataPoints = dataPoints?.pagination
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
 			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-				setOpen(false);
+				setPopupOpen(false);
 			}
 		};
 		document.addEventListener('mousedown', handler);
-
 		return () => document.removeEventListener('mousedown', handler);
-	}, [setOpen]);
-
-	if (isloadingDataPoints || isLoadingPipelines) return <FlyWheelPageLoading />
+	}, []);
 
 	return (
 		<DashboardLayout>
-
 			<PopUp
-				openPopup={open}
-				onClose={() => setOpen(false)}
-				onBuildPipeline={() => setNewPipeline(true)}
+				openPopup={popupOpen}
+				onClose={() => setPopupOpen(false)}
+				onBuildPipeline={() => {
+					setCreatingPipeline(true);
+					setCreatingDataPoint(false);
+				}}
 			/>
 
 			<div className="flex justify-between">
@@ -85,76 +87,93 @@ const Flywheel = () => {
 					))}
 				</div>
 				{selectedTab === 'Overview' && (
-					<Overview />
+					<Overview 
+						pipelines={pipelines?.length}
+					/>
 				)}
 
-				{selectedTab === 'Data Points' && (
+				{selectedTab === 'Data Pipelines' && (
 					<div className="mt-5">
-						{openNewDataPoint ? (
-							<button
-								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-								onClick={() => setOpenNewDataPoint(false)}
-							>
-								<List size={18} color="white" className="mr-1" />
-								Data Points
-							</button>
+						{creatingPipeline ? (
+							<>
+								<button
+									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => setCreatingPipeline(false)}
+								>
+									<List size={18} color="white" className="mr-1" />
+									View Pipelines
+								</button>
+								<NewPipeLine setCreatingPipeline={setCreatingPipeline} />
+							</>
 						) : (
-							<button
-								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-								onClick={() => setOpenNewDataPoint(true)}
-							>
-								<Plus size={18} color="white" className="mr-1" />
-								New Data Point
-							</button>
-						)}
-						{openNewDataPoint ? (
-							<NewDataPoint />
-						) : (
-							<DataPoints data={dataPoints ?? []} />
+							<>
+								<button
+									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => setPopupOpen(true)}
+								>
+									<Plus size={18} color="white" className="mr-1" />
+									Build a new Pipeline
+								</button>
+								<Pipeline
+									data={pipelines ?? []}
+									pagination={paginationDataPoints ?? { page: 1, limit: 10, total: pipelines.length }}
+									onPageChange={setPage}
+									onLimitChange={setLimit}
+								/>
+							</>
 						)}
 					</div>
 				)}
 
-				{selectedTab === 'Pipelines' && (
+
+				{selectedTab === 'Data Points' && (
 					<>
 						<div className="mt-5">
-							{newPipeLine ? (
+							{creatingDataPoint ? (
 								<button
 									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setNewPipeline(false)}
+									onClick={() => setCreatingDataPoint(false)}
 								>
 									<List size={18} color="white" className="mr-1" />
-									Pipeline
+									View Data Points
 								</button>
-							) :
-								(
-									<button
-										className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-										onClick={() => setOpen(true)}
-									>
-										<Plus size={18} color="white" className="mr-1" />
-										Build a new Pipeline
-									</button>
-								)
-							}
-
+							) : (
+								<button
+									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => {
+										setCreatingDataPoint(true);
+									}}
+								>
+									<Plus size={18} color="white" className="mr-1" />
+									New Data Point
+								</button>
+							)}
 						</div>
 
-						{newPipeLine ? (
-							<NewPipeLine />
+						{creatingDataPoint ? (
+							<NewDataPoint
+								setCreatingDataPoint={setCreatingDataPoint}
+								pipelines={pipelines ?? []}
+							/>
 						) : (
 							<>
-								<Pipeline
-									data={pipelines ?? []}
-									pagination={pagination ?? { page: 1, limit: 10, pages: 1 }}
+								{ isLoadingPipelines ? (
+									<FlyWheelPageLoading/>
+								): (
+									<DataPoints
+									data={datapoints ?? []}
+									pagination={paginationPipelines ?? { page: 1, limit: 10, pages: 1 }}
 									onPageChange={setPage}
 									onLimitChange={setLimit}
 								/>
+								) }
+								
 							</>
 
 						)}
 					</>
 				)}
+
 
 			</div>
 

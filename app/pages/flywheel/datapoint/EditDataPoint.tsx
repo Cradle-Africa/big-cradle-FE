@@ -1,30 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { toCamelCase } from '@/app/utils/toCamelCase';
-import SelectOptionManager from "./SelectOptionManager";
+import { useEffect, useState } from "react";
+import { toCamelCase } from "@/app/utils/toCamelCase";
+import SelectOptionManager from "../_components/SelectOptionManager";
+import FieldPreview from "../_components/FieldPreview";
 import { Check } from "lucide-react";
-import FieldPreview from "./FieldPreview";
-import { FieldType, Field, PipelineForm, Pipeline } from "@/app/lib/type";
-import { useCreatePipeline } from '../_features/hook';
-import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
+import { Field, PipelineForm, FieldType, DataPoint } from "@/app/lib/type";
+import { useEditPipeline, useFetchSinglePipeline } from "../_features/hook";
+import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
-const mockDataPoints = [
-    { id: "65f0f0d2d1a1e3b4a2b7e1c2", name: "Data Point 1" },
-    { id: "65f0f0d2d1a1e3b4a2b7e1c9", name: "Data Point 2" },
-];
+interface EditDataPointProps {
+    editingDataPoint: boolean,
+    uniqueId: string;
+    setEditingDataPoint: (value: boolean) => void;
+}
 
-const NewPipeline = () => {
+const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId, setEditingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    const [form, setForm] = useState<PipelineForm>({
-        dataPointId: "",
-        field: [],
-    });
+    const [form, setForm] = useState<PipelineForm>({ dataPointId: '', field: [] });
+
     const businessUserId = getBusinessId();
     const employeeUserId = getEmployeeUserId();
-    const { mutate, isPending } = useCreatePipeline({ axios });
+    const queryClient = useQueryClient();
+
+    const { data, isLoading } = useFetchSinglePipeline({ axios, id: uniqueId });
+    const { mutate, isPending } = useEditPipeline({ axios });
+
+    useEffect(() => {
+        if (data) {
+            setForm({
+                dataPointId: data.id || '',
+                field: data.field,
+            });
+            setNewOptions(data.field.map(() => ""));
+        }
+    }, [data]);
 
     const handleFieldChange = <K extends keyof Field>(index: number, key: K, value: Field[K]) => {
         const updatedFields = [...form.field];
@@ -68,66 +81,45 @@ const NewPipeline = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Build full payload
-        const payload: Pipeline = {
+        const payload: DataPoint = {
             businessUserId,
             employeeUserId,
             dataPointId: form.dataPointId,
             field: form.field,
         };
 
-        console.log(JSON.stringify(payload));
         mutate(payload, {
             onSuccess: () => {
-                setForm({dataPointId: "", field: [],}); // clear the form
-                setNewOptions([]);
-                toast.success("Pipeline created successfully");
-                console.log("Pipeline successfully submitted");
+                queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+                toast.success("Data point updated successfully");
+                setEditingDataPoint(false);
             },
             onError: (error: any) => {
-                console.log("Pipeline submission failed:", error.message);
+                toast.error(error.message || "Failed to update data point");
             },
         });
     };
 
+    if (isLoading) {
+        return <p className="text-gray-500 text-sm mx-auto my-auto">Loading...</p>;
+    }
+
+    if (!editingDataPoint) return null;
     return (
         <form
             onSubmit={handleSubmit}
             className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
         >
-            <h2 className="text-md text-black mb-4">New Pipeline</h2>
+            <h2 className="text-md text-black mb-4">Edit Data Point</h2>
 
-            <div className="w-full">
-                <select
-                    value={form.dataPointId}
-                    onChange={(e) =>
-                        setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
-                    }
-                    required
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
-                >
-                    <option value="">Select Data Point</option>
-                    {mockDataPoints.map((dp) => (
-                        <option key={dp.id} value={dp.id}>
-                            {dp.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {form.field.map((field, index: any) => (
-                <div
-                    key={index}
-                    className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2"
-                >
+            {form.field.map((field, index) => (
+                <div key={index} className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2">
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
                             type="text"
                             placeholder="Label"
                             value={field.label}
-                            onChange={(e) =>
-                                handleFieldChange(index, "label", e.target.value)
-                            }
+                            onChange={(e) => handleFieldChange(index, "label", e.target.value)}
                             className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
                         />
                         <select
@@ -139,27 +131,27 @@ const NewPipeline = () => {
                         >
                             <option value="">Select Type</option>
                             <option value="text">Text</option>
+                            <option value="email">Email</option>
+                            <option value="tel">Tel</option>
                             <option value="select">Select</option>
-                            <option value="multiselect">Multi-Select</option>
+                            <option value="checkbox">Check box</option>
                             <option value="radio">Radio</option>
                             <option value="date">Date</option>
                             <option value="textarea">Textarea</option>
                         </select>
                     </div>
 
-                    <div className="flex items-center mt-6">
+                    <div className="flex items-center mt-6 cursor-pointer">
                         <input
                             type="checkbox"
+                            id={`${field.type}-${index}`}
                             checked={field.required}
-                            onChange={(e) =>
-                                handleFieldChange(index, "required", e.target.checked)
-                            }
-                            className="mr-2 cursor-pointer outline-none"
+                            onChange={(e) => handleFieldChange(index, "required", e.target.checked)}
+                            className="mr-2 outline-none"
                         />
-                        <span className="text-sm">Required</span>
+                        <label htmlFor={`${field.type}-${index}`} className="text-sm">Required</label>
                     </div>
 
-                    {/* Field Preview */}
                     <FieldPreview field={field} />
 
                     <SelectOptionManager
@@ -197,11 +189,11 @@ const NewPipeline = () => {
                     className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
                 >
                     <Check size={16} className="mr-1" />
-                    {isPending ? "Submitting..." : "Submit"}
+                    {isPending ? "Updating..." : "Update"}
                 </button>
             </div>
         </form>
     );
 };
 
-export default NewPipeline;
+export default EditDataPoint;

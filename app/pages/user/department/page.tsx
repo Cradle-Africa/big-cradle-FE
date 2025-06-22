@@ -4,8 +4,8 @@ import { Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import DepartmentTable from "./_components/DepartmentTable";
 import axios from "@/app/lib/axios";
-import { useFetchDepartments } from "./_features/hook";
-import DepartmentLosding from "./loading";
+import { useFetchDepartments } from './_features/hook'
+import DepartmentLoading from "./loading";
 import { getBusinessId } from "@/app/utils/user/userData";
 import NewDepartment from "./_components/NewDepartment";
 
@@ -33,8 +33,6 @@ const Department = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, [setOpen]);
 
-  if (isLoading) return <DepartmentLosding />;
-
   return (
     <DashboardLayout>
       <div className="flex justify-between">
@@ -56,16 +54,14 @@ const Department = () => {
       <div className="flex flex-col bg-white p-4 mt-8">
         <p className="font-bold text-black mb-5">Departments</p>
 
-        {open && <NewDepartment setOpen={setOpen} />}
-
-        {isLoading ? (
-          <DepartmentLosding />
-        ) : (
-          <DepartmentTable data={departments ?? []} />
-        )}
-      </div>
-    </DashboardLayout>
-  );
+                {isLoading ? (
+                    <DepartmentLoading />
+                ) : (
+                    <DepartmentTable data={departments ?? []} />
+                )}
+            </div>
+        </DashboardLayout>
+    );
 };
 
 export default Department;

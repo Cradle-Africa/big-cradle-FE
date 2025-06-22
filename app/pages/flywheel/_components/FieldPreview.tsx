@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-
-type FieldType = "text" | "select" | "date" | "radio" | "textarea" | "multiselect";
+import { FieldType } from "@/app/lib/type";
 
 type Field = {
     label: string;
@@ -16,66 +15,83 @@ interface FieldPreviewProps {
     field: Field;
 }
 
+const baseStyle = "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed";
+
 const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
     switch (field.type) {
         case "text":
-            return (
-                <input
-                    type="text"
-                    placeholder="Enter text"
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
-                    disabled
-                />
-            );
-
+        case "email":
+        case "tel":
+        case "number":
         case "date":
             return (
                 <input
-                    type="date"
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
+                    type={field.type}
+                    placeholder={field.label}
+                    className={baseStyle}
                     disabled
-
                 />
             );
 
+        case "textarea":
+            return (
+                <textarea
+                    placeholder={field.label}
+                    className={baseStyle}
+                    rows={3}
+                    disabled
+                />
+            );
+
+        case "select":
+            if (!field.options?.length) return null;
+            return (
+                <select
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100`}
+                    disabled
+                >
+                    {field.options.map((opt, i) => (
+                        <option key={i} value={opt}>
+                            {opt}
+                        </option>
+                    ))}
+                </select>
+            );
+
         case "radio":
-            if ((field.options?.length ?? 0) === 0) return null;
+            if (!field.options?.length) return null;
             return (
                 <div className="space-y-2">
-                    {(field.options ?? []).map((opt, i) => (
-                        <label key={i} className="flex items-center space-x-2">
-                            <input type="radio" name={field.key} disabled />
-                            <span>{opt}</span>
+                    {field.options.map((opt, i) => (
+                        <label key={i} className="flex gap-3 items-center space-x-2 cursor-not-allowed">
+                            <div>
+                                <input type="radio" name={field.key}
+                                    className={baseStyle} disabled />
+                            </div>
+                            <div>
+                                <span>{opt}</span>
+                            </div>
+
                         </label>
                     ))}
                 </div>
             );
 
-
-        case "textarea":
+        case "checkbox":
+            if (!field.options?.length) return null;
             return (
-                <textarea
-                    placeholder="Enter text"
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
-                    rows={3}
-                    disabled
-
-                />
-            );
-
-
-        case "multiselect":
-            if ((field.options?.length ?? 0) === 0) return null;
-            return (
-                <select
-                    multiple
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
-                    disabled
-                >
-                    {(field.options ?? []).map((opt, i) => (
-                        <option key={i}>{opt}</option>
+                <div className="space-y-2">
+                    {field.options.map((opt, i) => (
+                        <label key={i} className="flex gap-3 items-center space-x-2 cursor-not-allowed ">
+                            <div>
+                                <input type="checkbox" name={`${field.key}-${i}`} disabled
+                                    className={baseStyle}
+                                />
+                            </div>
+                            <div>{opt}</div>
+                        </label>
                     ))}
-                </select>
+                </div>
             );
 
         default:
