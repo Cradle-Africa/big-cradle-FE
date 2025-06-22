@@ -16,7 +16,7 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     onClose,
     uniqueId,
 }) => {
-    const { data: pipeline, isLoading } = useFetchSinglePipeline({
+    const { isLoading } = useFetchSinglePipeline({
         axios,
         id: uniqueId,
         enabled: shareDataPoint,

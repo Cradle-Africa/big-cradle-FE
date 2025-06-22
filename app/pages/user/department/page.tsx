@@ -1,14 +1,13 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
+import axios from "@/app/lib/axios";
+import { getBusinessId } from "@/app/utils/user/userData";
 import { Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import DepartmentTable from "./_components/DepartmentTable";
-import axios from "@/app/lib/axios";
+import NewDepartment from "./_components/NewDepartment";
 import { useFetchDepartments } from "./_features/hook";
 import DepartmentLosding from "./loading";
-import DepartmentLoading from "./loading";
-import { getBusinessId } from "@/app/utils/user/userData";
-import NewDepartment from "./_components/NewDepartment";
 
 const Department = () => {
   const [open, setOpen] = useState(false);
