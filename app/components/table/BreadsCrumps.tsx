@@ -126,7 +126,7 @@ const BreadsCrumps: React.FC<BreadsCrumpsProps> = (
                                         setOpenBusiness(true)
                                     }
                                 }}
-                                className={`btn ${rightAction.add.className || 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] opacity-90 text-white px-2 py-1 rounded-sm cursor-pointer'}`}
+                                className={`btn ${rightAction.add.className || 'bg-blue-600 text-white px-2 py-1 rounded-sm cursor-pointer'}`}
                                 key="right-action-button"
                             >
                                 {rightAction.add.icon && (

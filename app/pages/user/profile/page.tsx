@@ -32,20 +32,20 @@ const ProfilePage = () => {
     const renderSuperAdminTable = () => (
         <>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Full Name</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.fullName}</td>
+                <td className=" px-6 py-3 text-sm">Full Name</td>
+                <td className=" px-6 py-3 text-sm">{userData.fullName}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Role</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm capitalize">{userData.role}</td>
+                <td className=" px-6 py-3 text-sm">Role</td>
+                <td className=" px-6 py-3 text-sm capitalize">{userData.role}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Email</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.email}</td>
+                <td className=" px-6 py-3 text-sm">Email</td>
+                <td className=" px-6 py-3 text-sm">{userData.email}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Account Status</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">
+                <td className=" px-6 py-3 text-sm">Account Status</td>
+                <td className=" px-6 py-3 text-sm">
                     <span className='text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-1 py-[2px]'>
                         {userData.isVerified ? 'Active' : 'Inactive'}
                     </span>
@@ -57,46 +57,46 @@ const ProfilePage = () => {
     const renderBusinessTable = () => (
         <>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Business Name</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.businessName}</td>
+                <td className="px-6 py-3 text-sm">Business Name</td>
+                <td className="px-6 py-3 text-sm">{userData.businessName}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Contact Person</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">
+                <td className="px-6 py-3 text-sm">Contact Person</td>
+                <td className="px-6 py-3 text-sm">
                     {userData.contactPersonFirstName} {userData.contactPersonLastName}
                 </td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Phone</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.countryCode} {userData.contactNumber}</td>
+                <td className="px-6 py-3 text-sm">Phone</td>
+                <td className="px-6 py-3 text-sm">{userData.countryCode} {userData.contactNumber}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Location</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.businessAddress}, {userData.businessCity}, {userData.businessState}, {userData.businessCountry}</td>
+                <td className="px-6 py-3 text-sm">Location</td>
+                <td className="px-6 py-3 text-sm">{userData.businessAddress}, {userData.businessCity}, {userData.businessState}, {userData.businessCountry}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Sector</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.sector}</td>
+                <td className="px-6 py-3 text-sm">Sector</td>
+                <td className="px-6 py-3 text-sm">{userData.sector}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Organization Size</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.organizationSize}</td>
+                <td className="px-6 py-3 text-sm">Organization Size</td>
+                <td className="px-6 py-3 text-sm">{userData.organizationSize}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Email</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.email}</td>
+                <td className="px-6 py-3 text-sm">Email</td>
+                <td className="px-6 py-3 text-sm">{userData.email}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Role</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">{userData.role}</td>
+                <td className="px-6 py-3 text-sm">Role</td>
+                <td className="px-6 py-3 text-sm">{userData.role}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">KYC Status</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm capitalize">{userData.kycStatus}</td>
+                <td className="px-6 py-3 text-sm">KYC Status</td>
+                <td className="px-6 py-3 text-sm capitalize">{userData.kycStatus}</td>
             </tr>
             <tr>
-                <td className="border border-gray-100 px-6 py-3 text-sm">Account Status</td>
-                <td className="border border-gray-100 px-6 py-3 text-sm">
+                <td className="px-6 py-3 text-sm">Account Status</td>
+                <td className="px-6 py-3 text-sm">
                     <span className='text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-1 py-[2px]'>
                         {userData.isActive ? 'Active' : 'Inactive'}
                     </span>
@@ -138,12 +138,12 @@ const ProfilePage = () => {
                         <IdCard size={15} className='text-blue-600' />
                         <h5>Basic Information</h5>
                     </div>
-                    <div className='relative overflow-x-auto whitespace-nowrap'>
-                        <table className="w-full table-auto">
+                    <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">
+                        <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
                             <thead>
                                 <tr className='bg-gray-100'>
-                                    <th className="rounded-tl-lg border-r border-gray-200 px-6 py-3 text-left text-sm font-semibold text-gray-600">Field</th>
-                                    <th className="rounded-tr-lg border-gray-200 px-6 py-3 text-left text-sm font-semibold text-gray-600">Value</th>
+                                    <th className="rounded-tl-lg px-6 py-3 text-left text-sm font-semibold text-gray-600">Field</th>
+                                    <th className="rounded-tr-lg px-6 py-3 text-left text-sm font-semibold text-gray-600">Value</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">

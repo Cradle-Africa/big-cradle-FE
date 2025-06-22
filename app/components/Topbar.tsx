@@ -1,22 +1,35 @@
 'use client';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search, Bell, ChevronRight, CircleUser, LogOut, X } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
 import Image from 'next/image';
 import TopBarSkeleton from './skeleton/TopBarSkeleton';
 import { removeUser } from '../utils/user/userData';
 import Link from 'next/link'
+import { useRef } from 'react';
 
 const Topbar = () => {
     const [openProfile, setOpenProfile] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpenProfile(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, [setOpenProfile]);
     const user = useUser();
     if (!user) {
         return (
             <TopBarSkeleton />
         )
     }
+
+    
     return (
-        <>
+        <div ref={menuRef}>
             <div className=''>
                 <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
                     <form className="hidden relative md:flex items-center">
@@ -39,7 +52,7 @@ const Topbar = () => {
 
                         <div className='flex flex-col hover:cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
                             <span className='hidden lg:inline text-xs font-semibold'>
-                                {user?.fullName ?? user?.fullName } 
+                                {user?.fullName ?? user?.fullName}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
                                 {user?.firstName ?? user?.firstName}  {user?.lastName ?? user?.lastName}
                                 {user?.businessName ?? user?.businessName}
@@ -47,7 +60,7 @@ const Topbar = () => {
                             <span className='inline lg:hidden text-xs font-semibold'>
                                 {user?.fullName ?? user?.fullName?.slice(0, 12)}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName}
-                                {user?.firstName ?? user?.firstName} 
+                                {user?.firstName ?? user?.firstName}
                             </span>
                             <span className='text-xs text-gray-500'>{user?.role}</span>
                         </div>
@@ -68,24 +81,24 @@ const Topbar = () => {
                         </div>
                         <div className='flex flex-col mt-5 md:mt-10 text-blue-600'>
                             <span className='hidden lg:inline text-sm font-semibold '>
-                                {user?.fullName ?? user?.fullName }
-                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} { user?.contactPersonLastName ?? user?.contactPersonLastName}
-                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName} 
+                                {user?.fullName ?? user?.fullName}
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
                             </span>
                             <span className='inline lg:hidden text-sm font-semibold'>
-                                {user?.fullName ?? user?.fullName }
-                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} { user?.contactPersonLastName ?? user?.contactPersonLastName}
-                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName} 
+                                {user?.fullName ?? user?.fullName}
+                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
                             </span>
                             <span className='text-xs'>{user?.role}</span>
                         </div>
                         <Link
                             href='/pages/user/profile'
-                            className='w-full flex justify-center px-2 py-1 bg-gray-100 rounded-md mt-5 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
+                            className='w-full flex justify-center px-2 py-1 bg-gray-100 rounded-md mt-5 text-md hover:cursor-pointer hover:text-white hover:bg-blue-600 transition'
                         >Profile</Link>
                         <button
-                            className='w-full px-2 py-1 bg-gray-100 rounded-md mt-2 text-sm hover:cursor-pointer hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 transition-shadow'
-                            onClick={() => removeUser()}    
+                            className='w-full px-2 py-1 bg-gray-100 rounded-md mt-2 text-md hover:cursor-pointer hover:text-white hover:bg-blue-600 transition'
+                            onClick={() => removeUser()}
                         >
                             <LogOut
                                 size={12}
@@ -96,7 +109,7 @@ const Topbar = () => {
                     </div>
                 )}
             </div>
-        </>
+        </div>
 
     )
 }

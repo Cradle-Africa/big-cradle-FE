@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronDown,
   ChevronUp,
+  Database,
   File,
   House,
   MonitorCog,
@@ -98,7 +99,7 @@ const sideBarLinks: {
   {
     label: "Data Flywheel",
     href: "/pages/flywheel",
-    icon: <File size={15} />,
+    icon: <Database size={15} />,
   },
   {
     label: "Department",

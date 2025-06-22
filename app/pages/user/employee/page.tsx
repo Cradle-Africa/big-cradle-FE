@@ -32,7 +32,7 @@ const Admin = () => {
             endpoint: 'manage-employee/invite-employee-user',
             method: 'POST',
             icon: '',
-            className: 'bg-gradient-to-br from-[#578CFF] to-[#0546D2] opacity-90 text-white px-2 py-1 rounded-sm cursor-pointer',
+            className: 'bg-blue-600 text-white px-2 py-2 rounded-sm cursor-pointer',
             payload: {}
         }
     }

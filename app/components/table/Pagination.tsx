@@ -50,7 +50,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
                 onClick={handlePrevious}
                 disabled={currentPage === 1}
-                className={`py-1 px-4 rounded-md hover:cursor-pointer text-gray-400 bg-gray-100 ${currentPage === 1
+                className={`py-2 px-4 rounded-md hover:cursor-pointer text-gray-400 bg-gray-100 ${currentPage === 1
                         ? 'bg-gray-100 cursor-not-allowed'
                         : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'
                     }`}
@@ -65,7 +65,7 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
                 onClick={handleNext}
                 disabled={currentPage === totalPages}
-                className={`py-1 px-4 rounded-md hover:cursor-pointer text-gray-400 bg-gray-100 ${currentPage === totalPages
+                className={`py-2 px-4 rounded-md hover:cursor-pointer text-gray-400 bg-gray-100 ${currentPage === totalPages
                         ? 'bg-gray-100 cursor-not-allowed'
                         : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'
                     }`}
@@ -80,7 +80,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     max={totalPages}
                     value={currentPage}
                     onChange={handlePageInputChange}
-                    className="w-16 py-1 px-3 rounded-md border border-gray-300 text-center text-sm focus:outline-none"
+                    className="w-16 py-2 px-3 rounded-md border border-gray-300 text-center text-sm focus:outline-none"
                 />
             )}
 
@@ -88,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 <select
                     value={limit}
                     onChange={handleLimitChange}
-                    className="py-1 px-3 rounded-md border border-gray-300 text-sm focus:outline-none"
+                    className="py-2 px-3 rounded-md border border-gray-300 text-sm focus:outline-none"
                 >
                     <option value={5}>5 per page</option>
                     <option value={10}>10 per page</option>
