@@ -2,11 +2,12 @@
 
 import { DataPoint } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, Pencil } from "lucide-react";
+import { Eye, Pencil, Share2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
 import EditDataPoint from "./EditDataPoint";
+import ShareDataPoint from "./ShareDataPoint";
 
 const DataPoints = ({
     data,
@@ -22,6 +23,7 @@ const DataPoints = ({
 
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
     const [editingDataPoint, setEditingDataPoint] = useState(false);
+    const [shareDataPoint, setShareDataPoint] = useState(false);
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
     const handleViewDataPoint = (id: any) => {
@@ -31,6 +33,11 @@ const DataPoints = ({
 
     const handleEditDataPoint = (id: any) => {
         setEditingDataPoint(true)
+        setUniqueDataPoint(id)
+    }
+
+    const handleShareDataPoint = (id: any) => {
+        setShareDataPoint(true)
         setUniqueDataPoint(id)
     }
     const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
@@ -53,6 +60,12 @@ const DataPoints = ({
             <ViewDataPoint
                 openViewDataPoint={openViewDataPoint}
                 onClose={() => setOpenViewDataPoit(false)}
+                uniqueId={uniqueDataPoint}
+            />
+
+            <ShareDataPoint
+                shareDataPoint={shareDataPoint}
+                onClose={() => setShareDataPoint(false)}
                 uniqueId={uniqueDataPoint}
             />
 
@@ -148,6 +161,11 @@ const DataPoints = ({
                                                 <Pencil
                                                     size={35}
                                                     onClick={() => handleEditDataPoint(dataPoints?.id)}
+                                                    className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
+                                                />
+                                                <Share2
+                                                    size={35}
+                                                    onClick={() => handleShareDataPoint(dataPoints?.id)}
                                                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                                                 />
                                             </td>
