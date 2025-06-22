@@ -28,7 +28,7 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
                 <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
 
                 <div className="fixed z-50 inset-0 flex items-center justify-center px-4">
-                    <div className="relative w-full bg-white rounded-xl shadow-xl max-w-2xl p-5">
+                    <div className="relative w-full bg-white rounded-xl shadow-xl max-w-xl p-5">
                         <button
                             onClick={onClose}
                             className="absolute top-8 right-7 text-gray-400 hover:text-blue-600 cursor-pointer text-xl"
@@ -37,7 +37,7 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
                         </button>
 
                         <h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-                            <ArrowDownUp size={20} /> Share Data Point
+                            <Share2 size={20} /> Share Data Point
                         </h2>
                         {isLoading ? (
                             <p className="text-gray-500">Loading...</p>
