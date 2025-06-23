@@ -101,7 +101,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId
     };
 
     if (isLoading) {
-        return <p className="text-gray-500 text-sm mx-auto my-auto">Loading...</p>;
+        return <p className="flex justify-center px-10 py-10 text-gray-700 text-sm">Loading...</p>;
     }
 
     if (!editingDataPoint) return null;
@@ -110,7 +110,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId
             onSubmit={handleSubmit}
             className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
         >
-            <h2 className="text-md text-black mb-4">Edit Data Point</h2>
+            <h2 className="text-md text-black mb-4">Edit the data point</h2>
 
             {form.field.map((field, index) => (
                 <div key={index} className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2">

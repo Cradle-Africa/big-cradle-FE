@@ -41,7 +41,6 @@ export const createDepartment = async (
         const statusCode = error?.response?.status;
         let message = error?.response?.message;
 
-        console.log(error.response.data.message)
         switch (statusCode) {
             case 400:
                 message = error?.response?.data?.message;

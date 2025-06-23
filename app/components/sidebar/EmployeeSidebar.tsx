@@ -2,6 +2,7 @@
 
 import classNames from "classnames";
 import {
+  Database,
   House
 } from "lucide-react";
 import Link from "next/link";
@@ -44,4 +45,11 @@ const sideBarLinks: {
   label: string;
   href: string;
   icon: JSX.Element;
-}[] = [{ label: "Dashboard", href: "/", icon: <House size={15} /> }];
+}[] = [
+  { label: "Dashboard", href: "/", icon: <House size={15} /> },
+  {
+    label: "Data Flywheel",
+    href: "/pages/flywheel",
+    icon: <Database size={15} />,
+  },
+];

@@ -22,6 +22,7 @@ export interface User {
     kycStatus: string;
     certificateOfIncorporation: string;
     businessName: string;
+    businessUserId: string;
     __v: number;
 };
 

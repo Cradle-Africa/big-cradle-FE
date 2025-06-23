@@ -67,6 +67,8 @@ export default function SignInPage() {
         localStorage.setItem("businessId", response.data.id);
       } else if (response.data.role === "admin") {
         localStorage.setItem("adminUserId", response.data.id);
+      } else if (response.data.role === "employee") {
+        localStorage.setItem("employeeId", response.data.id);
       }
       toast.dismiss();
       toast.success("Signed in successfully!");
