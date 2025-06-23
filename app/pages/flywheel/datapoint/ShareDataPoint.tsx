@@ -2,7 +2,7 @@
 
 import axios from "@/app/lib/axios";
 import { useFetchSinglePipeline } from "../_features/hook";
-import { X, ArrowDownUp, Share2 } from "lucide-react";
+import { X, Share2 } from "lucide-react";
 import Link from 'next/link'
 
 interface PopUpProps {
