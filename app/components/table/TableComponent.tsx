@@ -103,7 +103,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                             {loading ? (
                                 <tr key="loading-state">
                                     <td
-                                        className="py-2 text-center text-sm text-gray-500"
+                                        className="py-10 text-center text-sm text-gray-500"
                                         colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
                                     >
                                         Loading...

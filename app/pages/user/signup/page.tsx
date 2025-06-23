@@ -81,11 +81,11 @@ function BuildSignUpPage() {
 						className="mb-4"
 					/>
 
-					{superAdminSignUp && (
+					{/* {superAdminSignUp && (
 						<h3 className="text-lg font-semibold text-gray-700">
 							Sign up as a Super admin
 						</h3>
-					)}
+					)} */}
 					{adminSignUp && (
 						<h3 className="text-lg font-semibold text-gray-700">
 							Sign up as an Investor
@@ -123,11 +123,12 @@ function BuildSignUpPage() {
 						<hr className="flex-grow border-gray-300" />
 					</div>
 
-					{superAdminSignUp ||
+					{
+					// superAdminSignUp ||
 						adminSignUp ||
 						(businessSignUp && (
 							<div className="overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700">
-								<button
+								{/* <button
 									onClick={() => {
 										setSuperAdminSignUp(true);
 										setBusinessSignUp(false);
@@ -140,7 +141,7 @@ function BuildSignUpPage() {
 										}`}
 								>
 									Super admin
-								</button>
+								</button> */}
 								<button
 									onClick={() => {
 										setAdminSignUp(true);

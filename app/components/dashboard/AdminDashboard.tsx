@@ -24,6 +24,7 @@ const BusinessDashboard = () => {
         openAdminKycVerification={openAdminKycVerification}
         setOpenAdminKycVerification={setOpenAdminKycVerification}
         user={user}
+        kycReviewReason={user?.kycReviewReason || ''}
       />
 
       <div className="w-full">
@@ -38,7 +39,7 @@ const BusinessDashboard = () => {
         {[...Array(3)].map((_, index) => (
           <BusinessCard
             key={index}
-            title="Active Campaigns"
+            title="Pipelines"
             subTitle="Increase from last month"
             value="67"
             percentage="10.2%"
