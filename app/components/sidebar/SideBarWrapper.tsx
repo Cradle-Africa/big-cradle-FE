@@ -1,4 +1,4 @@
-import LogoWithText from "@/public/images/logo-with-text.png";
+import LogoWithText from "@/public/images/white-logo-with-text.png";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
