@@ -23,6 +23,7 @@ export interface User {
     certificateOfIncorporation: string;
     businessName: string;
     businessUserId: string;
+    kycReviewReason?: string;
     __v: number;
 };
 
