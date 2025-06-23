@@ -114,7 +114,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                             </div>
                         </div>
 
-                        <div className='mt-5'>
+                        {/* <div className='mt-5'>
                             <input
                                 type="email"
                                 name="email"
@@ -124,7 +124,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                             />
                             {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                        </div>
+                        </div> */}
 
                         {/* <div className='relative mt-5'>
                             <label>Profile picture</label>
