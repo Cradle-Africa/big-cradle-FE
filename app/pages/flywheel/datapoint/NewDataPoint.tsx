@@ -7,7 +7,7 @@ import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
 import { FieldType, Field, PipelineForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
-import { getBusinessId, getEmployeeUserId } from '@/app/utils/user/userData';
+import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,13 +19,20 @@ interface DataPointProps {
 
 const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    // const [isLoading, setIsLoading] = useState(false);
-    
     const [form, setForm] = useState<PipelineForm>({
         dataPointId: "",
         field: [],
     });
-    const businessUserId = getBusinessId();
+    const user = getUser()
+
+    let businessUserId: string | null = null;
+
+    if (user?.role === 'business') {
+        businessUserId = getBusinessId() || null;
+    } else {
+        businessUserId = user?.businessUserId || null;
+    }
+
     const employeeUserId = getEmployeeUserId();
     const { mutate, isPending } = useCreateDataPoint({ axios });
 
@@ -68,7 +75,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
         setNewOptions((prev) => [...prev, ""]);
     };
 
-	const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -83,15 +90,15 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
 
         mutate(payload, {
             onSuccess: () => {
-				queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+                queryClient.invalidateQueries({ queryKey: ["pipelines"] });
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");
                 setCreatingDataPoint(false)
             },
             onError: (error: any) => {
-				toast.error(error.message || "Failed to create data point");
-            },
+                toast.error(error.message || "Failed to create data point");
+            }
         });
     };
 
@@ -128,6 +135,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
                             type="text"
+                            required
                             placeholder="Label"
                             value={field.label}
                             onChange={(e) =>
@@ -144,6 +152,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                         >
                             <option value="">Select Type</option>
                             <option value="text">Text</option>
+                            <option value="number">Number</option>
                             <option value="email">Email</option>
                             <option value="tel">Tel</option>
                             <option value="select">Select</option>
@@ -157,7 +166,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                     <div className="flex items-center mt-6 cursor-pointer">
                         <input
                             type="checkbox"
-                            id={`${field.type}-${index}` }
+                            id={`${field.type}-${index}`}
                             checked={field.required}
                             onChange={(e) =>
                                 handleFieldChange(index, "required", e.target.checked)

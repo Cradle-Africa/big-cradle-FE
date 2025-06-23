@@ -3,7 +3,7 @@ import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios from "@/app/lib/axios";
 import { PipeLineSchema } from "@/app/lib/type";
 import { pipeLineSchema } from "@/app/lib/validationSchemas";
-import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
+import { getBusinessId, getEmployeeUserId, getUser } from "@/app/utils/user/userData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check } from "lucide-react";
@@ -17,8 +17,16 @@ type Props = {
 
 const NewPipeline = ({ setCreatingPipeline }: Props) => {
 
-	const businessUserId = getBusinessId();
+	const user = getUser()
 	const employeeUserId = getEmployeeUserId();
+
+	let businessUserId: string | null = null;
+
+	if (user?.role === 'business') {
+		businessUserId = getBusinessId() || null;
+	} else {
+		businessUserId = user?.businessUserId || null;
+	}
 
 	const {
 		register,
@@ -44,7 +52,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 					setCreatingPipeline(false);
 				},
 				onError: (error: any) => {
-					toast.error(error.message || "Failed to create pipeline");
+					toast.error(error.message || "Failed to create data point");
 				}
 			}
 		);

@@ -1,16 +1,23 @@
-import { removeUser } from '@/app/utils/user/userData';
+import { getEmployeeUserId, getUser, removeUser } from '@/app/utils/user/userData';
 import { DataPoint, Pipeline } from './../../../lib/type';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { AxiosInstance } from "axios";
 
-const getBusinessUserId = getBusinessId()
+const user = getUser()
+const employeeUserId = getEmployeeUserId()
+let businessUserId: string | null = null;
 
+if (user?.role === 'business') {
+    businessUserId = getBusinessId() || null;
+} else {
+    businessUserId = user?.businessUserId || null;
+}
 
 export const fetchPipelines = async (
     axios: AxiosInstance,
-    queryParams?: { 
-        page?: number; 
-        limit?: number; 
+    queryParams?: {
+        page?: number;
+        limit?: number;
         total?: number;
     }
 ) => {
@@ -20,11 +27,13 @@ export const fetchPipelines = async (
             limit: queryParams?.limit || 10,
             total: queryParams?.total
         };
-        const res = await axios.get(`/data-point-mgt/pipeline-fields-business?businessUserId=${getBusinessUserId}`, {params});
-        if (res?.status === 401){
-            removeUser();
-        } 
-        return res.data;
+        if (user?.role === 'business') {
+            const res = await axios.get(`/data-point-mgt/pipeline-fields-business?businessUserId=${businessUserId}`, { params });
+            return res.data;
+        } else {
+            const res = await axios.get(`/data-point-mgt/pipeline-fields-employee?employeeUserId=${employeeUserId}`, { params });
+            return res.data;
+        }
     } catch (error: any) {
         console.log(JSON.stringify(error));
         return []; // fallback return
@@ -37,7 +46,7 @@ export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
         if (res.status === 401) {
             removeUser();
         }
-        return res.data.data; 
+        return res.data.data;
     } catch (error: any) {
         console.error("Fetch single data type error:", error);
     }
@@ -46,9 +55,9 @@ export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
 
 export const fetchDataPoints = async (
     axios: AxiosInstance,
-    queryParams?: { 
-        page?: number; 
-        limit?: number; 
+    queryParams?: {
+        page?: number;
+        limit?: number;
     }
 ) => {
     try {
@@ -56,10 +65,10 @@ export const fetchDataPoints = async (
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
         };
-        const res = await axios.get(`/data-point-mgt/data-point?businessUserId=${getBusinessUserId}`, {params});
-        if (res?.status === 401){
+        const res = await axios.get(`/data-point-mgt/data-point?businessUserId=${businessUserId}`, { params });
+        if (res?.status === 401) {
             removeUser();
-        } 
+        }
         return res.data;
     } catch (error: any) {
         console.log(JSON.stringify(error));
@@ -96,7 +105,7 @@ export const createPipeline = async (
                 message = typeof message === 'string' ? message : "An unexpected error occurred";
         }
 
-        return Promise.reject({ message }); 
+        return Promise.reject({ message });
     }
 };
 
@@ -127,7 +136,7 @@ export const createDataPoint = async (
             default:
                 message = typeof message === 'string' ? message : "An unexpected error occurred";
         }
-        return Promise.reject({ message }); 
+        return Promise.reject({ message });
     }
 };
 

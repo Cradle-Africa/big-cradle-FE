@@ -126,7 +126,7 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 							<ArrowDownUp size={20} /> View Data Point
 						</h2>
 						{isLoading ? (
-							<p className="text-gray-500">Loading...</p>
+							<p className="flex justify-center px-10 py-10 text-gray-700 text-sm">Loading...</p>
 						) : (
 							<>
 								<div className="overflow-y-auto max-h-[70vh] py-8 ">
@@ -146,7 +146,7 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 									</form>
 								</div>
 
-								<div className="pt-2 border-t border-gray-200 mt-6">
+								{/* <div className="pt-2 border-t border-gray-200 mt-6">
 									<button
 										type="button"
 										className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
@@ -156,7 +156,7 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 									>
 										Edit Data Point
 									</button>
-								</div>
+								</div> */}
 							</>
 
 						)}

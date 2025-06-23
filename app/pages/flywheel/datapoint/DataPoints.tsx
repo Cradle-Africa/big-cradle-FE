@@ -107,8 +107,8 @@ const DataPoints = ({
                                                             <td className=" py-2 align-top">
                                                                 {dataPoints.field.map((field: any, idx: number) => (
                                                                     <div key={idx} className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50">
-                                                                        <div className="flex flex-wrap gap-x-4">
-                                                                            <span className="min-w-[300px] font-medium">{field.label}</span>
+                                                                        <div className="flex gap-x-4">
+                                                                            <span className="min-w-[400px] font-medium flex flex-wrap">{field.label}</span>
                                                                             <span className="min-w-[100px]">{field.type}</span>
                                                                             <span className="min-w-[100px]">{field.required ? "Required" : "Optional"}</span>
                                                                         </div>
