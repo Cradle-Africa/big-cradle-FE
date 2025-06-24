@@ -16,7 +16,7 @@ const NewSurveyPage = () => {
     <DashboardLayout>
       <div className="flex gap-4">
         {/* Survey buttons area */}
-        {surveyMenuList.map((survey: string, index) => (
+        {surveyMenuList.map((survey: string) => (
           <SurveyTabButton
             onClick={() => router.push(`/pages/survey/new?survey=${survey}`)}
             key={survey}
