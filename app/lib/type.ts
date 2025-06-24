@@ -61,3 +61,17 @@ export type Pipeline = {
   createdAt?: string | undefined;
 }
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;
+
+// export type DataEntryField = {
+//   key: string;
+//   value: string;
+// }
+
+export interface DataEntry {
+  businessUserId: string | null;
+  employeeUserId: string | null;
+  fieldId: string;
+  data: Record<string, any>;
+  createdAt?: string;
+}
+

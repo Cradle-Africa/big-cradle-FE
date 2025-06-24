@@ -1,20 +1,20 @@
 import { Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { Calendar, Eye, LetterText } from "lucide-react";
-import Pagination from "../_components/Pagination";
 
+type DataPipelineProps = {
+    data: Pipeline[];
+    // pagination: PaginationMeta;
+    // onPageChange: (newPage: number) => void;
+    // onLimitChange: (newLimit: number) => void;
+};
 
 const PipelinePage = ({
     data,
-    pagination,
-    onPageChange,
-    onLimitChange,
-}: {
-    data: Pipeline[];
-    pagination: { page: number; limit: number; total: number };
-    onPageChange: (page: number) => void;
-    onLimitChange: (limit: number) => void;
-}) => {
+    // pagination,
+    // onPageChange,
+    // onLimitChange,
+}: DataPipelineProps) => {
     return (
         <div>
             <div className="grid grid-cols-1 md:grid md:grid-cols-2 xl:grid xl-grid-cols-3 w-full gap-5 mt-10">
@@ -50,7 +50,7 @@ const PipelinePage = ({
                     )
                 }
             </div >
-            {pagination && (
+            {/* {pagination && (
                 <Pagination
                     currentPage={pagination.page}
                     totalPages={pagination.total}
@@ -58,7 +58,7 @@ const PipelinePage = ({
                     onPageChange={onPageChange}
                     onLimitChange={onLimitChange}
                 />
-            )}
+            )} */}
         </div>
 
 

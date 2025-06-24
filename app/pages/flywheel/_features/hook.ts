@@ -1,13 +1,14 @@
-import { DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
+import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataPoint, createPipeline, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
+import { createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
 	queryParams?: {
 		page?: number;
 		limit?: number;
+		total?: number;
 	};
 }
 
@@ -20,12 +21,12 @@ type UseFetchPipelines = {
 	};
 }
 
-export const useFetchPipelines = ({
+export const useFetchDataPoints = ({
 	axios, queryParams
-}: UseFetchPipelines) => {
+}: UseFetchDataPoints) => {
 	return useQuery<{
 	    	data: DataPoint[]
-			pagination: Pagination;
+			  pagination: Pagination;
 		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
@@ -61,11 +62,16 @@ export const useEditPipeline = ({ axios }: { axios: AxiosInstance }) => {
     });
 };
 
+export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, Pipeline>({
+		mutationFn: (data: Pipeline) => createPipeline(axios, data),
+	});
+};
 
-export const useFetchDataPoints = ({
+export const useFetchPipelines = ({
   axios,
   queryParams
-}: UseFetchDataPoints) => {
+}: UseFetchPipelines) => {
   return useQuery<{
     dataPoint: Pipeline[];
     pagination: PaginationMeta;
@@ -76,16 +82,40 @@ export const useFetchDataPoints = ({
   });
 };
 
-
-export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
-	return useMutation<void, Error, Pipeline>({
-		mutationFn: (data: Pipeline) => createPipeline(axios, data),
-	});
-};
-
-
 export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, DataPoint>({
 		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
 	});
 };
+
+export const useCreateDataEntry = ({ axios }: { axios: AxiosInstance }) => {
+	return useMutation<void, Error, DataEntry>({
+		mutationFn: (data: DataEntry) => createDataEntry(axios, data),
+	});
+};
+
+
+
+type UseFetchDataEntries = {
+	axios: AxiosInstance;
+	queryParams?: {
+		page?: number;
+		limit?: number;
+		total?: number;
+	};
+}
+
+export const useFetchDataEntries = ({
+  axios,
+  queryParams,
+}: UseFetchDataEntries) => {
+  return useQuery<{
+    data: DataEntry[]; 
+    pagination: PaginationMeta;
+  }>({
+    queryKey: ["data-entries", queryParams],
+    queryFn: () => fetchDataEntries(axios, queryParams),
+    staleTime: 5 * 60 * 1000,
+  });
+};
+

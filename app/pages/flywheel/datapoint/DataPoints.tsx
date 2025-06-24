@@ -1,6 +1,6 @@
 "use client";
 
-import { DataPoint } from "@/app/lib/type";
+import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { Eye, Pencil, Share2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
@@ -9,17 +9,20 @@ import ViewDataPoint from "./ViewDataPoint";
 import EditDataPoint from "./EditDataPoint";
 import ShareDataPoint from "./ShareDataPoint";
 
+type DataPointsProps = {
+    data: DataPoint[];
+    pagination: PaginationMeta;
+    onPageChange: (newPage: number) => void;
+    onLimitChange: (newLimit: number) => void;
+};
+
 const DataPoints = ({
     data,
     pagination,
     onPageChange,
     onLimitChange,
-}: {
-    data: DataPoint[];
-    pagination: { page: number; limit: number; pages: number };
-    onPageChange: (page: number) => void;
-    onLimitChange: (limit: number) => void;
-}) => {
+}: DataPointsProps
+) => {
 
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
     const [editingDataPoint, setEditingDataPoint] = useState(false);
