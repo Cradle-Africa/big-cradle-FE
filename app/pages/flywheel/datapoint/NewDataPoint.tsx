@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { toCamelCase } from '@/app/utils/toCamelCase';
+import { toCamelCase } from '@/app/utils/caseFormat';
 import SelectOptionManager from "../_components/SelectOptionManager";
 import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";

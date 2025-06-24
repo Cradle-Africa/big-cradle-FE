@@ -31,7 +31,7 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     const [shareUrl, setShareUrl] = useState("");
     useEffect(() => {
         if (encodedId && typeof window !== "undefined") {
-            const fullUrl = `${window.location.origin}/pages/flywheel/data-entry?data-point=${encodedId}`;
+            const fullUrl = `${window.location.origin}/pages/flywheel/data-entry/shared?data-point=${encodedId}`;
             setShareUrl(fullUrl);
         }
     }, [encodedId]);

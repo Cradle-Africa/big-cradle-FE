@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Image, { StaticImageData } from "next/image";
+import bigCradleDashboardImg from "@/public/images/big cradle dashboard img.png";
 import handsAndPapers from "@/public/images/hands and paper.png";
 import boyWithComputer from "@/public/images/boy with computer.png";
 import girlWithIpad from "@/public/images/girl with iPad.png";
@@ -102,6 +103,12 @@ const imagesList: {
   title: string;
   description: string;
 }[] = [
+  {
+    imgPath: bigCradleDashboardImg,
+    title: "Your Growth Partner",
+    description:
+      "Whether you're a startup or an enterprise, Big Cradle is your partner in data transformation. We don’t just provide tools — we build with you.",
+  },
   {
     imgPath: handsAndPapers,
     title: "Your Growth Partner",

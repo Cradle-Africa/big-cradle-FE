@@ -9,41 +9,60 @@ import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios"
 import PopUp from "./_components/Popup";
 import FlyWheelPageLoading from "./loading";
-import { useFetchDataPoints, useFetchPipelines } from "./_features/hook";
+import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline'
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
+import DataEntries from "./data-entry/DataEntries";
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
-	const tabs = ["Overview", "Data Pipelines", "Data Points"];
+	const tabs = ["Overview", "Data Pipelines", "Data Points", "Data Entries"];
 	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
 	const [popupOpen, setPopupOpen] = useState(false); // Controls main popup
 	const [creatingPipeline, setCreatingPipeline] = useState(false); // Toggles NewPipeline view
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false); // Toggles NewDataPoint view
 
-	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(10);
+	const [entriesPage, setEntriesPage] = useState(1);
+	const [entriesLimit, setEntriesLimit] = useState(10);
 
-	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchDataPoints({
+	const [pointsPage, setPointsPage] = useState(1);
+	const [pointsLimit, setPointsLimit] = useState(10);
+
+	const [pipelinesPage] = useState(1);
+	const [pipelinesLimit] = useState(10);
+
+
+	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchPipelines({
 		axios,
 		queryParams: {
-			page: 1,
-			limit: 10
+			page: pipelinesPage,
+			limit: pipelinesLimit
 		}
-	})
+	});
 
-	const pipelines = pipelinesData?.dataPoint ?? [];
-	const paginationPipelines = pipelinesData?.pagination;
-
-	const { data: dataPoints } = useFetchPipelines({
+	const { data: dataPoints } = useFetchDataPoints ({
 		axios,
 		queryParams: {
-			page,
-			limit,
+			page: pointsPage,
+			limit: pointsLimit,
 		},
 	});
+
+	const { data: dataEntries } = useFetchDataEntries({
+		axios,
+		queryParams: {
+			page: entriesPage,
+			limit: entriesLimit,
+		},
+	});
+	const pipelines = pipelinesData?.dataPoint ?? [];
+	const paginationPipelines = pipelinesData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
+
 	const datapoints = dataPoints?.data ?? []
-	const paginationDataPoints = dataPoints?.pagination
+	// const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
+
+	const dataentries = dataEntries?.data ?? [];
+	const paginationDataEntries = dataEntries?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -87,7 +106,7 @@ const Flywheel = () => {
 					))}
 				</div>
 				{selectedTab === 'Overview' && (
-					<Overview 
+					<Overview
 						pipelines={pipelines?.length}
 					/>
 				)}
@@ -116,9 +135,12 @@ const Flywheel = () => {
 								</button>
 								<Pipeline
 									data={pipelines ?? []}
-									pagination={paginationDataPoints ?? { page: 1, limit: 10, total: pipelines.length }}
-									onPageChange={setPage}
-									onLimitChange={setLimit}
+									// pagination={paginationDataPoints}
+									// onPageChange={setPipelinesPage}
+									// onLimitChange={(newLimit) => {
+									// 	setPointsLimit(newLimit);
+									// 	setEntriesPage(1);
+									// }}
 								/>
 							</>
 						)}
@@ -157,19 +179,39 @@ const Flywheel = () => {
 							/>
 						) : (
 							<>
-								{ isLoadingPipelines ? (
-									<FlyWheelPageLoading/>
-								): (
+								{isLoadingPipelines ? (
+									<FlyWheelPageLoading />
+								) : (
 									<DataPoints
-									data={datapoints ?? []}
-									pagination={paginationPipelines ?? { page: 1, limit: 10, pages: 1 }}
-									onPageChange={setPage}
-									onLimitChange={setLimit}
-								/>
-								) }
-								
+										data={datapoints}
+										pagination={paginationPipelines}
+										onPageChange={setPointsPage}
+										onLimitChange={(newLimit) => {
+											setPointsLimit(newLimit);
+											setEntriesPage(1);
+										}}
+									/>
+								)}
+
 							</>
 
+						)}
+					</>
+				)}
+
+
+				{selectedTab === 'Data Entries' && (
+					<>
+						{selectedTab === 'Data Entries' && (
+							<DataEntries
+								data={dataentries}
+								pagination={paginationDataEntries}
+								onPageChange={setEntriesPage}
+								onLimitChange={(newLimit) => {
+									setEntriesLimit(newLimit);
+									setEntriesPage(1);
+								}}
+							/>
 						)}
 					</>
 				)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { toCamelCase } from "@/app/utils/toCamelCase";
+import { toCamelCase } from "@/app/utils/caseFormat";
 import SelectOptionManager from "../_components/SelectOptionManager";
 import FieldPreview from "../_components/FieldPreview";
 import { Check } from "lucide-react";
@@ -113,7 +113,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId
             <h2 className="text-md text-black mb-4">Edit the data point</h2>
 
             {form.field.map((field, index) => (
-                <div key={index} className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2">
+                <div key={index} className="w-full p-4 border bg-[#fcfcfb] border-gray-200 rounded space-y-3 mb-2">
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
                             type="text"
