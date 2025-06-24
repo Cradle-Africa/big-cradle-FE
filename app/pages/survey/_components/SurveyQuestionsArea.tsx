@@ -1,6 +1,6 @@
 import { CircleMinus } from "lucide-react";
 import { useState } from "react";
-import QuestionTypeSelect from "./QuestionTupeSelect";
+import QuestionTypeSelect from "./SurveySelect";
 
 const SurveyQuestionsArea = () => {
   const [questionType, setQuestionType] = useState("");
@@ -23,7 +23,7 @@ const SurveyQuestionsArea = () => {
   };
 
   return (
-    <form className="my-8 flex flex-col gap-4 max-w-xl">
+    <form className="my-8 flex flex-col gap-4">
       <div className="bg-gray-50 p-4 rounded-md flex flex-col gap-4">
         <input
           placeholder="Title"
@@ -47,6 +47,12 @@ const SurveyQuestionsArea = () => {
           <QuestionTypeSelect
             value={questionType}
             onChange={(e) => setQuestionType(e.target.value)}
+            valuesList={[
+              "Multiple Choice",
+              "Rating Scale",
+              "Text Input",
+              "Image Upload",
+            ]}
           />
         </div>
         {answers.map((answer, index) => (
