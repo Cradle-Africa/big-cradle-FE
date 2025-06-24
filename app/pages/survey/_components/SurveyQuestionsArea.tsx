@@ -1,10 +1,14 @@
 import { CircleMinus } from "lucide-react";
 import { useState } from "react";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import QuestionTypeSelect from "./SurveySelect";
 =======
 import QuestionTypeSelect from "./QuestionTupeSelect";
 >>>>>>> d5fb3b4 (Implement survey navigation with questions area)
+=======
+import QuestionTypeSelect from "./SurveySelect";
+>>>>>>> 4c7de56 (Create the survey settings area)
 
 const SurveyQuestionsArea = () => {
   const [questionType, setQuestionType] = useState("");
@@ -28,10 +32,14 @@ const SurveyQuestionsArea = () => {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <form className="my-8 flex flex-col gap-4">
 =======
     <form className="my-8 flex flex-col gap-4 max-w-xl">
 >>>>>>> d5fb3b4 (Implement survey navigation with questions area)
+=======
+    <form className="my-8 flex flex-col gap-4">
+>>>>>>> 4c7de56 (Create the survey settings area)
       <div className="bg-gray-50 p-4 rounded-md flex flex-col gap-4">
         <input
           placeholder="Title"
@@ -56,14 +64,20 @@ const SurveyQuestionsArea = () => {
             value={questionType}
             onChange={(e) => setQuestionType(e.target.value)}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4c7de56 (Create the survey settings area)
             valuesList={[
               "Multiple Choice",
               "Rating Scale",
               "Text Input",
               "Image Upload",
             ]}
+<<<<<<< HEAD
 =======
 >>>>>>> d5fb3b4 (Implement survey navigation with questions area)
+=======
+>>>>>>> 4c7de56 (Create the survey settings area)
           />
         </div>
         {answers.map((answer, index) => (
