@@ -21,9 +21,8 @@ const barData = [
 export default function DashboardCharts() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
-            {/* Revenue Split Pie Chart */}
             <div className="bg-white rounded-xl px-2 py-4 border border-[#F7F7F7]">
-                <h2 className="text-md text-gray-700 font-semibold ml-2 mb-4">Revenue Split</h2>
+                <h2 className="text-md text-gray-700 font-semibold ml-2 mb-4">Data Split</h2>
                 <div className='flex items-center justify-between mb-4'>
                     <ResponsiveContainer width="100%" height={250}>
                         <PieChart>

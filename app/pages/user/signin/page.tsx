@@ -70,10 +70,10 @@ export default function SignInPage() {
       } else if (response.data.role === "employee") {
         localStorage.setItem("employeeId", response.data.id);
       }
+      router.push('/')
       toast.dismiss();
       toast.success("Signed in successfully!");
       // window.location.href = "/";
-      router.push('/')
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.dismiss();
