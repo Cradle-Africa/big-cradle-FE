@@ -1,6 +1,6 @@
 import { Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Calendar, Eye, LetterText } from "lucide-react";
+import { Calendar, LetterText } from "lucide-react";
 
 type DataPipelineProps = {
     data: Pipeline[];

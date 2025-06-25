@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { PipelineForm } from "@/app/lib/type";
+import { DataPointForm } from "@/app/lib/type";
 import { FieldType } from "@/app/lib/type";
 interface SelectOptionManagerProps {
 	index: number;
 	newOptions: string[];
 	setNewOptions: React.Dispatch<React.SetStateAction<string[]>>;
 	formFields: Field[];
-	setFormFields: React.Dispatch<React.SetStateAction<PipelineForm>>;
+	setFormFields: React.Dispatch<React.SetStateAction<DataPointForm>>;
 }
 
 
