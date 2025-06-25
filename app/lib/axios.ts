@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { getToken, removeUser } from "../utils/user/userData";
-const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
+export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
 // const BASE_URL = "";
 
 const apiClient_ = axios.create({
@@ -33,3 +33,10 @@ apiClient_.interceptors.response.use(
 );
 
 export default apiClient_;
+
+export const axiosWithoutAuth = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
