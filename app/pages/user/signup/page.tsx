@@ -113,7 +113,7 @@ function BuildSignUpPage() {
 							Sign in
 						</Link>
 					</p>
-					<button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
+					{/* <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
 						<FcGoogle className="text-md" /> Continue with Google
 					</button>
 
@@ -121,7 +121,7 @@ function BuildSignUpPage() {
 						<hr className="flex-grow border-gray-300" />
 						<span className="text-sm text-gray-500">OR</span>
 						<hr className="flex-grow border-gray-300" />
-					</div>
+					</div> */}
 
 					{
 					// superAdminSignUp ||
