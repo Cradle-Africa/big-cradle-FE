@@ -85,7 +85,7 @@ const SurveyCard = () => {
           className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
           //   onClick={() => setOpen(true)}
         >
-          <Link href="/pages/survey/new?survey=Survey%20questions">
+          <Link href="/pages/survey/new">
             <div className="flex fgap2 items-center gap-2">
               <Plus size={18} color="white" />
               <span className="text-white">Create new survey</span>
