@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from "react";
 import QuestionTypeSelect from "./SurveySelect";
 
@@ -55,6 +56,12 @@ const SettingsArea = () => {
           Your wallet balance is: ₦200,000
         </button>
       </form>
+=======
+const SettingsArea = () => {
+  return (
+    <div className="my-8">
+      <p className="text-4xl font-bold">Settings</p>
+>>>>>>> d5fb3b4 (Implement survey navigation with questions area)
     </div>
   );
 };
