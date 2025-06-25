@@ -1,7 +1,7 @@
 import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSingleDataPoint } from "./api";
+import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSingleDataPoint } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -119,3 +119,15 @@ export const useFetchDataEntries = ({
   });
 };
 
+interface AnalyseDataParams {
+    endpoint: string;
+    businessUserId: string;
+    prompt: string;
+}
+
+export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
+    return useMutation<any, Error, AnalyseDataParams>({
+        mutationFn: ({ endpoint, businessUserId, prompt }) =>
+            analyseData(axios, endpoint, businessUserId, prompt),
+    });
+};

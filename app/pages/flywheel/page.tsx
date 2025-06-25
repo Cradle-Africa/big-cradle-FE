@@ -1,6 +1,6 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
-import { List, Plus } from "lucide-react";
+import { ChartLine, List, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
@@ -13,6 +13,7 @@ import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_f
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline'
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
 import DataEntries from "./data-entry/DataEntries";
+import AnalyseData from "./_components/AnalyseData";
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -21,7 +22,7 @@ const Flywheel = () => {
 	const [popupOpen, setPopupOpen] = useState(false); // Controls main popup
 	const [creatingPipeline, setCreatingPipeline] = useState(false); // Toggles NewPipeline view
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false); // Toggles NewDataPoint view
-
+	const [analyseData, setAnalyseData] = useState(false);
 	const [entriesPage, setEntriesPage] = useState(1);
 	const [entriesLimit, setEntriesLimit] = useState(10);
 
@@ -40,7 +41,7 @@ const Flywheel = () => {
 		}
 	});
 
-	const { data: dataPoints } = useFetchDataPoints ({
+	const { data: dataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: {
 			page: pointsPage,
@@ -94,8 +95,8 @@ const Flywheel = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col bg-[#fcfcfc] p-4 mt-8">
-				<div className="flex gap-4 my-4">
+			<div className="flex flex-col bg-[#fcfcfc] p-4 mt-5">
+				<div className="flex gap-4 my-4 bg-[#fcfcfc]">
 					{tabs.map((tab) => (
 						<FlywheelTabs
 							key={tab}
@@ -108,6 +109,7 @@ const Flywheel = () => {
 				{selectedTab === 'Overview' && (
 					<Overview
 						pipelines={pipelines?.length}
+						dataentries={dataentries?.length}
 					/>
 				)}
 
@@ -135,12 +137,12 @@ const Flywheel = () => {
 								</button>
 								<Pipeline
 									data={pipelines ?? []}
-									// pagination={paginationDataPipelines}
-									// onPageChange={setPipelinesPage}
-									// onLimitChange={(newLimit) => {
-									// 	setPointsLimit(newLimit);
-									// 	setEntriesPage(1);
-									// }}
+								// pagination={paginationDataPipelines}
+								// onPageChange={setPipelinesPage}
+								// onLimitChange={(newLimit) => {
+								// 	setPointsLimit(newLimit);
+								// 	setEntriesPage(1);
+								// }}
 								/>
 							</>
 						)}
@@ -202,17 +204,28 @@ const Flywheel = () => {
 
 				{selectedTab === 'Data Entries' && (
 					<>
-						{selectedTab === 'Data Entries' && (
-							<DataEntries
-								data={dataentries}
-								pagination={paginationDataEntries}
-								onPageChange={setEntriesPage}
-								onLimitChange={(newLimit) => {
-									setEntriesLimit(newLimit);
-									setEntriesPage(1);
-								}}
-							/>
-						)}
+						<div className="mt-5">
+							<button
+								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+								onClick={() => setAnalyseData(true)}
+							>
+								<ChartLine size={16} color="white" className="mr-1" />
+								Analyse data
+							</button>
+						</div>
+						<AnalyseData
+							analyseData={analyseData}
+							onClose={() => setAnalyseData(false)}
+						/>
+						<DataEntries
+							data={dataentries}
+							pagination={paginationDataEntries}
+							onPageChange={setEntriesPage}
+							onLimitChange={(newLimit) => {
+								setEntriesLimit(newLimit);
+								setEntriesPage(1);
+							}}
+						/>
 					</>
 				)}
 

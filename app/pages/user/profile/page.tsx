@@ -105,6 +105,36 @@ const ProfilePage = () => {
         </>
     );
 
+    const renderEmployeeTable = () => (
+        <>
+            <tr>
+                <td className="px-6 py-3 text-sm">Empployee First Name</td>
+                <td className="px-6 py-3 text-sm">{userData.firstName}</td>
+            </tr>
+            <tr>
+                <td className="px-6 py-3 text-sm">Empployee Last Name</td>
+                <td className="px-6 py-3 text-sm">{userData.lastName}</td>
+            </tr>
+            
+            <tr>
+                <td className="px-6 py-3 text-sm">Email</td>
+                <td className="px-6 py-3 text-sm">{userData.email}</td>
+            </tr>
+            <tr>
+                <td className="px-6 py-3 text-sm">Role</td>
+                <td className="px-6 py-3 text-sm">{userData.role}</td>
+            </tr>
+            <tr>
+                <td className="px-6 py-3 text-sm">Account Status</td>
+                <td className="px-6 py-3 text-sm">
+                    <span className='text-xs text-[#0BAD2E] border border-[#0BAD2E] rounded-2xl px-1 py-[2px]'>
+                        {userData.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+            </tr>
+        </>
+    );
+
     return (
         <DashboardLayout>
             <div>
@@ -155,7 +185,9 @@ const ProfilePage = () => {
                                     renderSuperAdminTable()
                                 ) : userData.role === 'business' ? (
                                     renderBusinessTable()
-                                ) : (
+                                ) : userData.role === 'employee' ? (                                
+                                    renderEmployeeTable()
+                                ): (
                                     <tr>
                                         <td colSpan={2} className='px-6 py-3 text-center text-sm text-gray-400'>Unknown Role</td>
                                     </tr>

@@ -1,5 +1,5 @@
 
-import { getEmployeeUserId, getUser, removeUser } from '@/app/utils/user/userData';
+import { getEmployeeUserId, getToken, getUser, removeUser } from '@/app/utils/user/userData';
 import { DataEntry, DataPoint, Pipeline } from './../../../lib/type';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { AxiosInstance } from "axios";
@@ -22,32 +22,46 @@ export const fetchPipelines = async (
         total?: number;
     }
 ) => {
-    try {
-        const params = {
-            page: queryParams?.page || 1,
-            limit: queryParams?.limit || 10,
-            total: queryParams?.total
-        };
-        if (user?.role === 'business') {
-            const res = await axios.get(`/data-point-mgt/pipeline-fields-business?businessUserId=${businessUserId}`, { params });
-            const pagination = {
-                ...res.data.pagination,
-                page: Number(res.data.pagination.page),
-                limit: Number(res.data.pagination.limit),
-                pages: Number(res.data.pagination.pages),
-            };
+    const params = {
+        page: queryParams?.page || 1,
+        limit: queryParams?.limit || 10,
+        total: queryParams?.total,
+    };
 
-            return {
-                data: res.data.data,
-                pagination,
-            };
-        } else {
-            const res = await axios.get(`/data-point-mgt/pipeline-fields-employee?employeeUserId=${employeeUserId}`, { params });
-            return res.data;
-        }
+    let endpoint = '';
+    let userIdParam = '';
+
+    if (user?.role === 'business') {
+        const businessUserId = getBusinessId() || null;
+        endpoint = `/data-point-mgt/pipeline-fields-business`;
+        userIdParam = `businessUserId=${businessUserId}`;
+    } else {
+        endpoint = `/data-point-mgt/pipeline-fields-employee`;
+        userIdParam = `employeeUserId=${employeeUserId}`;
+    }
+
+    try {
+        const res = await axios.get(`${endpoint}?${userIdParam}`, { params });
+
+        const pagination = res.data.pagination
+            ? {
+                  ...res.data.pagination,
+                  page: Number(res.data.pagination.page),
+                  limit: Number(res.data.pagination.limit),
+                  pages: Number(res.data.pagination.pages),
+              }
+            : null;
+
+        return {
+            data: res.data.data || [],
+            pagination,
+        };
     } catch (error: any) {
-        console.log(JSON.stringify(error));
-        return []; // fallback return
+        console.error('Fetch pipeline error:', JSON.stringify(error));
+        return {
+            data: [],
+            pagination: null,
+        };
     }
 };
 
@@ -60,6 +74,7 @@ export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => 
         return res.data.data;
     } catch (error: any) {
         console.error("Fetch single data type error:", error);
+        return []
     }
 };
 
@@ -219,21 +234,30 @@ export const fetchDataEntries = async (
         limit?: number;
     }
 ) => {
-    try {
-        const params = {
-            page: queryParams?.page || 1,
-            limit: queryParams?.limit || 10,
-        };
+    const params = {
+        page: queryParams?.page || 1,
+        limit: queryParams?.limit || 10,
+    };
 
-        const res = await axios.get(`/data-point-mgt/pipeline-fields-entry?businessUserId=${businessUserId}`, {
-            params,
-        });
+    let endpoint = '';
+    let userIdParam = '';
+
+    if (user?.role === 'business') {
+        const businessUserId = getBusinessId() || null;
+        endpoint = `/data-point-mgt/pipeline-fields-entry-business`;
+        userIdParam = `businessUserId=${businessUserId}`;
+    } else {
+        endpoint = `/data-point-mgt/pipeline-fields-entry-employee`;
+        userIdParam = `employeeUserId=${employeeUserId}`;
+    }
+
+    try {
+        const res = await axios.get(`${endpoint}?${userIdParam}`, { params });
 
         if (res?.status === 401) {
             removeUser();
         }
 
-        // Coerce pagination values to numbers
         const pagination = {
             ...res.data.pagination,
             page: Number(res.data.pagination.page),
@@ -264,10 +288,39 @@ export const fetchDataEntries = async (
             default:
                 message = typeof message === 'string' ? message : "An unexpected error occurred";
         }
+
         return Promise.reject({ message });
-        // return {
-        //     data: [],
-        //     pagination: { page: 1, limit: 10, pages: 1, total: 0 },
-        // };
+    }
+};
+
+
+export const analyseData = async (
+    axios: AxiosInstance,
+    endpoint: string,
+    businessUserId: string,
+    prompt: string
+) => {
+    try {
+        const res = await axios.post(
+            `/ai/analyze/${endpoint}?businessUserId=${businessUserId}`,
+            { prompt },
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`, 
+                },
+            }
+        );
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message =
+            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+
+        if (statusCode === 401) {
+            removeUser(); 
+            message = "Unauthorized access. Please log in again.";
+        }
+
+        return Promise.reject({ message });
     }
 };
