@@ -9,19 +9,21 @@ import {
   getUser,
 } from "@/app/utils/user/userData";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useState } from "react";
 import FieldPreview from "../../flywheel/_components/FieldPreview";
 import SelectOptionManager from "../../flywheel/_components/SelectOptionManager";
 import { useCreateSurvey } from "../_features/hooks";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  name: string;
-  description: string;
+  name?: string;
+  description?: string;
 };
 
-const NewSurveyForm = ({ name, description }: Props) => {
+const NewSurveyQuestionsForm = ({ name, description }: Props) => {
+  const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
   const [form, setForm] = useState<DataPointForm>({
     dataPointId: "",
@@ -96,9 +98,9 @@ const NewSurveyForm = ({ name, description }: Props) => {
     const payload: Survey = {
       businessUserId,
       employeeUserId,
-      surveyName: name,
-      amount : 100,
-      surveyDescription: description,
+      surveyName: "name",
+      amount: 100,
+      surveyDescription: "description",
       field: form.field,
     };
     createSurvey(payload, {
@@ -116,7 +118,17 @@ const NewSurveyForm = ({ name, description }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full py-6 rounded-md space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="w-full py-6 rounded-md space-y-6 max-w-3xl mx-auto"
+    >
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="text-red-600 border border-red-600 px-4 py-1 cursor-pointer rounded-lg hover:bg-blue-50"
+      >
+        <ArrowLeft />
+      </button>
       <h2 className="text-md text-black mb-4">Build a New Survey</h2>
 
       {/* <div className="w-full">
@@ -228,9 +240,16 @@ const NewSurveyForm = ({ name, description }: Props) => {
           <Check size={16} className="mr-1" />
           {isPending ? "Submitting..." : "Submit"}
         </button>
+
+        <button
+          onClick={() => router.push(`/pages/survey/new?survey=survey-payment`)}
+          className="border border-green-600 rounded-md py-2 px-8 mr-auto"
+        >
+          <span className="text-green-600">Next</span>
+        </button>
       </div>
     </form>
   );
 };
 
-export default NewSurveyForm;
+export default NewSurveyQuestionsForm;
