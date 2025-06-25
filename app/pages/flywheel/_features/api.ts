@@ -3,6 +3,7 @@ import { getEmployeeUserId, getToken, getUser, removeUser } from '@/app/utils/us
 import { DataEntry, DataPoint, Pipeline } from './../../../lib/type';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { AxiosInstance } from "axios";
+import { axiosWithoutAuth } from '@/app/lib/axios';
 
 const user = getUser()
 const employeeUserId = getEmployeeUserId()
@@ -65,12 +66,15 @@ export const fetchPipelines = async (
     }
 };
 
+
+
 export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => {
     try {
-        const res = await axios.get(`/data-point-mgt/pipeline-fields/${id}`);
-        if (res.status === 401) {
-            removeUser();
-        }
+        const res = await axiosWithoutAuth.get(`/data-point-mgt/pipeline-fields/${id}`, {
+            headers: {
+                Authorization: null, 
+            }});
+       
         return res.data.data;
     } catch (error: any) {
         console.error("Fetch single data type error:", error);

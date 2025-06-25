@@ -109,7 +109,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
         >
             <h2 className="text-md text-black mb-4">Build a New Data Point</h2>
 
-            <div className="w-full">=
+            <div className="w-full">
                 <select
                     value={form.dataPointId}
                     onChange={(e) =>
