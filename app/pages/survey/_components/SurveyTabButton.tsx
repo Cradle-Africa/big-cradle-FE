@@ -12,9 +12,9 @@ const SurveyTabButton = ({ children, isSelected, onClick }: Props) => {
     <div
       onClick={onClick}
       className={classNames({
-        "hover:bg-gray-100 rounded-full cursor-pointer px-5 transition-all":
+        "hover:bg-gray-100 rounded-full cursor-pointer px-5 transition-all py-1 ":
           true,
-        "border border-blue-500 border-dotted rounded-full px-5": isSelected,
+        "border border-blue-500  rounded-full px-5 bg-blue-100": isSelected,
       })}
     >
       {children}
