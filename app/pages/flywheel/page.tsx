@@ -32,7 +32,7 @@ const Flywheel = () => {
 	const [pipelinesLimit] = useState(10);
 
 
-	const { isLoading: isLoadingPipelines, data: pipelinesData } = useFetchPipelines({
+	const { isLoading: isLoadingDataPoints, data: dataPointsData } = useFetchPipelines({
 		axios,
 		queryParams: {
 			page: pipelinesPage,
@@ -55,11 +55,11 @@ const Flywheel = () => {
 			limit: entriesLimit,
 		},
 	});
-	const pipelines = pipelinesData?.dataPoint ?? [];
-	const paginationPipelines = pipelinesData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
+	const pipelines = dataPointsData?.dataPoint ?? [];
+	const paginationDataPoints = dataPointsData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
 	const datapoints = dataPoints?.data ?? []
-	// const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
+	// const paginationDataPipelines = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
 	const dataentries = dataEntries?.data ?? [];
 	const paginationDataEntries = dataEntries?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
@@ -94,7 +94,7 @@ const Flywheel = () => {
 				</div>
 			</div>
 
-			<div className="flex flex-col bg-white p-4 mt-8">
+			<div className="flex flex-col bg-[#fcfcfc] p-4 mt-8">
 				<div className="flex gap-4 my-4">
 					{tabs.map((tab) => (
 						<FlywheelTabs
@@ -135,7 +135,7 @@ const Flywheel = () => {
 								</button>
 								<Pipeline
 									data={pipelines ?? []}
-									// pagination={paginationDataPoints}
+									// pagination={paginationDataPipelines}
 									// onPageChange={setPipelinesPage}
 									// onLimitChange={(newLimit) => {
 									// 	setPointsLimit(newLimit);
@@ -179,12 +179,12 @@ const Flywheel = () => {
 							/>
 						) : (
 							<>
-								{isLoadingPipelines ? (
+								{isLoadingDataPoints ? (
 									<FlyWheelPageLoading />
 								) : (
 									<DataPoints
 										data={datapoints}
-										pagination={paginationPipelines}
+										pagination={paginationDataPoints}
 										onPageChange={setPointsPage}
 										onLimitChange={(newLimit) => {
 											setPointsLimit(newLimit);

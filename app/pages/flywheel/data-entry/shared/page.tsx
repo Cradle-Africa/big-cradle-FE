@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchSinglePipeline } from "../../_features/hook";
+import { useFetchSingleDataPoint } from "../../_features/hook";
 import { useCreateDataEntry } from "../../_features/hook"; // Assuming same location
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -15,7 +15,7 @@ const DataEntryPage = () => {
     const encoded = searchParams.get("data-point");
     const decodedId = encoded ? atob(encoded) : "";
 
-    const { data: datapoints, isLoading } = useFetchSinglePipeline({
+    const { data: datapoints, isLoading } = useFetchSingleDataPoint({
         axios,
         id: decodedId,
         enabled: !!decodedId,
@@ -47,7 +47,7 @@ const DataEntryPage = () => {
 
     const renderField = (field: any, index: number) => {
         const baseStyle =
-            "w-full px-3 py-2 border border-gray-300 rounded-md";
+            "w-full px-3 py-2 bg-white border border-gray-300 rounded-md";
 
         switch (field.type) {
             case "text":
@@ -203,7 +203,7 @@ const DataEntryPage = () => {
             />
 
             <div className="fixed z-50 inset-0 flex items-center justify-center px-4 py-10">
-                <div className="relative w-full bg-white rounded-lg max-w-2xl py-0">
+                <div className="relative w-full bg-[#fcfcfc] rounded-lg max-w-2xl py-0">
                     <div className="flex justify-between bg-blue-600 text-xl rounded-t-lg font-semibold py-2 mb-5">
                         <Image
                             src={LogoWithText}

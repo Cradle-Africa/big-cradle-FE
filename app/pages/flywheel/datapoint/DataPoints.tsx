@@ -181,13 +181,12 @@ const DataPoints = ({
                         {pagination && (
                             <Pagination
                                 currentPage={pagination.page}
-                                totalPages={Math.ceil(pagination.pages / pagination.limit)}
+                                totalPages={pagination.pages}
                                 limit={pagination.limit}
                                 onPageChange={onPageChange}
                                 onLimitChange={onLimitChange}
                             />
-                        )
-                        }
+                        )}
                     </>
 
                 )}

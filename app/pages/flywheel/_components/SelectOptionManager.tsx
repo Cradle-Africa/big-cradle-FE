@@ -65,7 +65,7 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 						updated[index] = e.target.value;
 						setNewOptions(updated);
 					}}
-					className="flex-1 border border-gray-200 rounded px-3 py-2"
+					className="flex-1 border bg-white border-gray-300 rounded px-3 py-2"
 				/>
 
 				<button

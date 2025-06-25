@@ -1,7 +1,7 @@
 import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSinglePipeline } from "./api";
+import { createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSingleDataPoint } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -36,7 +36,7 @@ export const useFetchDataPoints = ({
 };
 
 
-export const useFetchSinglePipeline = ({
+export const useFetchSingleDataPoint = ({
     axios,
     id,
     enabled = true, //disable query if ID is undefined
@@ -47,7 +47,7 @@ export const useFetchSinglePipeline = ({
 }) => {
     return useQuery<DataPoint>({
         queryKey: ["single-pipeline", id],
-        queryFn: () => fetchSinglePipeline(axios, id),
+        queryFn: () => fetchSingleDataPoint(axios, id),
         enabled: !!id && enabled,
         staleTime: 1000 * 60 * 5,
     });

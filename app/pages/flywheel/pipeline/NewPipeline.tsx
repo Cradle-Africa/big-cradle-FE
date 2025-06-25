@@ -61,7 +61,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 
 
 	return (
-		<div className="mt-10">
+		<div className="mt-10 py-5">
 			<h2 className="text-gray-800 text-lg font-normal">New Data Pipeline</h2>
 
 			<form onSubmit={handleSubmit(onButtonClick)} className="lg:w-3/4">
@@ -69,7 +69,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 					{...register("dataPointName")}
 					type="text"
 					placeholder="Data pipeline name"
-					className="mt-5 w-full border border-gray-200 rounded px-3 py-2 outline-none"
+					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
 				/>
 				<ErrorMessage>{errors.dataPointName?.message}</ErrorMessage>
 
@@ -77,7 +77,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 				<textarea
 					{...register("dataPointDescription")}
 					placeholder="Data pipeline Description"
-					className="mt-5 w-full border border-gray-200 rounded px-3 py-2 outline-none"
+					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
 				/>
 
 				<ErrorMessage>{errors.dataPointDescription?.message}</ErrorMessage>

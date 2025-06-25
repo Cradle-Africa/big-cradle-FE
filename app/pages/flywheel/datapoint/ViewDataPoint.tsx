@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchSinglePipeline } from "../_features/hook";
+import { useFetchSingleDataPoint } from "../_features/hook";
 import { X, ArrowDownUp } from "lucide-react";
 
 interface PopUpProps {
@@ -15,7 +15,7 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 	onClose,
 	uniqueId,
 }) => {
-	const { data: pipeline, isLoading } = useFetchSinglePipeline({
+	const { data: pipeline, isLoading } = useFetchSingleDataPoint({
 		axios,
 		id: uniqueId,
 		enabled: openViewDataPoint,
