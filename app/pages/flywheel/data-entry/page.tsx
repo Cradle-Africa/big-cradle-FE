@@ -1,7 +1,11 @@
 "use client";
 
 import axios from "@/app/lib/axios";
+<<<<<<< HEAD
 import { useFetchSingleDataPoint } from "../_features/hook";
+=======
+import { useFetchSinglePipeline } from "../_features/hook";
+>>>>>>> daccfb6 (merging dev into phil_dev)
 import { useSearchParams } from "next/navigation";
 import LogoWithText from "@/public/images/logo-with-text.png";
 import Image from "next/image";
@@ -12,7 +16,11 @@ const DataEntryPage = () => {
     const encoded = searchParams.get("data-point");
     const decodedId = encoded ? atob(encoded) : '';
 
+<<<<<<< HEAD
     const { data: datapoints, isLoading } = useFetchSingleDataPoint({
+=======
+    const { data: datapoints, isLoading } = useFetchSinglePipeline({
+>>>>>>> daccfb6 (merging dev into phil_dev)
         axios,
         id: decodedId,
         enabled: true,
@@ -28,7 +36,11 @@ const DataEntryPage = () => {
 
     const renderField = (field: any, index: number) => {
         const baseStyle =
+<<<<<<< HEAD
             "w-full px-3 py-2 bg-white border border-gray-300 rounded-md ";
+=======
+            "w-full px-3 py-2 border border-gray-300 rounded-md ";
+>>>>>>> daccfb6 (merging dev into phil_dev)
 
         switch (field.type) {
             case "text":
@@ -122,7 +134,11 @@ const DataEntryPage = () => {
             />
 
             <div className="fixed z-50 inset-0 flex items-center justify-center px-4 py-10">
+<<<<<<< HEAD
                 <div className="relative w-full rounded-lg max-w-2xl py-0 px-5">
+=======
+                <div className="relative w-full bg-white rounded-lg max-w-2xl py-0 px-5">
+>>>>>>> daccfb6 (merging dev into phil_dev)
                     <div className="flex justify-between  text-xl rounded-t-lg font-semibold mt-3 mb-6 ">
                         <Image
                             src={LogoWithText}
