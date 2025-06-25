@@ -9,3 +9,8 @@ export const departmentSchema = z.object({
   departmentName: z.string().min(1, "Enter the department name"),
   departmentDescription: z.string().min(1, "Enter the department desciption"),
 });
+
+export const surveySchema = z.object({
+  surveyName: z.string().min(1, "Enter the survey name"),
+  surveyDescription: z.string().min(1, "Enter the description name"),
+});
