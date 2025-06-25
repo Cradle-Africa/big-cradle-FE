@@ -5,7 +5,7 @@ import { toCamelCase } from '@/app/utils/caseFormat';
 import SelectOptionManager from "../_components/SelectOptionManager";
 import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
-import { FieldType, Field, PipelineForm, DataPoint, Pipeline } from "@/app/lib/type";
+import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
 import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
@@ -19,7 +19,7 @@ interface DataPointProps {
 
 const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    const [form, setForm] = useState<PipelineForm>({
+    const [form, setForm] = useState<DataPointForm>({
         dataPointId: "",
         field: [],
     });
@@ -105,7 +105,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
+            className="w-full lg:w-3/4 py-6 rounded-md space-y-6"
         >
             <h2 className="text-md text-black mb-4">Build a New Data Point</h2>
 
@@ -116,7 +116,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                         setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
                     }
                     required
-                    className="w-full border border-gray-200 rounded px-3 py-2 outline-blue-600"
+                    className="w-full border bg-white border-gray-300 rounded px-3 py-2 outline-blue-600"
                 >
                     <option value="">Select a pipeline</option>
                     {pipelines.map((dp: any) => (
@@ -130,7 +130,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
             {form.field.map((field, index: any) => (
                 <div
                     key={index}
-                    className="w-full p-4 border border-gray-200 rounded space-y-3 mb-2"
+                    className="w-full p-4 border border-gray-300 rounded space-y-3 mb-2"
                 >
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
@@ -141,14 +141,14 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                             onChange={(e) =>
                                 handleFieldChange(index, "label", e.target.value)
                             }
-                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
+                            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 mt-1 outline-none"
                         />
                         <select
                             value={field.type}
                             onChange={(e) =>
                                 handleFieldChange(index, "type", e.target.value as FieldType)
                             }
-                            className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
+                            className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 mt-1 outline-none"
                         >
                             <option value="">Select Type</option>
                             <option value="text">Text</option>

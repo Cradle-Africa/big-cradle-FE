@@ -5,8 +5,8 @@ import { toCamelCase } from "@/app/utils/caseFormat";
 import SelectOptionManager from "../_components/SelectOptionManager";
 import FieldPreview from "../_components/FieldPreview";
 import { Check } from "lucide-react";
-import { Field, PipelineForm, FieldType, DataPoint } from "@/app/lib/type";
-import { useEditPipeline, useFetchSinglePipeline } from "../_features/hook";
+import { Field, DataPointForm, FieldType, DataPoint } from "@/app/lib/type";
+import { useEditPipeline, useFetchSingleDataPoint } from "../_features/hook";
 import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
@@ -20,13 +20,13 @@ interface EditDataPointProps {
 
 const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId, setEditingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    const [form, setForm] = useState<PipelineForm>({ dataPointId: '', field: [] });
+    const [form, setForm] = useState<DataPointForm>({ dataPointId: '', field: [] });
 
     const businessUserId = getBusinessId();
     const employeeUserId = getEmployeeUserId();
     const queryClient = useQueryClient();
 
-    const { data, isLoading } = useFetchSinglePipeline({ axios, id: uniqueId });
+    const { data, isLoading } = useFetchSingleDataPoint({ axios, id: uniqueId });
     const { mutate, isPending } = useEditPipeline({ axios });
 
     useEffect(() => {
@@ -113,7 +113,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId
             <h2 className="text-md text-black mb-4">Edit the data point</h2>
 
             {form.field.map((field, index) => (
-                <div key={index} className="w-full p-4 border bg-[#fcfcfb] border-gray-200 rounded space-y-3 mb-2">
+                <div key={index} className="w-full p-4 border border-gray-300 rounded space-y-3 mb-2">
                     <div className="w-full grid grid-cols-2 gap-2">
                         <input
                             type="text"

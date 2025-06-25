@@ -4,8 +4,8 @@ import DashboardLayout from "@/app/DashboardLayout";
 import { useRouter, useSearchParams } from "next/navigation";
 import ResponsesArea from "../_components/ResponsesArea";
 import SettingsArea from "../_components/SettingsArea";
-import SurveyQuestionsArea from "../_components/SurveyQuestionsArea";
 import SurveyTabButton from "../_components/SurveyTabButton";
+import SurveyQuestionsArea from "../_components/SurveyQuestionsArea";
 
 const NewSurveyPage = () => {
   const searchParams = useSearchParams();

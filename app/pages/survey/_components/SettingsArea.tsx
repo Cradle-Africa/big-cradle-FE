@@ -3,7 +3,6 @@ import QuestionTypeSelect from "./SurveySelect";
 
 const SettingsArea = () => {
   const [questionType, setQuestionType] = useState("");
-  // const [answers, setAnswers] = useState([""]);
 
   return (
     <div className="my-8">

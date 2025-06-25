@@ -2,7 +2,7 @@
 
 import axios from "@/app/lib/axios";
 import { Copy, Share2, X } from "lucide-react";
-import { useFetchSinglePipeline } from "../_features/hook";
+import { useFetchSingleDataPoint } from "../_features/hook";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -17,7 +17,7 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     onClose,
     uniqueId,
 }) => {
-    const { isLoading } = useFetchSinglePipeline({
+    const { isLoading } = useFetchSingleDataPoint({
         axios,
         id: uniqueId,
         enabled: shareDataPoint,

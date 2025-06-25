@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { pipeLineSchema, departmentSchema } from "./validationSchemas";
+import { ReactNode } from "react";
 
 export interface PaginationMeta {
   total: number;
@@ -39,7 +40,7 @@ export type Field = {
   options?: string[];
 };
 
-export interface PipelineForm {
+export interface DataPointForm {
   dataPointId: string;
   field: Field[];
 }
@@ -75,3 +76,10 @@ export interface DataEntry {
   createdAt?: string;
 }
 
+export type DashboardMenu = {
+  title: string, 
+  subTitle: string,
+  value: string,
+  percentage: string,
+  icon: ReactNode,
+}

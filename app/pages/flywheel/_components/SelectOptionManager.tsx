@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { PipelineForm } from "@/app/lib/type";
+import { DataPointForm } from "@/app/lib/type";
 import { FieldType } from "@/app/lib/type";
 interface SelectOptionManagerProps {
 	index: number;
 	newOptions: string[];
 	setNewOptions: React.Dispatch<React.SetStateAction<string[]>>;
 	formFields: Field[];
-	setFormFields: React.Dispatch<React.SetStateAction<PipelineForm>>;
+	setFormFields: React.Dispatch<React.SetStateAction<DataPointForm>>;
 }
 
 
@@ -65,7 +65,7 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 						updated[index] = e.target.value;
 						setNewOptions(updated);
 					}}
-					className="flex-1 border border-gray-200 rounded px-3 py-2"
+					className="flex-1 border bg-white border-gray-300 rounded px-3 py-2"
 				/>
 
 				<button

@@ -1,3 +1,4 @@
+
 import { getEmployeeUserId, getUser, removeUser } from '@/app/utils/user/userData';
 import { DataEntry, DataPoint, Pipeline } from './../../../lib/type';
 import { getBusinessId } from '@/app/utils/user/userData';
@@ -50,7 +51,7 @@ export const fetchPipelines = async (
     }
 };
 
-export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
+export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => {
     try {
         const res = await axios.get(`/data-point-mgt/pipeline-fields/${id}`);
         if (res.status === 401) {
