@@ -5,7 +5,7 @@ import { toCamelCase } from "@/app/utils/caseFormat";
 import SelectOptionManager from "../_components/SelectOptionManager";
 import FieldPreview from "../_components/FieldPreview";
 import { Check } from "lucide-react";
-import { Field, PipelineForm, FieldType, DataPoint } from "@/app/lib/type";
+import { Field, DataPointForm, FieldType, DataPoint } from "@/app/lib/type";
 import { useEditPipeline, useFetchSingleDataPoint } from "../_features/hook";
 import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
@@ -20,7 +20,7 @@ interface EditDataPointProps {
 
 const EditDataPoint: React.FC<EditDataPointProps> = ({editingDataPoint, uniqueId, setEditingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    const [form, setForm] = useState<PipelineForm>({ dataPointId: '', field: [] });
+    const [form, setForm] = useState<DataPointForm>({ dataPointId: '', field: [] });
 
     const businessUserId = getBusinessId();
     const employeeUserId = getEmployeeUserId();

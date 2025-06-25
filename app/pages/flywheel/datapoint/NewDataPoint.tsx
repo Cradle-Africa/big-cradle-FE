@@ -5,7 +5,7 @@ import { toCamelCase } from '@/app/utils/caseFormat';
 import SelectOptionManager from "../_components/SelectOptionManager";
 import { Check } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
-import { FieldType, Field, PipelineForm, DataPoint, Pipeline } from "@/app/lib/type";
+import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
 import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
@@ -19,7 +19,7 @@ interface DataPointProps {
 
 const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
-    const [form, setForm] = useState<PipelineForm>({
+    const [form, setForm] = useState<DataPointForm>({
         dataPointId: "",
         field: [],
     });

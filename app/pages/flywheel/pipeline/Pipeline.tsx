@@ -30,13 +30,13 @@ const PipelinePage = ({
                             <p className="text-[#494949] text-[14px] mt-5">
                                 {pipeline.dataPointDescription}
                             </p>
-                            <div className="flex w-full justify-end mt-5 border-b border-gray-100 pb-3">
+                            <div className="flex w-full justify-end mt-5 pb-3">
                                 <div className="flex items-center ">
                                     <Calendar size={12} />
                                     <h6 className="ml-1 text-[#494949] text-[12px]">{formatDate(pipeline?.createdAt ?? '')}</h6>
                                 </div>
                             </div>
-                            <div className="flex justify-end mt-5">
+                            {/* <div className="flex justify-end mt-5">
                                 <button
                                     className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
                                 >
@@ -45,7 +45,7 @@ const PipelinePage = ({
                                         <span className="text-white">View Data Point</span>
                                     </div>
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     )
                 }
