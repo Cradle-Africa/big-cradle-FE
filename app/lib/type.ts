@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { pipeLineSchema, departmentSchema } from "./validationSchemas";
+import { pipeLineSchema, departmentSchema, surveySchema } from "./validationSchemas";
 import { ReactNode } from "react";
 
 export interface PaginationMeta {
@@ -13,6 +13,7 @@ export interface Pagination {
 	total: number;
 	page: number;
 	limit: number;
+  pages?: number;
 }
 
 
@@ -23,6 +24,8 @@ export type Department = {
 }
 
 export type DepartmentSchema = z.infer<typeof departmentSchema>;
+
+export type SurveySchema = z.infer<typeof surveySchema>;
 
 export type BusinessKyc = {
   businessUserId: string | null;
@@ -54,6 +57,16 @@ export interface DataPoint {
   createdAt?: string;
 }
 
+export interface Survey {
+  id?: string;
+  businessUserId: string | null;
+  employeeUserId: string | null;
+  surveyName: string;
+  surveyDescription : string;
+  amount : number,
+  field: Field[];
+}
+
 export type Pipeline = {
   businessUserId?: string | null;
   employeeUserId?: string | null;
@@ -83,3 +96,37 @@ export type DashboardMenu = {
   percentage: string,
   icon: ReactNode,
 }
+
+export type SurveyListResponse = {
+  success: boolean;
+  message: string;
+  survey: SurveyListItem[];
+  pagination: Pagination;
+};
+
+export type SurveyListItem = {
+  id: string;
+  businessUserId: string;
+  surveyName: string;
+  amount: number;
+  surveyDescription: string;
+  field: SurveyListField[];
+  isActive: boolean;
+  paymentStatus: "not-paid" | "paid"; // adjust based on actual possible values
+  tx_ref: string;
+  createdAt: string; // ISO date string
+  updatedAt: string;
+  __v: number;
+};
+
+export type SurveyListField = {
+  label: string;
+  key: string;
+  type: string; // consider using a union like 'text' | 'number' | 'select' etc. if known
+  required: boolean;
+  options: string[]; // assuming options are strings
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
