@@ -72,3 +72,25 @@ export const fetchSurvey = async (axios: AxiosInstance, surveyId: string) => {
     throw customError;
   }
 };
+
+export const surveyPay = async (axios: AxiosInstance, data: Survey) => {
+  try {
+    const res = await axios.post(`/payments/flutterwave/initialize`, data);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+
+    switch (statusCode) {
+      case 409:
+        message = "Conflict";
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    const customError = new Error(message);
+    throw customError;
+  }
+};

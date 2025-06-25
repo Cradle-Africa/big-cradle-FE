@@ -134,7 +134,7 @@ export default function SignInPage() {
               Sign up
             </Link>
           </p>
-          <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 py-2 hover:cursor-pointer">
+          {/* <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 py-2 hover:cursor-pointer">
             <FcGoogle className="text-md font-semibold" />
             Continue with Google
           </button>
@@ -143,7 +143,7 @@ export default function SignInPage() {
             <hr className="flex-grow border-gray-300" />
             <span className="text-sm text-gray-500">OR</span>
             <hr className="flex-grow border-gray-300" />
-          </div>
+          </div> */}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input

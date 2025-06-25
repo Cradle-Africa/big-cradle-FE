@@ -136,3 +136,19 @@ export type SurveyListField = {
   updatedAt: string;
 };
 
+export type FlutterWavePaymentSubmit = {
+  tx_ref: string;
+  amount: number;
+  currency: string;
+  redirect_url: string;
+  payment_options: string;
+  customer: {
+    email: string;
+  };
+  customizations: {
+    title: string;
+    description: string;
+  };
+};
+
+
