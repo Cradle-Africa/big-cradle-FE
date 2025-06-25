@@ -1,7 +1,7 @@
-import { Survey, SurveyListResponse, SurveySchema } from "@/app/lib/type";
+import { SingleSurveyResponse, Survey, SurveyListResponse, SurveySchema } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createSurvey, fetchSurveys } from "./api";
+import { createSurvey, fetchSurvey, fetchSurveys } from "./api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { surveySchema } from "@/app/lib/validationSchemas";
@@ -28,6 +28,26 @@ export const useFetchSurvey = ({
     queryFn: () => fetchSurveys(axios, businessUserId, page),
     staleTime: 60 * 1000 * 60,
     retry: 3,
+  });
+};
+
+type UseFetchSingleSurvey = {
+  axios: AxiosInstance;
+  surveyId: string;
+  enabled : boolean;
+};
+
+export const useFetchSingleSurvey = ({
+  axios,
+  surveyId,
+  enabled,
+}: UseFetchSingleSurvey) => {
+  return useQuery<SingleSurveyResponse>({
+    queryKey: ["surveys", surveyId],
+    queryFn: () => fetchSurvey(axios, surveyId),
+    staleTime: 60 * 1000 * 60,
+    retry: 3,
+    enabled
   });
 };
 

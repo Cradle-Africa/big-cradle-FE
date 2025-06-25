@@ -50,3 +50,25 @@ export const fetchSurveys = async (
     throw customError;
   }
 };
+
+export const fetchSurvey = async (axios: AxiosInstance, surveyId: string) => {
+  try {
+    const res = await axios.get(`survey-mgt/survey/${surveyId}`);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+
+    switch (statusCode) {
+      case 409:
+        message = "Conflict";
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    const customError = new Error(message);
+    throw customError;
+  }
+};

@@ -104,6 +104,12 @@ export type SurveyListResponse = {
   pagination: Pagination;
 };
 
+export type SingleSurveyResponse = {
+  success: boolean;
+  message: string;
+  data: SurveyListItem
+};
+
 export type SurveyListItem = {
   id: string;
   businessUserId: string;

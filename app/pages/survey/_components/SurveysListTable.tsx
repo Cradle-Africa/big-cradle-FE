@@ -2,7 +2,9 @@
 
 import { SurveyListItem } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
+import { Eye, Pencil, Share2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import ViewSurveyDetails from "./ViewSurveyDetails";
 
 type SurveysListTableProps = {
   data: SurveyListItem[];
@@ -17,25 +19,25 @@ const SurveysListTable = ({
 //   onPageChange,
 //   onLimitChange,
 SurveysListTableProps) => {
-  //   const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
+  const [openViewSurveyDetails, setOpenViewSurveyDetails] = useState(false);
   //   const [editingDataPoint, setEditingDataPoint] = useState(false);
   //   const [shareDataPoint, setShareDataPoint] = useState(false);
 
-  //   const [uniqueDataPoint, setUniqueDataPoint] = useState<string>("");
-  //   const handleViewDataPoint = (id: any) => {
-  //     setOpenViewDataPoit(true);
-  //     setUniqueDataPoint(id);
-  //   };
+  const [uniqueDataPoint, setUniqueDataPoint] = useState<string>("");
+  const handleViewSurveyDetails = (id: any) => {
+    setOpenViewSurveyDetails(true);
+    setUniqueDataPoint(id);
+  };
 
-  //   const handleEditDataPoint = (id: any) => {
-  //     setEditingDataPoint(true);
-  //     setUniqueDataPoint(id);
-  //   };
+  const handleEditDataPoint = (id: any) => {
+    //   setEditingDataPoint(true);
+    setUniqueDataPoint(id);
+  };
 
-  //   const handleShareDataPoint = (id: any) => {
-  //     setShareDataPoint(true);
-  //     setUniqueDataPoint(id);
-  //   };
+  const handleShareDataPoint = (id: any) => {
+    //   setShareDataPoint(true);
+    setUniqueDataPoint(id);
+  };
   const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
   const optionRef = useRef<HTMLUListElement | null>(null);
 
@@ -55,6 +57,11 @@ SurveysListTableProps) => {
   }, []);
   return (
     <>
+      <ViewSurveyDetails
+        openViewDataSurveyDetails={openViewSurveyDetails}
+        onClose={() => setOpenViewSurveyDetails(false)}
+        surveyId={uniqueDataPoint}
+      />
       <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
           <thead className="bg-gray-50">
@@ -72,7 +79,7 @@ SurveysListTableProps) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
-            {data.map((dataPoints, index) => (
+            {data.map((survey, index) => (
               <tr key={index} className="">
                 <td className="px-6 py-4 align-top">{index + 1}</td>
                 <td className="px-3 py-2 align-top">
@@ -80,7 +87,7 @@ SurveysListTableProps) => {
                     <tbody>
                       <tr>
                         <td className=" py-2 align-top">
-                          {dataPoints.field.map((field: any, idx: number) => (
+                          {survey.field.map((field: any, idx: number) => (
                             <div
                               key={idx}
                               className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50"
@@ -103,9 +110,9 @@ SurveysListTableProps) => {
                                     onClick={() =>
                                       setOpenOptionIndex(
                                         openOptionIndex ===
-                                          `${dataPoints.id}-${idx}`
+                                          `${survey.id}-${idx}`
                                           ? null
-                                          : `${dataPoints.id}-${idx}`
+                                          : `${survey.id}-${idx}`
                                       )
                                     }
                                     className="text-blue-600 cursor-pointer underline text-sm"
@@ -114,7 +121,7 @@ SurveysListTableProps) => {
                                   </button>
 
                                   {openOptionIndex ===
-                                    `${dataPoints.id}-${idx}` && (
+                                    `${survey.id}-${idx}` && (
                                     <ul
                                       ref={optionRef}
                                       className="absolute left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-lg z-50 w-64 max-w-xs text-sm"
@@ -142,28 +149,24 @@ SurveysListTableProps) => {
                 </td>
 
                 <td className="px-3 py-4 align-top text-left text-sm">
-                  {formatDate(dataPoints?.createdAt ?? "")}
+                  {formatDate(survey?.createdAt ?? "")}
                 </td>
                 <td className="px-3 py-4 align-top">
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Neque quod perspiciatis.
-                  </p>
-                  {/* <Eye
+                  <Eye
                     size={35}
-                    onClick={() => handleViewDataPoint(dataPoints?.id)}
+                    onClick={() => handleViewSurveyDetails(survey?.id)}
                     className="cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   />
                   <Pencil
                     size={35}
-                    onClick={() => handleEditDataPoint(dataPoints?.id)}
+                    onClick={() => handleEditDataPoint(survey?.id)}
                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   />
                   <Share2
                     size={35}
-                    onClick={() => handleShareDataPoint(dataPoints?.id)}
+                    onClick={() => handleShareDataPoint(survey?.id)}
                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
-                  /> */}
+                  />
                 </td>
               </tr>
             ))}
