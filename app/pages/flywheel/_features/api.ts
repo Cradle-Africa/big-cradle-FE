@@ -66,8 +66,6 @@ export const fetchPipelines = async (
     }
 };
 
-
-
 export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => {
     try {
         const res = await axiosWithoutAuth.get(`/data-point-mgt/pipeline-fields/${id}`, {
@@ -78,7 +76,7 @@ export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => 
         return res.data.data;
     } catch (error: any) {
         console.error("Fetch single data error:", error);
-        return []
+        return null
     }
 };
 
@@ -96,6 +94,40 @@ export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
         return []
     }
 };
+
+export const fetchDataEntriesOfDataPoints = async (
+  axios: AxiosInstance,
+  queryParams?: {
+    page?: number;
+    limit?: number;
+    dataPoint?: string;
+  }
+) => {
+  try {
+    const params = {
+      page: queryParams?.page || 1,
+      limit: queryParams?.limit || 10,
+      dataPoint: queryParams?.dataPoint || "",
+    };
+
+    const res = await axios.get(`/data-point-mgt/pipeline-fields-entry-attached-to-data-point`, { params });
+
+    if (res?.status === 401) {
+      removeUser();
+    }
+    return res.data;
+  } catch (error: any) {
+    console.error("Error fetching entries:", error);
+    return { data: [], pagination: {} };
+  }
+};
+
+
+
+
+
+
+
 
 export const createPipeline = async (
     axios: AxiosInstance,
@@ -313,33 +345,40 @@ export const fetchDataEntries = async (
 };
 
 
+
+
 export const analyseData = async (
-    axios: AxiosInstance,
-    endpoint: string,
-    businessUserId: string,
-    prompt: string
+  axios: AxiosInstance,
+  endpoint: string,
+  businessUserId: string,
+  dataPoint: string,
+  prompt: string,
+  limit: number = 10,
+  page: number = 1
 ) => {
-    try {
-        const res = await axios.post(
-            `/ai/analyze/${endpoint}?businessUserId=${businessUserId}`,
-            { prompt },
-            {
-                headers: {
-                    Authorization: `Bearer ${getToken()}`, 
-                },
-            }
-        );
-        return res.data;
-    } catch (error: any) {
-        const statusCode = error?.response?.status;
-        let message =
-            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+  try {
+    const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
 
-        if (statusCode === 401) {
-            removeUser(); 
-            message = "Unauthorized access. Please log in again.";
-        }
+    const res = await axios.post(
+      url,
+      { prompt }, // Only `prompt` is in the body
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message =
+      error?.response?.data?.message || error?.message || "An unexpected error occurred";
 
-        return Promise.reject({ message });
+    if (statusCode === 401) {
+      removeUser();
+      message = "Unauthorized access. Please log in again.";
     }
+
+    return Promise.reject({ message });
+  }
 };

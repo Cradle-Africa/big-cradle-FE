@@ -2,33 +2,43 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, Pencil, Share2 } from "lucide-react";
+import { Database, Eye, List, Pencil, Plus, Share2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
 import EditDataPoint from "./EditDataPoint";
 import ShareDataPoint from "./ShareDataPoint";
+import ViewDataEntries from "../data-entry/ViewDataEntries";
 
 type DataPointsProps = {
     data: DataPoint[];
     pagination: PaginationMeta;
     onPageChange: (newPage: number) => void;
     onLimitChange: (newLimit: number) => void;
+    creatingDataPoint: boolean;
+    setCreatingDataPoint: (value: boolean) => void;
 };
+
 
 const DataPoints = ({
     data,
     pagination,
     onPageChange,
     onLimitChange,
+    creatingDataPoint,
+    setCreatingDataPoint
 }: DataPointsProps
 ) => {
 
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
     const [editingDataPoint, setEditingDataPoint] = useState(false);
     const [shareDataPoint, setShareDataPoint] = useState(false);
+    const [viewDataEntries, setViewDataEntries] = useState(false);
+
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
+    const [uniqueDataEntry, setUniqueDataEntry] = useState<string>('')
+
     const handleViewDataPoint = (id: any) => {
         setOpenViewDataPoit(true)
         setUniqueDataPoint(id)
@@ -43,6 +53,12 @@ const DataPoints = ({
         setShareDataPoint(true)
         setUniqueDataPoint(id)
     }
+
+    const handleViewDataEntries = (id: any) => {
+        setViewDataEntries(true)
+        setUniqueDataEntry(id)
+    }
+
     const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
     const optionRef = useRef<HTMLUListElement | null>(null);
 
@@ -78,9 +94,25 @@ const DataPoints = ({
                 setEditingDataPoint={setEditingDataPoint}
             />
 
-            {
-                !editingDataPoint && (
+            <ViewDataEntries
+                viewDataEntries={viewDataEntries}
+                uniqueId={uniqueDataEntry}
+                setViewDataEntries={setViewDataEntries}
+            />
+
+            {!editingDataPoint && !viewDataEntries && (
                     <>
+                        <div className="mt-5">
+                            {creatingDataPoint && (
+                                <button
+                                    className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+                                    onClick={() => setCreatingDataPoint(false)}
+                                >
+                                    <List size={18} color="white" className="mr-1" />
+                                    View Data Points
+                                </button>
+                            ) }
+                        </div>
                         <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">
                             <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
                                 <thead className="bg-gray-50">
@@ -171,6 +203,11 @@ const DataPoints = ({
                                                     onClick={() => handleShareDataPoint(dataPoints?.id)}
                                                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                                                 />
+                                                <Database
+                                                    size={35}
+                                                    onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
+                                                    className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
+                                                />
                                             </td>
                                         </tr>
                                     ))}
@@ -189,7 +226,7 @@ const DataPoints = ({
                         )}
                     </>
 
-                )}
+            )}
 
         </div >
 

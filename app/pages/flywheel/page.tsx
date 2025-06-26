@@ -149,11 +149,10 @@ const Flywheel = () => {
 					</div>
 				)}
 
-
-				{selectedTab === 'Data Points' && (
+				{/* {selectedTab === 'Data Points' && (
 					<>
-						<div className="mt-5">
-							{creatingDataPoint ? (
+						{creatingDataPoint ? (
+							<div>
 								<button
 									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
 									onClick={() => setCreatingDataPoint(false)}
@@ -161,24 +160,11 @@ const Flywheel = () => {
 									<List size={18} color="white" className="mr-1" />
 									View Data Points
 								</button>
-							) : (
-								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => {
-										setCreatingDataPoint(true);
-									}}
-								>
-									<Plus size={18} color="white" className="mr-1" />
-									New Data Point
-								</button>
-							)}
-						</div>
-
-						{creatingDataPoint ? (
-							<NewDataPoint
-								setCreatingDataPoint={setCreatingDataPoint}
-								pipelines={pipelines ?? []}
-							/>
+								<NewDataPoint
+									setCreatingDataPoint={setCreatingDataPoint}
+									pipelines={pipelines ?? []}
+								/>
+							</div>
 						) : (
 							<>
 								{isLoadingDataPoints ? (
@@ -192,13 +178,61 @@ const Flywheel = () => {
 											setPointsLimit(newLimit);
 											setEntriesPage(1);
 										}}
+										creatingDataPoint={creatingDataPoint}
+										setCreatingDataPoint={setCreatingDataPoint}
 									/>
+
 								)}
 
 							</>
-
 						)}
 					</>
+
+				)} */}
+
+				{selectedTab === 'Data Points' && (
+					<div className="mt-5">
+						{creatingDataPoint ? (
+							<>
+								<button
+									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => setCreatingDataPoint(false)}
+								>
+									<List size={18} color="white" className="mr-1" />
+									View Data Points
+								</button>
+								<NewDataPoint
+									setCreatingDataPoint={setCreatingDataPoint}
+									pipelines={pipelines ?? []}
+								/>
+							</>
+						) : (
+							<>
+								<button
+									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => setCreatingDataPoint(true)}
+								>
+									<Plus size={18} color="white" className="mr-1" />
+									New Data Point
+								</button>
+								{isLoadingDataPoints ? (
+									<FlyWheelPageLoading />
+								) : (
+									<DataPoints
+										data={datapoints}
+										pagination={paginationDataPoints}
+										onPageChange={setPointsPage}
+										onLimitChange={(newLimit) => {
+											setPointsLimit(newLimit);
+											setEntriesPage(1);
+										}}
+										creatingDataPoint={creatingDataPoint}
+										setCreatingDataPoint={setCreatingDataPoint}
+									/>
+								)}
+							</>
+						)}
+					</div>
 				)}
 
 
@@ -213,10 +247,10 @@ const Flywheel = () => {
 								Analyse data
 							</button>
 						</div>
-						<AnalyseData
+						{/* <AnalyseData
 							analyseData={analyseData}
 							onClose={() => setAnalyseData(false)}
-						/>
+						/> */}
 						<DataEntries
 							data={dataentries}
 							pagination={paginationDataEntries}
