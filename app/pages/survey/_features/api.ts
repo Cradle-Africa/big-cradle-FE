@@ -1,4 +1,4 @@
-import { Survey } from "@/app/lib/type";
+import { FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
 import { AxiosInstance } from "axios";
 
 export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
@@ -53,7 +53,7 @@ export const fetchSurveys = async (
 
 export const fetchSurvey = async (axios: AxiosInstance, surveyId: string) => {
   try {
-    const res = await axios.get(`survey-mgt/survey/${surveyId}`);
+    const res = await axios.get(`/survey-mgt/survey/${surveyId}`);
     return res.data;
   } catch (error: any) {
     const statusCode = error?.response?.status;
@@ -73,7 +73,24 @@ export const fetchSurvey = async (axios: AxiosInstance, surveyId: string) => {
   }
 };
 
-export const surveyPay = async (axios: AxiosInstance, data: Survey) => {
+export const verifySurvey = async (axios: AxiosInstance, txRef: string) => {
+  try {
+    const res = await axios.get(
+      `/survey-mgt/verify-survey-payment?tx_ref=${txRef}`
+    );
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+    const customError = new Error(message);
+    throw customError;
+  }
+};
+
+export const surveyPay = async (
+  axios: AxiosInstance,
+  data: FlutterWavePaymentSubmit
+) => {
   try {
     const res = await axios.post(`/payments/flutterwave/initialize`, data);
     return res.data;

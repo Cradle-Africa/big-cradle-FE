@@ -1,33 +1,50 @@
 "use client";
 
 import DashboardLayout from "@/app/DashboardLayout";
-import axios from "@/app/lib/axios";
-import { SurveyListItem } from "@/app/lib/type";
-import { getUser } from "@/app/utils/user/userData";
+import { DataPointForm, SurveySchema } from "@/app/lib/type";
+import { surveySchema } from "@/app/lib/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import SettingsArea from "../_components/SettingsArea";
-import SurveyNameAndDescription from "../_components/SurveyNameAndDescription";
-import SurveysListArea from "../_components/SurveysListArea";
-import SurveyTabButton from "../_components/SurveyTabButton";
-import { useFetchSurvey } from "../_features/hooks";
-import LoadingNewSurveyPage from "./loading";
+import {
+  FieldErrors,
+  useForm,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
 import NewSurveyQuestionsForm from "../_components/NewSurveyQuestionsForm";
+import SurveyNameAndDescription from "../_components/SurveyNameAndDescription";
 import SurveyPayementArea from "../_components/SurveyPayementArea";
+import SurveyTabButton from "../_components/SurveyTabButton";
 
 const NewSurveyPage = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const paramSurvey = searchParams.get("survey");
   const surveyId = searchParams.get("surveyId");
   const [isUpdatingSurvey, setIsUpdatingSurvey] = useState(false);
-  const router = useRouter();
-  const user = getUser();
+
+  const [form, setForm] = useState<DataPointForm>({
+    dataPointId: "",
+    field: [],
+  });
 
   const {
-    data: surveysListResponse,
-    isLoading,
-    error,
-  } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SurveySchema>({
+    resolver: zodResolver(surveySchema),
+  });
+
+  const surveyName = watch("surveyName");
+  const surveyDescription = watch("surveyDescription");
+
+  const onSubmit = (data: SurveySchema) => {
+    console.log(JSON.stringify(data));
+    router.push(`/pages/survey/new?survey=survey-questions`);
+  };
 
   // const { data : singleSurvey, isLoading: isLoadingSingleSurvey } = useFetchSingleSurvey({
   //   axios,
@@ -35,9 +52,15 @@ const NewSurveyPage = () => {
   //   enabled: !!surveyId,
   // });
 
-  if (isLoading) return <LoadingNewSurveyPage />;
+  // const {
+  //   data: surveysListResponse,
+  //   isLoading,
+  //   error,
+  // } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
 
-  if (error) return;
+  // if (isLoading) return <LoadingNewSurveyPage />;
+
+  // if (error) return;
 
   return (
     <DashboardLayout>
@@ -105,7 +128,17 @@ const NewSurveyPage = () => {
       {/* Forms area */}
       <FormArea
         survey={paramSurvey || ""}
-        surveysList={surveysListResponse?.survey || []}
+        // surveysList={surveysListResponse?.survey || []}
+        form={form}
+        setForm={setForm}
+        //
+        register={register}
+        surveyName={surveyName}
+        surveyDescription={surveyDescription}
+        //
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
       />
     </DashboardLayout>
   );
@@ -119,16 +152,54 @@ const NewSurveyPage = () => {
 
 type FormAreaProps = {
   survey: string;
-  surveysList: SurveyListItem[];
+  // surveysList: SurveyListItem[];
+  form: DataPointForm;
+  setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
+
+  //
+  register: UseFormRegister<SurveySchema>;
+  surveyName: string;
+  surveyDescription: string;
+
+  //
+  handleSubmit: UseFormHandleSubmit<SurveySchema>;
+  onSubmit: (data: SurveySchema) => void;
+  errors: FieldErrors<SurveySchema>;
 };
 
-const FormArea = ({ survey, surveysList }: FormAreaProps) => {
+const FormArea = ({
+  survey,
+  form,
+  setForm,
+  register,
+  surveyName,
+  surveyDescription,
+  handleSubmit,
+  onSubmit,
+  errors,
+}: FormAreaProps) => {
   if (survey === "survey-name-and-description") {
-    return <SurveyNameAndDescription />;
+    return (
+      <SurveyNameAndDescription
+        register={register}
+        // surveyName={surveyName}
+        // surveyDescription={surveyDescription}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
+      />
+    );
   } else if (survey === "survey-questions") {
-    return <NewSurveyQuestionsForm />;
+    return <NewSurveyQuestionsForm form={form} setForm={setForm} />;
   } else if (survey === "survey-payment") {
-    return <SurveyPayementArea />;
+    return (
+      <SurveyPayementArea
+        surveyName={surveyName}
+        surveyDescription={surveyDescription}
+        form={form}
+        setForm={setForm}
+      />
+    );
   }
 
   // else if (survey === "Surveys list") {

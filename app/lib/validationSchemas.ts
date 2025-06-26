@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const pipeLineSchema = z.object({
   dataPointName: z.string().min(1, "Enter the data point name"),
@@ -13,4 +13,11 @@ export const departmentSchema = z.object({
 export const surveySchema = z.object({
   surveyName: z.string().min(1, "Enter the survey name"),
   surveyDescription: z.string().min(1, "Enter the description name"),
+});
+
+export const surveyPaymentSchema = z.object({
+  amount: z.string(),
+  title: z.string(),
+  email: z.string(),
+  description: z.string().optional(),
 });
