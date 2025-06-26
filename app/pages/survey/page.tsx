@@ -21,6 +21,7 @@ import SurveysListArea from "./_components/SurveysListArea";
 import { statuses } from "./_components/SurveyStatus";
 import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
+import SurveyTable from "./_components/SurveyTable";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -56,8 +57,11 @@ const SurveyPage = () => {
 
   const filteredSurveys = useMemo(() => {
     const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
-    if (!surveyStatus || surveyStatus === "All") return surveys;
-    return surveys.filter((survey) => survey.paymentStatus === surveyStatus);
+    if (!surveyStatus || surveyStatus === "all") return surveys;
+    return surveys.filter(
+      (survey) =>
+        survey.paymentStatus.toLocaleLowerCase() === surveyStatus.toLowerCase()
+    );
   }, [surveyStatus, surveysListResponse?.survey]);
 
   useEffect(() => {
@@ -218,7 +222,7 @@ const SurveyPage = () => {
             // />
             <SurveyStatus
               key={status}
-              isSelected={status === surveyStatus}
+              isSelected={status.toLowerCase() === surveyStatus}
               status={status}
               onClick={() =>
                 router.push(`/pages/survey?status=${status.toLowerCase()}`)
@@ -227,7 +231,8 @@ const SurveyPage = () => {
           ))}
         </div>
         {/* <SurveyTable /> */}
-        <SurveysListArea data={filteredSurveys || []} />
+        {/* <SurveysListArea data={filteredSurveys || []} /> */}
+        <SurveyTable  data={filteredSurveys || []}/>
       </div>
     </DashboardLayout>
   );
