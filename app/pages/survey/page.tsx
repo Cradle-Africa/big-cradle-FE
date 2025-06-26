@@ -6,23 +6,20 @@ import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
-import { Plus, PlusCircle } from "lucide-react";
+import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import Overview from "../flywheel/_components/Overview";
 import {
   useFetchDataEntries,
   useFetchPipelines,
 } from "../flywheel/_features/hook";
-import SurveysListArea from "./_components/SurveysListArea";
 import { statuses } from "./_components/SurveyStatus";
+import SurveyTable from "./_components/SurveyTable";
 import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
-import SurveyTable from "./_components/SurveyTable";
-import SurveyCard from "./_components/SurveyCard";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
