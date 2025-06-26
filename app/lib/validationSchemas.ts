@@ -15,6 +15,9 @@ export const surveySchema = z.object({
   surveyDescription: z.string().min(1, "Enter the description name"),
 });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
 
 export const surveyPaymentSchema = z.object({
   amount: z.string(),
@@ -22,5 +25,8 @@ export const surveyPaymentSchema = z.object({
   email: z.string(),
   description: z.string().optional(),
 });
+<<<<<<< HEAD
 =======
 >>>>>>> f134ea7 (Display the list of surveys)
+=======
+>>>>>>> 98b4a89 (Survey test implementation)

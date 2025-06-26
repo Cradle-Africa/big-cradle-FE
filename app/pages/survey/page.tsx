@@ -1,7 +1,9 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
+import { Plus } from "lucide-react";
 import axios from "@/app/lib/axios";
-import { SurveyListItem } from "@/app/lib/type";
+import Card from "./_components/SurveyCard";
+import { statuses } from "./_components/SurveyStatus";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
@@ -9,37 +11,18 @@ import build_pipeline from "@/public/icons/build_pipeline.png";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useVerifySurvey } from "./_features/hooks";
 import toast from "react-hot-toast";
-import Overview from "../flywheel/_components/Overview";
-import {
-  useFetchDataEntries,
-  useFetchPipelines,
-} from "../flywheel/_features/hook";
-import SurveysListArea from "./_components/SurveysListArea";
-import { statuses } from "./_components/SurveyStatus";
-import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
-import SurveyPageLoading from "./loading";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
   const searchParam = useSearchParams();
   const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const [entriesPage] = useState(1);
-  const [entriesLimit] = useState(10);
-  // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
-
-  const surveyStatus = searchParam.get("status");
-
-  const [pipelinesPage] = useState(1);
-  const [pipelinesLimit] = useState(10);
-
-  const user = getUser();
 
   const txRef = searchParams.get("tx_ref");
+
   const {
     mutateAsync: verifyPayment,
     isPending: isVerifing,
@@ -47,18 +30,6 @@ const SurveyPage = () => {
   } = useVerifySurvey({
     axios,
   });
-
-  const { data: surveysListResponse, isLoading } = useFetchSurvey({
-    axios,
-    businessUserId: user?.id ?? "",
-    page: 1,
-  });
-
-  const filteredSurveys = useMemo(() => {
-    const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
-    if (!surveyStatus || surveyStatus === "All") return surveys;
-    return surveys.filter((survey) => survey.paymentStatus === surveyStatus);
-  }, [surveyStatus, surveysListResponse?.survey]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -71,13 +42,13 @@ const SurveyPage = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, [setOpen]);
 
-  const verifyPayementFunc = useCallback(async () => {
+  const verifyPayementFunc = async () => {
     try {
       await verifyPayment(txRef || "");
     } catch (error) {
       console.log(error);
     }
-  }, [txRef, verifyPayment]);
+  };
 
   useEffect(() => {
     try {
@@ -85,47 +56,13 @@ const SurveyPage = () => {
     } catch (error: any) {
       toast.error(`Error ---> ${error.message}`);
     }
-  }, [txRef, verifyPayementFunc]);
-
-  const { data: dataPointsData } = useFetchPipelines({
-    axios,
-    queryParams: {
-      page: pipelinesPage,
-      limit: pipelinesLimit,
-    },
-  });
-
-  const { data: dataEntries } = useFetchDataEntries({
-    axios,
-    queryParams: {
-      page: entriesPage,
-      limit: entriesLimit,
-    },
-  });
-
-  const dataentries = dataEntries?.data ?? [];
-  // const paginationDataEntries = dataEntries?.pagination ?? {
-  //   page: 1,
-  //   limit: 10,
-  //   pages: 1,
-  //   total: 0,
-  // };
-
-  const pipelines = dataPointsData?.dataPoint ?? [];
-  // const paginationDataPoints = dataPointsData?.pagination ?? {
-  //   page: 1,
-  //   limit: 10,
-  //   pages: 1,
-  //   total: 0,
-  // };
+  }, []);
 
   useEffect(() => {
-    if (isError) toast.error(`An error occured when verifing your payment`);
-  }, [isError, txRef, verifyPayementFunc]);
+    if (isError) toast.error(`Error ---> An error occured`);
+  }, [isError]);
 
-  // if (isVerifing) return <p>Is Verifing payment...</p>;
-
-  if (isLoading || isVerifing) return <SurveyPageLoading />;
+  if (isVerifing) return <p>Is Verifing...</p>;
 
   return (
     <DashboardLayout>

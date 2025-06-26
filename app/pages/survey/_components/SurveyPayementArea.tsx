@@ -8,12 +8,16 @@ import {
 } from "@/app/lib/type";
 import { surveyPaymentSchema } from "@/app/lib/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useCreateSurvey, useSurveyPay } from "../_features/hooks";
+import {
+  useCreateSurvey,
+  useSurveyPay,
+  useVerifySurvey,
+} from "../_features/hooks";
 
 import {
   getBusinessId,

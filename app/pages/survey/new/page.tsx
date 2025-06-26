@@ -1,47 +1,32 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
-import axios from "@/app/lib/axios";
-import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
-import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
-import { getUser } from "@/app/utils/user/userData";
-import api_icon from "@/public/icons/api_icon.png";
-import build_pipeline from "@/public/icons/build_pipeline.png";
-import { Plus, PlusCircle } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { DataPointForm, SurveySchema } from "@/app/lib/type";
+import { surveySchema } from "@/app/lib/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import Overview from "../flywheel/_components/Overview";
+import { useState } from "react";
 import {
-  useFetchDataEntries,
-  useFetchPipelines,
-} from "../flywheel/_features/hook";
-import SurveysListArea from "./_components/SurveysListArea";
-import { statuses } from "./_components/SurveyStatus";
-import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
-import SurveyPageLoading from "./loading";
-import SurveyTable from "./_components/SurveyTable";
-import SurveyCard from "./_components/SurveyCard";
+  FieldErrors,
+  useForm,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
+import NewSurveyQuestionsForm from "../_components/NewSurveyQuestionsForm";
+import SurveyNameAndDescription from "../_components/SurveyNameAndDescription";
+import SurveyPayementArea from "../_components/SurveyPayementArea";
+import SurveyTabButton from "../_components/SurveyTabButton";
 
-const SurveyPage = () => {
-  const [open, setOpen] = useState(false);
-  const searchParam = useSearchParams();
-  const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
+const NewSurveyPage = () => {
   const searchParams = useSearchParams();
-  const [entriesPage] = useState(1);
-  const [entriesLimit] = useState(10);
-  const [surveyDashBoardItems, setSurveyDashBoardItems] =
-    useState<DashboardMenu[]>();
-  // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
+  const router = useRouter();
+  const paramSurvey = searchParams.get("survey");
+  const surveyId = searchParams.get("surveyId");
+  const [isUpdatingSurvey, setIsUpdatingSurvey] = useState(false);
 
-  const surveyStatus = searchParam.get("status");
-
-  const [pipelinesPage] = useState(1);
-  const [pipelinesLimit] = useState(10);
-
-  const user = getUser();
+  const [form, setForm] = useState<DataPointForm>({
+    dataPointId: "",
+    field: [],
+  });
 
   const txRef = searchParams.get("tx_ref");
   const {
@@ -55,14 +40,21 @@ const SurveyPage = () => {
   });
 
   const {
-    data: surveysListResponse,
-    isSuccess,
-    isLoading,
-  } = useFetchSurvey({
-    axios,
-    businessUserId: user?.id ?? "",
-    page: 1,
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SurveySchema>({
+    resolver: zodResolver(surveySchema),
   });
+
+  const surveyName = watch("surveyName");
+  const surveyDescription = watch("surveyDescription");
+
+  const onSubmit = (data: SurveySchema) => {
+    console.log(JSON.stringify(data));
+    router.push(`/pages/survey/new?survey=survey-questions`);
+  };
 
   const filteredSurveys = useMemo(() => {
     const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
@@ -74,98 +66,15 @@ const SurveyPage = () => {
     }
   }, [surveyStatus, surveysListResponse?.survey]);
 
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
+  // const {
+  //   data: surveysListResponse,
+  //   isLoading,
+  //   error,
+  // } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
 
-    return () => document.removeEventListener("mousedown", handler);
-  }, [setOpen]);
+  // if (isLoading) return <LoadingNewSurveyPage />;
 
-  const verifyPayementFunc = useCallback(async () => {
-    try {
-      await verifyPayment(txRef || "");
-    } catch (error) {
-      console.log(error);
-    }
-  }, [txRef, verifyPayment]);
-
-  useEffect(() => {
-    try {
-      if (txRef) verifyPayementFunc();
-    } catch (error: any) {
-      toast.error(`${error.message}`);
-    }
-  }, [txRef, verifyPayementFunc]);
-
-  useEffect(() => {
-    if (isVerifyPaymentSuccess) {
-      if (paymentMadeData.paymentResult.data.status === "successful") {
-        toast.success("Payment made successfull");
-      } else {
-        toast.error("Error when making payments");
-      }
-    }
-  }, [txRef, verifyPayementFunc]);
-
-  const { data: dataPointsData } = useFetchPipelines({
-    axios,
-    queryParams: {
-      page: pipelinesPage,
-      limit: pipelinesLimit,
-    },
-  });
-
-  const { data: dataEntries } = useFetchDataEntries({
-    axios,
-    queryParams: {
-      page: entriesPage,
-      limit: entriesLimit,
-    },
-  });
-
-  const dataentries = dataEntries?.data ?? [];
-  // const paginationDataEntries = dataEntries?.pagination ?? {
-  //   page: 1,
-  //   limit: 10,
-  //   pages: 1,
-  //   total: 0,
-  // };
-
-  const pipelines = dataPointsData?.dataPoint ?? [];
-  // const paginationDataPoints = dataPointsData?.pagination ?? {
-  //   page: 1,
-  //   limit: 10,
-  //   pages: 1,
-  //   total: 0,
-  // };
-
-  // useEffect(() => {
-  //   if (isSuccess && surveysListResponse) {
-  //     const allSurveys = surveysListResponse.survey.length;
-  //     const activeSurveys = surveysListResponse.survey.filter(
-  //       (v) => v.isActive
-  //     ).length;
-  //     const inActiveSurveys = surveysListResponse.survey.filter(
-  //       (v) => !v.isActive
-  //     ).length;
-
-  //     const dashBoardValue = [];
-
-  //     setSurveyDashBoardItems(dashBoardValue);
-  //   }
-  // }, [isSuccess, surveysListResponse]);
-
-  useEffect(() => {
-    if (isError) toast.error(`An error occured when verifing your payment`);
-  }, [isError, txRef, verifyPayementFunc]);
-
-  // if (isVerifing) return <p>Is Verifing payment...</p>;
-
-  if (isLoading || isVerifing) return <SurveyPageLoading />;
+  // if (error) return;
 
   return (
     <DashboardLayout>
@@ -240,32 +149,88 @@ const SurveyPage = () => {
         ))}
       </div> */}
 
-      {/* \\\\ */}
-      {/* <Overview
-        pipelines={pipelines?.length}
-        dataentries={dataentries?.length}
-      /> */}
-      {/* Survey table  */}
-      <div className="flex flex-col bg-white p-4 mt-8">
-        <p className="font-bold text-black">Survey Table List</p>
-        <div className="flex gap-4 my-4">
-          {statuses.map((status: any) => (
-            <SurveyStatus
-              key={status}
-              isSelected={status.toLowerCase() === surveyStatus}
-              status={status}
-              onClick={() =>
-                router.push(`/pages/survey?status=${status.toLowerCase()}`)
-              }
-            />
-          ))}
-        </div>
-        {/* <SurveyTable /> */}
-        {/* <SurveysListArea data={filteredSurveys || []} /> */}
-        <SurveyTable data={filteredSurveys || []} />
-      </div>
+      {/* Forms area */}
+      <FormArea
+        survey={paramSurvey || ""}
+        // surveysList={surveysListResponse?.survey || []}
+        form={form}
+        setForm={setForm}
+        //
+        register={register}
+        surveyName={surveyName}
+        surveyDescription={surveyDescription}
+        //
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
+      />
     </DashboardLayout>
   );
 };
 
-export default SurveyPage;
+// const surveyMenuList = [
+//   "Survey name and description",
+//   "Surveys list",
+//   "Settings",
+// ];
+
+type FormAreaProps = {
+  survey: string;
+  // surveysList: SurveyListItem[];
+  form: DataPointForm;
+  setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
+
+  //
+  register: UseFormRegister<SurveySchema>;
+  surveyName: string;
+  surveyDescription: string;
+
+  //
+  handleSubmit: UseFormHandleSubmit<SurveySchema>;
+  onSubmit: (data: SurveySchema) => void;
+  errors: FieldErrors<SurveySchema>;
+};
+
+const FormArea = ({
+  survey,
+  form,
+  setForm,
+  register,
+  surveyName,
+  surveyDescription,
+  handleSubmit,
+  onSubmit,
+  errors,
+}: FormAreaProps) => {
+  if (survey === "survey-name-and-description") {
+    return (
+      <SurveyNameAndDescription
+        register={register}
+        // surveyName={surveyName}
+        // surveyDescription={surveyDescription}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
+      />
+    );
+  } else if (survey === "survey-questions") {
+    return <NewSurveyQuestionsForm form={form} setForm={setForm} />;
+  } else if (survey === "survey-payment") {
+    return (
+      <SurveyPayementArea
+        surveyName={surveyName}
+        surveyDescription={surveyDescription}
+        form={form}
+        setForm={setForm}
+      />
+    );
+  }
+
+  // else if (survey === "Surveys list") {
+  //   return <SurveysListArea data={surveysList} />;
+  // } else {
+  //   return <SettingsArea />;
+  // }
+};
+
+export default NewSurveyPage;
