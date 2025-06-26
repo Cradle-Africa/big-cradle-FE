@@ -12,13 +12,18 @@ import build_pipeline from "@/public/icons/build_pipeline.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useVerifySurvey } from "./_features/hooks";
+import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
 import toast from "react-hot-toast";
+import LoadingNewSurveyPage from "./new/loading";
+import { getUser } from "@/app/utils/user/userData";
+import SurveysListArea from "./_components/SurveysListArea";
 
-const SurveyCard = () => {
+const SurveyPage = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
+
+  const user = getUser();
 
   const txRef = searchParams.get("tx_ref");
 
@@ -29,6 +34,12 @@ const SurveyCard = () => {
   } = useVerifySurvey({
     axios,
   });
+
+  const {
+    data: surveysListResponse,
+    isLoading,
+    error,
+  } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -62,6 +73,8 @@ const SurveyCard = () => {
   }, [isError]);
 
   if (isVerifing) return <p>Is Verifing...</p>;
+
+  if (isLoading) return <LoadingNewSurveyPage />;
 
   return (
     <DashboardLayout>
@@ -149,10 +162,11 @@ const SurveyCard = () => {
             />
           ))}
         </div>
-        <SurveyTable />
+        {/* <SurveyTable /> */}
+        <SurveysListArea data={surveysListResponse?.survey || []} />
       </div>
     </DashboardLayout>
   );
 };
 
-export default SurveyCard;
+export default SurveyPage;

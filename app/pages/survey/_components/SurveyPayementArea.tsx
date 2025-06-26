@@ -152,7 +152,10 @@ const SurveyPayementArea = ({
       >
         <ArrowLeft />
       </button>
-      <p className="text-3xl font-bold mb-5">Payment</p>
+      <p className="text-3xl font-bold mb-1">Payment</p>
+      <p className="mb-8">
+        Fill the fields down and click on the proceed button to make payment
+      </p>
       <form
         onSubmit={handleSubmit(submitSurvey)}
         className="flex flex-col gap-2"
