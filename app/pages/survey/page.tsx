@@ -250,10 +250,10 @@ const SurveyPage = () => {
           />
         ))}
       </div> */}
-      <Overview
+      {/* <Overview
         pipelines={pipelines?.length}
         dataentries={dataentries?.length}
-      />
+      /> */}
 
       {/* \\\\ */}
       {/* <Overview
