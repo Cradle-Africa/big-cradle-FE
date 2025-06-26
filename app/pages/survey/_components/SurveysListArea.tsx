@@ -49,13 +49,13 @@ const SurveysListArea = ({ data }: Props) => {
   }, []);
 
   return (
-    <div className="my-8">
+    <div>
       <ViewSurveyDetails
         openViewDataSurveyDetails={openViewSurveyDetails}
         onClose={() => setOpenViewSurveyDetails(false)}
         surveyId={uniqueDataPoint}
       />
-      <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">
+      <div className="overflow-x-auto rounded-[8px] border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
           <thead className="bg-gray-50">
             <tr>
