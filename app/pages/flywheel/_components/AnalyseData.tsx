@@ -11,15 +11,17 @@ import { handleDownloadAnalysis } from "@/app/utils/handleDownload";
 
 interface AnalyseDataProps {
     analyseData: boolean;
+    uniqueId: string;
     onClose: () => void;
 }
 
-const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose }) => {
+const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueId }) => {
     const modalRef = useRef<HTMLDivElement>(null);
     const [prompt, setPrompt] = useState("");
 
     const businessUserId = getBusinessId() || "";
-    const endpoint = "pipeline-fields-entry-business";
+    const endpoint = "pipeline-fields-entry-attached-to-data-point";
+
 
     const mutation = useAnalyseData({ axios });
 
@@ -40,7 +42,12 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose }) => {
 
     const handleSubmit = () => {
         mutation.mutate(
-            { endpoint, businessUserId, prompt },
+            {
+                endpoint,
+                businessUserId,
+                dataPoint: uniqueId,
+                prompt,
+            },
             {
                 onSuccess: () => {
                     toast.success("Data analysis completed successfully");
@@ -51,6 +58,8 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose }) => {
             }
         );
     };
+
+
 
     const getResponseContent = () => {
         try {

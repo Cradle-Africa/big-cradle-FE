@@ -1,10 +1,20 @@
 import { z } from "zod";
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
 import {
   pipeLineSchema,
   departmentSchema,
   surveySchema,
   surveyPaymentSchema,
 } from "./validationSchemas";
+<<<<<<< HEAD
+=======
+import { pipeLineSchema, departmentSchema, surveySchema } from "./validationSchemas";
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
 import { ReactNode } from "react";
 
 export interface PaginationMeta {
@@ -15,9 +25,21 @@ export interface PaginationMeta {
 }
 
 export interface Pagination {
+<<<<<<< HEAD
+<<<<<<< HEAD
   total: number;
   page: number;
   limit: number;
+=======
+	total: number;
+	page: number;
+	limit: number;
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+  total: number;
+  page: number;
+  limit: number;
+>>>>>>> 98b4a89 (Survey test implementation)
   pages?: number;
 }
 
@@ -31,8 +53,16 @@ export type DepartmentSchema = z.infer<typeof departmentSchema>;
 
 export type SurveySchema = z.infer<typeof surveySchema>;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
 
+=======
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
+
+>>>>>>> 98b4a89 (Survey test implementation)
 export type BusinessKyc = {
   businessUserId: string | null;
   departmentName: string;
@@ -77,8 +107,18 @@ export interface Survey {
   businessUserId: string | null;
   employeeUserId: string | null;
   surveyName: string;
+<<<<<<< HEAD
+<<<<<<< HEAD
   surveyDescription: string;
   amount: number;
+=======
+  surveyDescription : string;
+  amount : number,
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+  surveyDescription: string;
+  amount: number;
+>>>>>>> 98b4a89 (Survey test implementation)
   field: Field[];
 }
 
@@ -100,17 +140,33 @@ export interface DataEntry {
   businessUserId: string | null;
   employeeUserId: string | null;
   fieldId: string;
+  dataPointId: string;
   data: Record<string, any>;
   createdAt?: string;
 }
 
 export type DashboardMenu = {
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
   title: string;
   subTitle: string;
   value: string;
   percentage: string;
   icon: ReactNode;
 };
+<<<<<<< HEAD
+=======
+  title: string, 
+  subTitle: string,
+  value: string,
+  percentage: string,
+  icon: ReactNode,
+}
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
 
 export type SurveyListResponse = {
   success: boolean;
@@ -119,6 +175,11 @@ export type SurveyListResponse = {
   pagination: Pagination;
 };
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
 export type FlutterwaveHostedLinkResponse = {
   status: string;
   message: string;
@@ -127,12 +188,25 @@ export type FlutterwaveHostedLinkResponse = {
   };
 };
 
+<<<<<<< HEAD
 export type SingleSurveyResponse = {
   success: boolean;
   message: string;
   data: SurveyListItem;
 };
 
+=======
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+=======
+>>>>>>> 98b4a89 (Survey test implementation)
+export type SingleSurveyResponse = {
+  success: boolean;
+  message: string;
+  data: SurveyListItem;
+};
+
+>>>>>>> 4027abe (Display survey details)
 export type SurveyListItem = {
   id: string;
   businessUserId: string;
@@ -159,6 +233,10 @@ export type SurveyListField = {
   updatedAt: string;
 };
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e6e6d7e (Build the survey stepper)
 export type FlutterWavePaymentSubmit = {
   tx_ref: string;
   amount: number;
@@ -170,6 +248,22 @@ export type FlutterWavePaymentSubmit = {
   };
   customizations: {
     title: string;
+<<<<<<< HEAD
+<<<<<<< HEAD
     description?: string;
   };
 };
+=======
+>>>>>>> f134ea7 (Display the list of surveys)
+=======
+    description: string;
+  };
+};
+
+
+>>>>>>> e6e6d7e (Build the survey stepper)
+=======
+    description?: string;
+  };
+};
+>>>>>>> 98b4a89 (Survey test implementation)
