@@ -3,10 +3,11 @@ import FlywheelCard from './FlywheelCard'
 import { Album } from 'lucide-react'
 
 interface PipelineProps {
-    pipelines: number
+    pipelines: number,
+    dataentries: number
 }
 
-const Overview:React.FC<PipelineProps> = ({pipelines}) => {
+const Overview:React.FC<PipelineProps> = ({pipelines, dataentries}) => {
     return (
         <div className="grid grid-cols-1 md:grid md:grid-cols-2 xl:grid xl-grid-cols-3 w-full gap-6 mt-8">
             <FlywheelCard
@@ -22,7 +23,7 @@ const Overview:React.FC<PipelineProps> = ({pipelines}) => {
                 isHighLighted={false}
                 title="Data entries"
                 icon={Album}
-                value={1000}
+                value={dataentries}
                 description={`Data entries through ${pipelines} pipelines`}
             />
         </div>

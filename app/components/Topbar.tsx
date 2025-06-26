@@ -37,7 +37,7 @@ const Topbar = () => {
                         <input
                             type="text"
                             placeholder="Search for something..."
-                            className="hidden md:block pl-10 pr-3 py-1 md:w-72 border border-gray-300 text-sm rounded-md focus:outline-none"
+                            className="hidden md:block pl-10 pr-3 py-2 md:w-72 border bg-white border-gray-300 text-sm rounded-md focus:outline-none"
                         />
                     </form>
 

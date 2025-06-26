@@ -21,7 +21,7 @@ const BusinessCard = ({
   return (
     <div
       className={classNames({
-        "rounded-[12px] w-full max-w-[400px] flex flex-col p-4 ": true,
+        "rounded-[12px] w-full flex flex-col p-4 ": true,
         "bg-white border border-gray-200": !isHighLighted,
         "bg-[#3352FF] border border-gray-200 text-white": isHighLighted,
       })}
