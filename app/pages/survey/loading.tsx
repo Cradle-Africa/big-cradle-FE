@@ -1,9 +1,13 @@
-import React from 'react'
+import DashboardLayout from "@/app/DashboardLayout";
 
-const FlyWheelPageLoading = () => {
+const SurveyPageLoading = () => {
   return (
-    <div>FlyWheelPageLoading</div>
-  )
-}
+    <DashboardLayout>
+      <div>
+        <p>Loading...</p>
+      </div>
+    </DashboardLayout>
+  );
+};
 
-export default FlyWheelPageLoading
+export default SurveyPageLoading;

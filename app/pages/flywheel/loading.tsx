@@ -1,9 +1,13 @@
-import React from 'react'
+import DashboardLayout from "@/app/DashboardLayout";
 
 const FlyWheelPageLoading = () => {
   return (
-    <div className='flex items-center justify-center py-10'>Loading ...</div>
-  )
-}
+    <DashboardLayout>
+      <div>
+        <p>Loading...</p>
+      </div>
+    </DashboardLayout>
+  );
+};
 
-export default FlyWheelPageLoading
+export default FlyWheelPageLoading;

@@ -1,6 +1,7 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
+import { SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
@@ -19,8 +20,7 @@ import {
 import SurveysListArea from "./_components/SurveysListArea";
 import { statuses } from "./_components/SurveyStatus";
 import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
-import LoadingNewSurveyPage from "./new/loading";
-import { SurveyListItem } from "@/app/lib/type";
+import SurveyPageLoading from "./loading";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -123,9 +123,9 @@ const SurveyPage = () => {
     if (isError) toast.error(`An error occured when verifing your payment`);
   }, [isError, txRef, verifyPayementFunc]);
 
-  if (isVerifing) return <p>Is Verifing payment...</p>;
+  // if (isVerifing) return <p>Is Verifing payment...</p>;
 
-  if (isLoading) return <LoadingNewSurveyPage />;
+  if (isLoading || isVerifing) return <SurveyPageLoading />;
 
   return (
     <DashboardLayout>
