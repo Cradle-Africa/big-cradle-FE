@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "@/app/lib/axios";
 import DashboardLayout from "@/app/DashboardLayout";
 import { DataPointForm, SurveySchema } from "@/app/lib/type";
 import { surveySchema } from "@/app/lib/validationSchemas";

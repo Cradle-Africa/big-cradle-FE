@@ -1,35 +1,41 @@
-import { SurveyListItem } from "@/app/lib/type";
-<<<<<<< HEAD
-import { formatDate } from "@/app/utils/formatDate";
-import { Eye } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import ViewSurveyDetails from "./ViewSurveyDetails";
-=======
-import SurveysListTable from "./SurveysListTable";
->>>>>>> f134ea7 (Display the list of surveys)
+"use client";
 
-type Props = {
+import { SurveyListItem } from "@/app/lib/type";
+import { formatDate } from "@/app/utils/formatDate";
+import { useEffect, useRef, useState } from "react";
+
+type SurveysListTableProps = {
   data: SurveyListItem[];
+  //   pagination: PaginationMeta;
+  //   onPageChange: (newPage: number) => void;
+  //   onLimitChange: (newLimit: number) => void;
 };
 
-const SurveysListArea = ({ data }: Props) => {
-<<<<<<< HEAD
-  const [openViewSurveyDetails, setOpenViewSurveyDetails] = useState(false);
-  
+const SurveysListTable = ({
+  data,
+}: //   pagination,
+//   onPageChange,
+//   onLimitChange,
+SurveysListTableProps) => {
+  //   const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
   //   const [editingDataPoint, setEditingDataPoint] = useState(false);
   //   const [shareDataPoint, setShareDataPoint] = useState(false);
 
-  const [uniqueDataPoint, setUniqueDataPoint] = useState<string>("");
-  const handleViewSurveyDetails = (id: any) => {
-    setOpenViewSurveyDetails(true);
-    setUniqueDataPoint(id);
-  };
+  //   const [uniqueDataPoint, setUniqueDataPoint] = useState<string>("");
+  //   const handleViewDataPoint = (id: any) => {
+  //     setOpenViewDataPoit(true);
+  //     setUniqueDataPoint(id);
+  //   };
 
+  //   const handleEditDataPoint = (id: any) => {
+  //     setEditingDataPoint(true);
+  //     setUniqueDataPoint(id);
+  //   };
 
-  // const handleShareDataPoint = (id: any) => {
-  //   //   setShareDataPoint(true);
-  //   setUniqueDataPoint(id);
-  // };
+  //   const handleShareDataPoint = (id: any) => {
+  //     setShareDataPoint(true);
+  //     setUniqueDataPoint(id);
+  //   };
   const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
   const optionRef = useRef<HTMLUListElement | null>(null);
 
@@ -47,15 +53,9 @@ const SurveysListArea = ({ data }: Props) => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   return (
-    <div>
-      <ViewSurveyDetails
-        openViewDataSurveyDetails={openViewSurveyDetails}
-        onClose={() => setOpenViewSurveyDetails(false)}
-        surveyId={uniqueDataPoint}
-      />
-      <div className="overflow-x-auto rounded-[8px] border border-gray-200">
+    <>
+      <div className="overflow-x-auto rounded-[8px] mt-10 border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
           <thead className="bg-gray-50">
             <tr>
@@ -72,7 +72,7 @@ const SurveysListArea = ({ data }: Props) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
-            {data.map((survey, index) => (
+            {data.map((dataPoints, index) => (
               <tr key={index} className="">
                 <td className="px-6 py-4 align-top">{index + 1}</td>
                 <td className="px-3 py-2 align-top">
@@ -80,7 +80,7 @@ const SurveysListArea = ({ data }: Props) => {
                     <tbody>
                       <tr>
                         <td className=" py-2 align-top">
-                          {survey.field.map((field: any, idx: number) => (
+                          {dataPoints.field.map((field: any, idx: number) => (
                             <div
                               key={idx}
                               className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50"
@@ -103,9 +103,9 @@ const SurveysListArea = ({ data }: Props) => {
                                     onClick={() =>
                                       setOpenOptionIndex(
                                         openOptionIndex ===
-                                          `${survey.id}-${idx}`
+                                          `${dataPoints.id}-${idx}`
                                           ? null
-                                          : `${survey.id}-${idx}`
+                                          : `${dataPoints.id}-${idx}`
                                       )
                                     }
                                     className="text-blue-600 cursor-pointer underline text-sm"
@@ -114,7 +114,7 @@ const SurveysListArea = ({ data }: Props) => {
                                   </button>
 
                                   {openOptionIndex ===
-                                    `${survey.id}-${idx}` && (
+                                    `${dataPoints.id}-${idx}` && (
                                     <ul
                                       ref={optionRef}
                                       className="absolute left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-lg z-50 w-64 max-w-xs text-sm"
@@ -142,27 +142,26 @@ const SurveysListArea = ({ data }: Props) => {
                 </td>
 
                 <td className="px-3 py-4 align-top text-left text-sm">
-                  {formatDate(survey?.createdAt ?? "")}
+                  {formatDate(dataPoints?.createdAt ?? "")}
                 </td>
                 <td className="px-3 py-4 align-top">
-                  <Eye
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Neque quod perspiciatis.
+                  </p>
+                  {/* <Eye
                     size={35}
-                    onClick={() => handleViewSurveyDetails(survey?.id)}
+                    onClick={() => handleViewDataPoint(dataPoints?.id)}
                     className="cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   />
-                  {/* <Pencil
+                  <Pencil
                     size={35}
-                    // onClick={() => handleEditDataPoint(survey?.id)}
-                    onClick={() =>
-                      router.push(
-                        `/pages/survey/new?survey=Survey%20questions&surveyId=${survey?.id}`
-                      )
-                    }
+                    onClick={() => handleEditDataPoint(dataPoints?.id)}
                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   />
                   <Share2
                     size={35}
-                    onClick={() => handleShareDataPoint(survey?.id)}
+                    onClick={() => handleShareDataPoint(dataPoints?.id)}
                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   /> */}
                 </td>
@@ -180,13 +179,8 @@ const SurveysListArea = ({ data }: Props) => {
               onLimitChange={onLimitChange}
             />
           )} */}
-=======
-  return (
-    <div className="my-8">
-      <SurveysListTable data={data}/>
->>>>>>> f134ea7 (Display the list of surveys)
-    </div>
+    </>
   );
 };
 
-export default SurveysListArea;
+export default SurveysListTable;
