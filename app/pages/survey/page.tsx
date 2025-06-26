@@ -16,6 +16,7 @@ import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
 import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
+import Pagination from "@/app/components/Pagination";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -28,8 +29,15 @@ const SurveyPage = () => {
   // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
 
   const surveyStatus = searchParam.get("status");
+  const page = searchParams.get("page") ?? "";
 
   const user = getUser();
+
+  const changeStatus = (status: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("status", status);
+    router.push("?" + params.toString());
+  };
 
   const txRef = searchParams.get("tx_ref");
   const {
@@ -49,7 +57,7 @@ const SurveyPage = () => {
   } = useFetchSurvey({
     axios,
     businessUserId: user?.id ?? "",
-    page: 1,
+    page,
   });
 
   const filteredSurveys = useMemo(() => {
@@ -103,7 +111,6 @@ const SurveyPage = () => {
     isVerifyPaymentSuccess,
     paymentMadeData?.paymentResult.data.status,
   ]);
-
 
   // const paginationDataEntries = dataEntries?.pagination ?? {
   //   page: 1,
@@ -230,15 +237,19 @@ const SurveyPage = () => {
               key={status}
               isSelected={status.toLowerCase() === surveyStatus}
               status={status}
-              onClick={() =>
-                router.push(`/pages/survey?status=${status.toLowerCase()}`)
-              }
+              onClick={() => changeStatus(status.toLowerCase())}
             />
           ))}
         </div>
         {/* <SurveyTable /> */}
         {/* <SurveysListArea data={filteredSurveys || []} /> */}
         <SurveyTable data={filteredSurveys || []} />
+        <Pagination
+          pageSize={10}
+          currentPage={parseInt(page)}
+          itemCount={surveysListResponse?.pagination.total ?? 0}
+          className="mt-4"
+        />
       </div>
     </DashboardLayout>
   );

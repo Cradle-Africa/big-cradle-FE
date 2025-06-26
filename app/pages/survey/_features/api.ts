@@ -26,11 +26,11 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
 export const fetchSurveys = async (
   axios: AxiosInstance,
   businessUserId: string,
-  page: number
+  page: string
 ) => {
   try {
     const res = await axios.get(
-      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=20`
+      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
     );
     return res.data;
   } catch (error: any) {
@@ -107,4 +107,3 @@ export const surveyPay = async (
     throw customError;
   }
 };
-

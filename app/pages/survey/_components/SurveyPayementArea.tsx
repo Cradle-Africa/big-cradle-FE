@@ -108,8 +108,8 @@ const SurveyPayementArea = ({
           tx_ref: createdSurvey.data.tx_ref,
           amount: parseInt(data.amount),
           currency: "NGN",
-          redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey?${createdSurvey.data.tx_ref}`,
-          // redirect_url: `http://localhost:3000/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
+          // redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey?${createdSurvey.data.tx_ref}`,
+          redirect_url: `http://localhost:3000/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
           payment_options:
             "card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
           customer: {

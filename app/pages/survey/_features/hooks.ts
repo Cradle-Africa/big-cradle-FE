@@ -39,7 +39,7 @@ export const useCreateSurvey = ({ axios }: { axios: AxiosInstance }) => {
 type UseFetchSurvey = {
   axios: AxiosInstance;
   businessUserId: string;
-  page: number;
+  page: string;
   onSuccess?: (data: any) => void;
 };
 

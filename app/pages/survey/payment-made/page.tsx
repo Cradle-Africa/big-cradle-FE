@@ -7,6 +7,7 @@ import React, { useCallback, useEffect } from "react";
 import { useVerifySurveyPayment } from "../_features/hooks";
 import SurveyPageLoading from "../loading";
 import toast from "react-hot-toast";
+import { Verified } from "lucide-react";
 
 const PaymentMadePage = () => {
   const searchParams = useSearchParams();
@@ -42,9 +43,9 @@ const PaymentMadePage = () => {
   useEffect(() => {
     if (isVerifyPaymentSuccess) {
       if (data.paymentResult.data.status === "successful") {
-        toast.success(data.message);
+        toast.success("Payment successfull");
       } else {
-        toast.error(data.message);
+        toast.error("Error when making payments");
       }
     }
   }, [
@@ -62,7 +63,12 @@ const PaymentMadePage = () => {
       <div className="text-black">
         {data?.paymentResult.data.status === "successful" ? (
           <div className="bg-green-100 p-4">
-            <p className="text-xl font-bold mb-4">{data.message}</p>
+            <div className="flex gap-4 items-center mb-8">
+              <div className="bg-green-300 rounded-full">
+                <Verified color="white" />
+              </div>
+              <p className="text-xl font-bold">Payment successfull</p>
+            </div>
             <p>{data.paymentResult?.data.id}</p>
             <p>{data.paymentResult?.data.tx_ref}</p>
             <p>{data.paymentResult?.data.flw_ref}</p>

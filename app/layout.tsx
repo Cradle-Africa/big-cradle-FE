@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import QueryProvider from "@/providers/QueryProvider";
 import ReduxProvider from "@/providers/ReduxProvider";
+import "./theme-config.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +39,9 @@ export default function RootLayout({
       >
         <QueryProvider>
           <ReduxProvider>
-            <main>{children}</main>
+            <Theme>
+              <main>{children}</main>
+            </Theme>
             <Toaster position="top-right" reverseOrder={false} />
           </ReduxProvider>
         </QueryProvider>
