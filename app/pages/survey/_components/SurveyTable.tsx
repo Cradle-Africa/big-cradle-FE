@@ -3,6 +3,7 @@ import { formattedDate } from "@/app/utils/tools";
 import { Edit, Eye, MoreVertical } from "lucide-react";
 import { ImFileEmpty } from "react-icons/im";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 type Props = {
   data: SurveyListItem[];
@@ -87,10 +88,12 @@ const SurveyTable = ({ data }: Props) => {
                     className="absolute right-4 z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-gray-200"
                   >
                     <ul className="py-1 text-sm text-gray-700">
+                      <Link href={`/pages/survey/${survey.id}`}>
                       <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
                         <Eye />
                         <p>View</p>
                       </li>
+                      </Link>
                       <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
                         <Edit />
                         <p>Edit</p>

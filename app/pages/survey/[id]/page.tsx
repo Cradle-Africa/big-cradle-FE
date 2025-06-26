@@ -1,24 +1,19 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { X, ArrowDownUp } from "lucide-react";
+import DashboardLayout from "@/app/DashboardLayout";
+import { useParams } from "next/navigation";
 import { useFetchSingleSurvey } from "../_features/hooks";
+import SurveyDetailsLoadingPage from "./loading";
+import { useRouter } from "next/navigation";
 
-interface PopUpProps {
-  openViewDataSurveyDetails: boolean;
-  onClose: () => void;
-  surveyId: string;
-}
+const SurveyDetailsPage = () => {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
 
-const ViewSurveyDetails: React.FC<PopUpProps> = ({
-  openViewDataSurveyDetails,
-  onClose,
-  surveyId,
-}) => {
   const { data, isLoading } = useFetchSingleSurvey({
     axios,
-    surveyId,
-    // enabled: openViewDataSurveyDetails,
+    surveyId: params.id,
   });
 
   const renderField = (field: any, index: number) => {
@@ -108,50 +103,51 @@ const ViewSurveyDetails: React.FC<PopUpProps> = ({
     }
   };
 
-  if (!openViewDataSurveyDetails) return null;
+  if (isLoading) return <SurveyDetailsLoadingPage />;
+
   return (
-    <>
-      <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
-
-      <div className="fixed z-50 inset-0 flex items-center justify-center px-4">
-        <div className="relative w-full bg-white rounded-xl shadow-xl max-w-2xl p-5">
+    <DashboardLayout>
+      <div className="flex flex-col max-w-3xl">
+        {/* <button className="py-2 rounded-md px-4 bg-blue-600 text-white ml-auto">
+          Edit the survey
+        </button> */}
+        <div className="flex justify-between">
+          <div>
+            <p className="text-black font-bold">Survey Details</p>
+            <p>Look down all the survey details</p>
+          </div>
           <button
-            onClick={onClose}
-            className="absolute top-8 right-7 text-gray-400 hover:text-blue-600 cursor-pointer text-xl"
+            onClick={() => router.back()}
+            className="py-2 rounded-md px-4 bg-blue-600 text-white mb-8"
           >
-            <X />
+            Go Back
           </button>
+        </div>
 
-          <h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-            <ArrowDownUp size={20} /> View Survey details
-          </h2>
-          {isLoading ? (
-            <p className="flex justify-center px-10 py-10 text-gray-700 text-sm">
-              Loading...
-            </p>
-          ) : (
-            <>
-              <div className="overflow-y-auto max-h-[70vh] py-8 ">
-                <form className="space-y-6 text-left text-sm">
-                  {data?.data.field.map((field, index) => (
-                    <div key={index}>
-                      <label className="block text-gray-700 mb-1 font-medium">
-                        {field.label}
-                        {field.required && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
-                      </label>
-                      {renderField(field, index)}
-                    </div>
-                  ))}
-                </form>
-              </div>
-            </>
-          )}
+        <div className="flex flex-col gap-2 bg-blue-50 rounded-b-md  p-4 mb-1">
+          <p>Survey Name</p>
+          <p className="text-black font-bold">{data?.data.surveyName}</p>
+        </div>
+        <div className="flex flex-col gap-2 bg-blue-50 rounded-b-md  p-4">
+          <p>Survey Description</p>
+          <p className="text-black font-bold">{data?.data.surveyDescription}</p>
+        </div>
+
+        <p className="text-black font-bold mt-8 mb-4">Survey Fields</p>
+        <div className="flex flex-col gap-4">
+          {data?.data.field.map((field, index) => (
+            <div key={index}>
+              <label className="block text-gray-700 mb-1 font-medium">
+                {field.label}
+                {field.required && <span className="text-red-500 ml-1">*</span>}
+              </label>
+              {renderField(field, index)}
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </DashboardLayout>
   );
 };
 
-export default ViewSurveyDetails;
+export default SurveyDetailsPage;
