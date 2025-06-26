@@ -1,9 +1,7 @@
-import Pagination from "@/app/components/Pagination";
 import { SurveyListItem } from "@/app/lib/type";
 import { formattedDate } from "@/app/utils/tools";
 import { Eye, MoreVertical } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ImFileEmpty } from "react-icons/im";
 

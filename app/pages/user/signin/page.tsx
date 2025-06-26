@@ -13,7 +13,6 @@ import ForgotPasswordCode from "../../../components/user/ForgotPasswordCode";
 import ResetPassword from "../../../components/user/ResetPassword";
 import { signInService } from "../../../services/user/userService";
 import { validateSignIn } from "../validation/userValidation";
-import { Button } from "@radix-ui/themes";
 
 export default function SignInPage() {
   const [openReset, setOpenReset] = useState(false);

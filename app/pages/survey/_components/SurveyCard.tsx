@@ -1,6 +1,5 @@
-import { Album } from "lucide-react";
-import classNames from "classnames";
 import { DashboardMenu } from "@/app/lib/type";
+import classNames from "classnames";
 
 type Props = {
   data: DashboardMenu;

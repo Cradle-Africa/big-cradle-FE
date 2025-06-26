@@ -1,4 +1,5 @@
 "use client";
+import Pagination from "@/app/components/Pagination";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
 import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
@@ -10,20 +11,18 @@ import {
   FolderOpenDot,
   Plus,
   ShieldBan,
-  ShieldCheck,
-  User,
+  ShieldCheck
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import SurveyCard from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
 import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
-import Pagination from "@/app/components/Pagination";
-import SurveyCard from "./_components/SurveyCard";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);

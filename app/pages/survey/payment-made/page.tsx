@@ -1,15 +1,14 @@
 "use client";
 
-import axios from "@/app/lib/axios";
 import DashboardLayout from "@/app/DashboardLayout";
+import axios from "@/app/lib/axios";
+import { formattedDate } from "@/app/utils/tools";
+import { Verified } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useVerifySurveyPayment } from "../_features/hooks";
 import SurveyPageLoading from "../loading";
-import toast from "react-hot-toast";
-import { Verified } from "lucide-react";
-import { Props } from "recharts/types/container/Surface";
-import { formattedDate } from "@/app/utils/tools";
 
 const PaymentMadePage = () => {
   const searchParams = useSearchParams();
