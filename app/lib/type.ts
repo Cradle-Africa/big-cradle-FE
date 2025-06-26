@@ -199,6 +199,9 @@ export type SurveyListField = {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e6e6d7e (Build the survey stepper)
 export type FlutterWavePaymentSubmit = {
   tx_ref: string;
   amount: number;
@@ -210,8 +213,16 @@ export type FlutterWavePaymentSubmit = {
   };
   customizations: {
     title: string;
+<<<<<<< HEAD
     description?: string;
   };
 };
 =======
 >>>>>>> f134ea7 (Display the list of surveys)
+=======
+    description: string;
+  };
+};
+
+
+>>>>>>> e6e6d7e (Build the survey stepper)

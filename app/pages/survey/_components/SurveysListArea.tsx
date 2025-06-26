@@ -1,19 +1,14 @@
 import { SurveyListItem } from "@/app/lib/type";
-<<<<<<< HEAD
 import { formatDate } from "@/app/utils/formatDate";
 import { Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ViewSurveyDetails from "./ViewSurveyDetails";
-=======
-import SurveysListTable from "./SurveysListTable";
->>>>>>> f134ea7 (Display the list of surveys)
 
 type Props = {
   data: SurveyListItem[];
 };
 
 const SurveysListArea = ({ data }: Props) => {
-<<<<<<< HEAD
   const [openViewSurveyDetails, setOpenViewSurveyDetails] = useState(false);
   
   //   const [editingDataPoint, setEditingDataPoint] = useState(false);
@@ -180,11 +175,6 @@ const SurveysListArea = ({ data }: Props) => {
               onLimitChange={onLimitChange}
             />
           )} */}
-=======
-  return (
-    <div className="my-8">
-      <SurveysListTable data={data}/>
->>>>>>> f134ea7 (Display the list of surveys)
     </div>
   );
 };
