@@ -1,21 +1,12 @@
 "use client";
 
-import axios from "@/app/lib/axios";
-import { DataPointForm, Field, FieldType, Survey } from "@/app/lib/type";
+import { DataPointForm, Field, FieldType } from "@/app/lib/type";
 import { toCamelCase } from "@/app/utils/caseFormat";
-import {
-  getBusinessId,
-  getEmployeeUserId,
-  getUser,
-} from "@/app/utils/user/userData";
-import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FieldPreview from "../../flywheel/_components/FieldPreview";
 import SelectOptionManager from "../../flywheel/_components/SelectOptionManager";
-import { useCreateSurvey } from "../_features/hooks";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 type Props = {
   form: DataPointForm;
@@ -91,8 +82,6 @@ const NewSurveyQuestionsForm = ({
     }));
     setNewOptions((prev) => [...prev, ""]);
   };
-
-  const queryClient = useQueryClient();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

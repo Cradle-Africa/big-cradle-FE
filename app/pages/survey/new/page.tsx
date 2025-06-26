@@ -21,8 +21,6 @@ const NewSurveyPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const paramSurvey = searchParams.get("survey");
-  const surveyId = searchParams.get("surveyId");
-  const [isUpdatingSurvey, setIsUpdatingSurvey] = useState(false);
 
   const [form, setForm] = useState<DataPointForm>({
     dataPointId: "",
@@ -33,7 +31,7 @@ const NewSurveyPage = () => {
     register,
     watch,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SurveySchema>({
     resolver: zodResolver(surveySchema),
   });
