@@ -1,8 +1,8 @@
 import {
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
-  SingleSurveyResponse,
   PaymentVerificationResponse,
+  SingleSurveyResponse,
   Survey,
   SurveyListResponse,
   SurveySchema,

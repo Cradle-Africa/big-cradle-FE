@@ -147,6 +147,7 @@ export type SurveyListResponse = {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export type FlutterwaveHostedLinkResponse = {
   status: string;
   message: string;
@@ -163,6 +164,14 @@ export type SingleSurveyResponse = {
 
 =======
 >>>>>>> f134ea7 (Display the list of surveys)
+=======
+export type SingleSurveyResponse = {
+  success: boolean;
+  message: string;
+  data: SurveyListItem
+};
+
+>>>>>>> 4027abe (Display survey details)
 export type SurveyListItem = {
   id: string;
   businessUserId: string;
