@@ -1,9 +1,13 @@
-import React from 'react'
+import DashboardLayout from "@/app/DashboardLayout";
 
 const LoadingNewSurveyPage = () => {
   return (
-    <div>Loading...</div>
-  )
+      <DashboardLayout>
+        <div>
+          <p>Loading...</p>
+        </div>
+      </DashboardLayout>
+    );
 }
 
 export default LoadingNewSurveyPage
