@@ -47,7 +47,6 @@ export const useFetchSurvey = ({
   axios,
   businessUserId,
   page,
-  onSuccess,
 }: UseFetchSurvey) => {
   return useQuery<SurveyListResponse>({
     queryKey: ["surveys", businessUserId, page],

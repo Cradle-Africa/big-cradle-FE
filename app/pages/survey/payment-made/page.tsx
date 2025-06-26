@@ -18,7 +18,7 @@ const PaymentMadePage = () => {
     isPending: isVerifing,
     data: data,
     isSuccess: isVerifyPaymentSuccess,
-    isError,
+    // isError,
   } = useVerifySurveyPayment({
     axios,
   });
@@ -47,7 +47,13 @@ const PaymentMadePage = () => {
         toast.error(data.message);
       }
     }
-  }, [txRef, verifyPayementFunc]);
+  }, [
+    txRef,
+    data?.message,
+    data?.paymentResult.data.status,
+    isVerifyPaymentSuccess,
+    verifyPayementFunc,
+  ]);
 
   if (isVerifing) return <SurveyPageLoading />;
 

@@ -1,7 +1,7 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
+import { SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
@@ -12,10 +12,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import {
-  useFetchDataEntries,
-  useFetchPipelines,
-} from "../flywheel/_features/hook";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
 import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
@@ -27,16 +23,11 @@ const SurveyPage = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [entriesPage] = useState(1);
-  const [entriesLimit] = useState(10);
-  const [surveyDashBoardItems, setSurveyDashBoardItems] =
-    useState<DashboardMenu[]>();
+  // const [surveyDashBoardItems, setSurveyDashBoardItems] =
+  //   useState<DashboardMenu[]>();
   // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
 
   const surveyStatus = searchParam.get("status");
-
-  const [pipelinesPage] = useState(1);
-  const [pipelinesLimit] = useState(10);
 
   const user = getUser();
 
@@ -53,7 +44,7 @@ const SurveyPage = () => {
 
   const {
     data: surveysListResponse,
-    isSuccess,
+    // isSuccess,
     isLoading,
   } = useFetchSurvey({
     axios,
@@ -106,25 +97,14 @@ const SurveyPage = () => {
         toast.error("Error when making payments");
       }
     }
-  }, [txRef, verifyPayementFunc]);
+  }, [
+    txRef,
+    verifyPayementFunc,
+    isVerifyPaymentSuccess,
+    paymentMadeData?.paymentResult.data.status,
+  ]);
 
-  const { data: dataPointsData } = useFetchPipelines({
-    axios,
-    queryParams: {
-      page: pipelinesPage,
-      limit: pipelinesLimit,
-    },
-  });
 
-  const { data: dataEntries } = useFetchDataEntries({
-    axios,
-    queryParams: {
-      page: entriesPage,
-      limit: entriesLimit,
-    },
-  });
-
-  const dataentries = dataEntries?.data ?? [];
   // const paginationDataEntries = dataEntries?.pagination ?? {
   //   page: 1,
   //   limit: 10,
@@ -132,7 +112,6 @@ const SurveyPage = () => {
   //   total: 0,
   // };
 
-  const pipelines = dataPointsData?.dataPoint ?? [];
   // const paginationDataPoints = dataPointsData?.pagination ?? {
   //   page: 1,
   //   limit: 10,

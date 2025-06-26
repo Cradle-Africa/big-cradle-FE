@@ -50,7 +50,6 @@ const SuperAdminDashboard = () => {
             title={menu.title}
             subTitle={menu.subTitle }
             value={menu.value}
-            percentage={menu.percentage}
             icon={<UsersRound />}
             isHighLighted={index === 0}
           />
@@ -66,21 +65,18 @@ const data: DashboardMenu[]=[
     title: 'Pipelines',
     subTitle: 'Total pipelines',
     value: '10',
-    percentage: '56',
     icon: <ArrowDownUp />,    
   },
   {
     title: 'Data points',
     subTitle: 'Total data points',
     value: '50',
-    percentage: '70',
     icon: <Database/>,    
   },
   {
     title: 'Surveys',
     subTitle: 'Total survey',
     value: '30',
-    percentage: '60',
     icon: <Scan/>,    
   }
 ]
