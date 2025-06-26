@@ -66,16 +66,6 @@ const NewSurveyPage = () => {
     }
   }, [surveyStatus, surveysListResponse?.survey]);
 
-  // const {
-  //   data: surveysListResponse,
-  //   isLoading,
-  //   error,
-  // } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
-
-  // if (isLoading) return <LoadingNewSurveyPage />;
-
-  // if (error) return;
-
   return (
     <DashboardLayout>
       {open && (

@@ -12,14 +12,19 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useVerifySurvey } from "./_features/hooks";
+import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
 import toast from "react-hot-toast";
+import LoadingNewSurveyPage from "./new/loading";
+import { getUser } from "@/app/utils/user/userData";
+import SurveysListArea from "./_components/SurveysListArea";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
   const searchParam = useSearchParams();
   const menuRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
+
+  const user = getUser();
 
   const txRef = searchParams.get("tx_ref");
 
@@ -30,6 +35,12 @@ const SurveyPage = () => {
   } = useVerifySurvey({
     axios,
   });
+
+  const {
+    data: surveysListResponse,
+    isLoading,
+    error,
+  } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -63,6 +74,8 @@ const SurveyPage = () => {
   }, [isError]);
 
   if (isVerifing) return <p>Is Verifing...</p>;
+
+  if (isLoading) return <LoadingNewSurveyPage />;
 
   return (
     <DashboardLayout>
@@ -164,7 +177,7 @@ const SurveyPage = () => {
           ))}
         </div>
         {/* <SurveyTable /> */}
-        <SurveysListArea data={filteredSurveys || []} />
+        <SurveysListArea data={surveysListResponse?.survey || []} />
       </div>
     </DashboardLayout>
   );
