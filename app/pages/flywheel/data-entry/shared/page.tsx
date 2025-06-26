@@ -170,6 +170,7 @@ const DataEntryPage = () => {
         const payload: DataEntry = {
             businessUserId: datapoints.businessUserId ?? null,
             employeeUserId: datapoints.employeeUserId ?? null,
+            dataPointId: datapoints.dataPointId,
             fieldId: decodedId,
             data: cleanedData, // data fields objects
         };

@@ -140,6 +140,7 @@ export interface DataEntry {
   businessUserId: string | null;
   employeeUserId: string | null;
   fieldId: string;
+  dataPointId: string;
   data: Record<string, any>;
   createdAt?: string;
 }
