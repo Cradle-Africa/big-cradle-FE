@@ -10,8 +10,8 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
     let message = "";
 
     switch (statusCode) {
-      case 409:
-        message = "Conflict";
+      case 400:
+        message = "The Survey with this name already exist. Use another name";
         break;
 
       default:

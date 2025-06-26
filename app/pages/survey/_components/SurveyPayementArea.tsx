@@ -122,7 +122,12 @@ const SurveyPayementArea = ({
         // verifyPayment(createdSurvey.data.tx_ref);
       },
       onError: (error: any) => {
-        toast.error(error.message || "Failed to creat the survey");
+        console.error("Create survey error:", error);
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to create the survey";
+        toast.error(message);
       },
     });
   };
