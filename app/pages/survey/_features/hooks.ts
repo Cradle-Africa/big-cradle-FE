@@ -1,13 +1,37 @@
-import { SingleSurveyResponse, Survey, SurveyListResponse, SurveySchema } from "@/app/lib/type";
+import {
+  FlutterwaveHostedLinkResponse,
+  FlutterWavePaymentSubmit,
+  SingleSurveyResponse,
+  Survey,
+  SurveyListItem,
+  SurveyListResponse,
+  SurveySchema,
+} from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { AxiosInstance } from "axios";
-import { createSurvey, fetchSurvey, fetchSurveys } from "./api";
+import axios, { AxiosInstance } from "axios";
+import {
+  createSurvey,
+  fetchSurvey,
+  fetchSurveys,
+  surveyPay,
+  verifySurvey,
+} from "./api";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { surveySchema } from "@/app/lib/validationSchemas";
 
+export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<
+    FlutterwaveHostedLinkResponse,
+    Error,
+    FlutterWavePaymentSubmit
+  >({
+    mutationFn: (data: FlutterWavePaymentSubmit) => surveyPay(axios, data),
+  });
+};
+
 export const useCreateSurvey = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<void, Error, Survey>({
+  return useMutation<SingleSurveyResponse, Error, Survey>({
     mutationFn: (data: Survey) => createSurvey(axios, data),
   });
 };
@@ -30,11 +54,27 @@ export const useFetchSurvey = ({
     retry: 3,
   });
 };
+export const useVerifySurvey = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation({
+    mutationFn: (txRef: string) => verifySurvey(axios, txRef),
+  });
+};
+
+// export const useVerifySurvey = ({
+//   enabled,
+//   axios,
+// }: UseVerifySurveySurvey) => {
+//   return useQuery({
+//     queryKey: ["verify-survey"],
+//     queryFn: (txRef : string) => verifySurvey(axios, txRef),
+//     enabled,
+//   });
+// };
 
 type UseFetchSingleSurvey = {
   axios: AxiosInstance;
   surveyId: string;
-  enabled : boolean;
+  enabled: boolean;
 };
 
 export const useFetchSingleSurvey = ({
@@ -47,7 +87,7 @@ export const useFetchSingleSurvey = ({
     queryFn: () => fetchSurvey(axios, surveyId),
     staleTime: 60 * 1000 * 60,
     retry: 3,
-    enabled
+    enabled,
   });
 };
 

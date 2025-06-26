@@ -1,6 +1,7 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
 import { Plus } from "lucide-react";
+import axios from "@/app/lib/axios";
 import Card from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
@@ -10,10 +11,24 @@ import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useVerifySurvey } from "./_features/hooks";
+import toast from "react-hot-toast";
 
 const SurveyCard = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+
+  const txRef = searchParams.get("tx_ref");
+
+  const {
+    mutateAsync: verifyPayment,
+    isPending: isVerifing,
+    isError,
+  } = useVerifySurvey({
+    axios,
+  });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -25,6 +40,28 @@ const SurveyCard = () => {
 
     return () => document.removeEventListener("mousedown", handler);
   }, [setOpen]);
+
+  const verifyPayementFunc = async () => {
+    try {
+      await verifyPayment(txRef || "");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    try {
+      if (txRef) verifyPayementFunc();
+    } catch (error: any) {
+      toast.error(`Error ---> ${error.message}`);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isError) toast.error(`Error ---> An error occured`);
+  }, [isError]);
+
+  if (isVerifing) return <p>Is Verifing...</p>;
 
   return (
     <DashboardLayout>

@@ -18,29 +18,32 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  name?: string;
-  description?: string;
+  form: DataPointForm;
+  setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
 };
 
-const NewSurveyQuestionsForm = ({ name, description }: Props) => {
+const NewSurveyQuestionsForm = ({
+  form,
+  setForm,
+}: Props) => {
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
-  const [form, setForm] = useState<DataPointForm>({
-    dataPointId: "",
-    field: [],
-  });
-  const user = getUser();
+  // const [form, setForm] = useState<DataPointForm>({
+  //   dataPointId: "",
+  //   field: [],
+  // });
+  // const user = getUser();
 
-  let businessUserId: string | null = null;
+  // let businessUserId: string | null = null;
 
-  if (user?.role === "business") {
-    businessUserId = getBusinessId() || null;
-  } else {
-    businessUserId = user?.businessUserId || null;
-  }
+  // if (user?.role === "business") {
+  //   businessUserId = getBusinessId() || null;
+  // } else {
+  //   businessUserId = user?.businessUserId || null;
+  // }
 
-  const employeeUserId = getEmployeeUserId();
-  const { mutate: createSurvey, isPending } = useCreateSurvey({ axios });
+  // const employeeUserId = getEmployeeUserId();
+  
 
   const handleFieldChange = <K extends keyof Field>(
     index: number,
@@ -95,26 +98,7 @@ const NewSurveyQuestionsForm = ({ name, description }: Props) => {
     e.preventDefault();
     // console.log(JSON.stringify({ name, description }));
 
-    const payload: Survey = {
-      businessUserId,
-      employeeUserId,
-      surveyName: "name",
-      amount: 100,
-      surveyDescription: "description",
-      field: form.field,
-    };
-    createSurvey(payload, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["pipelines"] });
-        setForm({ dataPointId: "", field: [] }); // clear the form
-        setNewOptions([]);
-        toast.success("Survey created successfully");
-        // setCreatingDataPoint(false);
-      },
-      onError: (error: any) => {
-        toast.error(error.message || "Failed to creat the survey");
-      },
-    });
+    
   };
 
   return (
@@ -232,14 +216,14 @@ const NewSurveyQuestionsForm = ({ name, description }: Props) => {
           + Add
         </button>
 
-        <button
+        {/* <button
           type="submit"
           //   disabled={isPending}
           className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
         >
           <Check size={16} className="mr-1" />
           {isPending ? "Submitting..." : "Submit"}
-        </button>
+        </button> */}
 
         <button
           onClick={() => router.push(`/pages/survey/new?survey=survey-payment`)}
