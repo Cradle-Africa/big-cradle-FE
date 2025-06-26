@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchSingleDataPoint } from "../_features/hook";
+import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
 import { X, ArrowDownUp } from "lucide-react";
 
 interface PopUpProps {
@@ -18,6 +18,12 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 	const { data: pipeline, isLoading } = useFetchSingleDataPoint({
 		axios,
 		id: uniqueId,
+		enabled: openViewDataPoint,
+	});
+
+	const { data: singlePipeline } = useFetchSinglePipeline({
+		axios,
+		id: pipeline?.dataPointId || '',
 		enabled: openViewDataPoint,
 	});
 
@@ -108,45 +114,45 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 		}
 	};
 
-	if (!openViewDataPoint ) return ( null )
+	if (!openViewDataPoint) return (null)
 	return (
-			<>
-				<div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
+		<>
+			<div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
 
-				<div className="fixed z-50 inset-0 flex items-center justify-center px-4">
-					<div className="relative w-full bg-white rounded-xl shadow-xl max-w-2xl p-5">
-						<button
-							onClick={onClose}
-							className="absolute top-8 right-7 text-gray-400 hover:text-blue-600 cursor-pointer text-xl"
-						>
-							<X />
-						</button>
+			<div className="fixed z-50 inset-0 flex items-center justify-center px-4">
+				<div className="relative w-full bg-white rounded-xl shadow-xl max-w-2xl p-5">
+					<button
+						onClick={onClose}
+						className="absolute top-8 right-7 text-gray-400 hover:text-blue-600 cursor-pointer text-xl"
+					>
+						<X />
+					</button>
 
-						<h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-							<ArrowDownUp size={20} /> View Data Point
-						</h2>
-						{isLoading ? (
-							<p className="flex justify-center px-10 py-10 text-gray-700 text-sm">Loading...</p>
-						) : (
-							<>
-								<div className="overflow-y-auto max-h-[70vh] py-8 ">
+					<h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
+						<ArrowDownUp size={20} /> View Data Point
+					</h2>
+					{isLoading ? (
+						<p className="flex justify-center px-10 py-10 text-gray-800 text-sm">Loading...</p>
+					) : (
+						<>
+							<h2>{singlePipeline?.dataPointName }</h2>
+							<div className="overflow-y-auto max-h-[70vh] py-8 ">
+								<form className="space-y-6 text-left text-sm">
+									{pipeline?.field.map((field, index) => (
+										<div key={index}>
+											<label className="block text-gray-700 mb-1 font-medium">
+												{field.label}
+												{field.required && (
+													<span className="text-red-500 ml-1">*</span>
+												)}
+											</label>
+											{renderField(field, index)}
+										</div>
+									))}
+								</form>
+							</div>
 
-									<form className="space-y-6 text-left text-sm">
-										{pipeline?.field.map((field, index) => (
-											<div key={index}>
-												<label className="block text-gray-700 mb-1 font-medium">
-													{field.label}
-													{field.required && (
-														<span className="text-red-500 ml-1">*</span>
-													)}
-												</label>
-												{renderField(field, index)}
-											</div>
-										))}
-									</form>
-								</div>
-
-								{/* <div className="pt-2 border-t border-gray-200 mt-6">
+							{/* <div className="pt-2 border-t border-gray-200 mt-6">
 									<button
 										type="button"
 										className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
@@ -157,14 +163,14 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 										Edit Data Point
 									</button>
 								</div> */}
-							</>
+						</>
 
-						)}
+					)}
 
-					</div>
 				</div>
-			</>
-		
+			</div>
+		</>
+
 	);
 };
 

@@ -29,7 +29,7 @@ const DataEntries = ({
                     <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Pipeline name</th>
+                            {/* <th className="px-6 py-3 text-left text-sm font-semibold">Pipeline name</th> */}
                             <th className="px-6 py-3 text-left text-sm font-semibold">Field Values</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Created On</th>
                         </tr>
@@ -38,7 +38,7 @@ const DataEntries = ({
                         {data.map((entry, index) => (
                             <tr key={index} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 font-medium">{index + 1}</td>
-                                <td className="px-6 py-4 font-medium">Pipeline name</td>
+                                {/* <td className="px-6 py-4 font-medium">Pipeline name</td> */}
                                 <td className="px-6 py-4">
                                     <table className="text-md">
                                         <tbody>

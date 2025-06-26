@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchSingleDataPoint } from "../../_features/hook";
+import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../../_features/hook";
 import { useCreateDataEntry } from "../../_features/hook"; // Assuming same location
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -18,6 +18,12 @@ const DataEntryPage = () => {
     const { data: datapoints, isLoading } = useFetchSingleDataPoint({
         axios,
         id: decodedId,
+        enabled: !!decodedId,
+    });
+
+    const { data: singlePipeline } = useFetchSinglePipeline({
+        axios,
+        id: datapoints?.dataPointId || '',
         enabled: !!decodedId,
     });
 
@@ -214,7 +220,7 @@ const DataEntryPage = () => {
                         />
                     </div>
                     <div className="flex text-blue-600 text-xl mx-5 px-3 py-2">
-                        {"Data Pipeline"}
+                        { singlePipeline?.dataPointName }
                     </div>
 
 
