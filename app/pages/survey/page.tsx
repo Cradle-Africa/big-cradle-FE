@@ -1,12 +1,18 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { SurveyListItem } from "@/app/lib/type";
+import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
-import { Plus } from "lucide-react";
+import {
+  FolderOpenDot,
+  Plus,
+  ShieldBan,
+  ShieldCheck,
+  User,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -17,6 +23,7 @@ import SurveyTable from "./_components/SurveyTable";
 import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 import Pagination from "@/app/components/Pagination";
+import SurveyCard from "./_components/SurveyCard";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -24,9 +31,8 @@ const SurveyPage = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const [surveyDashBoardItems, setSurveyDashBoardItems] =
-  //   useState<DashboardMenu[]>();
-  // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
+  const [surveyDashBoardItems, setSurveyDashBoardItems] =
+    useState<DashboardMenu[]>();
 
   const surveyStatus = searchParam.get("status");
   const page = searchParams.get("page") ?? "";
@@ -52,7 +58,7 @@ const SurveyPage = () => {
 
   const {
     data: surveysListResponse,
-    // isSuccess,
+    isSuccess,
     isLoading,
   } = useFetchSurvey({
     axios,
@@ -126,21 +132,40 @@ const SurveyPage = () => {
   //   total: 0,
   // };
 
-  // useEffect(() => {
-  //   if (isSuccess && surveysListResponse) {
-  //     const allSurveys = surveysListResponse.survey.length;
-  //     const activeSurveys = surveysListResponse.survey.filter(
-  //       (v) => v.isActive
-  //     ).length;
-  //     const inActiveSurveys = surveysListResponse.survey.filter(
-  //       (v) => !v.isActive
-  //     ).length;
+  useEffect(() => {
+    if (isSuccess && surveysListResponse) {
+      const allSurveys = surveysListResponse.pagination.total;
+      const activeSurveys = surveysListResponse.survey.filter(
+        (v) => v.isActive
+      ).length;
+      const inActiveSurveys = surveysListResponse.survey.filter(
+        (v) => !v.isActive
+      ).length;
 
-  //     const dashBoardValue = [];
+      const dashBoardValue: DashboardMenu[] = [
+        {
+          value: `${allSurveys}`,
+          title: "All surveys",
+          subTitle: "Amount paid out to contributors",
+          icon: <FolderOpenDot size={16} color="blue" />,
+        },
+        {
+          value: `${activeSurveys}`,
+          title: "Active surveys",
+          subTitle: "Amount paid out to contributors",
+          icon: <ShieldCheck size={16} color="blue" />,
+        },
+        {
+          value: `${inActiveSurveys}`,
+          title: "Inactive surveys",
+          subTitle: "Amount paid out to contributors",
+          icon: <ShieldBan size={16} color="blue" />,
+        },
+      ];
 
-  //     setSurveyDashBoardItems(dashBoardValue);
-  //   }
-  // }, [isSuccess, surveysListResponse]);
+      setSurveyDashBoardItems(dashBoardValue);
+    }
+  }, [isSuccess, surveysListResponse]);
 
   useEffect(() => {
     if (isError) toast.error(`An error occured when verifing your payment`);
@@ -217,11 +242,15 @@ const SurveyPage = () => {
         </button>
       </div>
       {/* Build the cards area */}
-      {/* <div className="flex gap-6 mt-8">
-        {[...Array(3)].map((_, index) => (
-          <SurveyCard key={`${index}`} isHighLighted={index === 0} />
+      <div className="flex gap-6 mt-8">
+        {surveyDashBoardItems?.map((menu, index) => (
+          <SurveyCard
+            key={`${menu.title}`}
+            data={menu}
+            isHighLighted={index === 0}
+          />
         ))}
-      </div> */}
+      </div>
 
       {/* \\\\ */}
       {/* <Overview
@@ -241,8 +270,6 @@ const SurveyPage = () => {
             />
           ))}
         </div>
-        {/* <SurveyTable /> */}
-        {/* <SurveysListArea data={filteredSurveys || []} /> */}
         <SurveyTable data={filteredSurveys || []} />
         <Pagination
           pageSize={10}

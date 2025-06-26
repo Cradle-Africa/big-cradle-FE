@@ -1,7 +1,13 @@
 import { Album } from "lucide-react";
 import classNames from "classnames";
+import { DashboardMenu } from "@/app/lib/type";
 
-const SurveyCard = ({ isHighLighted }: { isHighLighted: boolean }) => {
+type Props = {
+  data: DashboardMenu;
+  isHighLighted: boolean;
+};
+
+const SurveyCard = ({ isHighLighted, data }: Props) => {
   return (
     <div
       className={classNames({
@@ -11,9 +17,9 @@ const SurveyCard = ({ isHighLighted }: { isHighLighted: boolean }) => {
       })}
     >
       <div className="flex justify-between items-center">
-        <p>Total Surveys</p>
+        <p>{data.title}</p>
         <div className="rounded-full border border-[#3352FF] bg-blue-100 p-2">
-          <Album size={16} color="blue" />
+          {data.icon}
         </div>
       </div>
       <span
@@ -23,13 +29,13 @@ const SurveyCard = ({ isHighLighted }: { isHighLighted: boolean }) => {
           "text-white": isHighLighted,
         })}
       >
-        67
+        {data.value}
       </span>
       <div className="flex gap-2 items-center">
-        <div className="border-1 border-green-500 bg-green-100 rounded-[4px] ">
+        {/* <div className="border-1 border-green-500 bg-green-100 rounded-[4px] ">
           <span className="text-[12px] px-2 text-green-600">10.2%</span>
-        </div>
-        <span className="text-[13px]">Amount paid out to contributors</span>
+        </div> */}
+        <span className="text-[13px]">{data.subTitle}</span>
       </div>
     </div>
   );
