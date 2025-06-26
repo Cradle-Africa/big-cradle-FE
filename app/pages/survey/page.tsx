@@ -54,11 +54,11 @@ const SurveyPage = () => {
     page: 1,
   });
 
-  const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
   const filteredSurveys = useMemo(() => {
+    const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
     if (!surveyStatus || surveyStatus === "All") return surveys;
     return surveys.filter((survey) => survey.paymentStatus === surveyStatus);
-  }, [surveyStatus, surveys]);
+  }, [surveyStatus, surveysListResponse?.survey]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -87,14 +87,13 @@ const SurveyPage = () => {
     }
   }, [txRef, verifyPayementFunc]);
 
-  const { isLoading: isLoadingDataPoints, data: dataPointsData } =
-    useFetchPipelines({
-      axios,
-      queryParams: {
-        page: pipelinesPage,
-        limit: pipelinesLimit,
-      },
-    });
+  const { data: dataPointsData } = useFetchPipelines({
+    axios,
+    queryParams: {
+      page: pipelinesPage,
+      limit: pipelinesLimit,
+    },
+  });
 
   const { data: dataEntries } = useFetchDataEntries({
     axios,
@@ -105,26 +104,26 @@ const SurveyPage = () => {
   });
 
   const dataentries = dataEntries?.data ?? [];
-  const paginationDataEntries = dataEntries?.pagination ?? {
-    page: 1,
-    limit: 10,
-    pages: 1,
-    total: 0,
-  };
+  // const paginationDataEntries = dataEntries?.pagination ?? {
+  //   page: 1,
+  //   limit: 10,
+  //   pages: 1,
+  //   total: 0,
+  // };
 
   const pipelines = dataPointsData?.dataPoint ?? [];
-  const paginationDataPoints = dataPointsData?.pagination ?? {
-    page: 1,
-    limit: 10,
-    pages: 1,
-    total: 0,
-  };
+  // const paginationDataPoints = dataPointsData?.pagination ?? {
+  //   page: 1,
+  //   limit: 10,
+  //   pages: 1,
+  //   total: 0,
+  // };
 
   useEffect(() => {
-    if (isError) toast.error(`Error ---> An error occured`);
+    if (isError) toast.error(`An error occured when verifing your payment`);
   }, [isError, txRef, verifyPayementFunc]);
 
-  if (isVerifing) return <p>Is Verifing...</p>;
+  if (isVerifing) return <p>Is Verifing payment...</p>;
 
   if (isLoading) return <LoadingNewSurveyPage />;
 

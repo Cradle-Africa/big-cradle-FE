@@ -1,9 +1,8 @@
 import { SurveyListItem } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, Pencil, Share2 } from "lucide-react";
+import { Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ViewSurveyDetails from "./ViewSurveyDetails";
-import { useRouter } from "next/navigation";
 
 type Props = {
   data: SurveyListItem[];
@@ -11,7 +10,7 @@ type Props = {
 
 const SurveysListArea = ({ data }: Props) => {
   const [openViewSurveyDetails, setOpenViewSurveyDetails] = useState(false);
-  const router = useRouter();
+  
   //   const [editingDataPoint, setEditingDataPoint] = useState(false);
   //   const [shareDataPoint, setShareDataPoint] = useState(false);
 
@@ -22,10 +21,10 @@ const SurveysListArea = ({ data }: Props) => {
   };
 
 
-  const handleShareDataPoint = (id: any) => {
-    //   setShareDataPoint(true);
-    setUniqueDataPoint(id);
-  };
+  // const handleShareDataPoint = (id: any) => {
+  //   //   setShareDataPoint(true);
+  //   setUniqueDataPoint(id);
+  // };
   const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
   const optionRef = useRef<HTMLUListElement | null>(null);
 
