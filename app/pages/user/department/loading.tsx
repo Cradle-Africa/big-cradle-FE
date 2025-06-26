@@ -1,9 +1,13 @@
-import React from 'react'
+import DashboardLayout from "@/app/DashboardLayout";
 
 const DepartmentLosding = () => {
-  return (
-    <div className='flex items-center justify-center'>Loading ...</div>
-  )
+   return (
+      <DashboardLayout>
+        <div>
+          <p>Loading...</p>
+        </div>
+      </DashboardLayout>
+    );
 }
 
 export default DepartmentLosding
