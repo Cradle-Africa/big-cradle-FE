@@ -27,11 +27,6 @@ const BusinessDashboard = () => {
         user={user}
         kycReviewReason={user?.kycReviewReason || ""}
       />
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> dev
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
         {data.map((menu, index) => (
           <BusinessCard

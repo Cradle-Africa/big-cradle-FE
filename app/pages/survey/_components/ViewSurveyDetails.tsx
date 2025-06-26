@@ -18,7 +18,6 @@ const ViewSurveyDetails: React.FC<PopUpProps> = ({
   const { data, isLoading } = useFetchSingleSurvey({
     axios,
     surveyId,
-    enabled: openViewDataSurveyDetails,
   });
 
   const renderField = (field: any, index: number) => {

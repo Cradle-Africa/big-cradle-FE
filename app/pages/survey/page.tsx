@@ -249,11 +249,7 @@ const SurveyPage = () => {
             isHighLighted={index === 0}
           />
         ))}
-      </div> */}
-      {/* <Overview
-        pipelines={pipelines?.length}
-        dataentries={dataentries?.length}
-      /> */}
+      </div>
 
       {/* \\\\ */}
       {/* <Overview
@@ -265,12 +261,6 @@ const SurveyPage = () => {
         <p className="font-bold text-black">Survey Table List</p>
         <div className="flex gap-4 my-4">
           {statuses.map((status) => (
-            // <SurveyStatusBadge
-            //   key={status}
-            //   isSelected={status === surveyStatus}
-            //   status={status}
-            //   onClick={() => router.push(`/pages/survey?status=${status}`)}
-            // />
             <SurveyStatus
               key={status}
               isSelected={status.toLowerCase() === surveyStatus}
