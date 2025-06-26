@@ -8,16 +8,12 @@ import {
 } from "@/app/lib/type";
 import { surveyPaymentSchema } from "@/app/lib/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  useCreateSurvey,
-  useSurveyPay,
-  useVerifySurvey,
-} from "../_features/hooks";
+import { useCreateSurvey, useSurveyPay } from "../_features/hooks";
 
 import {
   getBusinessId,
@@ -25,7 +21,6 @@ import {
   getUser,
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
-import { verifySurvey } from "../_features/api";
 
 type Props = {
   form: DataPointForm;
@@ -42,14 +37,8 @@ const SurveyPayementArea = ({
 }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [txRef, setTxRef] = useState("");
-  //   const [paymentInfos, setPaymentsInfos] = useState<FlutterWavePaymentSubmit>();
-  const { data, isPending } = useSurveyPay({ axios });
-  const {
-    mutateAsync: createSurvey,
-    data: createdSurvey,
-    isPending: isCreatingSurvey,
-  } = useCreateSurvey({ axios });
+  const { mutateAsync: createSurvey, isPending: isCreatingSurvey } =
+    useCreateSurvey({ axios });
 
   const { mutateAsync: makePayment, isPending: isMakingPayment } = useSurveyPay(
     { axios }
@@ -93,7 +82,8 @@ const SurveyPayementArea = ({
           },
         }
       );
-    } catch (error) {}
+    } finally {
+    }
   };
 
   const submitSurvey = async (data: SurveyPaymentSchema) => {
@@ -212,17 +202,17 @@ const SurveyPayementArea = ({
   );
 };
 
-const paymentMethods = [
-  "card",
-  "account",
-  "banktransfer",
-  "ussd",
-  "mpesa",
-  "ghana_mobilemoney",
-  "uganda_mobilemoney",
-  "rwanda_mobilemoney",
-  "barter",
-  "credit",
-];
+// const paymentMethods = [
+//   "card",
+//   "account",
+//   "banktransfer",
+//   "ussd",
+//   "mpesa",
+//   "ghana_mobilemoney",
+//   "uganda_mobilemoney",
+//   "rwanda_mobilemoney",
+//   "barter",
+//   "credit",
+// ];
 
 export default SurveyPayementArea;

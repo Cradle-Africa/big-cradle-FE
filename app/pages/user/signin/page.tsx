@@ -2,18 +2,17 @@
 import LoginImage from "@/app/components/LoginImage";
 import ForgotPassword from "@/app/components/user/ForgotPassword";
 import { addToken, addUser } from "@/app/utils/user/userData";
+import LogoWithText from "@/public/images/logo-with-text.png";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FcGoogle } from "react-icons/fc";
 import ForgotPasswordCode from "../../../components/user/ForgotPasswordCode";
 import ResetPassword from "../../../components/user/ResetPassword";
 import { signInService } from "../../../services/user/userService";
 import { validateSignIn } from "../validation/userValidation";
-import LogoWithText from "@/public/images/logo-with-text.png"
-import { useRouter } from "next/navigation"
 
 export default function SignInPage() {
   const [openReset, setOpenReset] = useState(false);

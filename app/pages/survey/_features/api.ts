@@ -79,11 +79,7 @@ export const verifySurvey = async (axios: AxiosInstance, txRef: string) => {
       `/survey-mgt/verify-survey-payment?tx_ref=${txRef}`
     );
     return res.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = "";
-    const customError = new Error(message);
-    throw customError;
+  } finally {
   }
 };
 
