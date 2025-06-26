@@ -77,7 +77,22 @@ export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => 
        
         return res.data.data;
     } catch (error: any) {
-        console.error("Fetch single data type error:", error);
+        console.error("Fetch single data error:", error);
+        return []
+    }
+};
+
+
+export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
+    try {
+        const res = await axiosWithoutAuth.get(`/data-point-mgt/data-point/${id}`, {
+            headers: {
+                Authorization: null, 
+            }});
+       
+        return res.data.data;
+    } catch (error: any) {
+        console.error("Fetch single pipeline error:", error);
         return []
     }
 };
@@ -205,7 +220,7 @@ export const createDataEntry = async (
     data: DataEntry
 ) => {
     try {
-        const res = await axios.post(`/data-point-mgt/pipeline-fields-entry`, data);
+        const res = await axiosWithoutAuth.post(`/data-point-mgt/pipeline-fields-entry`, data);
         return res.data;
     } catch (error: any) {
         const statusCode = error?.response?.status;
