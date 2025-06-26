@@ -1,6 +1,7 @@
 import { SurveyListItem } from "@/app/lib/type";
 import { formattedDate } from "@/app/utils/tools";
 import { Edit, Eye, MoreVertical } from "lucide-react";
+import { ImFileEmpty } from "react-icons/im";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -27,6 +28,14 @@ const SurveyTable = ({ data }: Props) => {
   const toggleMenu = (id: any) => {
     setOpenMenuId((prev) => (prev === id ? null : id));
   };
+
+  if (data.length < 1)
+    return (
+      <div className="flex flex-col items-center gap-5 justify-center py-8">
+        <ImFileEmpty />
+        <p>No Data</p>
+      </div>
+    );
 
   return (
     <div className="overflow-x-auto rounded-[8px] border border-gray-200">

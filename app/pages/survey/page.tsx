@@ -58,10 +58,11 @@ const SurveyPage = () => {
   const filteredSurveys = useMemo(() => {
     const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
     if (!surveyStatus || surveyStatus === "all") return surveys;
-    return surveys.filter(
-      (survey) =>
-        survey.paymentStatus.toLocaleLowerCase() === surveyStatus.toLowerCase()
-    );
+    if (surveyStatus.toLowerCase() === "active") {
+      return surveys.filter((survey) => survey.isActive);
+    } else {
+      return surveys.filter((survey) => !survey.isActive);
+    }
   }, [surveyStatus, surveysListResponse?.survey]);
 
   useEffect(() => {
@@ -214,12 +215,6 @@ const SurveyPage = () => {
         <p className="font-bold text-black">Survey Table List</p>
         <div className="flex gap-4 my-4">
           {statuses.map((status) => (
-            // <SurveyStatusBadge
-            //   key={status}
-            //   isSelected={status === surveyStatus}
-            //   status={status}
-            //   onClick={() => router.push(`/pages/survey?status=${status}`)}
-            // />
             <SurveyStatus
               key={status}
               isSelected={status.toLowerCase() === surveyStatus}
@@ -232,7 +227,7 @@ const SurveyPage = () => {
         </div>
         {/* <SurveyTable /> */}
         {/* <SurveysListArea data={filteredSurveys || []} /> */}
-        <SurveyTable  data={filteredSurveys || []}/>
+        <SurveyTable data={filteredSurveys || []} />
       </div>
     </DashboardLayout>
   );
