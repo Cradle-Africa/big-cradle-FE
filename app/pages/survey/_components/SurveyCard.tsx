@@ -20,7 +20,7 @@ const SurveyCard = ({ isHighLighted }: { isHighLighted: boolean }) => {
         className={classNames({
           "text-[42px] font-bold mt-8 mb-2": true,
           "text-black": !isHighLighted,
-          "text-white": !isHighLighted,
+          "text-white": isHighLighted,
         })}
       >
         67

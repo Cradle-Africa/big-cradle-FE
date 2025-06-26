@@ -27,15 +27,7 @@ const BusinessDashboard = () => {
         user={user}
         kycReviewReason={user?.kycReviewReason || ''}
       />
-
-      {/* <div className="w-full">
-        <p className="font-semibold text-md space-y-1">
-          Hi Esther, here’s your platform overview for today
-        </p>
-        <p className="text-sm">
-          All systems operational. Last sync: 10 mins ago
-        </p>
-      </div> */}
+      
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
         {data.map((menu, index) => (
           <BusinessCard

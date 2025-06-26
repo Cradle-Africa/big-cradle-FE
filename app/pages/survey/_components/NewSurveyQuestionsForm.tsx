@@ -213,7 +213,7 @@ const NewSurveyQuestionsForm = ({
           onClick={addField}
           className="text-blue-600 border border-blue-600 px-4 py-1 cursor-pointer rounded-lg hover:bg-blue-50"
         >
-          + Add
+          + Add Question
         </button>
 
         {/* <button
