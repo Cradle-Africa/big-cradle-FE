@@ -10,8 +10,8 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
     let message = "";
 
     switch (statusCode) {
-      case 409:
-        message = "Conflict";
+      case 400:
+        message = "The Survey with this name already exist. Use another name";
         break;
 
       default:
@@ -26,11 +26,11 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
 export const fetchSurveys = async (
   axios: AxiosInstance,
   businessUserId: string,
-  page: number
+  page: string
 ) => {
   try {
     const res = await axios.get(
-      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=20`
+      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
     );
     return res.data;
   } catch (error: any) {

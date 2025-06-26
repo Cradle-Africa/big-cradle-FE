@@ -10,7 +10,6 @@ const SurveyStatus = ({ isSelected, status, onClick }: SurveyStatusProps) => {
   return (
     <div
       onClick={onClick}
-    
       className={classNames({
         "bg-blue-50 hover:cursor-pointer border-blue-500 text-blue-600 px-4 rounded-full py-1":
           isSelected,
@@ -22,6 +21,6 @@ const SurveyStatus = ({ isSelected, status, onClick }: SurveyStatusProps) => {
   );
 };
 
-export const statuses = ["All", "Payed", "Not-paid"];
+export const statuses = ["All", "Active", "Inactive"];
 
 export default SurveyStatus;

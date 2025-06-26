@@ -21,6 +21,7 @@ import {
   getUser,
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
+import Spinner from "@/app/components/Spinner";
 
 type Props = {
   form: DataPointForm;
@@ -107,7 +108,8 @@ const SurveyPayementArea = ({
           tx_ref: createdSurvey.data.tx_ref,
           amount: parseInt(data.amount),
           currency: "NGN",
-          redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey?${createdSurvey.data.tx_ref}`,
+          // redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey?${createdSurvey.data.tx_ref}`,
+          redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
           payment_options:
             "card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
           customer: {
@@ -122,7 +124,12 @@ const SurveyPayementArea = ({
         // verifyPayment(createdSurvey.data.tx_ref);
       },
       onError: (error: any) => {
-        toast.error(error.message || "Failed to creat the survey");
+        console.error("Create survey error:", error);
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Failed to create the survey";
+        toast.error(message);
       },
     });
   };
@@ -194,7 +201,14 @@ const SurveyPayementArea = ({
           className="bg-blue-600 rounded-md py-2 px-8 mr-auto mt-4"
         >
           <span className="text-white">
-            {isMakingPayment || isCreatingSurvey ? "Loading" : "Proceed"}
+            {isMakingPayment || isCreatingSurvey ? (
+              <>
+                <span className="mr-2">Loading</span>
+                <Spinner />
+              </>
+            ) : (
+              "Proceed"
+            )}
           </span>
         </button>
       </form>

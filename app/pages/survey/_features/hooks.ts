@@ -1,6 +1,10 @@
 import {
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
+<<<<<<< HEAD
+=======
+  PaymentVerificationResponse,
+>>>>>>> dev
   SingleSurveyResponse,
   Survey,
   SurveyListResponse,
@@ -38,7 +42,12 @@ export const useCreateSurvey = ({ axios }: { axios: AxiosInstance }) => {
 type UseFetchSurvey = {
   axios: AxiosInstance;
   businessUserId: string;
+<<<<<<< HEAD
   page: number;
+=======
+  page: string;
+  onSuccess?: (data: any) => void;
+>>>>>>> dev
 };
 
 export const useFetchSurvey = ({
@@ -53,8 +62,13 @@ export const useFetchSurvey = ({
     retry: 3,
   });
 };
+<<<<<<< HEAD
 export const useVerifySurvey = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation({
+=======
+export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<PaymentVerificationResponse, void, string>({
+>>>>>>> dev
     mutationFn: (txRef: string) => verifySurvey(axios, txRef),
   });
 };
@@ -73,20 +87,29 @@ export const useVerifySurvey = ({ axios }: { axios: AxiosInstance }) => {
 type UseFetchSingleSurvey = {
   axios: AxiosInstance;
   surveyId: string;
+<<<<<<< HEAD
   enabled: boolean;
+=======
+>>>>>>> dev
 };
 
 export const useFetchSingleSurvey = ({
   axios,
   surveyId,
+<<<<<<< HEAD
   enabled,
+=======
+>>>>>>> dev
 }: UseFetchSingleSurvey) => {
   return useQuery<SingleSurveyResponse>({
     queryKey: ["surveys", surveyId],
     queryFn: () => fetchSurvey(axios, surveyId),
     staleTime: 60 * 1000 * 60,
     retry: 3,
+<<<<<<< HEAD
     enabled,
+=======
+>>>>>>> dev
   });
 };
 
@@ -94,4 +117,8 @@ export const useCreateSurveyForm = () => {
   return useForm<SurveySchema>({
     resolver: zodResolver(surveySchema),
   });
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> dev

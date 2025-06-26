@@ -1,46 +1,106 @@
-import { MoreVertical } from "lucide-react";
+import { SurveyListItem } from "@/app/lib/type";
+import { formattedDate } from "@/app/utils/tools";
+import { Eye, MoreVertical } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { ImFileEmpty } from "react-icons/im";
 
-const SurveyTable = () => {
+type Props = {
+  data: SurveyListItem[];
+};
+
+const SurveyTable = ({ data }: Props) => {
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setOpenMenuId(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleMenu = (id: any) => {
+    setOpenMenuId((prev) => (prev === id ? null : id));
+  };
+
+  if (data.length < 1)
+    return (
+      <div className="flex flex-col items-center gap-5 justify-center py-8">
+        <ImFileEmpty />
+        <p>No Data</p>
+      </div>
+    );
+
   return (
     <div className="overflow-x-auto rounded-[8px] border border-gray-200">
       <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-sm font-semibold">
-              Survey Title
+              Survey Same
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold">
-              Status
+              Survey Status
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold">
-              Created On
+              Created on
             </th>
             <th className="px-6 py-3 text-left text-sm font-semibold">
-              Responses
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
-              Completion Rate
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
-              Actions
+              Action
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
           {/* Example row */}
-          {[...Array(10)].map((_, index) => (
-            <tr key={index}>
-              <td className="px-6 py-4 font-medium">Product Feedback Q2</td>
+          {data.map((survey) => (
+            <tr key={survey.id}>
+              <td className="px-6 py-4 font-medium">{survey.surveyName}</td>
               <td className="px-6 py-4">
-                <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
-                  Active
-                </span>
+                {survey.isActive ? (
+                  <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
+                    Active
+                  </span>
+                ) : (
+                  <span className="inline-block px-4 py-1 text-xs font-medium  text-red-700 rounded-full border-1">
+                    Active
+                  </span>
+                )}
               </td>
-              <td className="px-6 py-4">May 10, 2025</td>
-              <td className="px-6 py-4">212 / 500</td>
-              <td className="px-6 py-4">87%</td>
-              <td className="px-6 py-4">
-                <MoreVertical size={18} />
+              <td className="px-6 py-4">{formattedDate(survey.createdAt)}</td>
+              <td className="px-6 py-4 relative">
+                <button
+                  onClick={() => toggleMenu(survey.id)}
+                  className="focus:outline-none cursor-pointer px-5"
+                >
+                  <MoreVertical size={18} />
+                </button>
+
+                {openMenuId === survey.id && (
+                  <div
+                    ref={menuRef}
+                    className="absolute right-4 z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-gray-200"
+                  >
+                    <ul className="py-1 text-sm text-gray-700 cursor-pointer ">
+                      <Link href={`/pages/survey/${survey.id}`}>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
+                          <Eye />
+                          <p>View</p>
+                        </li>
+                      </Link>
+                      {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
+                        <Edit />
+                        <p>Edit</p>
+                      </li> */}
+                    </ul>
+                  </div>
+                )}
               </td>
             </tr>
           ))}

@@ -7,16 +7,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FieldPreview from "../../flywheel/_components/FieldPreview";
 import SelectOptionManager from "../../flywheel/_components/SelectOptionManager";
+import toast from "react-hot-toast";
 
 type Props = {
   form: DataPointForm;
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
 };
 
-const NewSurveyQuestionsForm = ({
-  form,
-  setForm,
-}: Props) => {
+const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
   // const [form, setForm] = useState<DataPointForm>({
@@ -34,7 +32,6 @@ const NewSurveyQuestionsForm = ({
   // }
 
   // const employeeUserId = getEmployeeUserId();
-  
 
   const handleFieldChange = <K extends keyof Field>(
     index: number,
@@ -86,8 +83,14 @@ const NewSurveyQuestionsForm = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // console.log(JSON.stringify({ name, description }));
+  };
 
-    
+  const onNextButtonClicked = () => {
+    if (form.field.length < 1) {
+      toast.error("Please add some questions before you can pass");
+    } else {
+      router.push(`/pages/survey/new?survey=survey-payment`);
+    }
   };
 
   return (
@@ -215,7 +218,7 @@ const NewSurveyQuestionsForm = ({
         </button> */}
 
         <button
-          onClick={() => router.push(`/pages/survey/new?survey=survey-payment`)}
+          onClick={onNextButtonClicked}
           className="border border-green-600 rounded-md py-2 px-8 mr-auto"
         >
           <span className="text-green-600">Next</span>
