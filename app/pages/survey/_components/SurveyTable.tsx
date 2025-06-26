@@ -77,7 +77,7 @@ const SurveyTable = ({ data }: Props) => {
               <td className="px-6 py-4 relative">
                 <button
                   onClick={() => toggleMenu(survey.id)}
-                  className="focus:outline-none"
+                  className="focus:outline-none cursor-pointer px-5"
                 >
                   <MoreVertical size={18} />
                 </button>
@@ -87,17 +87,17 @@ const SurveyTable = ({ data }: Props) => {
                     ref={menuRef}
                     className="absolute right-4 z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-gray-200"
                   >
-                    <ul className="py-1 text-sm text-gray-700">
+                    <ul className="py-1 text-sm text-gray-700 cursor-pointer ">
                       <Link href={`/pages/survey/${survey.id}`}>
-                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
-                        <Eye />
-                        <p>View</p>
-                      </li>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
+                          <Eye />
+                          <p>View</p>
+                        </li>
                       </Link>
-                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
+                      {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
                         <Edit />
                         <p>Edit</p>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 )}

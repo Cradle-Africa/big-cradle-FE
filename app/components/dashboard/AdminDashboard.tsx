@@ -25,17 +25,16 @@ const BusinessDashboard = () => {
         openAdminKycVerification={openAdminKycVerification}
         setOpenAdminKycVerification={setOpenAdminKycVerification}
         user={user}
-        kycReviewReason={user?.kycReviewReason || ''}
+        kycReviewReason={user?.kycReviewReason || ""}
       />
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
         {data.map((menu, index) => (
           <BusinessCard
             key={index}
             title={menu.title}
-            subTitle={menu.subTitle }
+            subTitle={menu.subTitle}
             value={menu.value}
-            percentage={menu.percentage}
             icon={<UsersRound />}
             isHighLighted={index === 0}
           />
@@ -46,29 +45,26 @@ const BusinessDashboard = () => {
   );
 };
 
-const data: DashboardMenu[]=[ 
+const data: DashboardMenu[] = [
   {
-    title: 'Pipelines',
-    subTitle: 'Total pipelines',
-    value: '10',
-    percentage: '56',
-    icon: <ArrowDownUp />,    
+    title: "Pipelines",
+    subTitle: "Total pipelines",
+    value: "10",
+    icon: <ArrowDownUp />,
   },
   {
-    title: 'Data points',
-    subTitle: 'Total data points',
-    value: '50',
-    percentage: '70',
-    icon: <Database/>,    
+    title: "Data points",
+    subTitle: "Total data points",
+    value: "50",
+    icon: <Database />,
   },
   {
-    title: 'Surveys',
-    subTitle: 'Total survey',
-    value: '30',
-    percentage: '60',
-    icon: <Scan/>,    
-  }
-]
+    title: "Surveys",
+    subTitle: "Total survey",
+    value: "30",
 
+    icon: <Scan />,
+  },
+];
 
 export default BusinessDashboard;

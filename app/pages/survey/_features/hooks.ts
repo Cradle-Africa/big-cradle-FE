@@ -1,6 +1,7 @@
 import {
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
+  PaymentVerificationResponse,
   SingleSurveyResponse,
   Survey,
   SurveyListResponse,
@@ -39,12 +40,14 @@ type UseFetchSurvey = {
   axios: AxiosInstance;
   businessUserId: string;
   page: number;
+  onSuccess?: (data: any) => void;
 };
 
 export const useFetchSurvey = ({
   axios,
   businessUserId,
   page,
+  onSuccess,
 }: UseFetchSurvey) => {
   return useQuery<SurveyListResponse>({
     queryKey: ["surveys", businessUserId, page],
@@ -53,8 +56,8 @@ export const useFetchSurvey = ({
     retry: 3,
   });
 };
-export const useVerifySurvey = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation({
+export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<PaymentVerificationResponse, void, string>({
     mutationFn: (txRef: string) => verifySurvey(axios, txRef),
   });
 };

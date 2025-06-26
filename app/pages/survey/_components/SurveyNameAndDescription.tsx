@@ -36,7 +36,7 @@ const SurveyNameAndDescription = ({
           className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
         />
         <ErrorMessage>{errors.surveyName?.message}</ErrorMessage>
-      </div>
+      </div>  
       <div>
         <textarea
           {...register("surveyDescription")}

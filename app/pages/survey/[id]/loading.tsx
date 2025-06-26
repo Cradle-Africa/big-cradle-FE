@@ -1,9 +1,13 @@
-import React from 'react'
+import DashboardLayout from "@/app/DashboardLayout";
 
 const SurveyDetailsLoadingPage = () => {
   return (
-    <div>SurveyDetailsLoadingPage</div>
-  )
-}
+    <DashboardLayout>
+      <div>
+        <p>Loading survey details...</p>
+      </div>
+    </DashboardLayout>
+  );
+};
 
-export default SurveyDetailsLoadingPage
+export default SurveyDetailsLoadingPage;

@@ -108,7 +108,6 @@ export type DashboardMenu = {
   title: string;
   subTitle: string;
   value: string;
-  percentage: string;
   icon: ReactNode;
 };
 
@@ -146,6 +145,49 @@ export type SurveyListItem = {
   createdAt: string; // ISO date string
   updatedAt: string;
   __v: number;
+};
+
+export type PaymentVerificationResponse = {
+  success: boolean;
+  message: string;
+  paymentResult: {
+    status: string;
+    message: string;
+    data: {
+      id: number;
+      tx_ref: string;
+      flw_ref: string;
+      device_fingerprint: string;
+      amount: number;
+      currency: string;
+      charged_amount: number;
+      app_fee: number;
+      merchant_fee: number;
+      processor_response: string;
+      auth_model: string;
+      ip: string;
+      narration: string;
+      status: string;
+      payment_type: string;
+      created_at: string; // ISO date string
+      account_id: number;
+      meta: {
+        __CheckoutInitAddress: string;
+        originatorname: string;
+        bankname: string;
+        originatoramount: string;
+        originatoraccountnumber: string;
+      };
+      amount_settled: number;
+      customer: {
+        id: number;
+        name: string;
+        phone_number: string;
+        email: string;
+        created_at: string; // ISO date string
+      };
+    };
+  };
 };
 
 export type SurveyListField = {

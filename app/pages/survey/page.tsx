@@ -1,12 +1,12 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { SurveyListItem } from "@/app/lib/type";
+import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
-import { Plus } from "lucide-react";
+import { Plus, PlusCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,9 +19,10 @@ import {
 } from "../flywheel/_features/hook";
 import SurveysListArea from "./_components/SurveysListArea";
 import { statuses } from "./_components/SurveyStatus";
-import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
+import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 import SurveyTable from "./_components/SurveyTable";
+import SurveyCard from "./_components/SurveyCard";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -31,6 +32,8 @@ const SurveyPage = () => {
   const searchParams = useSearchParams();
   const [entriesPage] = useState(1);
   const [entriesLimit] = useState(10);
+  const [surveyDashBoardItems, setSurveyDashBoardItems] =
+    useState<DashboardMenu[]>();
   // const [filteredSuveys, setFilteredSurveys] = useState<SurveyListItem[]>([]);
 
   const surveyStatus = searchParam.get("status");
@@ -44,12 +47,18 @@ const SurveyPage = () => {
   const {
     mutateAsync: verifyPayment,
     isPending: isVerifing,
+    data: paymentMadeData,
+    isSuccess: isVerifyPaymentSuccess,
     isError,
-  } = useVerifySurvey({
+  } = useVerifySurveyPayment({
     axios,
   });
 
-  const { data: surveysListResponse, isLoading } = useFetchSurvey({
+  const {
+    data: surveysListResponse,
+    isSuccess,
+    isLoading,
+  } = useFetchSurvey({
     axios,
     businessUserId: user?.id ?? "",
     page: 1,
@@ -88,7 +97,17 @@ const SurveyPage = () => {
     try {
       if (txRef) verifyPayementFunc();
     } catch (error: any) {
-      toast.error(`Error ---> ${error.message}`);
+      toast.error(`${error.message}`);
+    }
+  }, [txRef, verifyPayementFunc]);
+
+  useEffect(() => {
+    if (isVerifyPaymentSuccess) {
+      if (paymentMadeData.paymentResult.data.status === "successful") {
+        toast.success("Payment made successfull");
+      } else {
+        toast.error("Error when making payments");
+      }
     }
   }, [txRef, verifyPayementFunc]);
 
@@ -123,6 +142,22 @@ const SurveyPage = () => {
   //   pages: 1,
   //   total: 0,
   // };
+
+  // useEffect(() => {
+  //   if (isSuccess && surveysListResponse) {
+  //     const allSurveys = surveysListResponse.survey.length;
+  //     const activeSurveys = surveysListResponse.survey.filter(
+  //       (v) => v.isActive
+  //     ).length;
+  //     const inActiveSurveys = surveysListResponse.survey.filter(
+  //       (v) => !v.isActive
+  //     ).length;
+
+  //     const dashBoardValue = [];
+
+  //     setSurveyDashBoardItems(dashBoardValue);
+  //   }
+  // }, [isSuccess, surveysListResponse]);
 
   useEffect(() => {
     if (isError) toast.error(`An error occured when verifing your payment`);
@@ -178,7 +213,6 @@ const SurveyPage = () => {
           </div>
         </>
       )}
-
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
           <p className="font-medium text-black">Surveys</p>
@@ -202,14 +236,15 @@ const SurveyPage = () => {
       {/* Build the cards area */}
       {/* <div className="flex gap-6 mt-8">
         {[...Array(3)].map((_, index) => (
-          <Card key={`${index}`} isHighLighted={index === 0} />
+          <SurveyCard key={`${index}`} isHighLighted={index === 0} />
         ))}
       </div> */}
-      <Overview
+
+      {/* \\\\ */}
+      {/* <Overview
         pipelines={pipelines?.length}
         dataentries={dataentries?.length}
-      />
-
+      /> */}
       {/* Survey table  */}
       <div className="flex flex-col bg-white p-4 mt-8">
         <p className="font-bold text-black">Survey Table List</p>

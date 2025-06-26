@@ -6,18 +6,11 @@ type Props = {
   title: string;
   value: string;
   subTitle: string;
-  percentage: string;
   icon: JSX.Element;
   isHighLighted: boolean;
 };
 
-const BusinessCard = ({
-  title,
-  value,
-  subTitle,
-  percentage,
-  isHighLighted,
-}: Props) => {
+const BusinessCard = ({ title, value, subTitle, isHighLighted }: Props) => {
   return (
     <div
       className={classNames({
@@ -42,9 +35,7 @@ const BusinessCard = ({
         {value}
       </span>
       <div className="flex gap-2 items-center">
-        <div className="border-1 border-green-500 bg-green-100 rounded-[4px] ">
-          <span className="text-[12px] px-2 text-green-600">{percentage}</span>
-        </div>
+        <div className="border-1 border-green-500 bg-green-100 rounded-[4px] "></div>
         <span className="text-[13px]">{subTitle}</span>
       </div>
     </div>
