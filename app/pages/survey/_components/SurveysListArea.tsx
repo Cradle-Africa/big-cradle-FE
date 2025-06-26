@@ -146,7 +146,7 @@ const SurveysListArea = ({ data }: Props) => {
                     onClick={() => handleViewSurveyDetails(survey?.id)}
                     className="cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
                   />
-                  <Pencil
+                  {/* <Pencil
                     size={35}
                     // onClick={() => handleEditDataPoint(survey?.id)}
                     onClick={() =>
@@ -160,7 +160,7 @@ const SurveysListArea = ({ data }: Props) => {
                     size={35}
                     onClick={() => handleShareDataPoint(survey?.id)}
                     className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
-                  />
+                  /> */}
                 </td>
               </tr>
             ))}
