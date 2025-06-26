@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAnalyseData, useFetchDataPointOfDataEntries } from "../_features/hook";
+import { useAnalyseData } from "../_features/hook";
 import { getBusinessId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";

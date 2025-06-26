@@ -13,7 +13,6 @@ import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_f
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline'
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
 import DataEntries from "./data-entry/DataEntries";
-import AnalyseData from "./_components/AnalyseData";
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -195,7 +194,7 @@ const Flywheel = () => {
 						{creatingDataPoint ? (
 							<>
 								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
 									onClick={() => setCreatingDataPoint(false)}
 								>
 									<List size={18} color="white" className="mr-1" />
@@ -209,7 +208,7 @@ const Flywheel = () => {
 						) : (
 							<>
 								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
 									onClick={() => setCreatingDataPoint(true)}
 								>
 									<Plus size={18} color="white" className="mr-1" />
@@ -239,18 +238,17 @@ const Flywheel = () => {
 				{selectedTab === 'Data Entries' && (
 					<>
 						<div className="mt-5">
-							<button
-								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-								onClick={() => setAnalyseData(true)}
-							>
-								<ChartLine size={16} color="white" className="mr-1" />
-								Analyse data
-							</button>
+							{ analyseData && (
+								<button
+									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+									onClick={() => setAnalyseData(true)}
+								>
+									<ChartLine size={16} color="white" className="mr-1" />
+									Analyse Data
+								</button>
+							)}
 						</div>
-						{/* <AnalyseData
-							analyseData={analyseData}
-							onClose={() => setAnalyseData(false)}
-						/> */}
+
 						<DataEntries
 							data={dataentries}
 							pagination={paginationDataEntries}

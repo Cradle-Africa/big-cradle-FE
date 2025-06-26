@@ -2,7 +2,7 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Database, Eye, List, Pencil, Plus, Share2 } from "lucide-react";
+import { Database, Eye, List, Pencil, Share2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
@@ -97,7 +97,6 @@ const DataPoints = ({
             <ViewDataEntries
                 viewDataEntries={viewDataEntries}
                 uniqueId={uniqueDataEntry}
-                setViewDataEntries={setViewDataEntries}
             />
 
             {!editingDataPoint && !viewDataEntries && (

@@ -4,22 +4,20 @@ import axios from "@/app/lib/axios";
 import { useFetchDataPointOfDataEntries } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ChartLine, List } from "lucide-react";
+import { ChartLine } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useState } from "react";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
     uniqueId: string;
-    setViewDataEntries: (value: boolean) => void;
 }
 
 const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     viewDataEntries,
     uniqueId,
-    setViewDataEntries,
 }) => {
-    const { data, isLoading, isError } = useFetchDataPointOfDataEntries({
+    const { data, isLoading } = useFetchDataPointOfDataEntries({
         axios,
         queryParams: {
             dataPoint: uniqueId,
@@ -63,11 +61,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 <>
                     <div className="mt-5">
                         <button
-                            className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+                            className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
                             onClick={() => setAnalyseData(true)}
                         >
                             <ChartLine size={16} color="white" className="mr-1" />
-                            Analyse data
+                            Analyse Data
                         </button>
                     </div>
         
