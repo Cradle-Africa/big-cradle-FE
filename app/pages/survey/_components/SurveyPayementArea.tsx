@@ -21,6 +21,7 @@ import {
   getUser,
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
+import Spinner from "@/app/components/Spinner";
 
 type Props = {
   form: DataPointForm;
@@ -199,7 +200,14 @@ const SurveyPayementArea = ({
           className="bg-blue-600 rounded-md py-2 px-8 mr-auto mt-4"
         >
           <span className="text-white">
-            {isMakingPayment || isCreatingSurvey ? "Loading" : "Proceed"}
+            {isMakingPayment || isCreatingSurvey ? (
+              <>
+                <span className="mr-2">Loading</span>
+                <Spinner />
+              </>
+            ) : (
+              "Proceed"
+            )}
           </span>
         </button>
       </form>
