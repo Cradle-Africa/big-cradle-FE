@@ -3,12 +3,14 @@ import {
   FlutterWavePaymentSubmit,
   SingleSurveyResponse,
   Survey,
-  SurveyListItem,
   SurveyListResponse,
   SurveySchema,
 } from "@/app/lib/type";
+import { surveySchema } from "@/app/lib/validationSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance } from "axios";
+import { useForm } from "react-hook-form";
 import {
   createSurvey,
   fetchSurvey,
@@ -16,9 +18,6 @@ import {
   surveyPay,
   verifySurvey,
 } from "./api";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { surveySchema } from "@/app/lib/validationSchemas";
 
 export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<

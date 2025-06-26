@@ -21,10 +21,6 @@ const SurveysListArea = ({ data }: Props) => {
     setUniqueDataPoint(id);
   };
 
-  const handleEditDataPoint = (id: any) => {
-    //   setEditingDataPoint(true);
-    setUniqueDataPoint(id);
-  };
 
   const handleShareDataPoint = (id: any) => {
     //   setShareDataPoint(true);

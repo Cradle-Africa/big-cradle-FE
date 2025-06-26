@@ -1,7 +1,5 @@
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import { SurveySchema } from "@/app/lib/type";
-import { error } from "console";
-import { useRouter } from "next/navigation";
 import {
   FieldErrors,
   UseFormHandleSubmit,
@@ -25,7 +23,6 @@ const SurveyNameAndDescription = ({
   handleSubmit,
   onSubmit,
 }: Props) => {
-  const router = useRouter();
 
   return (
     <form

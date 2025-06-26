@@ -1,20 +1,19 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-import { FcGoogle } from "react-icons/fc";
+import LoginImage from "@/app/components/LoginImage";
 import AccountVerification from "@/app/components/user/AccountVerification";
+import BusinessSignUpLink from "@/app/components/user/BusinessSignUpLink";
 import SuperAdminSignUp from "@/app/components/user/SuperadminSignUp";
+import LogoWithText from "@/public/images/logo-with-text.png";
+import { jwtDecode } from "jwt-decode";
+import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import AdminSignUp from "../../../components/user/AdminSignUp";
 import BusinessSignUp from "../../../components/user/BusinessSignUp";
 import EmployeeSignUp from "../../../components/user/EmployeeSignUp";
-import AdminSignUp from "../../../components/user/AdminSignUp";
 import { DecodedPayload } from "../types/User";
-import BusinessSignUpLink from "@/app/components/user/BusinessSignUpLink";
-import LoginImage from "@/app/components/LoginImage";
-import LogoWithText from "@/public/images/logo-with-text.png";
 
 function BuildSignUpPage() {
 	const searchParams = useSearchParams();
