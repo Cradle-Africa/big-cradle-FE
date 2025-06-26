@@ -1,7 +1,7 @@
 import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataPoints, fetchPipelines, fetchSingleDataPoint } from "./api";
+import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataPoints, fetchPipelines, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -46,12 +46,30 @@ export const useFetchSingleDataPoint = ({
     enabled?: boolean;
 }) => {
     return useQuery<DataPoint>({
-        queryKey: ["single-pipeline", id],
+        queryKey: ["single-datapoint", id],
         queryFn: () => fetchSingleDataPoint(axios, id),
         enabled: !!id && enabled,
         staleTime: 1000 * 60 * 5,
     });
 };
+
+export const useFetchSinglePipeline = ({
+    axios,
+    id,
+    enabled = true, //disable query if ID is undefined
+}: {
+    axios: AxiosInstance;
+    id: string;
+    enabled?: boolean;
+}) => {
+    return useQuery<Pipeline>({
+        queryKey: ["single-pipeline", id],
+        queryFn: () => fetchSinglePipeline(axios, id),
+        enabled: !!id && enabled,
+        staleTime: 1000 * 60 * 5,
+    });
+};
+
 
 export const useEditPipeline = ({ axios }: { axios: AxiosInstance }) => {
     return useMutation({
@@ -119,15 +137,41 @@ export const useFetchDataEntries = ({
   });
 };
 
+export const useFetchDataPointOfDataEntries = ({
+  axios,
+  queryParams,
+}: {
+  axios: AxiosInstance;
+  queryParams: {
+    page?: number;
+    limit?: number;
+    dataPoint?: string;
+  };
+}) => {
+  return useQuery<{
+    entries: DataEntry[];
+    pagination: PaginationMeta;
+  }>({
+    queryKey: ["data-points-data-entries", queryParams],
+    queryFn: () => fetchDataEntriesOfDataPoints(axios, queryParams),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!queryParams.dataPoint,
+  });
+};
+
 interface AnalyseDataParams {
-    endpoint: string;
-    businessUserId: string;
-    prompt: string;
+  endpoint: string;
+  businessUserId: string;
+  dataPoint: string;
+  prompt: string;
+  limit?: number;
+  page?: number;
 }
 
+
 export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
-    return useMutation<any, Error, AnalyseDataParams>({
-        mutationFn: ({ endpoint, businessUserId, prompt }) =>
-            analyseData(axios, endpoint, businessUserId, prompt),
-    });
+  return useMutation<any, Error, AnalyseDataParams>({
+    mutationFn: ({ endpoint, businessUserId, dataPoint, prompt, limit = 10, page = 1 }) =>
+      analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
+  });
 };
