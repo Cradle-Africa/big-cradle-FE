@@ -14,14 +14,7 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
 };
 
-<<<<<<< HEAD
 const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
-=======
-const NewSurveyQuestionsForm = ({
-  form,
-  setForm,
-}: Props) => {
->>>>>>> 98b4a89 (Survey test implementation)
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
   // const [form, setForm] = useState<DataPointForm>({
@@ -39,10 +32,6 @@ const NewSurveyQuestionsForm = ({
   // }
 
   // const employeeUserId = getEmployeeUserId();
-<<<<<<< HEAD
-=======
-  
->>>>>>> 98b4a89 (Survey test implementation)
 
   const handleFieldChange = <K extends keyof Field>(
     index: number,
@@ -96,16 +85,12 @@ const NewSurveyQuestionsForm = ({
     // console.log(JSON.stringify({ name, description }));
   };
 
-<<<<<<< HEAD
   const onNextButtonClicked = () => {
     if (form.field.length < 1) {
       toast.error("Please add some questions before you can pass");
     } else {
       router.push(`/pages/survey/new?survey=survey-payment`);
     }
-=======
-    
->>>>>>> 98b4a89 (Survey test implementation)
   };
 
   return (

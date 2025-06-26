@@ -1,9 +1,6 @@
 "use client";
 import DashboardLayout from "@/app/DashboardLayout";
-import { Plus } from "lucide-react";
 import axios from "@/app/lib/axios";
-import Card from "./_components/SurveyCard";
-import { statuses } from "./_components/SurveyStatus";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
@@ -12,11 +9,13 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import LoadingNewSurveyPage from "./new/loading";
-import { getUser } from "@/app/utils/user/userData";
+import Card from "./_components/SurveyCard";
 import SurveysListArea from "./_components/SurveysListArea";
+import { statuses } from "./_components/SurveyStatus";
+import { useFetchSurvey, useVerifySurvey } from "./_features/hooks";
+import LoadingNewSurveyPage from "./new/loading";
 
 const SurveyPage = () => {
   const [open, setOpen] = useState(false);
@@ -39,7 +38,6 @@ const SurveyPage = () => {
   const {
     data: surveysListResponse,
     isLoading,
-    error,
   } = useFetchSurvey({ axios, businessUserId: user?.id ?? "", page: 1 });
 
   useEffect(() => {
@@ -53,13 +51,13 @@ const SurveyPage = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, [setOpen]);
 
-  const verifyPayementFunc = async () => {
+  const verifyPayementFunc = useCallback(async () => {
     try {
       await verifyPayment(txRef || "");
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [txRef, verifyPayment]);
 
   useEffect(() => {
     try {
@@ -67,11 +65,11 @@ const SurveyPage = () => {
     } catch (error: any) {
       toast.error(`Error ---> ${error.message}`);
     }
-  }, []);
+  }, [txRef, verifyPayementFunc]);
 
   useEffect(() => {
     if (isError) toast.error(`Error ---> An error occured`);
-  }, [isError]);
+  }, [isError, txRef, verifyPayementFunc]);
 
   if (isVerifing) return <p>Is Verifing...</p>;
 
