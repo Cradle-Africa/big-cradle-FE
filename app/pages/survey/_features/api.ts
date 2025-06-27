@@ -23,6 +23,28 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
   }
 };
 
+export const updateSurvey = async (axios: AxiosInstance, data: Survey) => {
+  try {
+    const res = await axios.put(`/survey-mgt/survey`, data);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+
+    switch (statusCode) {
+      case 400:
+        message = "The Survey with this name already exist. Use another name";
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    const customError = new Error(message);
+    throw customError;
+  }
+};
+
 export const fetchSurveys = async (
   axios: AxiosInstance,
   businessUserId: string,

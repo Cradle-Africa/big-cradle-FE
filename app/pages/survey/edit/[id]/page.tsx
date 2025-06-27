@@ -9,7 +9,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SurveyDetailsLoadingPage from "../../[id]/loading";
 import SurveySelectOptionManager from "../../_components/SelectOptionManager";
-import { useFetchSingleSurvey } from "../../_features/hooks";
+import { useFetchSingleSurvey, useUpdateSurvey } from "../../_features/hooks";
+import { Check } from "lucide-react";
+import Spinner from "@/app/components/Spinner";
+import FieldPreview from "@/app/pages/flywheel/_components/FieldPreview";
 
 const SurveyEditPage = () => {
   const params = useParams<{ id: string }>();
@@ -17,6 +20,8 @@ const SurveyEditPage = () => {
 
   const [form, setForm] = useState<SurveyForm>({ surveyId: "", field: [] });
   const [newOptions, setNewOptions] = useState<string[]>([]);
+
+  const { mutateAsync: updateSurvey, isPending } = useUpdateSurvey({ axios });
 
   const { data, isLoading } = useFetchSingleSurvey({
     axios,
@@ -136,6 +141,8 @@ const SurveyEditPage = () => {
               </label>
             </div>
 
+            <FieldPreview field={field} />
+
             <SurveySelectOptionManager
               index={index}
               newOptions={newOptions}
@@ -165,14 +172,19 @@ const SurveyEditPage = () => {
             + Add
           </button>
 
-          {/* <button
+          <button
             type="submit"
             disabled={isPending}
             className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
           >
-            <Check size={16} className="mr-1" />
-            {isPending ? "Updating..." : "Update"}
-          </button> */}
+            {isPending ? (
+              <span>
+                Updating <Spinner />
+              </span>
+            ) : (
+              <span>Update survey</span>
+            )}
+          </button>
         </div>
       </form>
     </DashboardLayout>

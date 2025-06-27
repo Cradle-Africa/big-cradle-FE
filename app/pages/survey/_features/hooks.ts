@@ -17,6 +17,7 @@ import {
   fetchSurvey,
   fetchSurveys,
   surveyPay,
+  updateSurvey,
   verifySurvey,
 } from "./api";
 
@@ -33,6 +34,12 @@ export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
 export const useCreateSurvey = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<SingleSurveyResponse, Error, Survey>({
     mutationFn: (data: Survey) => createSurvey(axios, data),
+  });
+};
+
+export const useUpdateSurvey = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<SingleSurveyResponse, Error, Survey>({
+    mutationFn: (data: Survey) => updateSurvey(axios, data),
   });
 };
 
@@ -55,6 +62,7 @@ export const useFetchSurvey = ({
     retry: 3,
   });
 };
+
 export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<PaymentVerificationResponse, void, string>({
     mutationFn: (txRef: string) => verifySurvey(axios, txRef),
