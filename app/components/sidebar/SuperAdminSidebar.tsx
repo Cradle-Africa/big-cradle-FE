@@ -112,7 +112,7 @@ const sideBarLinks: {
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
   {
     label: "Survey",
-    href: "/pages/survey",
+    href: "/pages/survey?status=active&page=1",
     icon: <File size={15} />,
   },
 ];

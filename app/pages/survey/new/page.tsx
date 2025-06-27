@@ -16,6 +16,7 @@ import NewSurveyQuestionsForm from "../_components/NewSurveyQuestionsForm";
 import SurveyNameAndDescription from "../_components/SurveyNameAndDescription";
 import SurveyPayementArea from "../_components/SurveyPayementArea";
 import SurveyTabButton from "../_components/SurveyTabButton";
+import { getUser } from "@/app/utils/user/userData";
 
 const NewSurveyPage = () => {
   const searchParams = useSearchParams();
@@ -38,6 +39,7 @@ const NewSurveyPage = () => {
 
   const surveyName = watch("surveyName");
   const surveyDescription = watch("surveyDescription");
+  const user = getUser();
 
   const onSubmit = (data: SurveySchema) => {
     console.log(JSON.stringify(data));
@@ -91,7 +93,8 @@ const NewSurveyPage = () => {
           </div>
         </SurveyTabButton>
 
-        <SurveyTabButton
+
+       {user?.role === "business" && <SurveyTabButton
           // onClick={() =>
           //   router.push(`/pages/survey/new?survey=survey-questions`)
           // }
@@ -103,7 +106,7 @@ const NewSurveyPage = () => {
             </div>
             <p>Survey payment</p>
           </div>
-        </SurveyTabButton>
+        </SurveyTabButton>}
 
         {/* <SurveyTabButton
           onClick={() => router.push(`/pages/survey/new?survey=Surveys list`)}
@@ -178,7 +181,14 @@ const FormArea = ({
       />
     );
   } else if (survey === "survey-questions") {
-    return <NewSurveyQuestionsForm form={form} setForm={setForm} />;
+    return (
+      <NewSurveyQuestionsForm
+        surveyName={surveyName}
+        surveyDescription={surveyDescription}
+        form={form}
+        setForm={setForm}
+      />
+    );
   } else if (survey === "survey-payment") {
     return (
       <SurveyPayementArea

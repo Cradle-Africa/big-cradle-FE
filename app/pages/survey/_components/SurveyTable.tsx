@@ -1,6 +1,6 @@
 import { SurveyListItem } from "@/app/lib/type";
 import { formattedDate } from "@/app/utils/tools";
-import { Eye, MoreVertical } from "lucide-react";
+import { Edit, Eye, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ImFileEmpty } from "react-icons/im";
@@ -12,7 +12,7 @@ type Props = {
 const SurveyTable = ({ data }: Props) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -94,10 +94,12 @@ const SurveyTable = ({ data }: Props) => {
                           <p>View</p>
                         </li>
                       </Link>
-                      {/* <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
-                        <Edit />
-                        <p>Edit</p>
-                      </li> */}
+                      <Link href={`/pages/survey/edit/${survey.id}`}>
+                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
+                          <Edit />
+                          <p>Edit</p>
+                        </li>
+                      </Link>
                     </ul>
                   </div>
                 )}

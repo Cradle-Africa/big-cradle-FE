@@ -1,37 +1,82 @@
 "use client";
 
-import { DataPointForm, Field, FieldType } from "@/app/lib/type";
+import { DataPointForm, Field, FieldType, Survey } from "@/app/lib/type";
+import axios from "@/app/lib/axios";
 import { toCamelCase } from "@/app/utils/caseFormat";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FieldPreview from "../../flywheel/_components/FieldPreview";
 import SelectOptionManager from "../../flywheel/_components/SelectOptionManager";
 import toast from "react-hot-toast";
+import { useCreateSurvey } from "../_features/hooks";
+import {
+  getBusinessId,
+  getEmployeeUserId,
+  getUser,
+} from "@/app/utils/user/userData";
+import Spinner from "@/app/components/Spinner";
 
 type Props = {
   form: DataPointForm;
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
+  surveyName: string;
+  surveyDescription: string;
 };
 
-const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
+const NewSurveyQuestionsForm = ({
+  form,
+  setForm,
+  surveyName,
+  surveyDescription,
+}: Props) => {
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
   // const [form, setForm] = useState<DataPointForm>({
   //   dataPointId: "",
   //   field: [],
   // });
-  // const user = getUser();
+  const user = getUser();
 
-  // let businessUserId: string | null = null;
+  let businessUserId: string | null = null;
+  if (user?.role === "business") {
+    businessUserId = getBusinessId() || null;
+  } else {
+    businessUserId = user?.businessUserId || null;
+  }
 
-  // if (user?.role === "business") {
-  //   businessUserId = getBusinessId() || null;
-  // } else {
-  //   businessUserId = user?.businessUserId || null;
-  // }
+  const employeeUserId = getEmployeeUserId();
 
-  // const employeeUserId = getEmployeeUserId();
+  const { mutateAsync: createSurvey, isPending: isCreatingSurvey } =
+    useCreateSurvey({ axios });
+
+  const submitSurvey = async () => {
+    if (form.field.length < 1) {
+      toast.error("Please add some questions before you can pass");
+    } else {
+      const payload: Survey = {
+        businessUserId,
+        employeeUserId,
+        surveyName: surveyName,
+        surveyDescription: surveyDescription,
+        amount: 333,
+        field: form.field,
+      };
+
+      await createSurvey(payload, {
+        onSuccess: (createdSurvey) => {
+          toast.success("Survey ");
+        },
+        onError: (error: any) => {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Failed to create the survey";
+          toast.error(message);
+        },
+      });
+    }
+  };
 
   const handleFieldChange = <K extends keyof Field>(
     index: number,
@@ -80,10 +125,10 @@ const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
     setNewOptions((prev) => [...prev, ""]);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // console.log(JSON.stringify({ name, description }));
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   // console.log(JSON.stringify({ name, description }));
+  // };
 
   const onNextButtonClicked = () => {
     if (form.field.length < 1) {
@@ -95,7 +140,7 @@ const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
 
   return (
     <form
-      onSubmit={handleSubmit}
+      // onSubmit={handleSubmit}
       className="w-full py-6 rounded-md space-y-6 max-w-3xl mx-auto"
     >
       <button
@@ -208,21 +253,31 @@ const NewSurveyQuestionsForm = ({ form, setForm }: Props) => {
           + Add Question
         </button>
 
-        {/* <button
-          type="submit"
-          //   disabled={isPending}
-          className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
-        >
-          <Check size={16} className="mr-1" />
-          {isPending ? "Submitting..." : "Submit"}
-        </button> */}
-
-        <button
-          onClick={onNextButtonClicked}
-          className="border border-green-600 rounded-md py-2 px-8 mr-auto"
-        >
-          <span className="text-green-600">Next</span>
-        </button>
+        {user?.role === "super admin" ? (
+          <button
+            onClick={submitSurvey}
+            type="button"
+            //   disabled={isPending}
+            className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+          >
+            <Check size={16} className="mr-1" />
+            {isCreatingSurvey || isCreatingSurvey ? (
+              <>
+                <span className="mr-2">Submitting...</span>
+                <Spinner />
+              </>
+            ) : (
+              "Submit"
+            )}
+          </button>
+        ) : (
+          <button
+            onClick={onNextButtonClicked}
+            className="border border-green-600 rounded-md py-2 px-8 mr-auto"
+          >
+            <span className="text-green-600">Next</span>
+          </button>
+        )}
       </div>
     </form>
   );

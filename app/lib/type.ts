@@ -56,10 +56,17 @@ export type Field = {
   type: FieldType;
   required: boolean;
   options?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export interface DataPointForm {
   dataPointId: string;
+  field: Field[];
+}
+
+export interface SurveyForm {
+  surveyId: string;
   field: Field[];
 }
 
@@ -139,7 +146,7 @@ export type SurveyListItem = {
   surveyName: string;
   amount: number;
   surveyDescription: string;
-  field: SurveyListField[];
+  field: Field[];
   isActive: boolean;
   paymentStatus: "not-paid" | "paid"; // adjust based on actual possible values
   tx_ref: string;
@@ -191,16 +198,16 @@ export type PaymentVerificationResponse = {
   };
 };
 
-export type SurveyListField = {
-  label: string;
-  key: string;
-  type: string; // consider using a union like 'text' | 'number' | 'select' etc. if known
-  required: boolean;
-  options: string[]; // assuming options are strings
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-};
+// export type SurveyListField = {
+//   label: string;
+//   key: string;
+//   type: string; // consider using a union like 'text' | 'number' | 'select' etc. if known
+//   required: boolean;
+//   options?: string[]; // assuming options are strings
+//   id: string;
+//   createdAt: string;
+//   updatedAt: string;
+// };
 
 export type FlutterWavePaymentSubmit = {
   tx_ref: string;
