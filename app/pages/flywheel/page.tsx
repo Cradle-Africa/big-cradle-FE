@@ -1,66 +1,56 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
 import { ChartLine, List, Plus } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
 import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
 import NewDataPoint from "./datapoint/NewDataPoint";
 import Overview from "./_components/Overview";
-import axios from "@/app/lib/axios"
+import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
-import FlyWheelPageLoading from "./loading";
 import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
-import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline'
-import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline'
-import DataEntries from "./data-entry/DataEntries";
+import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
+import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
+// import DataEntries from "./data-entry/DataEntries";
+
+type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points';
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
-	const tabs = ["Overview", "Data Pipelines", "Data Points", "Data Entries"];
-	const [selectedTab, setSelectedTab] = useState<string>(tabs[0]);
-	const [popupOpen, setPopupOpen] = useState(false); // Controls main popup
-	const [creatingPipeline, setCreatingPipeline] = useState(false); // Toggles NewPipeline view
-	const [creatingDataPoint, setCreatingDataPoint] = useState(false); // Toggles NewDataPoint view
+
+	const tabs: TabKey[] = ['Overview', 'Data Pipelines', 'Data Points'];
+	const [selectedTab, setSelectedTab] = useState<TabKey>('Overview');
+
+	const [popupOpen, setPopupOpen] = useState(false);
+	const [creatingPipeline, setCreatingPipeline] = useState(false);
+	const [creatingDataPoint, setCreatingDataPoint] = useState(false);
 	const [analyseData, setAnalyseData] = useState(false);
+
 	const [entriesPage, setEntriesPage] = useState(1);
 	const [entriesLimit, setEntriesLimit] = useState(10);
-
 	const [pointsPage, setPointsPage] = useState(1);
 	const [pointsLimit, setPointsLimit] = useState(10);
-
 	const [pipelinesPage] = useState(1);
 	const [pipelinesLimit] = useState(10);
 
-
 	const { isLoading: isLoadingDataPoints, data: dataPointsData } = useFetchPipelines({
 		axios,
-		queryParams: {
-			page: pipelinesPage,
-			limit: pipelinesLimit
-		}
+		queryParams: { page: pipelinesPage, limit: pipelinesLimit }
 	});
 
 	const { data: dataPoints } = useFetchDataPoints({
 		axios,
-		queryParams: {
-			page: pointsPage,
-			limit: pointsLimit,
-		},
+		queryParams: { page: pointsPage, limit: pointsLimit }
 	});
 
 	const { data: dataEntries } = useFetchDataEntries({
 		axios,
-		queryParams: {
-			page: entriesPage,
-			limit: entriesLimit,
-		},
+		queryParams: { page: entriesPage, limit: entriesLimit }
 	});
+
 	const pipelines = dataPointsData?.dataPoint ?? [];
 	const paginationDataPoints = dataPointsData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
-
-	const datapoints = dataPoints?.data ?? []
-	// const paginationDataPipelines = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
-
+	const datapoints = dataPoints?.data ?? [];
 	const dataentries = dataEntries?.data ?? [];
 	const paginationDataEntries = dataEntries?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
@@ -73,6 +63,105 @@ const Flywheel = () => {
 		document.addEventListener('mousedown', handler);
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
+
+	// const TabContent = {
+	const TabContent: Record<TabKey, () => JSX.Element> = {
+
+		"Overview": () => (
+			<Overview pipelines={pipelines?.length} dataentries={dataentries?.length} />
+		),
+
+		"Data Pipelines": () => (
+			<div className="mt-5">
+				{creatingPipeline ? (
+					<>
+						<div className="">
+							<button
+								className="flex justify-end items-center bg-blue-600 text-white px-4 mt-5 py-1 rounded-md cursor-pointer"
+								onClick={() => setCreatingPipeline(false)}
+							>
+								<List size={18} color="white" className="mr-1" />
+								View Pipelines
+							</button>
+						</div>
+
+						<NewPipeLine setCreatingPipeline={setCreatingPipeline} />
+					</>
+				) : (
+					<>
+						<div className="flex justify-between">
+							<h2 className="text-lg text-black">Data pipelines</h2>
+							<button
+								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
+								onClick={() => setPopupOpen(true)}
+							>
+								<Plus size={18} color="white" className="mr-1" />
+								Build a new Pipeline
+							</button>
+						</div>
+						<Pipeline data={pipelines} />
+					</>
+				)}
+			</div>
+		),
+
+		"Data Points": () => (
+			<div className="mt-5">
+				{creatingDataPoint ? (
+					<>
+						<NewDataPoint
+							creatingDataPoint={creatingDataPoint}
+							setCreatingDataPoint={setCreatingDataPoint}
+							pipelines={pipelines}
+						/>
+					</>
+				) : (
+					<>
+						{isLoadingDataPoints ? (
+							<div className="mt-5">Loading ...</div>
+						) : (
+							<DataPoints
+								data={datapoints}
+								pagination={paginationDataPoints}
+								onPageChange={setPointsPage}
+								onLimitChange={(newLimit) => {
+									setPointsLimit(newLimit);
+									setPointsPage(1);
+								}}
+								creatingDataPoint={creatingDataPoint}
+								setCreatingDataPoint={setCreatingDataPoint}
+							/>
+						)}
+					</>
+				)}
+			</div>
+		)
+
+		// "Data Entries": () => (
+		// 	<>
+		// 		<div className="mt-5">
+		// 			{analyseData && (
+		// 				<button
+		// 					className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
+		// 					onClick={() => setAnalyseData(true)}
+		// 				>
+		// 					<ChartLine size={16} color="white" className="mr-1" />
+		// 					Analyse Data
+		// 				</button>
+		// 			)}
+		// 		</div>
+		// 		<DataEntries
+		// 			data={dataentries}
+		// 			pagination={paginationDataEntries}
+		// 			onPageChange={setEntriesPage}
+		// 			onLimitChange={(newLimit) => {
+		// 				setEntriesLimit(newLimit);
+		// 				setEntriesPage(1);
+		// 			}}
+		// 		/>
+		// 	</>
+		// ),
+	};
 
 	return (
 		<DashboardLayout>
@@ -88,14 +177,12 @@ const Flywheel = () => {
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-2">
 					<p className="font-medium text-black">Data flywheel</p>
-					<p>
-						Transform insights into actions that accelerate your business growth
-					</p>
+					<p>Transform insights into actions that accelerate your business growth</p>
 				</div>
 			</div>
 
-			<div className="flex flex-col bg-[#fcfcfc] p-4 mt-5">
-				<div className="flex gap-4 my-4 bg-[#fcfcfc]">
+			<div className="flex flex-col bg-[#fcfcfc] py-4 mt-5">
+				<div className="flex gap-4 bg-[#fcfcfc]">
 					{tabs.map((tab) => (
 						<FlywheelTabs
 							key={tab}
@@ -105,165 +192,10 @@ const Flywheel = () => {
 						/>
 					))}
 				</div>
-				{selectedTab === 'Overview' && (
-					<Overview
-						pipelines={pipelines?.length}
-						dataentries={dataentries?.length}
-					/>
-				)}
 
-				{selectedTab === 'Data Pipelines' && (
-					<div className="mt-5">
-						{creatingPipeline ? (
-							<>
-								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setCreatingPipeline(false)}
-								>
-									<List size={18} color="white" className="mr-1" />
-									View Pipelines
-								</button>
-								<NewPipeLine setCreatingPipeline={setCreatingPipeline} />
-							</>
-						) : (
-							<>
-								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setPopupOpen(true)}
-								>
-									<Plus size={18} color="white" className="mr-1" />
-									Build a new Pipeline
-								</button>
-								<Pipeline
-									data={pipelines ?? []}
-								// pagination={paginationDataPipelines}
-								// onPageChange={setPipelinesPage}
-								// onLimitChange={(newLimit) => {
-								// 	setPointsLimit(newLimit);
-								// 	setEntriesPage(1);
-								// }}
-								/>
-							</>
-						)}
-					</div>
-				)}
-
-				{/* {selectedTab === 'Data Points' && (
-					<>
-						{creatingDataPoint ? (
-							<div>
-								<button
-									className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setCreatingDataPoint(false)}
-								>
-									<List size={18} color="white" className="mr-1" />
-									View Data Points
-								</button>
-								<NewDataPoint
-									setCreatingDataPoint={setCreatingDataPoint}
-									pipelines={pipelines ?? []}
-								/>
-							</div>
-						) : (
-							<>
-								{isLoadingDataPoints ? (
-									<FlyWheelPageLoading />
-								) : (
-									<DataPoints
-										data={datapoints}
-										pagination={paginationDataPoints}
-										onPageChange={setPointsPage}
-										onLimitChange={(newLimit) => {
-											setPointsLimit(newLimit);
-											setEntriesPage(1);
-										}}
-										creatingDataPoint={creatingDataPoint}
-										setCreatingDataPoint={setCreatingDataPoint}
-									/>
-
-								)}
-
-							</>
-						)}
-					</>
-
-				)} */}
-
-				{selectedTab === 'Data Points' && (
-					<div className="mt-5">
-						{creatingDataPoint ? (
-							<>
-								<button
-									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setCreatingDataPoint(false)}
-								>
-									<List size={18} color="white" className="mr-1" />
-									View Data Points
-								</button>
-								<NewDataPoint
-									setCreatingDataPoint={setCreatingDataPoint}
-									pipelines={pipelines ?? []}
-								/>
-							</>
-						) : (
-							<>
-								<button
-									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setCreatingDataPoint(true)}
-								>
-									<Plus size={18} color="white" className="mr-1" />
-									New Data Point
-								</button>
-								{isLoadingDataPoints ? (
-									<FlyWheelPageLoading />
-								) : (
-									<DataPoints
-										data={datapoints}
-										pagination={paginationDataPoints}
-										onPageChange={setPointsPage}
-										onLimitChange={(newLimit) => {
-											setPointsLimit(newLimit);
-											setEntriesPage(1);
-										}}
-										creatingDataPoint={creatingDataPoint}
-										setCreatingDataPoint={setCreatingDataPoint}
-									/>
-								)}
-							</>
-						)}
-					</div>
-				)}
-
-
-				{selectedTab === 'Data Entries' && (
-					<>
-						<div className="mt-5">
-							{ analyseData && (
-								<button
-									className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-									onClick={() => setAnalyseData(true)}
-								>
-									<ChartLine size={16} color="white" className="mr-1" />
-									Analyse Data
-								</button>
-							)}
-						</div>
-
-						<DataEntries
-							data={dataentries}
-							pagination={paginationDataEntries}
-							onPageChange={setEntriesPage}
-							onLimitChange={(newLimit) => {
-								setEntriesLimit(newLimit);
-								setEntriesPage(1);
-							}}
-						/>
-					</>
-				)}
-
-
+				{/* Tab Layout Rendering */}
+				{TabContent[selectedTab]?.()}
 			</div>
-
 		</DashboardLayout>
 	);
 };

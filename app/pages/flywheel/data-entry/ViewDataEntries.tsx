@@ -1,21 +1,23 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchDataPointOfDataEntries } from "../_features/hook";
+import { useFetchDataPointOfDataEntries, useFetchSinglePipeline } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ChartLine } from "lucide-react";
+import { ChartLine, List } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useState } from "react";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
     uniqueId: string;
+    setViewDataEntries: (value: boolean) => void;
 }
 
 const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     viewDataEntries,
     uniqueId,
+    setViewDataEntries,
 }) => {
     const { data, isLoading } = useFetchDataPointOfDataEntries({
         axios,
@@ -25,8 +27,9 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
             limit: 10,
         },
     });
-    const [analyseData, setAnalyseData] = useState(false);
 
+    // console.log(pipeline)
+    const [analyseData, setAnalyseData] = useState(false);
 
     if (!viewDataEntries) return null;
 
@@ -37,11 +40,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     };
 
     return (
-        <div className="py-5">
+        <div className="w-full pb-5">
             {isLoading && <p className="mt-10">Loading...</p>}
 
             {!isLoading && (!data?.entries || data.entries.length === 0) && (
-                <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-10">
+                <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
                     <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
                         <thead className="bg-gray-50">
                             <tr>
@@ -51,7 +54,9 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </tr>
                         </thead>
                         <tbody>
-                            <td className="flex justify-center px-10 py-5" colSpan={3}>No data entries found.</td>
+                            <tr>
+                                <td className="flex justify-center px-5 py-5">No data entries</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -59,28 +64,18 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
             {!isLoading && data?.entries && data.entries.length > 0 && (
                 <>
-                    <div className="mt-5">
-                        <button
-                            className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-                            onClick={() => setAnalyseData(true)}
-                        >
-                            <ChartLine size={16} color="white" className="mr-1" />
-                            Analyse Data
-                        </button>
-                    </div>
-        
                     <AnalyseData
                         analyseData={analyseData}
                         uniqueId={uniqueId}
                         onClose={() => setAnalyseData(false)}
                     />
 
-                    <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-10">
+                    <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
                         <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold">Field Values</th>
+                                    <th className="px-6 py-3 text-left text-sm font-semibold">Data</th>
                                     <th className="px-6 py-3 text-left text-sm font-semibold">Created On</th>
                                 </tr>
                             </thead>
@@ -127,7 +122,20 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 ))}
                             </tbody>
                         </table>
+
+                        <div className="fixed align-bottom bottom-5 right-5 z-10">
+                            <div className="text-center text-sm">Analyse</div>
+                            <button
+                                className="flex justify-center w-15 h-15 items-center bg-blue-600 text-white rounded-full cursor-pointer"
+                                onClick={() => setAnalyseData(true)}
+                            >
+                                <ChartLine size={25} color="white" className="mr-1 animate-pulse " />
+                            </button>
+                        </div>
                     </div>
+
+
+
                 </>
 
             )}

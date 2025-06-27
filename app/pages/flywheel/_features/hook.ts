@@ -26,7 +26,7 @@ export const useFetchDataPoints = ({
 }: UseFetchDataPoints) => {
 	return useQuery<{
 	    	data: DataPoint[]
-			  pagination: Pagination;
+			  pagination: PaginationMeta;
 		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
