@@ -77,7 +77,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     />
 
                     <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
-                        <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
+                        <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
@@ -88,20 +88,20 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                 {entries.map((entry, index) => (
                                     <tr key={index} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 font-medium">{index + 1}</td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 font-medium align-top">{index + 1}</td>
+                                        <td className="px-6 py-4 align-top">
                                             <table className="text-md">
                                                 <tbody>
                                                     {entry.data && typeof entry.data === 'object' ? (
                                                         Object.entries(entry.data).length > 0 ? (
                                                             Object.entries(entry.data).map(([key, value]) => (
                                                                 <tr key={key}
-                                                                    className="flex justify-between min-w-[500px] max-w-[500px]
+                                                                    className="flex justify-between lg:min-w-[500px] lg:max-w-[500px]
                                                             border-b border-gray-200 last:border-b-0
                                                             "
                                                                 >
-                                                                    <td className="font-medium flex flex-wrap min-w-[230px] max-w-[230px] py-2">{toSentenceCase(key)}:</td>
-                                                                    <td className="flex flex-wrap justify-end min-w-[250px] max-w-[250px] py-2">{renderValue(value)}</td>
+                                                                    <td className="font-medium flex flex-wrap lg:min-w-[230px] lg:max-w-[230px] py-2">{toSentenceCase(key)}:</td>
+                                                                    <td className="flex flex-wrap justify-end lg:min-w-[250px] lg:max-w-[250px] py-2">{renderValue(value)}</td>
                                                                 </tr>
                                                             ))
                                                         ) : (
@@ -121,7 +121,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                                 </tbody>
                                             </table>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 align-top">
                                             {formatDate(entry.createdAt ?? '')}
                                         </td>
                                     </tr>

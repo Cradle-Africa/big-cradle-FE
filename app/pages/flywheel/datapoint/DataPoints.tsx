@@ -112,7 +112,7 @@ const DataPoints = ({
 
             {!editingDataPoint && !viewDataEntries && (
                 <>
-                    <div className="flex justify-between">
+                    <div className="flex justify-between w-full">
                         <h2 className="text-lg text-black">Data points</h2>
                         <div>
                             <button
@@ -126,13 +126,13 @@ const DataPoints = ({
 
                     </div>
                     <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
-                        <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
+                        <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-sm font-semibold">
                                         #
                                     </th>
-                                    <th className="px-3 py-3 text-left text-sm font-semibold">
+                                    <th className="hidden lg:inline px-3 py-3 text-left text-sm font-semibold">
                                         Fields
                                     </th>
                                     <th className="px-3 py-3 text-left text-sm font-semibold">
@@ -147,7 +147,7 @@ const DataPoints = ({
                                 {data.map((dataPoints, index) => (
                                     <tr key={index} className="">
                                         <td className="px-6 py-4 align-top">{index + 1}</td>
-                                        <td className="px-3 py-2 align-top">
+                                        <td className="hidden lg:inline px-3 py-2 align-top">
                                             <table className="w-full">
                                                 <tbody>
                                                     <tr>
@@ -155,9 +155,9 @@ const DataPoints = ({
                                                             {dataPoints.field.map((field: any, idx: number) => (
                                                                 <div key={idx} className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50">
                                                                     <div className="flex gap-x-4">
-                                                                        <span className="min-w-[400px] font-medium flex flex-wrap">{field.label}</span>
-                                                                        <span className="min-w-[100px]">{field.type}</span>
-                                                                        <span className="min-w-[100px]">{field.required ? "Required" : "Optional"}</span>
+                                                                        <span className="lg:min-w-[400px] font-medium flex flex-wrap">{field.label}</span>
+                                                                        <span className="lg:min-w-[100px]">{field.type}</span>
+                                                                        <span className="lg:min-w-[100px]">{field.required ? "Required" : "Optional"}</span>
                                                                     </div>
 
                                                                     {field.options && field.options.length > 0 && (
@@ -200,26 +200,36 @@ const DataPoints = ({
                                             {formatDate(dataPoints?.createdAt ?? "")}
                                         </td>
                                         <td className="px-3 py-4 text-center align-top">
-                                            <Eye
-                                                size={35}
-                                                onClick={() => handleViewDataPoint(dataPoints?.id)}
-                                                className="cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
-                                            />
-                                            <Pencil
-                                                size={35}
-                                                onClick={() => handleEditDataPoint(dataPoints?.id)}
-                                                className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
-                                            />
-                                            <Share2
-                                                size={35}
-                                                onClick={() => handleShareDataPoint(dataPoints?.id)}
-                                                className="mt-10 cursor-pointer bg-gray-100 rounded-full px-2 py-1 hover:bg-blue-600 hover:text-white "
-                                            />
-                                            <button
-                                                onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
-                                                className="w-28 text-center mt-10 text-sm cursor-pointer bg-gray-100 rounded-full px-3 py-1 hover:bg-blue-600 hover:text-white "
-                                            >View Entries
-                                            </button>
+                                            <div className="flex gap-1 lg:inline">
+                                                <Eye
+                                                    size={30}
+                                                    onClick={() => handleViewDataPoint(dataPoints?.id)}
+                                                    className="cursor-pointer bg-gray-100 rounded-full 
+                                                        px-2 py-0 lg:py-1 hover:bg-blue-600 hover:text-white 
+                                                        w-7 h-8 lg:w-9 lg:h-9"
+                                                />
+
+                                                <Pencil
+                                                    size={30}
+                                                    onClick={() => handleEditDataPoint(dataPoints?.id)}
+                                                    className="cursor-pointer bg-gray-100 rounded-full 
+                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
+                                                        w-7 h-7 lg:w-9 lg:h-9 lg:mt-5"
+                                                />
+                                                <Share2
+                                                    size={30}
+                                                    onClick={() => handleShareDataPoint(dataPoints?.id)}
+                                                    className="cursor-pointer bg-gray-100 rounded-full 
+                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
+                                                        w-7 h-7 lg:w-9 lg:h-9 lg:mt-5"
+                                                />
+                                                <button
+                                                    onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
+                                                    className="cursor-pointer bg-gray-100 rounded-full 
+                                                        px-2 py-1 hover:bg-blue-600 hover:text-white w-32 text-xs lg:mt-5"
+                                                >View Entries
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

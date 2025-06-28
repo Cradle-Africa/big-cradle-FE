@@ -6,8 +6,6 @@ import {
   ChevronUp,
   File,
   House,
-  User,
-  Users,
   UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -61,13 +59,13 @@ export default function SuperAdminSidebar() {
           </div>
           {usersMenuOpen && (
             <div className="ml-6 mt-1 space-y-1">
-              <Link
+              {/* <Link
                 href="/pages/user/user-management/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <User size={14} />
                 User management
-              </Link>
+              </Link> */}
               <Link
                 href="/pages/user/business/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
@@ -89,13 +87,13 @@ export default function SuperAdminSidebar() {
                 <Building2 size={14} />
                 Investors KYC
               </Link>
-              <Link
+              {/* <Link
                 href="/pages/user/employee/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Users size={14} />
                 Employees
-              </Link>
+              </Link> */}
             </div>
           )}
         </li>
