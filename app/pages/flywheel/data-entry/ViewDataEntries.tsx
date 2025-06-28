@@ -1,12 +1,13 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchDataPointOfDataEntries, useFetchSinglePipeline } from "../_features/hook";
+import { useFetchDataPointOfDataEntries } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ChartLine, List } from "lucide-react";
+import { ChartLine } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useState } from "react";
+import Pagination from "../_components/Pagination";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -17,16 +18,22 @@ interface ViewDataEntriesProps {
 const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     viewDataEntries,
     uniqueId,
-    setViewDataEntries,
 }) => {
+
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+
     const { data, isLoading } = useFetchDataPointOfDataEntries({
         axios,
         queryParams: {
             dataPoint: uniqueId,
-            page: 1,
-            limit: 10,
+            page: page,
+            limit: limit,
         },
     });
+
+    const entries = data?.entries
+    const pagination = data?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
     // console.log(pipeline)
     const [analyseData, setAnalyseData] = useState(false);
@@ -43,7 +50,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         <div className="w-full pb-5">
             {isLoading && <p className="mt-10">Loading...</p>}
 
-            {!isLoading && (!data?.entries || data.entries.length === 0) && (
+            {!isLoading && (!entries || entries.length === 0) && (
                 <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
                     <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
                         <thead className="bg-gray-50">
@@ -62,7 +69,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 </div>
             )}
 
-            {!isLoading && data?.entries && data.entries.length > 0 && (
+            {!isLoading && entries && entries.length > 0 && (
                 <>
                     <AnalyseData
                         analyseData={analyseData}
@@ -80,7 +87,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
-                                {data.entries.map((entry, index) => (
+                                {entries.map((entry, index) => (
                                     <tr key={index} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 font-medium">{index + 1}</td>
                                         <td className="px-6 py-4">
@@ -133,7 +140,16 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </button>
                         </div>
                     </div>
-
+                    <Pagination
+                        currentPage={page}
+                        totalPages={pagination.pages}
+                        limit={limit}
+                        onPageChange={(newPage) => setPage(newPage)}
+                        onLimitChange={(newLimit) => {
+                            setLimit(newLimit);
+                            setPage(1);
+                        }}
+                    />
 
 
                 </>

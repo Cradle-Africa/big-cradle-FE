@@ -2,7 +2,7 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Database, Eye, List, Pencil, Plus, Share2 } from "lucide-react";
+import { Eye, List, Pencil, Plus, Share2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
@@ -25,7 +25,6 @@ const DataPoints = ({
     pagination,
     onPageChange,
     onLimitChange,
-    creatingDataPoint,
     setCreatingDataPoint
 }: DataPointsProps
 ) => {
@@ -94,17 +93,6 @@ const DataPoints = ({
                 setEditingDataPoint={setEditingDataPoint}
             />
 
-            {/* {viewDataEntries && (
-                <div className="flex justify-end">
-                    <button
-                        className="flex w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
-                        onClick={() => setViewDataEntries(false)}
-                    >
-                        <List size={18} color="white" className="mr-1" />
-                        View Data Points
-                    </button>
-                </div>
-            )} */}
             {(viewDataEntries &&
                 <div className="flex justify-between">
                     <h2 className="text-md text-black">Data entries</h2>

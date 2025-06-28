@@ -1,6 +1,5 @@
 import { Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Button } from "@radix-ui/themes";
 import { Calendar, Eye, LetterText } from "lucide-react";
 import Link from "next/link";
 
