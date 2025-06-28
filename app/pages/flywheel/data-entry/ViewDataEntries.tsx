@@ -76,6 +76,16 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         onClose={() => setAnalyseData(false)}
                     />
 
+                    <div className="mt-3">
+                        <button
+                            className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                            onClick={() => setAnalyseData(true)}
+                        >
+                            <ChartLine size={15} color="white" className="mr-1 inline animate-pulse " />
+                            Analyse data
+                        </button>
+                    </div>
+
                     <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
                         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                             <thead className="bg-gray-50">
@@ -129,15 +139,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </tbody>
                         </table>
 
-                        <div className="fixed align-bottom bottom-5 right-5 z-10">
-                            <div className="text-center text-sm">Analyse</div>
-                            <button
-                                className="flex justify-center w-15 h-15 items-center bg-blue-600 text-white rounded-full cursor-pointer"
-                                onClick={() => setAnalyseData(true)}
-                            >
-                                <ChartLine size={25} color="white" className="mr-1 animate-pulse " />
-                            </button>
-                        </div>
                     </div>
                     <Pagination
                         currentPage={page}

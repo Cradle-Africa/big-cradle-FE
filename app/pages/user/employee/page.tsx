@@ -44,8 +44,8 @@ const Admin = () => {
                 endpoint="manage-employee/all-business-user-employeees"
                 fields={employeeFields}
                 breadcrumbs={{
-                    parent: { path: '/user/user-management', label: 'User & Access' },
-                    current: 'Employees'
+                    parent: { path: '/', label: 'Dashboard' },
+                    current: 'Dashboard'
                 }}
                 actionConfig={actionConfig}
                 rightAction={rightAction}

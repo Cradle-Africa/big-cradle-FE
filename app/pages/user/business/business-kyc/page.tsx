@@ -43,8 +43,8 @@ const BusinessKyc = () => {
                 endpoint="super-admin-auth/all-businesses-kyc-review"
                 fields={fields}
                 breadcrumbs={{
-                    parent: { path: 'pages/user', label: 'User' },
-                    current: 'Businesses KYC'
+                    parent: { path: '/', label: 'Dashboard' },
+                    current: 'Dashboard'
                 }}
                 actionConfig={actionConfig}
             />
