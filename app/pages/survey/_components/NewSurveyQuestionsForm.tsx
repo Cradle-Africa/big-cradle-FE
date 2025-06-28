@@ -64,7 +64,7 @@ const NewSurveyQuestionsForm = ({
       };
 
       await createSurvey(payload, {
-        onSuccess: (createdSurvey) => {
+        onSuccess: () => {
           toast.success("Survey ");
         },
         onError: (error: any) => {

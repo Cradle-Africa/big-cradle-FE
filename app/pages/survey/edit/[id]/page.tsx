@@ -4,24 +4,21 @@ import axios from "@/app/lib/axios";
 
 import DashboardLayout from "@/app/DashboardLayout";
 import { Field, FieldType, SurveyForm } from "@/app/lib/type";
+import FieldPreview from "@/app/pages/flywheel/_components/FieldPreview";
 import { toCamelCase } from "@/app/utils/caseFormat";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SurveyDetailsLoadingPage from "../../[id]/loading";
 import SurveySelectOptionManager from "../../_components/SelectOptionManager";
-import { useFetchSingleSurvey, useUpdateSurvey } from "../../_features/hooks";
-import { Check } from "lucide-react";
-import Spinner from "@/app/components/Spinner";
-import FieldPreview from "@/app/pages/flywheel/_components/FieldPreview";
+import { useFetchSingleSurvey } from "../../_features/hooks";
 
 const SurveyEditPage = () => {
   const params = useParams<{ id: string }>();
-  const router = useRouter();
 
   const [form, setForm] = useState<SurveyForm>({ surveyId: "", field: [] });
   const [newOptions, setNewOptions] = useState<string[]>([]);
 
-  const { mutateAsync: updateSurvey, isPending } = useUpdateSurvey({ axios });
+  // const { mutateAsync: updateSurvey, isPending } = useUpdateSurvey({ axios });
 
   const { data, isLoading } = useFetchSingleSurvey({
     axios,
@@ -172,7 +169,7 @@ const SurveyEditPage = () => {
             + Add
           </button>
 
-          <button
+          {/* <button
             type="submit"
             disabled={isPending}
             className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
@@ -184,7 +181,7 @@ const SurveyEditPage = () => {
             ) : (
               <span>Update survey</span>
             )}
-          </button>
+          </button> */}
         </div>
       </form>
     </DashboardLayout>
