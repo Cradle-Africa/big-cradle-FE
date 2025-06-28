@@ -18,7 +18,7 @@ export default function SuperAdminSidebar({
       <div className="absolute lg:fixed z-10 top-0 lg:h-screen py-5 lg:max-w-[300px]">
         <SideBar />
       </div>
-      <div className="fixed w-full lg:relative lg:ml-64 flex-1">
+      <div className="w-full lg:ml-64 flex-1">
         <Topbar />
         <div className="px-5 lg:px-0 lg:pl-5 lg:pr-0 py-5">{children}</div>
       </div>
