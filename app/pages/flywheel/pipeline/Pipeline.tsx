@@ -1,14 +1,21 @@
-import { Pipeline } from "@/app/lib/type";
+import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { Calendar, Eye, LetterText } from "lucide-react";
 import Link from "next/link";
+import Pagination from "../_components/Pagination";
 
 type DataPipelineProps = {
     data: Pipeline[];
+    pagination: PaginationMeta;
+    onPageChange: (newPage: number) => void;
+    onLimitChange: (newLimit: number) => void;
 };
 
 const PipelinePage = ({
     data,
+    pagination,
+    onPageChange,
+    onLimitChange,
 }: DataPipelineProps) => {
 
     return (
@@ -36,7 +43,7 @@ const PipelinePage = ({
                                 <Link
                                     href={`/pages/flywheel/data-entry/${pipeline.id}`}
                                     className="flex items-center text-center mt-5 text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white ">
-                                    <Eye size={14} className='mr-1 inline'/> View Entries
+                                    <Eye size={14} className='mr-1 inline' /> View Entries
                                 </Link>
                             </div>
 
@@ -44,6 +51,16 @@ const PipelinePage = ({
                     )
                 }
             </div >
+
+            {pagination && (
+                <Pagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.pages}
+                    limit={pagination.limit}
+                    onPageChange={onPageChange}
+                    onLimitChange={onLimitChange}
+                />
+            )}
         </div>
 
 

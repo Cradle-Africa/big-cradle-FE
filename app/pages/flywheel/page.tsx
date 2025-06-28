@@ -11,7 +11,6 @@ import PopUp from "./_components/Popup";
 import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
-// import DataEntries from "./data-entry/DataEntries";
 
 type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points';
 
@@ -25,33 +24,31 @@ const Flywheel = () => {
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false);
 
-	// const [entriesPage, setEntriesPage] = useState(1);
-	// const [entriesLimit, setEntriesLimit] = useState(10);
 	const [pointsPage, setPointsPage] = useState(1);
 	const [pointsLimit, setPointsLimit] = useState(10);
-	const [pipelinesPage] = useState(1);
-	const [pipelinesLimit] = useState(10);
+	const [pipelinePage, setPipelinePage ] = useState(1);
+	const [pipelineLimit, setPipelineLimit] = useState(10);
 
-	const { isLoading: isLoadingDataPoints, data: dataPointsData } = useFetchPipelines({
+	const { isLoading: isLoadingDataPoints, data: pipelineData } = useFetchPipelines({
 		axios,
-		queryParams: { page: pipelinesPage, limit: pipelinesLimit }
+		queryParams: { page: pipelinePage, limit: pipelineLimit }
 	});
+	const pipelines = pipelineData?.dataPoint ?? [];
+	const paginationDataPipeline = pipelineData?.pagination ?? { page: 1, limit: 10, pages: 1, total: pipelines.length }
 
 	const { data: dataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: { page: pointsPage, limit: pointsLimit }
 	});
+	const datapoints = dataPoints?.data ?? [];
+	const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
 
 	const { data: dataEntries } = useFetchDataEntries({
 		axios,
 		queryParams: { page: 0, limit: 0 }
 	});
-
-	const pipelines = dataPointsData?.dataPoint ?? [];
-	const paginationDataPoints = dataPointsData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
-	const datapoints = dataPoints?.data ?? [];
 	const dataentries = dataEntries?.data ?? [];
-	
+
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
 			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -97,7 +94,15 @@ const Flywheel = () => {
 								Build a new Pipeline
 							</button>
 						</div>
-						<Pipeline data={pipelines} />
+						<Pipeline
+							data={pipelines}
+							pagination={paginationDataPipeline}
+							onPageChange={setPipelinePage}
+							onLimitChange={(newLimit) => {
+								setPipelineLimit(newLimit);
+								setPipelinePage(1);
+							}}
+						/>
 					</>
 				)}
 			</div>
@@ -129,6 +134,7 @@ const Flywheel = () => {
 								creatingDataPoint={creatingDataPoint}
 								setCreatingDataPoint={setCreatingDataPoint}
 							/>
+
 						)}
 					</>
 				)}

@@ -35,7 +35,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const entries = data?.entries
     const pagination = data?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
-    // console.log(pipeline)
     const [analyseData, setAnalyseData] = useState(false);
 
     if (!viewDataEntries) return null;
