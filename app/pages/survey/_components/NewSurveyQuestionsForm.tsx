@@ -272,6 +272,7 @@ const NewSurveyQuestionsForm = ({
           </button>
         ) : (
           <button
+            type="button"
             onClick={onNextButtonClicked}
             className="border border-green-600 rounded-md py-2 px-8 mr-auto"
           >
