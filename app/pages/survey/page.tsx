@@ -220,28 +220,28 @@ const SurveyPage = () => {
           </div>
         </>
       )}
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-2">
+      <div className="w-full">
+        <div className="flex justify-between">
           <p className="font-medium text-black">Surveys</p>
-          <p>
-            View, manage, and track your survey tasks. Create new surveys to
-            collect insights in real time
-          </p>
-        </div>
-        <button
-          className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
+          <button
+            className="flex bg-[#3352FF] rounded-md px-4 py-1 lg:py-2 cursor-pointer"
           //   onClick={() => setOpen(true)}
-        >
-          <Link href="/pages/survey/new?survey=survey-name-and-description">
-            <div className="flex fgap2 items-center gap-2">
-              <Plus size={18} color="white" />
-              <span className="text-white">Create new survey</span>
-            </div>
-          </Link>
-        </button>
+          >
+            <Link href="/pages/survey/new?survey=survey-name-and-description">
+              <div className="flex items-center gap-2">
+                <Plus size={18} color="white" />
+                <span className="text-white">Create new survey</span>
+              </div>
+            </Link>
+          </button>
+        </div>
+        <p className="mt-2">
+          View, manage, and track your survey tasks. Create new surveys to
+          collect insights in real time
+        </p>
       </div>
       {/* Build the cards area */}
-      <div className="flex gap-6 mt-8">
+      <div className="grid grid-cols-2 md:grid md:grid-cols-3 2xl:grid 2xl:grid-cols-4 gap-3 lg:gap-6 mt-8">
         {surveyDashBoardItems?.map((menu, index) => (
           <SurveyCard
             key={`${menu.title}`}
@@ -257,7 +257,7 @@ const SurveyPage = () => {
         dataentries={dataentries?.length}
       /> */}
       {/* Survey table  */}
-      <div className="flex flex-col bg-white p-4 mt-8">
+      <div className="flex flex-col bg-white lg:p-4 mt-8">
         <p className="font-bold text-black">Survey Table List</p>
         <div className="flex gap-4 my-4">
           {statuses.map((status) => (

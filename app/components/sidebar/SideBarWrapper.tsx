@@ -1,4 +1,6 @@
-import LogoWithText from "@/public/images/white-logo-with-text.png";
+import LogoWithTextWhite from "@/public/images/white-logo-with-text.png";
+import LogoWithText from "@/public/images/logo-with-text.png";
+
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +17,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
       <div
         className={` ${
           open ? "" : "border border-gray-200 rounded-md bg-white"
-        } lg:hidden lg:mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}
+        } lg:hidden lg:mt-3 md:mt-0 px-2 py-1 md:p-2 lg:p-4 flex justify-between items-center`}
       >
         <button
           onClick={() => setOpen(!open)}
@@ -49,7 +51,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
         <div className="flex flex-col space-y-2 mt-2 lg:px-4">
           <Link href="/">
             <Image
-              src={LogoWithText}
+              src={LogoWithTextWhite}
               width={100}
               height={13}
               alt="Logo"

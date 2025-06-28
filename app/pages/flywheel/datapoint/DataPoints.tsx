@@ -132,7 +132,7 @@ const DataPoints = ({
                                     <th className="px-6 py-3 text-left text-sm font-semibold">
                                         #
                                     </th>
-                                    <th className="hidden lg:inline px-3 py-3 text-left text-sm font-semibold">
+                                    <th className="hidden md:inline px-3 py-3 text-left text-sm font-semibold">
                                         Fields
                                     </th>
                                     <th className="px-3 py-3 text-left text-sm font-semibold">
@@ -147,7 +147,7 @@ const DataPoints = ({
                                 {data.map((dataPoints, index) => (
                                     <tr key={index} className="">
                                         <td className="px-6 py-4 align-top">{index + 1}</td>
-                                        <td className="hidden lg:inline px-3 py-2 align-top">
+                                        <td className="hidden md:inline px-3 py-2 align-top">
                                             <table className="w-full">
                                                 <tbody>
                                                     <tr>
@@ -200,13 +200,13 @@ const DataPoints = ({
                                             {formatDate(dataPoints?.createdAt ?? "")}
                                         </td>
                                         <td className="px-3 py-4 text-center align-top">
-                                            <div className="flex gap-1 lg:inline">
+                                            <div className="flex flex-wrap gap-1 lg:inline">
                                                 <Eye
                                                     size={30}
                                                     onClick={() => handleViewDataPoint(dataPoints?.id)}
                                                     className="cursor-pointer bg-gray-100 rounded-full 
-                                                        px-2 py-0 lg:py-1 hover:bg-blue-600 hover:text-white 
-                                                        w-7 h-8 lg:w-9 lg:h-9"
+                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
+                                                        w-7 h-8 lg:w-9 lg:h-9 lg:mt-5"
                                                 />
 
                                                 <Pencil

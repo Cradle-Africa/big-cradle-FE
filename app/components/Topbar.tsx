@@ -30,7 +30,7 @@ const Topbar = () => {
     }
     return (
         <>
-            <div className=''>
+            <div className='md:ml-[550px] lg:ml-[650px] xl:ml-0'>
                 <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
                     <form className="hidden relative lg:flex items-center">
                         <Search className="absolute left-3 text-gray-300 w-4 h-4 pointer-events-none" />

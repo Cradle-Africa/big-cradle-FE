@@ -64,7 +64,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                 breadcrumbs={breadcrumbs}
             />
 
-            <div className="relative w-89 sm:min-w-full mt-5 rounded-md bg-white" key="table-container">
+            <div className="relative xs:w-90 sm:w-93 sm:min-w-full mt-5 rounded-md bg-white" key="table-container">
                 <div className='flex justify-between items-center mb-4' key="table-header">
                     <h2 className="text-md md:text-lg text-gray-800 font-semibold" key="table-title">
                         {title}
@@ -72,7 +72,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                 </div>
 
                 <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-10">
-                    <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
+                    <table className="min-w-[78%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                         <thead key="table-head">
                             <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                 <th
