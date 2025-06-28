@@ -39,20 +39,20 @@ const SurveyTable = ({ data }: Props) => {
     );
 
   return (
-    <div className="overflow-x-auto rounded-[8px] border border-gray-200">
-      <table className="min-w-full divide-y divide-gray-200 rounded-[8px] ">
+    <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
+      <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Survey Same
             </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Survey Status
             </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Created on
             </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold">
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Action
             </th>
           </tr>
@@ -61,8 +61,8 @@ const SurveyTable = ({ data }: Props) => {
           {/* Example row */}
           {data.map((survey) => (
             <tr key={survey.id}>
-              <td className="px-6 py-4 font-medium">{survey.surveyName}</td>
-              <td className="px-6 py-4">
+              <td className="px-3 lg:px-6 py-4 font-medium">{survey.surveyName}</td>
+              <td className="px-3 lg:px-6 py-4">
                 {survey.isActive ? (
                   <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
                     Active
@@ -73,8 +73,8 @@ const SurveyTable = ({ data }: Props) => {
                   </span>
                 )}
               </td>
-              <td className="px-6 py-4">{formattedDate(survey.createdAt)}</td>
-              <td className="px-6 py-4 relative">
+              <td className="px-3 lg:px-6 py-4">{formattedDate(survey.createdAt)}</td>
+              <td className="px-3 lg:px-6 py-4 relative">
                 <button
                   onClick={() => toggleMenu(survey.id)}
                   className="focus:outline-none cursor-pointer px-5"

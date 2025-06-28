@@ -1,5 +1,6 @@
 // components/Pagination.tsx
 import React from "react";
+import { GoChevronLeft, GoChevronRight } from "react-icons/go";
 
 interface PaginationProps {
     currentPage: number;
@@ -21,27 +22,27 @@ const PaginationComponent: React.FC<PaginationProps> = ({
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage <= 1}
-                className="px-3 py-2 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white disabled:opacity-50"
+                className="px-3 py-2 bg-gray-100 text-black rounded-md cursor-pointer hover:bg-blue-600 hover:text-white disabled:opacity-50"
             >
-                Previous
+                <GoChevronLeft size={14}/>
             </button>
 
-            <span className="text-sm text-gray-700">
+            <span className="text-sm">
                 Page {currentPage} of {totalPages}
             </span>
 
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className="px-3 py-2 bg-gray-200 rounded-md hover:bg-blue-600 hover:text-white disabled:opacity-50"
+                className="px-3 py-2 bg-gray-100 text-black rounded-md cursor-pointer hover:bg-blue-600 hover:text-white disabled:opacity-50"
             >
-                Next
+                <GoChevronRight size={14}/>
             </button>
 
             <select
                 value={limit}
                 onChange={(e) => onLimitChange(Number(e.target.value))}
-                className="ml-4 py-2 px-2 border border-gray-300 rounded-md outline-none"
+                className="ml-4 py-[4px] bg-gray-100 px-2 rounded-md outline-none hover:bg-blue-600 hover:text-white cursor-pointer"
             >
                 <option value={5}>5 per page</option>
                 <option value={10}>10 per page</option>

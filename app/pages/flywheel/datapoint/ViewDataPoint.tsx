@@ -2,7 +2,7 @@
 
 import axios from "@/app/lib/axios";
 import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
-import { X, ArrowDownUp } from "lucide-react";
+import { X } from "lucide-react";
 
 interface PopUpProps {
 	openViewDataPoint: boolean;
@@ -128,14 +128,14 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 						<X />
 					</button>
 
-					<h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-						<ArrowDownUp size={20} /> View Data Point
+					<h2 className="text-blue-600 text-xl mb-6 flex items-center gap-2">
+						View Data Point
 					</h2>
 					{isLoading ? (
 						<p className="flex justify-center px-10 py-10 text-gray-800 text-sm">Loading...</p>
 					) : (
 						<>
-							<h2>{singlePipeline?.dataPointName }</h2>
+							<h2 className="text-xl text-blue-600">{singlePipeline?.dataPointName }</h2>
 							<div className="overflow-y-auto max-h-[70vh] py-8 ">
 								<form className="space-y-6 text-left text-sm">
 									{pipeline?.field.map((field, index) => (
@@ -151,18 +151,6 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 									))}
 								</form>
 							</div>
-
-							{/* <div className="pt-2 border-t border-gray-200 mt-6">
-									<button
-										type="button"
-										className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
-										onClick={() => {
-											console.log("Edit clicked for ID:", uniqueId);
-										}}
-									>
-										Edit Data Point
-									</button>
-								</div> */}
 						</>
 
 					)}

@@ -90,6 +90,7 @@ export interface Survey {
 }
 
 export type Pipeline = {
+  id?: string;
   businessUserId?: string | null;
   employeeUserId?: string | null;
   dataPointName: string;

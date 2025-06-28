@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import Link from 'next/link';
 import { getBusinessId, getAdminUserId, getToken } from '../../utils/user/userData';
 import FormPopup from '../pop-up/PopUpForm'
 import { BASE_URL } from '@/app/services/base'
@@ -104,11 +103,6 @@ const BreadsCrumps: React.FC<BreadsCrumpsProps> = (
             )}
             <div className='flex justify-between w-full text-sm'>
                 <div>
-                    <span className='text-gray-400'>
-                        <Link href={breadcrumbs.parent.path} key="breadcrumb-link">
-                            {breadcrumbs.parent.label} /
-                        </Link>
-                    </span>
                     <span className='text-gray-700 ml-1' key="breadcrumb-current">
                         {breadcrumbs.current}
                     </span>
@@ -126,7 +120,7 @@ const BreadsCrumps: React.FC<BreadsCrumpsProps> = (
                                         setOpenBusiness(true)
                                     }
                                 }}
-                                className={`btn ${rightAction.add.className || 'bg-blue-600 text-white px-2 py-1 rounded-sm cursor-pointer'}`}
+                                className={`btn ${rightAction.add.className || 'bg-blue-600 text-white px-2 py-1 rounded-md cursor-pointer'}`}
                                 key="right-action-button"
                             >
                                 {rightAction.add.icon && (

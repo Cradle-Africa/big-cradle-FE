@@ -1,4 +1,4 @@
-import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
+import { DataEntry, DataPoint, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataPoints, fetchPipelines, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
@@ -26,7 +26,7 @@ export const useFetchDataPoints = ({
 }: UseFetchDataPoints) => {
 	return useQuery<{
 	    	data: DataPoint[]
-			  pagination: Pagination;
+			  pagination: PaginationMeta;
 		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),

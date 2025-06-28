@@ -21,13 +21,13 @@ const BusinessCard = ({ title, value, subTitle, isHighLighted }: Props) => {
     >
       <div className="flex justify-between items-center">
         <p>{title}</p>
-        <div className="rounded-full border border-[#3352FF] bg-blue-100 p-2">
-          <Album size={16} color="blue" />
+        <div className="rounded-full border border-[#3352FF] bg-blue-100 p-1 lg:p-2">
+          <Album size={14} color="blue" />
         </div>
       </div>
       <span
         className={classNames({
-          "text-[42px] font-bold mt-8 mb-2": true,
+          "text-2xl lg:text-[42px] font-bold mt-3 lg:mt-8 mb-1 lg:mb-2": true,
           "text-black": !isHighLighted,
           "text-white": isHighLighted,
         })}

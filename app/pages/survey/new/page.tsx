@@ -54,7 +54,7 @@ const NewSurveyPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="flex gap-4 items-center justify-center">
+      <div className="lg:flex lg:gap-4 items-center justify-center">
         {/* Survey buttons area */}
         {/* {surveyMenuList.map((survey: string) => (
           <SurveyTabButton
@@ -71,7 +71,7 @@ const NewSurveyPage = () => {
           // }
           isSelected={paramSurvey === "survey-name-and-description"}
         >
-          <div className="flex gap-4 items-center">
+          <div className="flex justify-center gap-1 lg:gap-4 items-center">
             <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
               <p>1</p>
             </div>
@@ -85,7 +85,7 @@ const NewSurveyPage = () => {
           // }
           isSelected={paramSurvey === "survey-questions"}
         >
-          <div className="flex gap-4 items-center">
+          <div className="flex justify-center gap-1 lg:gap-4 items-center">
             <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
               <p>2</p>
             </div>
@@ -100,7 +100,7 @@ const NewSurveyPage = () => {
           // }
           isSelected={paramSurvey === "survey-payment"}
         >
-          <div className="flex gap-4 items-center">
+          <div className="flex justify-center gap-1 lg:gap-4 items-center">
             <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
               <p>3</p>
             </div>
