@@ -2,7 +2,7 @@
 
 import axios from "@/app/lib/axios";
 import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
-import { X, ArrowDownUp } from "lucide-react";
+import { X } from "lucide-react";
 
 interface PopUpProps {
 	openViewDataPoint: boolean;

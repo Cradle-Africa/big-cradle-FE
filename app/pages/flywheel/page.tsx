@@ -1,6 +1,6 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
-import { ChartLine, List, Plus } from "lucide-react";
+import { List, Plus } from "lucide-react";
 import { JSX, useEffect, useRef, useState } from "react";
 import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
@@ -24,10 +24,9 @@ const Flywheel = () => {
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false);
-	const [analyseData, setAnalyseData] = useState(false);
 
-	const [entriesPage, setEntriesPage] = useState(1);
-	const [entriesLimit, setEntriesLimit] = useState(10);
+	// const [entriesPage, setEntriesPage] = useState(1);
+	// const [entriesLimit, setEntriesLimit] = useState(10);
 	const [pointsPage, setPointsPage] = useState(1);
 	const [pointsLimit, setPointsLimit] = useState(10);
 	const [pipelinesPage] = useState(1);
@@ -45,15 +44,14 @@ const Flywheel = () => {
 
 	const { data: dataEntries } = useFetchDataEntries({
 		axios,
-		queryParams: { page: entriesPage, limit: entriesLimit }
+		queryParams: { page: 0, limit: 0 }
 	});
 
 	const pipelines = dataPointsData?.dataPoint ?? [];
 	const paginationDataPoints = dataPointsData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 	const datapoints = dataPoints?.data ?? [];
 	const dataentries = dataEntries?.data ?? [];
-	const paginationDataEntries = dataEntries?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
-
+	
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
 			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -136,31 +134,6 @@ const Flywheel = () => {
 				)}
 			</div>
 		)
-
-		// "Data Entries": () => (
-		// 	<>
-		// 		<div className="mt-5">
-		// 			{analyseData && (
-		// 				<button
-		// 					className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-full cursor-pointer"
-		// 					onClick={() => setAnalyseData(true)}
-		// 				>
-		// 					<ChartLine size={16} color="white" className="mr-1" />
-		// 					Analyse Data
-		// 				</button>
-		// 			)}
-		// 		</div>
-		// 		<DataEntries
-		// 			data={dataentries}
-		// 			pagination={paginationDataEntries}
-		// 			onPageChange={setEntriesPage}
-		// 			onLimitChange={(newLimit) => {
-		// 				setEntriesLimit(newLimit);
-		// 				setEntriesPage(1);
-		// 			}}
-		// 		/>
-		// 	</>
-		// ),
 	};
 
 	return (

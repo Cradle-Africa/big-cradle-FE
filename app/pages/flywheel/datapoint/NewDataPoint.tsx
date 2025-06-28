@@ -18,7 +18,7 @@ interface DataPointProps {
     creatingDataPoint: boolean,
 }
 
-const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint, creatingDataPoint }) => {
+const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<DataPointForm>({
         dataPointId: "",
