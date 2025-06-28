@@ -10,7 +10,7 @@ const TopBarSkeleton = () => {
                 </div>
 
                 {/* Right side icons and user info */}
-                <div className='flex justify-between gap-3 bg-gray-100 px-2 py-2 h-10 rounded-md'>
+                <div className='flex justify-between gap-3 bg-gray-100 pr-5 pl-2 py-1 h-8 lg:10 rounded-md'>
                     {/* Icon 1 */}
                     <div className='rounded-full w-6 h-6 bg-gray-200 animate-pulse' />
 

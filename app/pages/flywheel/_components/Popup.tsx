@@ -18,19 +18,19 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
         <div>
         { openPopup && (
             <div>
-                <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
+                <div className="fixed inset-0 bg-black/40 z-10" onClick={onClose} />
                 <div
                     className="text-center bg-white px-5 py-5 md:px-8 md:py-8 rounded-lg w-82 md:w-full max-w-2xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     ref={menuRef}
                 >
-                    <h2 className="text-gray-800 text-lg font-normal">
+                    <h2 className="text-gray-800 text-sm lg:text-lg font-normal">
                         How would you like to collect your data?
                     </h2>
-                    <p className="mt-5 text-gray-700">
+                    <p className="mt-5 text-gray-700 hidden lg:block">
                         Choose an integration method or build your own feedback tool
                     </p>
 
-                    <div className="md:flex justify-between gap-5 mt-10">
+                    <div className="md:flex justify-between gap-3 md:gap-5 mt-5 lg:mt-10">
                         <button className="md:w-1/2 px-6 py-6 bg-[#FCEBFF] hover:bg-blue-500 hover:text-white hover:transition rounded-lg cursor-pointer">
                             <div className="flex justify-center">
                                 <Image alt="api icon" src={api_icon} width={40} height={40} />

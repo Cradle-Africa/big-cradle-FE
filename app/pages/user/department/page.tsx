@@ -39,7 +39,7 @@ const Department = () => {
     <DashboardLayout>
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
-          <p className="font-medium text-black">Departments</p>
+          <h2 className="font-bold text-black">Departments</h2>
         </div>
         <button
           className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
@@ -53,8 +53,7 @@ const Department = () => {
       </div>
 
       {/* department table  */}
-      <div className="flex flex-col bg-white p-4 mt-8">
-        <p className="font-bold text-black mb-5">Departments</p>
+      <div className="flex flex-col bg-white mt-5">
 
 
         {open && <NewDepartment setOpen={setOpen} />}

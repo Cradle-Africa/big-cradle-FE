@@ -9,20 +9,20 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className={`h-full rounded-md  lg:w-64 flex flex-col py-2 md:bg-[#002648] `}
+      className={` ${open ? 'bg-white shadow-md' : '' } h-full rounded-md mt-[-10px] lg:mt-0 px-5 lg:pl-0 lg:w-64 flex flex-col pt-2 pb-10 lg:bg-[#002648] `}
     >
       {/* Mobile toggle - unchanged */}
       <div
         className={` ${
-          open ? "" : "border border-gray-200"
-        } md:hidden mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}
+          open ? "" : "border border-gray-200 rounded-md bg-white"
+        } lg:hidden lg:mt-3 md:mt-0 px-2 py-1 md:p-4 flex justify-between items-center`}
       >
         <button
           onClick={() => setOpen(!open)}
           className="text-gray-500 hover:cursor-pointer"
         >
           {open ? (
-            <div className="flex items-center justify-between">
+            <div className="flex w-52 items-center justify-between">
               <Link href="/">
                 <Image
                   src={LogoWithText}
@@ -32,10 +32,10 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
                   className=""
                 />
               </Link>
-              <X size={15} className="text-red-500" />
+              <X size={15} className="text-red-500 cursor-pointer" />
             </div>
           ) : (
-            <Menu size={25} className="" />
+            <Menu size={25} className="rounded-md cursor-pointer" />
           )}
         </button>
       </div>
@@ -46,7 +46,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
           open ? "block" : "hidden"
         } lg:block`}
       >
-        <div className="flex flex-col space-y-2 mt-2 px-4">
+        <div className="flex flex-col space-y-2 mt-2 lg:px-4">
           <Link href="/">
             <Image
               src={LogoWithText}

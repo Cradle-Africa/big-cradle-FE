@@ -32,12 +32,12 @@ const Topbar = () => {
         <>
             <div className=''>
                 <div className="border-b border-gray-100 w-full flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
-                    <form className="hidden relative md:flex items-center">
+                    <form className="hidden relative lg:flex items-center">
                         <Search className="absolute left-3 text-gray-300 w-4 h-4 pointer-events-none" />
                         <input
                             type="text"
                             placeholder="Search for something..."
-                            className="hidden md:block pl-10 pr-3 py-2 md:w-72 border bg-white border-gray-300 text-sm rounded-md focus:outline-none"
+                            className="hidden lg:block pl-10 pr-3 py-2 md:w-72 border bg-white border-gray-300 text-sm rounded-md focus:outline-none"
                         />
                     </form>
 
@@ -61,6 +61,7 @@ const Topbar = () => {
                                 {user?.fullName ?? user?.fullName?.slice(0, 12)}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName}
                                 {user?.firstName ?? user?.firstName}
+                                {user?.businessName ?? user?.businessName}
                             </span>
                             <span className='text-xs text-gray-500'>{user?.role}</span>
                         </div>
@@ -84,11 +85,13 @@ const Topbar = () => {
                                 {user?.fullName ?? user?.fullName}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
                                 {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
+                                {user?.businessName ?? user?.businessName}
                             </span>
                             <span className='inline lg:hidden text-sm font-semibold'>
                                 {user?.fullName ?? user?.fullName}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
                                 {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
+                                {user?.businessName ?? user?.businessName}
                             </span>
                             <span className='text-xs'>{user?.role}</span>
                         </div>
