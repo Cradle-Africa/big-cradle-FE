@@ -19,15 +19,13 @@ type DataPointsProps = {
     setCreatingDataPoint: (value: boolean) => void;
 };
 
-
 const DataPoints = ({
     data,
     pagination,
     onPageChange,
     onLimitChange,
     setCreatingDataPoint
-}: DataPointsProps
-) => {
+}: DataPointsProps) => {
 
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
     const [editingDataPoint, setEditingDataPoint] = useState(false);
