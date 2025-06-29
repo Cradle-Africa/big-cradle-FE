@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   pipeLineSchema,
   departmentSchema,
+  inviteBusinessSchema,
   surveySchema,
   surveyPaymentSchema,
 } from "./validationSchemas";
@@ -27,7 +28,38 @@ export type Department = {
   departmentDescription: string;
 };
 
+export type InviteBusiness = {
+  email: string;
+  adminBusinessUserId: string;
+};
+
+export type Business = {
+    id: string;
+    businessName: string;
+    contactPersonFirstName: string;
+    contactPersonLastName: string;
+    contactName: string;
+    countryCode: string;
+    contactNumber: string;
+    businessAddress: string;
+    businessCity: string;
+    businessState: string;
+    businessCountry: string;
+    sector: string;
+    organizationSize: string;
+    email: string;
+    isActive: string;
+    kycStatus: string;
+    password: string;
+    confirmPassword: string;
+    businessLogo: string;
+    role: string;
+}
+
+
 export type DepartmentSchema = z.infer<typeof departmentSchema>;
+
+export type InviteBusinessSchema = z.infer<typeof inviteBusinessSchema>;
 
 export type SurveySchema = z.infer<typeof surveySchema>;
 

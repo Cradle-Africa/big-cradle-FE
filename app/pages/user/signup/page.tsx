@@ -41,6 +41,7 @@ function BuildSignUpPage() {
 		if (encrypted) {
 			try {
 				const decodedData = jwtDecode<DecodedPayload>(encrypted);
+
 				setDepartmentId(decodedData.departmentId);
 				setEmployeeEmail(decodedData.email);
 				setBusinessEmail(decodedData.email);
@@ -48,10 +49,10 @@ function BuildSignUpPage() {
 				setAdminBusinessUserId(decodedData.adminBusinessUserId);
 				if (decodedData.departmentId) {
 					setEmployeeSignUp(true);
-				}
-				if (decodedData.adminBusinessUserId) {
+				}else{
 					setBusinessSignUpLink(true);
 				}
+
 				setBusinessSignUp(false);
 				setSuperAdminSignUp(false);
 				setAdminSignUp(false);
@@ -71,7 +72,7 @@ function BuildSignUpPage() {
 				/>
 			)}
 			<div className="flex items-center justify-center w-full px-10 lg:px-0 lg:max-w-[400px] md:px-12 py-4 bg-white">
-				<div className="w-full md:w-[500px] space-y-3 py-10">
+				<div className="w-full md:w-[500px] px-8 lg:px-10 space-y-3 py-10">
 					<Image
 						src={LogoWithText}
 						width={200}
@@ -184,7 +185,7 @@ function BuildSignUpPage() {
 							/>
 						)}
 
-						{businessSignUpLink && adminBusinessUserId && (
+						{businessSignUpLink && (
 							<BusinessSignUpLink
 								signUpToken={token}
 								businessEmail={businessEmail}

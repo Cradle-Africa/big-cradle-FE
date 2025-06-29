@@ -2,7 +2,7 @@ import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import { getUser } from "@/app/utils/user/userData";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import KycVerification from "../KycVerification";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 import { DashboardMenu } from "@/app/lib/type";

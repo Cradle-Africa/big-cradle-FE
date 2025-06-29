@@ -1,5 +1,5 @@
 import { DashboardMenu } from "@/app/lib/type";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import { getUser } from "@/app/utils/user/userData";
 import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
