@@ -99,6 +99,7 @@ const SurveyPage = () => {
     surveyStatus,
     surveysListResponse?.survey,
     superAdminSurveysListResponse?.data,
+    user?.role,
   ]);
 
   useEffect(() => {
