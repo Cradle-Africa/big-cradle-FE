@@ -5,6 +5,8 @@ import {
   inviteBusinessSchema,
   surveySchema,
   surveyPaymentSchema,
+  reviewBusinessKycSchema,
+  reviewAdminKycSchema,
 } from "./validationSchemas";
 import { ReactNode } from "react";
 
@@ -33,43 +35,93 @@ export type InviteBusiness = {
   adminBusinessUserId: string;
 };
 
+export type ReviewBusinessKyc = {
+  action: string;
+  reason: string;
+  businessUserId: string;
+  adminUserId: string;
+};
+
+export type ReviewAdminKyc = {
+  action: string;
+  reason: string;
+  businessUserId: string;
+  adminUserId: string;
+};
+
 export type Business = {
-    id: string;
-    businessName: string;
-    contactPersonFirstName: string;
-    contactPersonLastName: string;
-    contactName: string;
-    countryCode: string;
-    contactNumber: string;
-    businessAddress: string;
-    businessCity: string;
-    businessState: string;
-    businessCountry: string;
-    sector: string;
-    organizationSize: string;
-    email: string;
-    isActive: string;
-    kycStatus: string;
-    password: string;
-    confirmPassword: string;
-    businessLogo: string;
-    role: string;
+  id: string;
+  businessName: string;
+  contactPersonFirstName: string;
+  contactPersonLastName: string;
+  contactName: string;
+  countryCode: string;
+  contactNumber: string;
+  businessAddress: string;
+  businessCity: string;
+  businessState: string;
+  businessCountry: string;
+  sector: string;
+  organizationSize: string;
+  email: string;
+  isActive: string;
+  kycStatus: string;
+  password: string;
+  confirmPassword: string;
+  businessLogo: string;
+  role: string;
 }
+
+export type BusinessKyc = {
+  id: string;
+  businessName: string;
+  contactPersonFirstName: string;
+  contactPersonLastName: string;
+  contactName: string;
+  countryCode: string;
+  contactNumber: string;
+  businessAddress: string;
+  businessCity: string;
+  businessState: string;
+  businessCountry: string;
+  sector: string;
+  organizationSize: string;
+  email: string;
+  isActive: string;
+  kycStatus: string;
+  kycReviewReason: string;
+  certificateOfIncorporation: string;
+};
+
+export type AdminKyc = {
+  id: string;
+  userType: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  country: string;
+  city: string;
+  state: string;
+  kycStatus: string;
+  createdAt: string;
+  email: string;
+  isActive: string;
+  kycReviewReason: string;
+  certificateOfIncorporation: string;
+};
 
 
 export type DepartmentSchema = z.infer<typeof departmentSchema>;
 
 export type InviteBusinessSchema = z.infer<typeof inviteBusinessSchema>;
 
+export type ReviewBusinessKycSchema = z.infer<typeof reviewBusinessKycSchema>;
+
+export type ReviewAdminKycSchema = z.infer<typeof reviewAdminKycSchema>;
+
 export type SurveySchema = z.infer<typeof surveySchema>;
 
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
-
-export type BusinessKyc = {
-  businessUserId: string | null;
-  departmentName: string;
-  departmentDescription: string;
-};
 
 export type FieldType =
   | "text"
@@ -120,6 +172,7 @@ export interface DataPoint {
   dataPointId: string;
   field: Field[];
   createdAt?: string;
+  dataPointName?: string;
 }
 
 export interface Survey {
@@ -139,6 +192,7 @@ export type Pipeline = {
   dataPointName: string;
   dataPointDescription: string;
   createdAt?: string | undefined;
+  fieldId?: string;
 };
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;
 
@@ -154,6 +208,7 @@ export interface DataEntry {
   dataPointId: string;
   data: Record<string, any>;
   createdAt?: string;
+  dataPointName?: string;
 }
 
 export type DashboardMenu = {

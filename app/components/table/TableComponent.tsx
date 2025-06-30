@@ -17,9 +17,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
     const [totalItems, setTotalItems] = useState(0);
 
     const totalPages = Math.ceil(totalItems / limit);
-    const [openDepartment, setOpenDepartment] = useState<boolean>(false);
+    // const [openDepartment, setOpenDepartment] = useState<boolean>(false);
     const [openEmployee, setOpenEmployee] = useState<boolean>(false);
-    const [openBusiness, setOpenBusiness] = useState<boolean>(false);
+    // const [openBusiness, setOpenBusiness] = useState<boolean>(false);
     const businessId = getBusinessId();
     const adminUserId = getAdminUserId();
 
@@ -54,12 +54,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
         <>
             <BreadsCrumps
                 title={title}
-                openDepartment={openDepartment}
-                setOpenDepartment={setOpenDepartment}
+                // setOpenDepartment={setOpenDepartment}
                 openEmployee={openEmployee}
                 setOpenEmployee={setOpenEmployee}
-                openBusiness={openBusiness}
-                setOpenBusiness={setOpenBusiness}
+                // openBusiness={openBusiness}
+                // setOpenBusiness={setOpenBusiness}
                 rightAction={rightAction}
                 breadcrumbs={breadcrumbs}
             />

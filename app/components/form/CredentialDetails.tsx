@@ -49,7 +49,7 @@ const CredentialDetails: React.FC<Props> = ({ formData, onChange, errors }) => {
         <div className="space-y-6" >
             {/* Email Field */}
             <div className="relative mt-5">
-                <MdOutlineEmail size={20} className="absolute left-2 top-[7px] text-gray-400" />
+                <MdOutlineEmail size={20} className="absolute left-2 top-[10px] text-gray-400" />
                 <input
                     type="email"
                     name="email"
@@ -65,9 +65,9 @@ const CredentialDetails: React.FC<Props> = ({ formData, onChange, errors }) => {
                 <button type="button" onClick={togglePasswordVisibility} >
                     {
                         passwordVisible ? (
-                            <IoEyeOutline size={18} className="absolute left-2 top-[7px] text-gray-400 cursor-pointer" />
+                            <IoEyeOutline size={18} className="absolute left-2 top-[10px] text-gray-400 cursor-pointer" />
                         ) : (
-                            <IoEyeOffOutline size={18} className="absolute left-2 top-[7px] text-gray-400 cursor-pointer" />
+                            <IoEyeOffOutline size={18} className="absolute left-2 top-[10px] text-gray-400 cursor-pointer" />
                         )}
                 </button>
                 < input
@@ -84,9 +84,9 @@ const CredentialDetails: React.FC<Props> = ({ formData, onChange, errors }) => {
                 <button type="button" onClick={togglePasswordVisibility} >
                     {
                         passwordVisible ? (
-                            <IoEyeOutline size={18} className="absolute left-2 top-[7px] text-gray-400 cursor-pointer" />
+                            <IoEyeOutline size={18} className="absolute left-2 top-[10px] text-gray-400 cursor-pointer" />
                         ) : (
-                            <IoEyeOffOutline size={18} className="absolute left-2 top-[7px] text-gray-400 cursor-pointer" />
+                            <IoEyeOffOutline size={18} className="absolute left-2 top-[10px] text-gray-400 cursor-pointer" />
                         )}
                 </button>
                 < input

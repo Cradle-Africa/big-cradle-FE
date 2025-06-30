@@ -1,56 +1,62 @@
 'use client'
-import React from 'react'
-import TableComponent from '@/app/components/table/TableComponent';
+import React, { useState } from 'react'
 import DashboardLayout from '@/app/DashboardLayout';
+import axios from '@/app/lib/axios';
+import BusinessKycLoading from './loading';
+import { useFetchBusinessKyc } from './_features/hook';
+import BusinessKycTable from './_components/BusinessKycTable';
+import Pagination from '../_components/Pagination';
 
 const BusinessKyc = () => {
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
 
-    const fields = [
-        { key: 'kycReviewReason', label: 'Reason', className: '' },
-        { key: 'businessName', label: 'Business Name', className: '' },
-        { key: 'contactPersonFirstName', label: 'First Name', className: '' },
-        { key: 'contactPersonLastName', label: 'Last Name', className: '' },
-        { key: 'businessCountry', label: 'Country', className: '' },
-        { key: 'contactNumber', label: 'Phone Number', className: '' },
-        { key: 'businessCity', label: 'City', className: '' },
-        { key: 'businessState', label: 'State', className: '' },
-        { key: 'kycStatus', label: 'Status', className: '' },
-        { key: 'organizationSize', label: 'Size', className: '' },
-        { key: 'businessAddress', label: 'Address', className: '' },
-        { key: 'email', label: 'Email', className: '' }
-    ]
-
-    const actionConfig = {
-        review: {
-            endPoint: 'super-admin-auth/review-kyc',
-            method: 'POST',
-            payload: {}
+    const { isLoading, data: businessesData } = useFetchBusinessKyc({
+        axios,
+        queryParams: {
+            page,
+            limit,
         },
-        view: {
-            endPoint: 'super-admin-auth/review-kyc',
-            method: 'POST',
-            payload: {}
-        },
+    });
 
+    const businessKycList = businessesData?.data ?? [];
+    const pagination = businessesData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
-    }
-
+    if (isLoading) return <BusinessKycLoading />;
 
     return (
         <DashboardLayout>
-            <TableComponent
-                title="Business KYC"
-                endpoint="super-admin-auth/all-businesses-kyc-review"
-                fields={fields}
-                breadcrumbs={{
-                    parent: { path: '/', label: 'Dashboard' },
-                    current: 'Dashboard'
-                }}
-                actionConfig={actionConfig}
-            />
-        </DashboardLayout>
+            <div className="flex justify-between">
+                <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-black">Businesses Kyc</h2>
+                </div>
+            </div>
 
-    )
+            {/* department table  */}
+            <div className="flex flex-col bg-white mt-5">
+
+                <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
+                    {isLoading ? (
+                        <BusinessKycLoading />
+                    ) : (
+                        <>
+                            <BusinessKycTable data={businessKycList ?? []} />
+                            <Pagination
+                                currentPage={pagination.page}
+                                totalPages={pagination.pages}
+                                limit={pagination.limit}
+                                onPageChange={(newPage) => setPage(newPage)}
+                                onLimitChange={(newLimit) => {
+                                    setLimit(newLimit);
+                                    setPage(1); // Reset to page 1 on limit change
+                                }}
+                            />
+                        </>
+                    )}
+                </div>
+            </div>
+        </DashboardLayout>
+    );
 }
 
 export default BusinessKyc

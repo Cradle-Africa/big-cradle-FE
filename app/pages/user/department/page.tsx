@@ -8,20 +8,32 @@ import DepartmentTable from "./_components/DepartmentTable";
 import NewDepartment from "./_components/NewDepartment";
 import { useFetchDepartments } from "./_features/hook";
 import DepartmentLosding from "./loading";
+import Pagination from "./Pagination";
 
 const Department = () => {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const businessUserId = getBusinessId();
 
   const { isLoading, data: departments } = useFetchDepartments({
     axios,
     queryParams: {
-      page: 1,
-      limit: 10,
+      page,
+      limit,
       businessUserId: businessUserId || undefined,
     },
   });
+
+  const departmentData = departments?.data ?? [];
+  const pagination = {
+    page: departments?.page || 1,
+    limit: departments?.limit || 10,
+    total: departments?.total || 0,
+    pages: Math.ceil((departments?.total || 0) / (departments?.limit || 10)),
+  };
+
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -61,7 +73,20 @@ const Department = () => {
         {isLoading ? (
           <DepartmentLosding />
         ) : (
-          <DepartmentTable data={departments ?? []} />
+          <>
+            <DepartmentTable departmentData={departmentData ?? []} />
+            <Pagination
+              currentPage={pagination.page}
+              totalPages={pagination.pages}
+              limit={pagination.limit}
+              onPageChange={(newPage) => setPage(newPage)}
+              onLimitChange={(newLimit) => {
+                setLimit(newLimit);
+                setPage(1); // Reset to page 1 on limit change
+              }}
+            />
+          </>
+
         )}
       </div>
     </DashboardLayout>

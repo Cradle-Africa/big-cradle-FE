@@ -1,5 +1,5 @@
 import { Business } from "@/app/lib/type";
-import { MoreVertical, Trash } from "lucide-react";
+import { LockKeyhole, MoreVertical, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "@/app/lib/axios";
 import { useBusinessesResetPassword, useDeleteBusinesses } from "../_features/hook";
@@ -83,7 +83,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
                     ? 'border border-green-500 text-green-600' 
                     : 'border border-red-500 text-red-600'} 
                   px-3 lg:px-5 py-1 rounded-full`}>
-                  {business.isActive ? 'Yes' : 'No'}
+                  {business.isActive ? 'Active' : 'Inactive'}
                 </span>
               </td>
               <td className="px-6 py-4 border-b border-r border-gray-100 whitespace-nowrap relative">
@@ -115,7 +115,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
                         className="flex w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-200 hover:cursor-pointer"
                       >
                         <div className="flex items-center gap-1">
-                          <Trash size={13} />
+                          <LockKeyhole size={13} />
                           {resetPasswordPending ? 'Resetting the password...' : 'Reset Password'}
                         </div>
                       </button>
