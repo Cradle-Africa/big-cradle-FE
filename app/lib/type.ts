@@ -225,6 +225,13 @@ export type SurveyListResponse = {
   pagination: Pagination;
 };
 
+export type SuperAdminSurveyListResponse = {
+  success: boolean;
+  message: string;
+  data: SurveyListItem[];
+  pagination: Pagination;
+};
+
 export type FlutterwaveHostedLinkResponse = {
   status: string;
   message: string;

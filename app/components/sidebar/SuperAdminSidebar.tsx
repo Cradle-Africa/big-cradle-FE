@@ -29,7 +29,8 @@ export default function SuperAdminSidebar() {
               className={classNames({
                 "block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition":
                   true,
-                "bg-gray-200 text-[#002648] ": currentPath === link.href,
+                "bg-gray-200 text-[#002648] ":
+                  currentPath === link.href.split("?")[0],
               })}
             >
               <div className="flex gap-1 items-center ">
