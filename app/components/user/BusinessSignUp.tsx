@@ -14,7 +14,6 @@ import CountrySelect from "@/app/components/form/CountrySelect";
 import { BusinessSignUpService } from "../../services/user/userService";
 import SearchSelect from "../form/SearchSelect";
 import cities from "../../utils/data/cities.json";
-import ImageUploader from "../form/ImageUploader";
 import CredentialDetails from "../../components/form/CredentialDetails";
 
 export default function BusinessSignUp() {
@@ -61,12 +60,12 @@ export default function BusinessSignUp() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleInputChange = (name: string, value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // const handleInputChange = (name: string, value: string) => {
+  //   setForm((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // };
 
   const handleCredentialChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -352,7 +351,7 @@ export default function BusinessSignUp() {
                   errors={errors}
                 />
 
-                <div className="flex justify-between gap-2 mt-5">
+                {/* <div className="flex justify-between gap-2 mt-5">
                   <button
                     type="button"
                     onClick={back}
@@ -369,27 +368,8 @@ export default function BusinessSignUp() {
                     Next
                     <ChevronRight size={14} className="inline ml-1" />
                   </button>
-                </div>
-              </>
-            )}
+                </div> */}
 
-            {/* Step 4 */}
-            {step === 4 && (
-              <>
-                <div className="relative mt-5">
-                  <label>Business Logo</label>
-                  <ImageUploader
-                    onChange={handleInputChange}
-                    text="Upload Business Logo"
-                    id="businessLogo"
-                    name="businessLogo"
-                  />
-                  {errors.businessLogo && (
-                    <p className="text-red-500 text-xs">
-                      {errors.businessLogo}
-                    </p>
-                  )}
-                </div>
                 <div className="flex justify-between gap-2 mt-5">
                   <button
                     type="button"
@@ -408,6 +388,27 @@ export default function BusinessSignUp() {
                     {isSubmitting ? "Submitting..." : "Create Account"}
                   </button>
                 </div>
+              </>
+            )}
+
+            {/* Step 4 */}
+            {step === 4 && (
+              <>
+                {/* <div className="relative mt-5">
+                  <label>Business Logo</label>
+                  <ImageUploader
+                    onChange={handleInputChange}
+                    text="Upload Business Logo"
+                    id="businessLogo"
+                    name="businessLogo"
+                  />
+                  {errors.businessLogo && (
+                    <p className="text-red-500 text-xs">
+                      {errors.businessLogo}
+                    </p>
+                  )}
+                </div> */}
+                
               </>
             )}
           </form>

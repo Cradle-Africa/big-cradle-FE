@@ -13,9 +13,6 @@ const DataEntryPage = () => {
     return (
         <DashboardLayout>
             <div className="w-full">
-                <div className="flex justify-between">
-                    <h2 className="text-md text-black">Data entries</h2>
-                </div>
                 <ViewDataEntries
                     viewDataEntries={viewDataEntries}
                     uniqueId={id}

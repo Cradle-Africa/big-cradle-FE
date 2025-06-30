@@ -129,10 +129,13 @@ const DataPoints = ({
                         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-sm font-semibold">
+                                    <th className="px-3 py-3 text-left text-sm font-semibold">
                                         #
                                     </th>
-                                    <th className="hidden md:inline px-3 py-3 text-left text-sm font-semibold">
+                                    <th className="px-3 py-3 text-left text-sm font-semibold">
+                                        Pipeline name
+                                    </th>
+                                    <th className="hidden md:block py-3 text-left text-sm font-semibold">
                                         Fields
                                     </th>
                                     <th className="px-3 py-3 text-left text-sm font-semibold">
@@ -146,16 +149,17 @@ const DataPoints = ({
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                 {data.map((dataPoints, index) => (
                                     <tr key={index} className="">
-                                        <td className="px-6 py-4 align-top">{index + 1}</td>
-                                        <td className="hidden md:inline px-3 py-2 align-top">
+                                        <td className="px-3 py-4 align-top">{index + 1}</td>
+                                        <td className="px-3 py-3 align-top">{dataPoints?.dataPointName }</td>
+                                        <td className="hidden md:block py-4 align-top">
                                             <table className="w-full">
                                                 <tbody>
                                                     <tr>
-                                                        <td className=" py-2 align-top">
+                                                        <td className=" align-top">
                                                             {dataPoints.field.map((field: any, idx: number) => (
                                                                 <div key={idx} className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50">
                                                                     <div className="flex gap-x-4">
-                                                                        <span className="lg:min-w-[400px] font-medium flex flex-wrap">{field.label}</span>
+                                                                        <span className="lg:min-w-[250px] font-medium flex flex-wrap">{field.label}</span>
                                                                         <span className="lg:min-w-[100px]">{field.type}</span>
                                                                         <span className="lg:min-w-[100px]">{field.required ? "Required" : "Optional"}</span>
                                                                     </div>
@@ -199,7 +203,7 @@ const DataPoints = ({
                                         <td className="px-3 py-4 align-top text-left text-sm">
                                             {formatDate(dataPoints?.createdAt ?? "")}
                                         </td>
-                                        <td className="px-3 py-4 text-center align-top">
+                                        <td className="px-3 pb-4 text-center align-top">
                                             <div className="flex flex-wrap gap-1 lg:inline">
                                                 <Eye
                                                     size={30}

@@ -2,7 +2,7 @@ import { Department } from "@/app/lib/type";
 import { MoreVertical } from "lucide-react";
 
 const
-  DepartmentTable = ({ data }: { data: Department[] }) => {
+  DepartmentTable = ({ departmentData }: { departmentData: Department[] }) => {
     return (
       <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
@@ -24,7 +24,7 @@ const
           </thead>
           <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
             {/* Example row */}
-            {data.map((department, index) => (
+            {departmentData.map((department, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 font-medium">
                   {index + 1}

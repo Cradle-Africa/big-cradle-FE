@@ -46,11 +46,11 @@ export const fetchPipelines = async (
 
         const pagination = res.data.pagination
             ? {
-                  ...res.data.pagination,
-                  page: Number(res.data.pagination.page),
-                  limit: Number(res.data.pagination.limit),
-                  pages: Number(res.data.pagination.pages),
-              }
+                ...res.data.pagination,
+                page: Number(res.data.pagination.page),
+                limit: Number(res.data.pagination.limit),
+                pages: Number(res.data.pagination.pages),
+            }
             : null;
 
         return {
@@ -70,9 +70,10 @@ export const fetchSingleDataPoint = async (axios: AxiosInstance, id: string) => 
     try {
         const res = await axiosWithoutAuth.get(`/data-point-mgt/pipeline-fields/${id}`, {
             headers: {
-                Authorization: null, 
-            }});
-       
+                Authorization: null,
+            }
+        });
+
         return res.data.data;
     } catch (error: any) {
         console.error("Fetch single data error:", error);
@@ -85,9 +86,10 @@ export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
     try {
         const res = await axiosWithoutAuth.get(`/data-point-mgt/data-point/${id}`, {
             headers: {
-                Authorization: null, 
-            }});
-       
+                Authorization: null,
+            }
+        });
+
         return res.data.data;
     } catch (error: any) {
         console.error("Fetch single pipeline error:", error);
@@ -96,30 +98,30 @@ export const fetchSinglePipeline = async (axios: AxiosInstance, id: string) => {
 };
 
 export const fetchDataEntriesOfDataPoints = async (
-  axios: AxiosInstance,
-  queryParams?: {
-    page?: number;
-    limit?: number;
-    dataPoint?: string;
-  }
-) => {
-  try {
-    const params = {
-      page: queryParams?.page || 1,
-      limit: queryParams?.limit || 10,
-      dataPoint: queryParams?.dataPoint || "",
-    };
-
-    const res = await axios.get(`/data-point-mgt/pipeline-fields-entry-attached-to-data-point`, { params });
-
-    if (res?.status === 401) {
-      removeUser();
+    axios: AxiosInstance,
+    queryParams?: {
+        page?: number;
+        limit?: number;
+        dataPoint?: string;
     }
-    return res.data;
-  } catch (error: any) {
-    console.error("Error fetching entries:", error);
-    return { data: [], pagination: {} };
-  }
+) => {
+    try {
+        const params = {
+            page: queryParams?.page || 1,
+            limit: queryParams?.limit || 10,
+            dataPoint: queryParams?.dataPoint || "",
+        };
+
+        const res = await axios.get(`/data-point-mgt/pipeline-fields-entry-attached-to-data-point`, { params });
+
+        if (res?.status === 401) {
+            removeUser();
+        }
+        return res.data;
+    } catch (error: any) {
+        console.error("Error fetching entries:", error);
+        return { data: [], pagination: {} };
+    }
 };
 
 
@@ -200,7 +202,12 @@ export const fetchDataPoints = async (
         page?: number;
         limit?: number;
     }
-) => {
+): Promise<{
+    data: Pipeline[];
+    limit: number;
+    page: number;
+    total: number;
+}> => {
     try {
         const params = {
             page: queryParams?.page || 1,
@@ -210,10 +217,20 @@ export const fetchDataPoints = async (
         if (res?.status === 401) {
             removeUser();
         }
-        return res.data;
+        return {
+            data: res.data.dataPoint ?? [],
+            limit: Number(res.data.limit),
+            page: Number(res.data.page),
+            total: Number(res.data.total),
+        };
     } catch (error: any) {
         console.log(JSON.stringify(error));
-        return []; // fallback return
+        return {
+            data: [],
+            limit: 10,
+            page: 1,
+            total: 0,
+        };
     }
 };
 
@@ -305,10 +322,6 @@ export const fetchDataEntries = async (
     try {
         const res = await axios.get(`${endpoint}?${userIdParam}`, { params });
 
-        if (res?.status === 401) {
-            removeUser();
-        }
-
         const pagination = {
             ...res.data.pagination,
             page: Number(res.data.pagination.page),
@@ -348,37 +361,37 @@ export const fetchDataEntries = async (
 
 
 export const analyseData = async (
-  axios: AxiosInstance,
-  endpoint: string,
-  businessUserId: string,
-  dataPoint: string,
-  prompt: string,
-  limit: number = 10,
-  page: number = 1
+    axios: AxiosInstance,
+    endpoint: string,
+    businessUserId: string,
+    dataPoint: string,
+    prompt: string,
+    limit: number = 10,
+    page: number = 1
 ) => {
-  try {
-    const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
+    try {
+        const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
 
-    const res = await axios.post(
-      url,
-      { prompt }, // Only `prompt` is in the body
-      {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
-    );
-    return res.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message =
-      error?.response?.data?.message || error?.message || "An unexpected error occurred";
+        const res = await axios.post(
+            url,
+            { prompt }, // Only `prompt` is in the body
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message =
+            error?.response?.data?.message || error?.message || "An unexpected error occurred";
 
-    if (statusCode === 401) {
-      removeUser();
-      message = "Unauthorized access. Please log in again.";
+        if (statusCode === 401) {
+            removeUser();
+            message = "Unauthorized access. Please log in again.";
+        }
+
+        return Promise.reject({ message });
     }
-
-    return Promise.reject({ message });
-  }
 };

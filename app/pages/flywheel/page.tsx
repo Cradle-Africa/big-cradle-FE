@@ -26,16 +26,18 @@ const Flywheel = () => {
 
 	const [pointsPage, setPointsPage] = useState(1);
 	const [pointsLimit, setPointsLimit] = useState(10);
-	const [pipelinePage, setPipelinePage ] = useState(1);
+	const [pipelinePage, setPipelinePage] = useState(1);
 	const [pipelineLimit, setPipelineLimit] = useState(10);
 
 	const { isLoading: isLoadingDataPoints, data: pipelineData } = useFetchPipelines({
 		axios,
 		queryParams: { page: pipelinePage, limit: pipelineLimit }
 	});
-	const pipelines = pipelineData?.dataPoint ?? [];
-	const paginationDataPipeline = pipelineData?.pagination ?? { page: 1, limit: 10, pages: 1, total: pipelines.length }
-
+	const pipelines = pipelineData?.data ?? [];
+	const paginationDataPipeline = {page: pipelineData?.page || 1, limit: pipelineData?.limit || 10, total: pipelineData?.total || 0,
+		pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
+	};
+	
 	const { data: dataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: { page: pointsPage, limit: pointsLimit }

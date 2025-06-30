@@ -86,19 +86,20 @@ export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
 	});
 };
 
-export const useFetchPipelines = ({
-  axios,
-  queryParams
-}: UseFetchPipelines) => {
+export const useFetchPipelines = ({axios,queryParams}: UseFetchPipelines) => {
   return useQuery<{
-    dataPoint: Pipeline[];
-    pagination: PaginationMeta;
+    data: Pipeline[];
+    page: number;
+    limit: number;
+    total: number;
   }>({
     queryKey: ["data-points", queryParams],
     queryFn: () => fetchDataPoints(axios, queryParams),
     staleTime: 60 * 1000 * 5,
   });
 };
+
+
 
 export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, DataPoint>({

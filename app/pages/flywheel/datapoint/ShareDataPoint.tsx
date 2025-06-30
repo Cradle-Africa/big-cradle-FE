@@ -5,6 +5,7 @@ import { Copy, Share2, X } from "lucide-react";
 import { useFetchSingleDataPoint } from "../_features/hook";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { shortenWithTinyURL } from "@/app/utils/shortenLink";
 
 interface PopUpProps {
     shareDataPoint: boolean;
@@ -29,12 +30,20 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     //Encode uniqueId using Base64 for public sharing
     const encodedId = typeof window !== "undefined" ? btoa(uniqueId) : "";
     const [shareUrl, setShareUrl] = useState("");
+
     useEffect(() => {
-        if (encodedId && typeof window !== "undefined") {
-            const fullUrl = `${window.location.origin}/pages/flywheel/data-entry/shared?data-point=${encodedId}`;
-            setShareUrl(fullUrl);
-        }
+        const generateLink = async () => {
+            if (encodedId && typeof window !== "undefined") {
+                const fullUrl = `https://big-cradle-frontend-eight.vercel.app/shared?data-point=${encodedId}`;
+                const shortUrl = await shortenWithTinyURL(fullUrl);
+                setShareUrl(shortUrl ?? fullUrl);
+            }
+        };
+
+        generateLink();
     }, [encodedId]);
+
+
     // Copy link handler
     const handleCopy = async () => {
         try {

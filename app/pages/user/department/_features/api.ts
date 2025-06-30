@@ -3,31 +3,42 @@ import { Department } from './../../../../lib/type';
 import { AxiosInstance } from "axios";
 
 export const fetchDepartments = async (
-    axios: AxiosInstance,
-    queryParams?: { 
-        page?: number; 
-        limit?: number; 
-        businessUserId?: string;
-    }
-) => {
-    try {
-        const params = {
-            page: queryParams?.page || 1,
-            limit: queryParams?.limit || 10,
-            businessUserId: queryParams?.businessUserId || null
-        };
-        const res = await axios.get(`/department-mgt/all-business-departments`, {params});
-        if (res?.status === 401){
-            removeUser();
-        } 
+  axios: AxiosInstance,
+  queryParams?: {
+    page?: number;
+    limit?: number;
+    businessUserId?: string;
+  }
+): Promise<{
+  data: Department[];
+  limit: number;
+  page: number;
+  total: number;
+}> => {
+  try {
+    const params = {
+      page: queryParams?.page || 1,
+      limit: queryParams?.limit || 10,
+      businessUserId: queryParams?.businessUserId ?? undefined,
+    };
 
-        return res.data.department;
-    } catch (error: any) {
-        console.log(JSON.stringify(error));
-        // toast.error(JSON.stringify(error))
-        return []; // fallback return
+    const res = await axios.get(`/department-mgt/all-business-departments`, { params });
 
-    }
+    return {
+      data: res.data.department ?? [],
+      limit: Number(res.data.limit),
+      page: Number(res.data.page),
+      total: Number(res.data.total),
+    };
+  } catch (error: any) {
+    console.error("Fetch Departments Error:", JSON.stringify(error));
+    return {
+      data: [],
+      limit: 10,
+      page: 1,
+      total: 0,
+    };
+  }
 };
 
 export const createDepartment = async (

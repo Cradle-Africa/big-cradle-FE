@@ -1,49 +1,63 @@
 "use client";
-import React from "react";
-import TableComponent from "@/app/components/table/TableComponent";
+import React, { useState } from "react";
 import DashboardLayout from "@/app/DashboardLayout";
+import axios from "@/app/lib/axios";
+import AdminKycLoading from "./loading";
+import AdminKycTable from "./_components/AdminKycTable";
+import Pagination from "./_components/Pagination";
+import { useFetchAdminKyc } from "./_features/hook";
 
 const AdminKyc = () => {
-  const fields = [
-    { key: "email", label: "Email", className: "" },
-    { key: "userType", label: "User Type", className: "" },
-    { key: "firstName", label: "First Name", className: "" },
-    { key: "lastName", label: "Last Name", className: "" },
-    { key: "phoneNumber", label: "Phone Number", className: "" },
-    { key: "country", label: "Country", className: "" },
-    { key: "city", label: "City", className: "" },
-    { key: "state", label: "State", className: "" },
-    { key: "kycStatus", label: "Status", className: "" },
-    { key: "createdAt", label: "Created at", className: "" },
-  ];
 
-  const actionConfig = {
-    review: {
-      endPoint: "super-admin-auth/review-admin-kyc",
-      method: "POST",
-      payload: {},
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const { isLoading, data: adminData } = useFetchAdminKyc({
+    axios,
+    queryParams: {
+      page,
+      limit,
     },
-    view: {
-      endPoint: "",
-      method: "",
-      payload: {},
-    },
-  };
+  });
+
+  const adminKycList = adminData?.data ?? [];
+  const pagination = adminData?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
+
+  if (isLoading) return <AdminKycLoading />;
 
   return (
     <DashboardLayout>
-      <TableComponent
-        title="Investors KYC"
-        endpoint="super-admin-auth/all-admin-kyc-review"
-        fields={fields}
-        breadcrumbs={{
-          parent: { path: "/Dashboard", label: "User" },
-          current: "Investors KYC",
-        }}
-        actionConfig={actionConfig}
-      />
+      <div className="flex justify-between">
+        <div className="flex flex-col gap-2">
+          <h2 className="font-bold text-black">Investors / Admins Kyc</h2>
+        </div>
+      </div>
+
+      {/* department table  */}
+      <div className="flex flex-col bg-white mt-5">
+
+        <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
+          {isLoading ? (
+            <AdminKycLoading />
+          ) : (
+            <>
+              <AdminKycTable data={adminKycList ?? []} />
+              <Pagination
+                currentPage={pagination.page}
+                totalPages={pagination.pages}
+                limit={pagination.limit}
+                onPageChange={(newPage) => setPage(newPage)}
+                onLimitChange={(newLimit) => {
+                  setLimit(newLimit);
+                  setPage(1);
+                }}
+              />
+            </>
+          )}
+        </div>
+      </div>
     </DashboardLayout>
   );
-};
 
-export default AdminKyc;
+}
+export default AdminKyc
