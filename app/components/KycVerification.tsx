@@ -23,7 +23,6 @@ const KycVerification: React.FC<KycVerificationProps> = ({
   openAdminKycVerification,
   setOpenAdminKycVerification,
   user,
-  kycReviewReason,
 }) => {
   const userData = getUser();
   const handleSubmit = () => {
