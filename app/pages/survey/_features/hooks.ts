@@ -1,4 +1,5 @@
 import {
+  DashboardAnalyticsResponse,
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
   PaymentVerificationResponse,
@@ -16,6 +17,7 @@ import {
   createSurvey,
   fetchSurvey,
   fetchSurveys,
+  fetchSurveysAnalytics,
   surveyPay,
   updateSurvey,
   verifySurvey,
@@ -58,6 +60,23 @@ export const useFetchSurvey = ({
   return useQuery<SurveyListResponse>({
     queryKey: ["surveys", businessUserId, page],
     queryFn: () => fetchSurveys(axios, businessUserId, page),
+    staleTime: 60 * 1000 * 60,
+    retry: 3,
+  });
+};
+
+type UseFetchSurveyAnalyctics = {
+  axios: AxiosInstance;
+  businessUserId: string;
+};
+
+export const useFetchSurveyAnalyctics = ({
+  axios,
+  businessUserId,
+}: UseFetchSurveyAnalyctics) => {
+  return useQuery<DashboardAnalyticsResponse>({
+    queryKey: ["surveys-analytics", businessUserId],
+    queryFn: () => fetchSurveysAnalytics(axios, businessUserId),
     staleTime: 60 * 1000 * 60,
     retry: 3,
   });

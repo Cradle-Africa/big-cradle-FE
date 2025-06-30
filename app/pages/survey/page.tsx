@@ -7,12 +7,7 @@ import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
-import {
-  FolderOpenDot,
-  Plus,
-  ShieldBan,
-  ShieldCheck
-} from "lucide-react";
+import { FolderOpenDot, Plus, ShieldBan, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,7 +16,11 @@ import toast from "react-hot-toast";
 import SurveyCard from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
-import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
+import {
+  useFetchSurvey,
+  useFetchSurveyAnalyctics,
+  useVerifySurveyPayment,
+} from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 
 const SurveyPage = () => {
@@ -63,6 +62,15 @@ const SurveyPage = () => {
     axios,
     businessUserId: user?.id ?? "",
     page,
+  });
+
+  const {
+    data: surveysAnalyticsResponse,
+    isSuccess: analyticsSuccess,
+    isLoading: analyticsLoading,
+  } = useFetchSurveyAnalyctics({
+    axios,
+    businessUserId: user?.id ?? "",
   });
 
   const filteredSurveys = useMemo(() => {
@@ -132,31 +140,23 @@ const SurveyPage = () => {
   // };
 
   useEffect(() => {
-    if (isSuccess && surveysListResponse) {
-      const allSurveys = surveysListResponse.pagination.total;
-      const activeSurveys = surveysListResponse.survey.filter(
-        (v) => v.isActive
-      ).length;
-      const inActiveSurveys = surveysListResponse.survey.filter(
-        (v) => !v.isActive
-      ).length;
-
+    if (analyticsSuccess && surveysAnalyticsResponse) {
       const dashBoardValue: DashboardMenu[] = [
         {
-          value: `${allSurveys}`,
+          value: `${surveysAnalyticsResponse.data.totalSurveys}`,
           title: "All surveys",
           subTitle: "Amount paid out to contributors",
           icon: <FolderOpenDot size={16} color="blue" />,
         },
         {
-          value: `${activeSurveys}`,
-          title: "Active surveys",
+          value: `${surveysAnalyticsResponse.data.totalEntries}`,
+          title: "Total entries",
           subTitle: "Amount paid out to contributors",
           icon: <ShieldCheck size={16} color="blue" />,
         },
         {
-          value: `${inActiveSurveys}`,
-          title: "Inactive surveys",
+          value: `${surveysAnalyticsResponse.data.totalAmount}`,
+          title: "Total Amount",
           subTitle: "Amount paid out to contributors",
           icon: <ShieldBan size={16} color="blue" />,
         },
@@ -164,7 +164,7 @@ const SurveyPage = () => {
 
       setSurveyDashBoardItems(dashBoardValue);
     }
-  }, [isSuccess, surveysListResponse]);
+  }, [analyticsSuccess, surveysAnalyticsResponse]);
 
   useEffect(() => {
     if (isError) toast.error(`An error occured when verifing your payment`);
