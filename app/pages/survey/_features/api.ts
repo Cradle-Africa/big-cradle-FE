@@ -47,13 +47,20 @@ export const updateSurvey = async (axios: AxiosInstance, data: Survey) => {
 
 export const fetchSurveys = async (
   axios: AxiosInstance,
-  businessUserId: string,
-  page: string
+  page: string,
+  businessUserId: string | null | undefined,
 ) => {
   try {
-    const res = await axios.get(
-      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
-    );
+    let res: any = {};
+    if (businessUserId) {
+      res = await axios.get(
+        `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
+      );
+    } else {
+      res = await axios.get(
+        `survey-mgt/super-admin-all-survey?page=${page}&limit=10`
+      );
+    }
     return res.data;
   } catch (error: any) {
     const statusCode = error?.response?.status;
@@ -75,7 +82,7 @@ export const fetchSurveys = async (
 
 export const fetchSurveysAnalytics = async (
   axios: AxiosInstance,
-  businessUserId: string,
+  businessUserId: string
 ) => {
   try {
     const res = await axios.get(

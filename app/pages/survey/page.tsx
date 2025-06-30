@@ -1,4 +1,5 @@
 "use client";
+
 import Pagination from "@/app/components/Pagination";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
@@ -17,6 +18,7 @@ import SurveyCard from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
 import {
+  useFetchSuperAdminSurvey,
   useFetchSurvey,
   useFetchSurveyAnalyctics,
   useVerifySurveyPayment,
@@ -54,14 +56,20 @@ const SurveyPage = () => {
     axios,
   });
 
-  const {
-    data: surveysListResponse,
-    isSuccess,
-    isLoading,
-  } = useFetchSurvey({
+  const { data: surveysListResponse, isLoading } = useFetchSurvey({
     axios,
-    businessUserId: user?.id ?? "",
     page,
+    businessUserId: user?.role === "business" ? user?.id : null,
+    enabled: user?.role === "business",
+  });
+
+  const {
+    data: superAdminSurveysListResponse,
+    isLoading: isLoadingSuperAdminSurveys,
+  } = useFetchSuperAdminSurvey({
+    axios,
+    page,
+    enabled: user?.role === "super admin",
   });
 
   const {
@@ -74,14 +82,24 @@ const SurveyPage = () => {
   });
 
   const filteredSurveys = useMemo(() => {
-    const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
+    let surveys: SurveyListItem[] = [];
+    if (user?.role === "business") {
+      surveys = surveysListResponse?.survey || [];
+    } else if (user?.role === "super admin") {
+      surveys = superAdminSurveysListResponse?.data || [];
+    }
+
     if (!surveyStatus || surveyStatus === "all") return surveys;
     if (surveyStatus.toLowerCase() === "active") {
       return surveys.filter((survey) => survey.isActive);
     } else {
       return surveys.filter((survey) => !survey.isActive);
     }
-  }, [surveyStatus, surveysListResponse?.survey]);
+  }, [
+    surveyStatus,
+    surveysListResponse?.survey,
+    superAdminSurveysListResponse?.data,
+  ]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -170,9 +188,8 @@ const SurveyPage = () => {
     if (isError) toast.error(`An error occured when verifing your payment`);
   }, [isError, txRef, verifyPayementFunc]);
 
-  // if (isVerifing) return <p>Is Verifing payment...</p>;
-
-  if (isLoading || isVerifing) return <SurveyPageLoading />;
+  if (isLoading || isLoadingSuperAdminSurveys || analyticsLoading || isVerifing)
+    return <SurveyPageLoading />;
 
   return (
     <DashboardLayout>
@@ -250,12 +267,6 @@ const SurveyPage = () => {
           />
         ))}
       </div>
-
-      {/* \\\\ */}
-      {/* <Overview
-        pipelines={pipelines?.length}
-        dataentries={dataentries?.length}
-      /> */}
       {/* Survey table  */}
       <div className="flex flex-col bg-white p-4 mt-8">
         <p className="font-bold text-black">Survey Table List</p>
@@ -273,7 +284,11 @@ const SurveyPage = () => {
         <Pagination
           pageSize={10}
           currentPage={parseInt(page)}
-          itemCount={surveysListResponse?.pagination.total ?? 0}
+          itemCount={
+            (surveysListResponse?.pagination.total ||
+              superAdminSurveysListResponse?.pagination.total) ??
+            0
+          }
           className="mt-4"
         />
       </div>
