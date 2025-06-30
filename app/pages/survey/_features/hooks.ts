@@ -1,8 +1,10 @@
 import {
+  DashboardAnalyticsResponse,
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
   PaymentVerificationResponse,
   SingleSurveyResponse,
+  SuperAdminSurveyListResponse,
   Survey,
   SurveyListResponse,
   SurveySchema,
@@ -16,6 +18,7 @@ import {
   createSurvey,
   fetchSurvey,
   fetchSurveys,
+  fetchSurveysAnalytics,
   surveyPay,
   updateSurvey,
   verifySurvey,
@@ -43,10 +46,32 @@ export const useUpdateSurvey = ({ axios }: { axios: AxiosInstance }) => {
   });
 };
 
+type UseFetchSuperAdminSurvey = {
+  axios: AxiosInstance;
+  page: string;
+  enabled : boolean;
+  onSuccess?: (data: any) => void;
+};
+
+export const useFetchSuperAdminSurvey = ({
+  axios,
+  page,
+  enabled,
+}: UseFetchSuperAdminSurvey) => {
+  return useQuery<SuperAdminSurveyListResponse>({
+    queryKey: ["surveys", page],
+    queryFn: () => fetchSurveys(axios, page, null),
+    staleTime: 60 * 1000 * 60,
+    retry: 3,
+    enabled,
+  });
+};
+
 type UseFetchSurvey = {
   axios: AxiosInstance;
-  businessUserId: string;
   page: string;
+  businessUserId: string | null;
+  enabled : boolean
   onSuccess?: (data: any) => void;
 };
 
@@ -54,10 +79,29 @@ export const useFetchSurvey = ({
   axios,
   businessUserId,
   page,
+  enabled,
 }: UseFetchSurvey) => {
   return useQuery<SurveyListResponse>({
     queryKey: ["surveys", businessUserId, page],
-    queryFn: () => fetchSurveys(axios, businessUserId, page),
+    queryFn: () => fetchSurveys(axios, page, businessUserId),
+    staleTime: 60 * 1000 * 60,
+    retry: 3,
+    enabled,
+  });
+};
+
+type UseFetchSurveyAnalyctics = {
+  axios: AxiosInstance;
+  businessUserId: string;
+};
+
+export const useFetchSurveyAnalyctics = ({
+  axios,
+  businessUserId,
+}: UseFetchSurveyAnalyctics) => {
+  return useQuery<DashboardAnalyticsResponse>({
+    queryKey: ["surveys-analytics", businessUserId],
+    queryFn: () => fetchSurveysAnalytics(axios, businessUserId),
     staleTime: 60 * 1000 * 60,
     retry: 3,
   });

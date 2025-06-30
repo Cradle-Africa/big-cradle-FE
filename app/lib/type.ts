@@ -92,6 +92,17 @@ export type Field = {
   updatedAt?: string;
 };
 
+export type DashboardAnalyticsResponse = {
+  success: boolean;
+  message: string;
+  data: {
+    totalSurveys: number;
+    totalEntries: number;
+    totalAmount: number;
+  };
+};
+
+
 export interface DataPointForm {
   dataPointId: string;
   field: Field[];
@@ -156,6 +167,13 @@ export type SurveyListResponse = {
   success: boolean;
   message: string;
   survey: SurveyListItem[];
+  pagination: Pagination;
+};
+
+export type SuperAdminSurveyListResponse = {
+  success: boolean;
+  message: string;
+  data: SurveyListItem[];
   pagination: Pagination;
 };
 

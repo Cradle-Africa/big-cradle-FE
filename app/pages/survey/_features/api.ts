@@ -47,12 +47,46 @@ export const updateSurvey = async (axios: AxiosInstance, data: Survey) => {
 
 export const fetchSurveys = async (
   axios: AxiosInstance,
-  businessUserId: string,
-  page: string
+  page: string,
+  businessUserId: string | null | undefined,
+) => {
+  try {
+    let res: any = {};
+    if (businessUserId) {
+      res = await axios.get(
+        `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
+      );
+    } else {
+      res = await axios.get(
+        `survey-mgt/super-admin-all-survey?page=${page}&limit=10`
+      );
+    }
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+
+    switch (statusCode) {
+      case 409:
+        message = "Conflict";
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    const customError = new Error(message);
+    throw customError;
+  }
+};
+
+export const fetchSurveysAnalytics = async (
+  axios: AxiosInstance,
+  businessUserId: string
 ) => {
   try {
     const res = await axios.get(
-      `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
+      `survey-mgt/survey-dashboard-analytics?businessUserId=${businessUserId}`
     );
     return res.data;
   } catch (error: any) {

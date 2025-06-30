@@ -1,4 +1,5 @@
 "use client";
+
 import Pagination from "@/app/components/Pagination";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
@@ -7,12 +8,7 @@ import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import api_icon from "@/public/icons/api_icon.png";
 import build_pipeline from "@/public/icons/build_pipeline.png";
-import {
-  FolderOpenDot,
-  Plus,
-  ShieldBan,
-  ShieldCheck
-} from "lucide-react";
+import { FolderOpenDot, Plus, ShieldBan, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -21,7 +17,12 @@ import toast from "react-hot-toast";
 import SurveyCard from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
-import { useFetchSurvey, useVerifySurveyPayment } from "./_features/hooks";
+import {
+  useFetchSuperAdminSurvey,
+  useFetchSurvey,
+  useFetchSurveyAnalyctics,
+  useVerifySurveyPayment,
+} from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 
 const SurveyPage = () => {
@@ -55,25 +56,51 @@ const SurveyPage = () => {
     axios,
   });
 
+  const { data: surveysListResponse, isLoading } = useFetchSurvey({
+    axios,
+    page,
+    businessUserId: user?.role === "business" ? user?.id : null,
+    enabled: user?.role === "business",
+  });
+
   const {
-    data: surveysListResponse,
-    isSuccess,
-    isLoading,
-  } = useFetchSurvey({
+    data: superAdminSurveysListResponse,
+    isLoading: isLoadingSuperAdminSurveys,
+  } = useFetchSuperAdminSurvey({
+    axios,
+    page,
+    enabled: user?.role === "super admin",
+  });
+
+  const {
+    data: surveysAnalyticsResponse,
+    isSuccess: analyticsSuccess,
+    isLoading: analyticsLoading,
+  } = useFetchSurveyAnalyctics({
     axios,
     businessUserId: user?.id ?? "",
-    page,
   });
 
   const filteredSurveys = useMemo(() => {
-    const surveys: SurveyListItem[] = surveysListResponse?.survey || [];
+    let surveys: SurveyListItem[] = [];
+    if (user?.role === "business") {
+      surveys = surveysListResponse?.survey || [];
+    } else if (user?.role === "super admin") {
+      surveys = superAdminSurveysListResponse?.data || [];
+    }
+
     if (!surveyStatus || surveyStatus === "all") return surveys;
     if (surveyStatus.toLowerCase() === "active") {
       return surveys.filter((survey) => survey.isActive);
     } else {
       return surveys.filter((survey) => !survey.isActive);
     }
-  }, [surveyStatus, surveysListResponse?.survey]);
+  }, [
+    surveyStatus,
+    surveysListResponse?.survey,
+    superAdminSurveysListResponse?.data,
+    user?.role,
+  ]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -132,31 +159,23 @@ const SurveyPage = () => {
   // };
 
   useEffect(() => {
-    if (isSuccess && surveysListResponse) {
-      const allSurveys = surveysListResponse.pagination.total;
-      const activeSurveys = surveysListResponse.survey.filter(
-        (v) => v.isActive
-      ).length;
-      const inActiveSurveys = surveysListResponse.survey.filter(
-        (v) => !v.isActive
-      ).length;
-
+    if (analyticsSuccess && surveysAnalyticsResponse) {
       const dashBoardValue: DashboardMenu[] = [
         {
-          value: `${allSurveys}`,
+          value: `${surveysAnalyticsResponse.data.totalSurveys}`,
           title: "All surveys",
           subTitle: "Amount paid out to contributors",
           icon: <FolderOpenDot size={16} color="blue" />,
         },
         {
-          value: `${activeSurveys}`,
-          title: "Active surveys",
+          value: `${surveysAnalyticsResponse.data.totalEntries}`,
+          title: "Total entries",
           subTitle: "Amount paid out to contributors",
           icon: <ShieldCheck size={16} color="blue" />,
         },
         {
-          value: `${inActiveSurveys}`,
-          title: "Inactive surveys",
+          value: `${surveysAnalyticsResponse.data.totalAmount}`,
+          title: "Total Amount",
           subTitle: "Amount paid out to contributors",
           icon: <ShieldBan size={16} color="blue" />,
         },
@@ -164,15 +183,14 @@ const SurveyPage = () => {
 
       setSurveyDashBoardItems(dashBoardValue);
     }
-  }, [isSuccess, surveysListResponse]);
+  }, [analyticsSuccess, surveysAnalyticsResponse]);
 
   useEffect(() => {
     if (isError) toast.error(`An error occured when verifing your payment`);
   }, [isError, txRef, verifyPayementFunc]);
 
-  // if (isVerifing) return <p>Is Verifing payment...</p>;
-
-  if (isLoading || isVerifing) return <SurveyPageLoading />;
+  if (isLoading || isLoadingSuperAdminSurveys || analyticsLoading || isVerifing)
+    return <SurveyPageLoading />;
 
   return (
     <DashboardLayout>
@@ -250,12 +268,6 @@ const SurveyPage = () => {
           />
         ))}
       </div>
-
-      {/* \\\\ */}
-      {/* <Overview
-        pipelines={pipelines?.length}
-        dataentries={dataentries?.length}
-      /> */}
       {/* Survey table  */}
       <div className="flex flex-col bg-white lg:p-4 mt-8">
         <p className="font-bold text-black">Survey Table List</p>
@@ -273,7 +285,11 @@ const SurveyPage = () => {
         <Pagination
           pageSize={10}
           currentPage={parseInt(page)}
-          itemCount={surveysListResponse?.pagination.total ?? 0}
+          itemCount={
+            (surveysListResponse?.pagination.total ||
+              superAdminSurveysListResponse?.pagination.total) ??
+            0
+          }
           className="mt-4"
         />
       </div>
