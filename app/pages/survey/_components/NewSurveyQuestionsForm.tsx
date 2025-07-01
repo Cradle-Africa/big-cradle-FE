@@ -1,6 +1,12 @@
 "use client";
 
-import { DataPointForm, Field, FieldType, Survey } from "@/app/lib/type";
+import {
+  CountryAndCity,
+  DataPointForm,
+  Field,
+  FieldType,
+  Survey,
+} from "@/app/lib/type";
 import axios from "@/app/lib/axios";
 import { toCamelCase } from "@/app/utils/caseFormat";
 import { ArrowLeft, Check } from "lucide-react";
@@ -22,6 +28,8 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
   surveyDescription: string;
+  locationAndDemographic: string;
+  countriesAndCities: CountryAndCity[];
 };
 
 const NewSurveyQuestionsForm = ({
@@ -29,7 +37,8 @@ const NewSurveyQuestionsForm = ({
   setForm,
   surveyName,
   surveyDescription,
-  
+  locationAndDemographic,
+  countriesAndCities,
 }: Props) => {
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);
@@ -55,27 +64,38 @@ const NewSurveyQuestionsForm = ({
     if (form.field.length < 1) {
       toast.error("Please add some questions before you can pass");
     } else {
-      const payload: Survey = {
-        businessUserId,
-        employeeUserId,
-        surveyName: surveyName,
-        surveyDescription: surveyDescription,
-        amount: 333,
-        field: form.field,
-      };
+      const demographicsToPost: string[] = [];
 
-      await createSurvey(payload, {
-        onSuccess: () => {
-          toast.success("Survey ");
-        },
-        onError: (error: any) => {
-          const message =
-            error?.response?.data?.message ||
-            error?.message ||
-            "Failed to create the survey";
-          toast.error(message);
-        },
-      });
+      for (let v of countriesAndCities) {
+        demographicsToPost.push(`${v.country}, ${v.city}`);
+      }
+
+      console.log(JSON.stringify(demographicsToPost));
+      console.log(JSON.stringify(locationAndDemographic));
+
+      // const payload: Survey = {
+      //   businessUserId,
+      //   employeeUserId,
+      //   surveyName: surveyName,
+      //   surveyDescription: surveyDescription,
+      //   amount: 0,
+      //   field: form.field,
+      //   surveyLocations : countriesAndCities,
+      //   ageDemographics : locationAndDemographic
+      // };
+
+      // await createSurvey(payload, {
+      //   onSuccess: () => {
+      //     toast.success("Survey ");
+      //   },
+      //   onError: (error: any) => {
+      //     const message =
+      //       error?.response?.data?.message ||
+      //       error?.message ||
+      //       "Failed to create the survey";
+      //     toast.error(message);
+      //   },
+      // });
     }
   };
 

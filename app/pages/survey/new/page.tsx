@@ -89,9 +89,18 @@ const NewSurveyPage = () => {
     setCountriesAndCities([...filteredList]);
   };
 
+  const onNextClicked = () => {
+    if (countriesAndCities.length < 1) {
+      toast.error("Please select regions");
+    } else {
+      router.push(`/pages/survey/new?survey=survey-name-and-description`);
+      console.log(JSON.stringify(countriesAndCities));
+    }
+  };
+
   const onSubmit = (data: SurveySchema) => {
-    console.log(JSON.stringify(data));
-    // router.push(`/pages/survey/new?survey=survey-questions`);
+    // console.log(JSON.stringify(data));
+    router.push(`/pages/survey/new?survey=survey-questions`);
   };
 
   // const { data : singleSurvey, isLoading: isLoadingSingleSurvey } = useFetchSingleSurvey({
@@ -188,6 +197,8 @@ const NewSurveyPage = () => {
         countryAndCitiesList={countriesAndCities || []}
         setCountriesAndCities={setCountriesAndCities}
         onDeleteClick={onDeleteClick}
+        onNextClicked={onNextClicked}
+        countriesAndCities={countriesAndCities}
       />
     </DashboardLayout>
   );
@@ -202,6 +213,7 @@ type FormAreaProps = {
 
   countryAndCitiesList: CountryAndCity[];
   setCountriesAndCities: (val: CountryAndCity[]) => void;
+  onNextClicked: () => void;
 
   // demographic
   ageDemographics: string;
@@ -209,6 +221,9 @@ type FormAreaProps = {
   registerDemographic: UseFormRegister<DemographicSchema>;
   controlDemographic: Control<DemographicSchema>;
   errorsDemographic: FieldErrors<DemographicSchema>;
+
+  //
+  countriesAndCities: CountryAndCity[];
 
   // name and description
   register: UseFormRegister<SurveySchema>;
@@ -247,11 +262,14 @@ const FormArea = ({
   controlDemographic,
 
   //
+  countriesAndCities,
+
+  //
   onDeleteClick,
+  onNextClicked,
 
   //
   countryAndCitiesList,
-  setCountriesAndCities,
 }: FormAreaProps) => {
   if (survey === "location-and-demographic") {
     return (
@@ -263,6 +281,7 @@ const FormArea = ({
         errors={errorsDemographic}
         countryAndCitiesList={countryAndCitiesList}
         onDeleteClick={onDeleteClick}
+        onNextClicked={onNextClicked}
         // setCountriesAndCities={setCountriesAndCities}
       />
     );
@@ -282,6 +301,8 @@ const FormArea = ({
         surveyDescription={surveyDescription}
         form={form}
         setForm={setForm}
+        countriesAndCities={countriesAndCities}
+        locationAndDemographic={ageDemographics}
       />
     );
   } else if (survey === "survey-payment") {
@@ -291,8 +312,8 @@ const FormArea = ({
         surveyDescription={surveyDescription}
         form={form}
         setForm={setForm}
-        country={country}
-        city={city}
+        countriesAndCities={countriesAndCities}
+        locationAndDemographic={ageDemographics}
         ageDemographics={ageDemographics}
       />
     );

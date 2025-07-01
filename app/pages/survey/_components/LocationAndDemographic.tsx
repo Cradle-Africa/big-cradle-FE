@@ -22,6 +22,7 @@ type Props = {
   onSubmit: (data: DemographicSchema) => void;
   countryAndCitiesList: CountryAndCity[];
   onDeleteClick: (val: CountryAndCity) => void;
+  onNextClicked : () => void;
   // setCountriesAndCities: React.Dispatch<React.SetStateAction<CountryAndCity[]>>;
   // onAddCountryClicked : (val : CountryAndCity) => void;
 };
@@ -34,6 +35,7 @@ const LocationAndDemographic = ({
   onSubmit,
   countryAndCitiesList,
   onDeleteClick,
+  onNextClicked,
 }: // setCountriesAndCities,
 Props) => {
   const [country, setCountry] = useState<Country | null>(null);
@@ -43,7 +45,6 @@ Props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <AgeGroupSelect registration={register("ageDemographics")} />
         <ErrorMessage>{errors.ageDemographics?.message}</ErrorMessage>
-
         <Controller
           control={control}
           name="country"
@@ -59,7 +60,7 @@ Props) => {
                   setCountry(_country);
                 }}
                 onTextChange={(_txt) => console.log(_txt)}
-                value={field.name}
+                value={"field.name"}
                 placeHolder="Select Country"
               />
               <ErrorMessage>{errors.country?.message}</ErrorMessage>
@@ -100,7 +101,7 @@ Props) => {
           demographicData={countryAndCitiesList}
           onDeleteClick={onDeleteClick}
         />
-        <Button type="button" mt="3">
+        <Button type="button" mt="3" onClick={onNextClicked}>
           <span className="px-4">Next</span>
         </Button>
       </form>
