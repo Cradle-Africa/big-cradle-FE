@@ -70,7 +70,6 @@ export type DashboardAnalyticsResponse = {
   };
 };
 
-
 export interface DataPointForm {
   dataPointId: string;
   field: Field[];
@@ -128,6 +127,39 @@ export type DashboardMenu = {
   subTitle: string;
   value: string;
   icon: ReactNode;
+};
+
+export type MeResponse = {
+  success: boolean;
+  message: string;
+  data: Me;
+};
+
+export type Me = {
+  lockUntil: string | null;
+  id: string;
+  businessName: string;
+  contactPersonFirstName: string;
+  contactPersonLastName: string;
+  countryCode: string;
+  contactNumber: string;
+  businessAddress: string;
+  businessCity: string;
+  businessState: string;
+  businessCountry: string;
+  sector: string;
+  organizationSize: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
+  certificateOfIncorporation: string;
+  kycStatus: string;
+  failedLoginAttempts: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  kycReviewReason: string;
 };
 
 export type SurveyListResponse = {

@@ -23,10 +23,10 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [resetToken, setResetToken] = useState("");
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
-    router.prefetch('/');
+    router.prefetch("/");
   });
   const [formData, setFormData] = useState<{
     email: string;
@@ -62,14 +62,16 @@ export default function SignInPage() {
       const response = await signInService(payload);
       addUser(response.data);
       addToken(response.accessToken);
+
       if (response.data.role === "business") {
+        localStorage.setItem("successKwcVisible", "true");
         localStorage.setItem("businessId", response.data.id);
       } else if (response.data.role === "admin") {
         localStorage.setItem("adminUserId", response.data.id);
       } else if (response.data.role === "employee") {
         localStorage.setItem("employeeId", response.data.id);
       }
-      router.push('/')
+      router.push("/");
       toast.dismiss();
       toast.success("Signed in successfully!");
       // window.location.href = "/";

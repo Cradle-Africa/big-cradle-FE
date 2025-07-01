@@ -1,19 +1,16 @@
-import React from "react";
-import { UploadCloud } from "lucide-react";
+import React, { useState } from "react";
+import { UploadCloud, X } from "lucide-react";
 import FormPopup from "./pop-up/PopUpForm";
 import { getUser } from "../utils/user/userData";
+import { Button, Flex } from "@radix-ui/themes";
+import { Me } from "../lib/type";
 
 interface KycVerificationProps {
   openBusinessKycVerification: boolean;
   setOpenBusinessKycVerification: React.Dispatch<React.SetStateAction<boolean>>;
   openAdminKycVerification: boolean;
   setOpenAdminKycVerification: React.Dispatch<React.SetStateAction<boolean>>;
-  user: {
-    email?: string;
-    kycStatus?: "not-submitted" | "pending" | "rejected" | string;
-    certificateOfIncorporation?: string;
-    role: string;
-  };
+  user: Me;
   kycReviewReason?: string;
 }
 
@@ -24,6 +21,7 @@ const KycVerification: React.FC<KycVerificationProps> = ({
   setOpenAdminKycVerification,
   user,
 }) => {
+  const [successKycVisible, setsuccessKycVisible] = useState(true);
   const userData = getUser();
   const handleSubmit = () => {
     if (user?.role === "business") {
@@ -103,14 +101,57 @@ const KycVerification: React.FC<KycVerificationProps> = ({
       )}
 
       {user?.kycStatus === "rejected" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no text-white bg-gradient-to-br from-[#ff5762] to-[#d20505] hover:opacity-90 px-5 py-3 rounded-md mb-4">
-          <div className="text-md">Your KYC has been Rejected</div>
-          <div className="text-md bg-white rounded-md px-2 py-1 text-red-500">
-            {" "}
-            {userData?.kycReviewReason}
+        <Flex
+          direction={{ initial: "column", md: "row" }}
+          justify="between"
+          gap="2"
+          align="center"
+          className="border border-red-500 rounded-md p-4"
+        >
+          <div className="md:mt-0 md:flex flex-col w-full text-red-500  hover:opacity-90 rounded-md">
+            <div className="text-md font-bold">Your KYC has been Rejected</div>
+            <div className="text-md bg-white mr-auto rounded-md text-red-500">
+              {" "}
+              {userData?.kycReviewReason}
+            </div>
           </div>
-        </div>
+          <Button color="red" variant="soft" onClick={handleSubmit}>
+            Upload documents
+          </Button>
+        </Flex>
       )}
+
+      {user?.kycStatus === "approved" &&
+        (localStorage.getItem("successKwcVisible") === "true" &&
+        successKycVisible === true ? (
+          <Flex
+            direction={{ initial: "column", md: "row" }}
+            justify="between"
+            gap="2"
+            align="start"
+            className="border border-green-500 rounded-md p-4"
+          >
+            <div className="md:mt-0 md:flex flex-col w-full text-green-500  hover:opacity-90 rounded-md">
+              <div className="text-md font-bold">
+                Your KYC has been Successfully validated
+              </div>
+            </div>
+            <Button
+              variant="soft"
+              onClick={() => {
+                setsuccessKycVisible(false);
+                localStorage.setItem("successKwcVisible", "false");
+              }}
+            >
+              <Flex align="center" gap="1">
+                <X />
+                <p>Close</p>
+              </Flex>
+            </Button>
+          </Flex>
+        ) : (
+          <p></p>
+        ))}
     </>
   );
 };
