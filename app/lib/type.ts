@@ -81,6 +81,8 @@ export type ReviewAdminKyc = {
   adminUserId: string;
 };
 
+export type CountryAndCity = { country: string; city: string };
+
 export type Business = {
   id: string;
   businessName: string;

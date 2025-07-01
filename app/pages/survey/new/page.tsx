@@ -1,7 +1,12 @@
 "use client";
 
 import DashboardLayout from "@/app/DashboardLayout";
-import { DataPointForm, DemographicSchema, SurveySchema } from "@/app/lib/type";
+import {
+  CountryAndCity,
+  DataPointForm,
+  DemographicSchema,
+  SurveySchema,
+} from "@/app/lib/type";
 import { demographicSchema, surveySchema } from "@/app/lib/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -19,11 +24,15 @@ import SurveyPayementArea from "../_components/SurveyPayementArea";
 import SurveyTabButton from "../_components/SurveyTabButton";
 import { getUser } from "@/app/utils/user/userData";
 import LocationAndDemographic from "../_components/LocationAndDemographic";
+import toast from "react-hot-toast";
 
 const NewSurveyPage = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const paramSurvey = searchParams.get("survey");
+  const [countriesAndCities, setCountriesAndCities] = useState<
+    CountryAndCity[]
+  >([]);
 
   const [form, setForm] = useState<DataPointForm>({
     dataPointId: "",
@@ -58,8 +67,26 @@ const NewSurveyPage = () => {
   const user = getUser();
 
   const onDemographicSubmit = (data: DemographicSchema) => {
-    console.log(JSON.stringify(data));
+    // Make sure the region doesn't exist in the list
+    const valueExist = countriesAndCities.some((v) => v.city === data.city);
+
+    if (!valueExist) {
+      setCountriesAndCities((prev: CountryAndCity[]) => [
+        ...(prev ?? []),
+        { country: data.country, city: data.city },
+      ]);
+      toast.success("Country and region added successfully to the list");
+    } else {
+      toast.error(
+        "City or region already exist in the list, please select a new one"
+      );
+    }
     // router.push(`/pages/survey/new?survey=survey-name-and-description`);
+  };
+
+  const onDeleteClick = (data: CountryAndCity) => {
+    const filteredList = countriesAndCities.filter((v) => v.city !== data.city);
+    setCountriesAndCities([...filteredList]);
   };
 
   const onSubmit = (data: SurveySchema) => {
@@ -90,9 +117,6 @@ const NewSurveyPage = () => {
           </div>
         </SurveyTabButton>
         <SurveyTabButton
-          // onClick={() =>
-          //   router.push(`/pages/survey/new?survey=survey-name-and-description`)
-          // }
           isSelected={paramSurvey === "survey-name-and-description"}
         >
           <div className="flex justify-center gap-1 lg:gap-4 items-center">
@@ -161,6 +185,9 @@ const NewSurveyPage = () => {
         errorsDemographic={errorsDemographic}
         handleSubmitDemographic={handleSubmitDemographic}
         registerDemographic={registerDemographic}
+        countryAndCitiesList={countriesAndCities || []}
+        setCountriesAndCities={setCountriesAndCities}
+        onDeleteClick={onDeleteClick}
       />
     </DashboardLayout>
   );
@@ -172,6 +199,9 @@ type FormAreaProps = {
   control: Control<SurveySchema>;
   form: DataPointForm;
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
+
+  countryAndCitiesList: CountryAndCity[];
+  setCountriesAndCities: (val: CountryAndCity[]) => void;
 
   // demographic
   ageDemographics: string;
@@ -186,13 +216,15 @@ type FormAreaProps = {
   surveyDescription: string;
   country: string;
   city: string;
-  
 
   //
   handleSubmit: UseFormHandleSubmit<SurveySchema>;
   onSubmit: (data: SurveySchema) => void;
   onSubmitDemographic: (data: DemographicSchema) => void;
   errors: FieldErrors<SurveySchema>;
+
+  //
+  onDeleteClick: (val: CountryAndCity) => void;
 };
 
 const FormArea = ({
@@ -213,6 +245,13 @@ const FormArea = ({
   errors,
   errorsDemographic,
   controlDemographic,
+
+  //
+  onDeleteClick,
+
+  //
+  countryAndCitiesList,
+  setCountriesAndCities,
 }: FormAreaProps) => {
   if (survey === "location-and-demographic") {
     return (
@@ -222,6 +261,9 @@ const FormArea = ({
         onSubmit={onSubmitDemographic}
         control={controlDemographic}
         errors={errorsDemographic}
+        countryAndCitiesList={countryAndCitiesList}
+        onDeleteClick={onDeleteClick}
+        // setCountriesAndCities={setCountriesAndCities}
       />
     );
   } else if (survey === "survey-name-and-description") {

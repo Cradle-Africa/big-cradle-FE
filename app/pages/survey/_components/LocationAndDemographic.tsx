@@ -1,3 +1,9 @@
+import ErrorMessage from "@/app/components/form/ErrorMessage";
+import { Country, CountryAndCity, DemographicSchema } from "@/app/lib/type";
+import { Button } from "@radix-ui/themes";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { CountrySelect, StateSelect } from "react-country-state-city";
 import {
   Control,
   Controller,
@@ -6,12 +12,7 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 import AgeGroupSelect from "./AgeGroupSelect";
-import { useState } from "react";
-import { Country, DemographicSchema, SurveySchema } from "@/app/lib/type";
-import { CountrySelect, StateSelect } from "react-country-state-city";
-import ErrorMessage from "@/app/components/form/ErrorMessage";
 import LocationAndDemographicTable from "./LocationAndDemographicTable";
-import { Button } from "@radix-ui/themes";
 
 type Props = {
   register: UseFormRegister<DemographicSchema>;
@@ -19,6 +20,10 @@ type Props = {
   errors: FieldErrors<DemographicSchema>;
   handleSubmit: UseFormHandleSubmit<DemographicSchema>;
   onSubmit: (data: DemographicSchema) => void;
+  countryAndCitiesList: CountryAndCity[];
+  onDeleteClick: (val: CountryAndCity) => void;
+  // setCountriesAndCities: React.Dispatch<React.SetStateAction<CountryAndCity[]>>;
+  // onAddCountryClicked : (val : CountryAndCity) => void;
 };
 
 const LocationAndDemographic = ({
@@ -27,7 +32,10 @@ const LocationAndDemographic = ({
   errors,
   handleSubmit,
   onSubmit,
-}: Props) => {
+  countryAndCitiesList,
+  onDeleteClick,
+}: // setCountriesAndCities,
+Props) => {
   const [country, setCountry] = useState<Country | null>(null);
 
   return (
@@ -64,7 +72,7 @@ const LocationAndDemographic = ({
           name="city"
           render={({ field }) => (
             <div>
-              <h6 className="mb-2">State</h6>
+              <h6 className="mb-2 mt-4">State</h6>
               <StateSelect
                 className="mb-1"
                 countryid={country?.id!}
@@ -84,9 +92,18 @@ const LocationAndDemographic = ({
             </div>
           )}
         />
-        <Button mt="3">Add Country and City to the list</Button>
+        <Button variant="outline" mt="4" mb="6">
+          <Plus />
+          <span>Add Country and City to the list</span>
+        </Button>
+        <LocationAndDemographicTable
+          demographicData={countryAndCitiesList}
+          onDeleteClick={onDeleteClick}
+        />
+        <Button type="button" mt="3">
+          <span className="px-4">Next</span>
+        </Button>
       </form>
-      <LocationAndDemographicTable demographicData={[]} />
     </div>
   );
 };
