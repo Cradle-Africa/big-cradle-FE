@@ -5,7 +5,7 @@ import { apiPostService } from '../../services/apiService';
 import { convertToBase64 } from '../../utils/covertToBase64';
 import { FormPopupProps, OptionType } from './types/PopUp';
 import { validateFields } from './validation/formValidator';
-import PdfUpload from '../form/PdfUploader';
+import ImageUpload from '../form/ImageUploader';
 
 const FormPopup: React.FC<FormPopupProps> = ({
     setOpen,
@@ -121,7 +121,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
                             <label className="block text-sm text-gray-600 mb-1">{field.label}</label>
                             {field.type === 'file' ? (
                                 <div className='relative bg-gray-100 rounded'>
-                                    <PdfUpload
+                                    <ImageUpload
                                         onChange={handleInputChange}
                                         text="Upload Certificate of incorparation"
                                         id="image"

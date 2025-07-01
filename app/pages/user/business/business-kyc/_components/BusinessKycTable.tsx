@@ -35,7 +35,7 @@ const BusinessKycTable = ({ data }: { data: BusinessKyc[] }) => {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-[8px] border border-gray-200">
+      <div className="overflow-x-auto pb-10 rounded-[8px] border border-gray-200">
         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
           <thead className="bg-gray-50">
             <tr>
@@ -86,7 +86,7 @@ const BusinessKycTable = ({ data }: { data: BusinessKyc[] }) => {
                     {business?.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </td>
-                <td className="px-6 py-4 border-b border-r border-gray-100 whitespace-nowrap relative">
+                <td className="px-6 py-4 border-r border-gray-100 whitespace-nowrap relative">
                   <button
                     className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
                     onClick={() => setOpenIndex(openIndex === index ? null : index)}
