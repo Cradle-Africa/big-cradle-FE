@@ -8,7 +8,7 @@ import NewDataPoint from "./datapoint/NewDataPoint";
 import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
-import { useFetchDataEntries, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
+import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 
@@ -34,10 +34,11 @@ const Flywheel = () => {
 		queryParams: { page: pipelinePage, limit: pipelineLimit }
 	});
 	const pipelines = pipelineData?.data ?? [];
-	const paginationDataPipeline = {page: pipelineData?.page || 1, limit: pipelineData?.limit || 10, total: pipelineData?.total || 0,
+	const paginationDataPipeline = {
+		page: pipelineData?.page || 1, limit: pipelineData?.limit || 10, total: pipelineData?.total || 0,
 		pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
 	};
-	
+
 	const { data: dataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: { page: pointsPage, limit: pointsLimit }
@@ -45,11 +46,7 @@ const Flywheel = () => {
 	const datapoints = dataPoints?.data ?? [];
 	const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
 
-	const { data: dataEntries } = useFetchDataEntries({
-		axios,
-		queryParams: { page: 0, limit: 0 }
-	});
-	const dataentries = dataEntries?.data ?? [];
+	const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -61,11 +58,30 @@ const Flywheel = () => {
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
 
+	if (isLoadingDataOverview) return (
+		<div>
+			<DashboardLayout>
+				Loading...
+			</DashboardLayout>
+		</div>
+	);
+	if (isError || !dataOverview) return (
+		<div>
+			<DashboardLayout>
+				Error loading overview data
+			</DashboardLayout>
+		</div>
+	)
+
 	// const TabContent = {
 	const TabContent: Record<TabKey, () => JSX.Element> = {
 
 		"Overview": () => (
-			<Overview pipelines={pipelines?.length} dataentries={dataentries?.length} />
+			<Overview
+				pipelines={dataOverview.totalDataPoints}
+				dataPoint={dataOverview.totalFields}
+				dataEntries={dataOverview.totalEntries}
+			/>
 		),
 
 		"Data Pipelines": () => (

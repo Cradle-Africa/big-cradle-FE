@@ -1,19 +1,20 @@
 import React from 'react'
 import FlywheelCard from './FlywheelCard'
-import { Album } from 'lucide-react'
+import { Album, ArrowUpDown, Database } from 'lucide-react'
 
 interface PipelineProps {
-    pipelines: number,
-    dataentries: number
+    pipelines: string,
+    dataPoint: string,
+    dataEntries: string
 }
 
-const Overview:React.FC<PipelineProps> = ({pipelines, dataentries}) => {
+const Overview:React.FC<PipelineProps> = ({pipelines, dataPoint, dataEntries}) => {
     return (
-        <div className="grid grid-cols-1 md:grid md:grid-cols-2 xl:grid xl-grid-cols-3 w-full gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid md:grid-cols-3 xl:grid xl-grid-cols-4 w-full gap-6 mt-8">
             <FlywheelCard
                 isHighLighted={true}
                 title="Data Pipelines"
-                icon={Album}
+                icon={ArrowUpDown}
                 value={pipelines}
                 percentage=""
                 description="Built pipelines"
@@ -21,9 +22,17 @@ const Overview:React.FC<PipelineProps> = ({pipelines, dataentries}) => {
 
             <FlywheelCard
                 isHighLighted={false}
-                title="Data entries"
+                title="Data Points"
                 icon={Album}
-                value={dataentries}
+                value={dataPoint}
+                description={`Total data points created`}
+            />
+
+            <FlywheelCard
+                isHighLighted={false}
+                title="Data entries"
+                icon={Database}
+                value={dataEntries}
                 description={`Data entries through ${pipelines} pipelines`}
             />
         </div>

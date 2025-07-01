@@ -8,7 +8,7 @@ import DepartmentTable from "./_components/DepartmentTable";
 import NewDepartment from "./_components/NewDepartment";
 import { useFetchDepartments } from "./_features/hook";
 import DepartmentLosding from "./loading";
-import Pagination from "./Pagination";
+import Pagination from "./_components/Pagination";
 
 const Department = () => {
   const [open, setOpen] = useState(false);

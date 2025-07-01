@@ -1,7 +1,7 @@
 import { Department } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { createDepartment , fetchDepartments } from "./api";
+import { createDepartment , fetchDepartments, updateDepartment } from "./api";
 
 type UseFetchDepartments = {
   axios: AxiosInstance;
@@ -29,5 +29,11 @@ export const useFetchDepartments = ({ axios, queryParams }: UseFetchDepartments)
 export const useCreateDepartment = ({ axios }: {axios: AxiosInstance}) => {
   return useMutation<void, Error, Department>({
     mutationFn: (data: Department) => createDepartment(axios, data),
+  });
+};
+
+export const useUpdateDepartment = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<void, Error, { id: string; data: Department }>({
+    mutationFn: ({ id, data }) => updateDepartment(axios, id, data),
   });
 };

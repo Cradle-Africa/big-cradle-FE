@@ -1,6 +1,8 @@
-import { removeUser } from '@/app/utils/user/userData';
+import { getAdminUserId, removeUser } from '@/app/utils/user/userData';
 import { Business, InviteBusiness } from '@/app/lib/type';
 import { AxiosInstance } from "axios";
+
+const adminUserId = getAdminUserId()
 
 export const fetchBusinesses = async (
     axios: AxiosInstance,
@@ -19,7 +21,7 @@ export const fetchBusinesses = async (
         const params = {
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
-            adminUserId: queryParams?.adminUserId || undefined,
+            adminUserId: adminUserId || undefined,
         };
 
         const res = await axios.get(`/manage-business/all-admin-user-businesses`, { params });

@@ -68,3 +68,32 @@ export const createDepartment = async (
         throw customError;
     }
 };
+
+export const updateDepartment = async (
+  axios: AxiosInstance,
+  id: string,
+  data: Department
+) => {
+  try {
+    const res = await axios.put(`/department-mgt/update-department/${id}`, data);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.message;
+
+    switch (statusCode) {
+      case 400:
+        message = error?.response?.data?.message;
+        break;
+
+      case 401:
+        removeUser();
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    throw new Error(message);
+  }
+};

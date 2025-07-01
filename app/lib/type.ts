@@ -25,6 +25,7 @@ export interface Pagination {
 }
 
 export type Department = {
+  id?: string;                                                        
   businessUserId: string | null;
   departmentName: string;
   departmentDescription: string;
@@ -196,6 +197,11 @@ export type Pipeline = {
 };
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;
 
+export type DataFlyOverview = {
+  totalDataPoints: string,
+  totalFields: string,
+  totalEntries: string
+}
 // export type DataEntryField = {
 //   key: string;
 //   value: string;

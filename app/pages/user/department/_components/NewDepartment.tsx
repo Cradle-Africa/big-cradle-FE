@@ -5,7 +5,7 @@ import { departmentSchema } from '@/app/lib/validationSchemas';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { MonitorCog } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -67,7 +67,9 @@ const NewDepartment: React.FC<Props> = ({ setOpen }) => {
         className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
       >
         <div className="flex justify-center mt-5">
-          <MonitorCog size={60} className="bg-gray-100 rounded-full px-3 py-3" />
+          <div className='bg-gray-100 rounded-full px-3 py-3'>
+            <Plus size={15} className="" />
+          </div>
         </div>
         <div className="items-center text-center mt-5">
           <h2 className="text-md font-semibold text-gray-700 mb-4">Create Department</h2>

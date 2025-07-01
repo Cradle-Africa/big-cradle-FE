@@ -64,7 +64,7 @@ const Business = () => {
             {/* department table  */}
             <div className="flex flex-col bg-white mt-5">
 
-                <div className="relative xs:w-90 sm:w-93 sm:min-w-full mt-5 rounded-md bg-white" key="table-container">
+                <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
                     {open && <InviteBusiness setOpen={setOpen} />}
                     {isLoading ? (
                         <BusinessLoading />
