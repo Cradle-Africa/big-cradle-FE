@@ -1,6 +1,6 @@
 
 import { getEmployeeUserId, getToken, getUser, removeUser } from '@/app/utils/user/userData';
-import { DataEntry, DataPoint, Pipeline } from './../../../lib/type';
+import { DataEntry, DataFlyOverview, DataPoint, Pipeline } from './../../../lib/type';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { AxiosInstance } from "axios";
 import { axiosWithoutAuth } from '@/app/lib/axios';
@@ -123,12 +123,6 @@ export const fetchDataEntriesOfDataPoints = async (
         return { data: [], pagination: {} };
     }
 };
-
-
-
-
-
-
 
 
 export const createPipeline = async (
@@ -358,8 +352,6 @@ export const fetchDataEntries = async (
 };
 
 
-
-
 export const analyseData = async (
     axios: AxiosInstance,
     endpoint: string,
@@ -394,4 +386,33 @@ export const analyseData = async (
 
         return Promise.reject({ message });
     }
+};
+
+
+export const fetchDataOverview = async (
+  axios: AxiosInstance
+): Promise<DataFlyOverview> => {
+  try {
+    const res = await axios.get(`/data-point-mgt/dashboard-data?businessUserId=${businessUserId}`);
+    return res.data.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.data?.message || error?.response?.message;
+
+    switch (statusCode) {
+      case 400:
+        if (Array.isArray(message)) {
+          message = message.join('\n');
+        }
+        break;
+      case 401:
+        removeUser();
+        message = "Unauthorized access. Please log in again.";
+        break;
+      default:
+        message = typeof message === 'string' ? message : "An unexpected error occurred";
+    }
+
+    return Promise.reject({ message });
+  }
 };
