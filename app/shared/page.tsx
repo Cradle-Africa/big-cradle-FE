@@ -1,11 +1,11 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../../_features/hook";
-import { useCreateDataEntry } from "../../_features/hook"; // Assuming same location
+import { useFetchSingleDataPoint, useFetchSinglePipeline } from "@/app/pages/flywheel/_features/hook";
+import { useCreateDataEntry } from "@/app/pages/flywheel/_features/hook"; // Assuming same location
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { DataEntry } from "@/app/lib/type";
 import toast from "react-hot-toast";
 import LogoWithText from '@/public/images/white-logo-with-text.png'
@@ -271,4 +271,12 @@ const DataEntryPage = () => {
     );
 };
 
-export default DataEntryPage;
+const SharedDataEntryForm = () => {
+    return (
+        <Suspense>
+            <DataEntryPage/>
+        </Suspense>
+    )
+}
+
+export default SharedDataEntryForm;

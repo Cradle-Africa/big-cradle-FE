@@ -1,6 +1,6 @@
 import axios from "@/app/lib/axios";
 import { DashboardMenu } from "@/app/lib/type";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import { useFetchMe } from "@/app/shared/_features/hooks";
 import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";

@@ -110,10 +110,10 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                     <div className="flex gap-5 justify-center mt-5">
                         <button
                             type="button"
-                            className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
+                            className="w-full hover:cursor-pointer text-gray-500 py-2 h-10 rounded-md hover:border border-gray-400"
                             onClick={() => setShowAccountVerification(false)}
                         >
-                            Cancel
+                            Close
                         </button>
 
                         <button

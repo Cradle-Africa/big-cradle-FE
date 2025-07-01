@@ -1,5 +1,5 @@
 import { useUser } from "@/app/hooks/useUser";
-import BusinessCard from "@/app/pages/user/business/components/BusinessCard";
+import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";

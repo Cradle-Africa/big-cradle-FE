@@ -12,14 +12,16 @@ type UseFetchDepartments = {
   };
 }
 
-export const useFetchDepartments = ({
-  axios, queryParams
-}: UseFetchDepartments) => {
-  return useQuery<Department[]>({
+export const useFetchDepartments = ({ axios, queryParams }: UseFetchDepartments) => {
+  return useQuery<{
+    data: Department[];
+    page: number;
+    limit: number;
+    total: number;
+  }>({
     queryKey: ["departments", queryParams],
     queryFn: () => fetchDepartments(axios, queryParams),
-    staleTime: 60 * 1000 * 5,
-    // retry: 3,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 

@@ -41,6 +41,7 @@ function BuildSignUpPage() {
 		if (encrypted) {
 			try {
 				const decodedData = jwtDecode<DecodedPayload>(encrypted);
+
 				setDepartmentId(decodedData.departmentId);
 				setEmployeeEmail(decodedData.email);
 				setBusinessEmail(decodedData.email);
@@ -48,10 +49,10 @@ function BuildSignUpPage() {
 				setAdminBusinessUserId(decodedData.adminBusinessUserId);
 				if (decodedData.departmentId) {
 					setEmployeeSignUp(true);
-				}
-				if (decodedData.adminBusinessUserId) {
+				}else{
 					setBusinessSignUpLink(true);
 				}
+
 				setBusinessSignUp(false);
 				setSuperAdminSignUp(false);
 				setAdminSignUp(false);
@@ -62,7 +63,7 @@ function BuildSignUpPage() {
 	}, [searchParams]);
 
 	return (
-		<div className="min-h-screen flex gap-16 md:py-0 bg-white">
+		<div className="min-h-screen flex lg:gap-16 md:py-0 bg-white">
 			{showVerification && (
 				<AccountVerification
 					showAccountVerification={showVerification}
@@ -70,8 +71,8 @@ function BuildSignUpPage() {
 					email={formData.email}
 				/>
 			)}
-			<div className="flex items-center justify-center w-full max-w-[400px] md:px-12 py-4 bg-white">
-				<div className="w-full md:w-[500px] space-y-3 py-10">
+			<div className="flex items-center justify-center w-full px-10 lg:px-0 lg:max-w-[400px] md:px-12 py-4 bg-white">
+				<div className="w-full md:w-[500px] px-8 lg:px-10 space-y-3 py-10">
 					<Image
 						src={LogoWithText}
 						width={200}
@@ -126,7 +127,7 @@ function BuildSignUpPage() {
 					// superAdminSignUp ||
 						adminSignUp ||
 						(businessSignUp && (
-							<div className="overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-xs text-gray-700">
+							<div className="overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-sm text-gray-700">
 								{/* <button
 									onClick={() => {
 										setSuperAdminSignUp(true);
@@ -135,7 +136,7 @@ function BuildSignUpPage() {
 										setAdminSignUp(false);
 									}}
 									className={`py-2 px-2 rounded-md hover:cursor-pointer ${superAdminSignUp
-											? "bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white"
+											? "bg-blue-600 text-white"
 											: " text-gray-700"
 										}`}
 								>
@@ -149,7 +150,7 @@ function BuildSignUpPage() {
 										setSuperAdminSignUp(false);
 									}}
 									className={`py-2 px-2 rounded-md hover:cursor-pointer ${adminSignUp
-											? "bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white"
+											? "bg-blue-600 text-white"
 											: " text-gray-700"
 										}`}
 								>
@@ -163,7 +164,7 @@ function BuildSignUpPage() {
 										setAdminSignUp(false);
 									}}
 									className={`py-2 px-2 rounded-md hover:cursor-pointer ${businessSignUp
-											? "bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white"
+											? "bg-blue-600 text-white"
 											: " text-gray-700"
 										}`}
 								>
@@ -184,7 +185,7 @@ function BuildSignUpPage() {
 							/>
 						)}
 
-						{businessSignUpLink && adminBusinessUserId && (
+						{businessSignUpLink && (
 							<BusinessSignUpLink
 								signUpToken={token}
 								businessEmail={businessEmail}

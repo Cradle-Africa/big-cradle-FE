@@ -17,9 +17,9 @@ Props) => {
     <div
       // onClick={onClick}
       className={classNames({
-        "rounded-full cursor-pointer px-5 transition-all py-1 ":
+        "mt-5 lg:mt-0 rounded-full cursor-pointer px-2 lg:px-5 transition-all py-1 ":
           true,
-        "border border-blue-500  rounded-full px-5 bg-blue-100": isSelected,
+        "border border-blue-500  rounded-full px-2 lg:px-5 bg-blue-100": isSelected,
       })}
     >
       {children}

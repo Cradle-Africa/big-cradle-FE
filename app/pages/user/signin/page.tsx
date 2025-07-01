@@ -89,8 +89,8 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-between gap-16 md:py-0 bg-white">
-      <div className="flex items-center justify-center w-full max-w-[400px] md:px-12 py-4 bg-white">
+    <div className="min-h-screen flex justify-between mlg:gap-16 md:py-0 bg-white">
+      <div className="flex items-center justify-center w-full  lg:max-w-[400px] md:px-12 py-4 bg-white">
         {openReset && (
           <ForgotPassword
             openReset={openReset}
@@ -118,7 +118,7 @@ export default function SignInPage() {
           />
         )}
 
-        <div className="w-full max-w-md space-y-6 text-sm">
+        <div className="w-full px-10 lg:px-0 lg:max-w-md space-y-6 text-sm">
           <Image
             src={LogoWithText}
             width={200}

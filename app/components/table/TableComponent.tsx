@@ -17,9 +17,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
     const [totalItems, setTotalItems] = useState(0);
 
     const totalPages = Math.ceil(totalItems / limit);
-    const [openDepartment, setOpenDepartment] = useState<boolean>(false);
+    // const [openDepartment, setOpenDepartment] = useState<boolean>(false);
     const [openEmployee, setOpenEmployee] = useState<boolean>(false);
-    const [openBusiness, setOpenBusiness] = useState<boolean>(false);
+    // const [openBusiness, setOpenBusiness] = useState<boolean>(false);
     const businessId = getBusinessId();
     const adminUserId = getAdminUserId();
 
@@ -54,25 +54,24 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
         <>
             <BreadsCrumps
                 title={title}
-                openDepartment={openDepartment}
-                setOpenDepartment={setOpenDepartment}
+                // setOpenDepartment={setOpenDepartment}
                 openEmployee={openEmployee}
                 setOpenEmployee={setOpenEmployee}
-                openBusiness={openBusiness}
-                setOpenBusiness={setOpenBusiness}
+                // openBusiness={openBusiness}
+                // setOpenBusiness={setOpenBusiness}
                 rightAction={rightAction}
                 breadcrumbs={breadcrumbs}
             />
 
-            <div className="relative w-93 sm:min-w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white" key="table-container">
+            <div className="relative xs:w-90 sm:w-93 sm:min-w-full mt-5 rounded-md bg-white" key="table-container">
                 <div className='flex justify-between items-center mb-4' key="table-header">
-                    <h2 className="text-sm md:text-md text-gray-700 font-semibold" key="table-title">
+                    <h2 className="text-md md:text-lg text-gray-800 font-semibold" key="table-title">
                         {title}
                     </h2>
                 </div>
 
-                <div className='relative overflow-x-auto whitespace-nowrap border border-gray-100 rounded-[8px]' key="table-wrapper">
-                    <table className="relative w-full rounded-[8px]" key="data-table">
+                <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-10">
+                    <table className="min-w-[78%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                         <thead key="table-head">
                             <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                 <th
@@ -84,14 +83,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                 {fields.map((field, index) => (
                                     <th
                                         key={`header-${field.key}-${index}`}
-                                        className={`px-6 py-3 text-left text-sm font-bold text-gray-500 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
+                                        className={`px-6 py-3 text-left text-sm font-bold text-gray-800 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
                                         {field.label}
                                     </th>
                                 ))}
                                 {actionConfig && (
                                     <th
                                         key="actions-header"
-                                        className="rounded-tr-lg px-6 py-3 text-left text-sm font-bold text-gray-500"
+                                        className="rounded-tr-lg px-6 py-3 text-left text-sm font-bold text-gray-800"
                                     >
                                         Actions
                                     </th>
@@ -103,7 +102,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                             {loading ? (
                                 <tr key="loading-state">
                                     <td
-                                        className="py-10 text-center text-sm text-gray-500"
+                                        className="py-10 text-center text-sm text-gray-700"
                                         colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
                                     >
                                         Loading...
@@ -167,15 +166,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     </table>
                 </div>
                 <Pagination
-                    key="pagination"
                     currentPage={currentPage}
                     totalPages={totalPages}
                     limit={limit}
                     onPageChange={setCurrentPage}
                     onLimitChange={setLimit}
-                    className=""
-                    showPageInput={true}
-                    showLimitSelect={true}
                 />
             </div>
         </>

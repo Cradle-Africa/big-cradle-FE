@@ -10,6 +10,20 @@ export const departmentSchema = z.object({
   departmentDescription: z.string().min(1, "Enter the department desciption"),
 });
 
+export const inviteBusinessSchema = z.object({
+  email: z.string().min(1, "Enter the email"),
+});
+
+export const reviewBusinessKycSchema = z.object({
+  reason: z.string().min(1, "Enter the reason"),
+  action: z.string().min(1, "Enter the action"),
+});
+
+export const reviewAdminKycSchema = z.object({
+  reason: z.string().min(1, "Enter the reason"),
+  action: z.string().min(1, "Enter the action"),
+});
+
 export const surveySchema = z.object({
   surveyName: z.string().min(1, "Enter the survey name"),
   surveyDescription: z.string().min(1, "Enter the description name"),

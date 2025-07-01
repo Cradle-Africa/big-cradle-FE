@@ -2,7 +2,6 @@
 
 import classNames from "classnames";
 import {
-  Building2,
   ChevronDown,
   ChevronUp,
   Database,
@@ -63,13 +62,13 @@ export default function BusinessSideBar() {
           </div>
           {usersMenuOpen && (
             <div className="ml-6 mt-1 space-y-1">
-              <Link
+              {/* <Link
                 href="/pages/user/business/business-kyc/"
                 className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
                 Businesses KYC
-              </Link>
+              </Link> */}
               <Link
                 href="/pages/user/employee/"
                 className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"

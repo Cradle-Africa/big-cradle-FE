@@ -1,4 +1,4 @@
-import { DataEntry, DataPoint, Pagination, PaginationMeta, Pipeline } from "@/app/lib/type";
+import { DataEntry, DataPoint, PaginationMeta, Pipeline } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataPoints, fetchPipelines, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
@@ -26,7 +26,7 @@ export const useFetchDataPoints = ({
 }: UseFetchDataPoints) => {
 	return useQuery<{
 	    	data: DataPoint[]
-			  pagination: Pagination;
+			  pagination: PaginationMeta;
 		}>({
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
@@ -86,19 +86,20 @@ export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
 	});
 };
 
-export const useFetchPipelines = ({
-  axios,
-  queryParams
-}: UseFetchPipelines) => {
+export const useFetchPipelines = ({axios,queryParams}: UseFetchPipelines) => {
   return useQuery<{
-    dataPoint: Pipeline[];
-    pagination: PaginationMeta;
+    data: Pipeline[];
+    page: number;
+    limit: number;
+    total: number;
   }>({
     queryKey: ["data-points", queryParams],
     queryFn: () => fetchDataPoints(axios, queryParams),
     staleTime: 60 * 1000 * 5,
   });
 };
+
+
 
 export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, DataPoint>({

@@ -61,7 +61,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 
 
 	return (
-		<div className="mt-10 py-5">
+		<div className="mt-5 py-5">
 			<h2 className="text-gray-800 text-lg font-normal">New Data Pipeline</h2>
 
 			<form onSubmit={handleSubmit(onButtonClick)} className="lg:w-3/4">

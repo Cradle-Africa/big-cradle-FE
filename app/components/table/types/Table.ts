@@ -75,10 +75,9 @@ export interface BreadsCrumpsProps {
     title: string
     openEmployee: boolean
     setOpenEmployee: React.Dispatch<React.SetStateAction<boolean>>
-    openDepartment: boolean
-    setOpenDepartment: React.Dispatch<React.SetStateAction<boolean>>
-    openBusiness: boolean
-    setOpenBusiness: React.Dispatch<React.SetStateAction<boolean>>
+    // setOpenDepartment: React.Dispatch<React.SetStateAction<boolean>>
+    // openBusiness: boolean
+    // setOpenBusiness: React.Dispatch<React.SetStateAction<boolean>>
     breadcrumbs: {
         parent: { path: string; label: string }
         current: string
