@@ -1,17 +1,12 @@
-import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
-import { useState } from "react";
-import DashboardCharts from "../charts/DashboardCharts";
-import { getUser } from "@/app/utils/user/userData";
-import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
-import KycVerification from "../KycVerification";
-import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 import { DashboardMenu } from "@/app/lib/type";
+import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
+import { getUser } from "@/app/utils/user/userData";
+import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
+import DashboardCharts from "../charts/DashboardCharts";
+import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 
 const BusinessDashboard = () => {
-  const [openBusinessKycVerification, setOpenBusinessKycVerification] =
-    useState(false);
-  const [openAdminKycVerification, setOpenAdminKycVerification] =
-    useState(false);
+  
   const user = getUser();
   if (!user) {
     return <DashboardSkeleton />;
@@ -19,14 +14,14 @@ const BusinessDashboard = () => {
 
   return (
     <div>
-      <KycVerification
+      {/* <KycVerification
         openBusinessKycVerification={openBusinessKycVerification}
         setOpenBusinessKycVerification={setOpenBusinessKycVerification}
         openAdminKycVerification={openAdminKycVerification}
         setOpenAdminKycVerification={setOpenAdminKycVerification}
         user={user}
         kycReviewReason={user?.kycReviewReason || ""}
-      />
+      /> */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
         {data.map((menu, index) => (
           <BusinessCard

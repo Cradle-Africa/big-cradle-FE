@@ -7,8 +7,40 @@ import {
   surveyPaymentSchema,
   reviewBusinessKycSchema,
   reviewAdminKycSchema,
+  demographicSchema,
 } from "./validationSchemas";
 import { ReactNode } from "react";
+
+export type LocationOption = {
+  id: number;
+  name: string;
+};
+
+export type AgeGroupOption = {
+  label: string;
+  value: string;
+};
+
+export type Country = {
+  id: number;
+  name: string;
+  iso3: string;
+  iso2: string;
+  numeric_code: string;
+  phone_code: string;
+  capital: string;
+  currency: string;
+  currency_name: string;
+  currency_symbol: string;
+  tld: string;
+  native: string;
+  region: string;
+  subregion: string;
+  latitude: string;
+  longitude: string;
+  emoji: string;
+  hasStates: boolean;
+};
 
 export interface PaginationMeta {
   total: number;
@@ -50,6 +82,8 @@ export type ReviewAdminKyc = {
   adminUserId: string;
 };
 
+export type CountryAndCity = { country: string; city: string };
+
 export type Business = {
   id: string;
   businessName: string;
@@ -71,7 +105,7 @@ export type Business = {
   confirmPassword: string;
   businessLogo: string;
   role: string;
-}
+};
 
 export type BusinessKyc = {
   id: string;
@@ -111,7 +145,6 @@ export type AdminKyc = {
   certificateOfIncorporation: string;
 };
 
-
 export type DepartmentSchema = z.infer<typeof departmentSchema>;
 
 export type InviteBusinessSchema = z.infer<typeof inviteBusinessSchema>;
@@ -121,6 +154,8 @@ export type ReviewBusinessKycSchema = z.infer<typeof reviewBusinessKycSchema>;
 export type ReviewAdminKycSchema = z.infer<typeof reviewAdminKycSchema>;
 
 export type SurveySchema = z.infer<typeof surveySchema>;
+
+export type DemographicSchema = z.infer<typeof demographicSchema>;
 
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
 
@@ -155,7 +190,6 @@ export type DashboardAnalyticsResponse = {
   };
 };
 
-
 export interface DataPointForm {
   dataPointId: string;
   field: Field[];
@@ -182,6 +216,8 @@ export interface Survey {
   employeeUserId: string | null;
   surveyName: string;
   surveyDescription: string;
+  surveyLocations: string[];
+  ageDemographics: string;
   amount: number;
   field: Field[];
 }
@@ -222,6 +258,39 @@ export type DashboardMenu = {
   subTitle: string;
   value: string;
   icon: ReactNode;
+};
+
+export type MeResponse = {
+  success: boolean;
+  message: string;
+  data: Me;
+};
+
+export type Me = {
+  lockUntil: string | null;
+  id: string;
+  businessName: string;
+  contactPersonFirstName: string;
+  contactPersonLastName: string;
+  countryCode: string;
+  contactNumber: string;
+  businessAddress: string;
+  businessCity: string;
+  businessState: string;
+  businessCountry: string;
+  sector: string;
+  organizationSize: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
+  certificateOfIncorporation: string;
+  kycStatus: string;
+  failedLoginAttempts: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  kycReviewReason: string;
 };
 
 export type SurveyListResponse = {

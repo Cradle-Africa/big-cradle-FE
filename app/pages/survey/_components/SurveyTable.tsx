@@ -1,6 +1,6 @@
 import { SurveyListItem } from "@/app/lib/type";
 import { formattedDate } from "@/app/utils/tools";
-import { Edit, Eye, MoreVertical } from "lucide-react";
+import { Eye, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ImFileEmpty } from "react-icons/im";
@@ -61,7 +61,9 @@ const SurveyTable = ({ data }: Props) => {
           {/* Example row */}
           {data.map((survey) => (
             <tr key={survey.id}>
-              <td className="px-3 lg:px-6 py-4 font-medium">{survey.surveyName}</td>
+              <td className="px-3 lg:px-6 py-4 font-medium">
+                {survey.surveyName}
+              </td>
               <td className="px-3 lg:px-6 py-4">
                 {survey.isActive ? (
                   <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
@@ -73,7 +75,9 @@ const SurveyTable = ({ data }: Props) => {
                   </span>
                 )}
               </td>
-              <td className="px-3 lg:px-6 py-4">{formattedDate(survey.createdAt)}</td>
+              <td className="px-3 lg:px-6 py-4">
+                {formattedDate(survey.createdAt)}
+              </td>
               <td className="px-3 lg:px-6 py-4 relative">
                 <button
                   onClick={() => toggleMenu(survey.id)}
@@ -94,12 +98,12 @@ const SurveyTable = ({ data }: Props) => {
                           <p>View</p>
                         </li>
                       </Link>
-                      <Link href={`/pages/survey/edit/${survey.id}`}>
+                      {/* <Link href={`/pages/survey/edit/${survey.id}`}>
                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
                           <Edit />
                           <p>Edit</p>
                         </li>
-                      </Link>
+                      </Link> */}
                     </ul>
                   </div>
                 )}

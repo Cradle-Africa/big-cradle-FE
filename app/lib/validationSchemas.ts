@@ -24,6 +24,12 @@ export const reviewAdminKycSchema = z.object({
   action: z.string().min(1, "Enter the action"),
 });
 
+export const demographicSchema = z.object({
+  country: z.string().min(1, "Select a country please"),
+  city: z.string().min(1, "Select a city please"),
+  ageDemographics: z.string().min(1, "Select the age demographic"),
+});
+
 export const surveySchema = z.object({
   surveyName: z.string().min(1, "Enter the survey name"),
   surveyDescription: z.string().min(1, "Enter the description name"),

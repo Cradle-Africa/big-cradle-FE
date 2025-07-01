@@ -1,6 +1,7 @@
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios from "@/app/lib/axios";
 import {
+  CountryAndCity,
   DataPointForm,
   FlutterWavePaymentSubmit,
   Survey,
@@ -28,6 +29,9 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
   surveyDescription: string;
+  locationAndDemographic: string;
+  countriesAndCities: CountryAndCity[];
+  ageDemographics: string;
 };
 
 const SurveyPayementArea = ({
@@ -35,6 +39,8 @@ const SurveyPayementArea = ({
   setForm,
   surveyName,
   surveyDescription,
+  locationAndDemographic,
+  countriesAndCities,
 }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -88,6 +94,15 @@ const SurveyPayementArea = ({
   };
 
   const submitSurvey = async (data: SurveyPaymentSchema) => {
+    const demographicsToPost: string[] = [];
+
+    for (const v of countriesAndCities) {
+      demographicsToPost.push(`${v.country}, ${v.city}`);
+    }
+
+    console.log(JSON.stringify(demographicsToPost));
+    console.log(JSON.stringify(locationAndDemographic));
+
     const payload: Survey = {
       businessUserId,
       employeeUserId,
@@ -95,9 +110,9 @@ const SurveyPayementArea = ({
       surveyDescription: surveyDescription,
       amount: parseInt(`${data.amount}`),
       field: form.field,
+      surveyLocations: demographicsToPost,
+      ageDemographics: locationAndDemographic,
     };
-
-    // console.log(JSON.stringify(data));
 
     await createSurvey(payload, {
       onSuccess: (createdSurvey) => {
@@ -120,8 +135,6 @@ const SurveyPayementArea = ({
             description: data.description,
           },
         });
-
-        // verifyPayment(createdSurvey.data.tx_ref);
       },
       onError: (error: any) => {
         console.error("Create survey error:", error);
