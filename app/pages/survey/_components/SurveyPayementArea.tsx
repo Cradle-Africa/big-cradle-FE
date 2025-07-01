@@ -28,6 +28,9 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
   surveyDescription: string;
+  country: string;
+  city: string;
+  ageDemographics: string;
 };
 
 const SurveyPayementArea = ({
@@ -35,6 +38,9 @@ const SurveyPayementArea = ({
   setForm,
   surveyName,
   surveyDescription,
+  country,
+  city,
+  ageDemographics,
 }: Props) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -95,6 +101,8 @@ const SurveyPayementArea = ({
       surveyDescription: surveyDescription,
       amount: parseInt(`${data.amount}`),
       field: form.field,
+      surveyLocations: ["TOD DO//", "TOD DO//"],
+      ageDemographics,
     };
 
     // console.log(JSON.stringify(data));

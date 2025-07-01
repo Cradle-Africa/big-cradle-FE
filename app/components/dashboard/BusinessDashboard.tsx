@@ -6,7 +6,6 @@ import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import Spinner from "../Spinner";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =

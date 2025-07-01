@@ -29,6 +29,7 @@ const NewSurveyQuestionsForm = ({
   setForm,
   surveyName,
   surveyDescription,
+  
 }: Props) => {
   const router = useRouter();
   const [newOptions, setNewOptions] = useState<string[]>([]);

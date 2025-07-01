@@ -21,6 +21,7 @@
     "lucide-react": "^0.511.0",
     "next": "15.3.3",
     "react": "^19.0.0",
+    "react-country-state-city": "^1.1.12",
     "react-dom": "^19.0.0",
     "react-hook-form": "7.55.0",
     "react-hot-toast": "^2.5.2",
