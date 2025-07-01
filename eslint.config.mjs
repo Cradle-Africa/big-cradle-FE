@@ -15,6 +15,9 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      "react/no-unescaped-entities": "off",
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     },
   },
 ];

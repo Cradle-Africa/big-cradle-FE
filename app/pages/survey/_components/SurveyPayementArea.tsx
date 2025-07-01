@@ -96,7 +96,7 @@ const SurveyPayementArea = ({
   const submitSurvey = async (data: SurveyPaymentSchema) => {
     const demographicsToPost: string[] = [];
 
-    for (let v of countriesAndCities) {
+    for (const v of countriesAndCities) {
       demographicsToPost.push(`${v.country}, ${v.city}`);
     }
 

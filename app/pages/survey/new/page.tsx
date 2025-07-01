@@ -98,7 +98,7 @@ const NewSurveyPage = () => {
     }
   };
 
-  const onSubmit = (data: SurveySchema) => {
+  const onSubmit = () => {
     // console.log(JSON.stringify(data));
     router.push(`/pages/survey/new?survey=survey-questions`);
   };
@@ -251,8 +251,6 @@ const FormArea = ({
   handleSubmitDemographic,
   surveyName,
   surveyDescription,
-  country,
-  city,
   ageDemographics,
   handleSubmit,
   onSubmit,

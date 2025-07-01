@@ -66,36 +66,36 @@ const NewSurveyQuestionsForm = ({
     } else {
       const demographicsToPost: string[] = [];
 
-      for (let v of countriesAndCities) {
+      for (const v of countriesAndCities) {
         demographicsToPost.push(`${v.country}, ${v.city}`);
       }
 
       console.log(JSON.stringify(demographicsToPost));
       console.log(JSON.stringify(locationAndDemographic));
 
-      // const payload: Survey = {
-      //   businessUserId,
-      //   employeeUserId,
-      //   surveyName: surveyName,
-      //   surveyDescription: surveyDescription,
-      //   amount: 0,
-      //   field: form.field,
-      //   surveyLocations : countriesAndCities,
-      //   ageDemographics : locationAndDemographic
-      // };
+      const payload: Survey = {
+        businessUserId,
+        employeeUserId,
+        surveyName: surveyName,
+        surveyDescription: surveyDescription,
+        amount: 0,
+        field: form.field,
+        surveyLocations :demographicsToPost,
+        ageDemographics : locationAndDemographic
+      };
 
-      // await createSurvey(payload, {
-      //   onSuccess: () => {
-      //     toast.success("Survey ");
-      //   },
-      //   onError: (error: any) => {
-      //     const message =
-      //       error?.response?.data?.message ||
-      //       error?.message ||
-      //       "Failed to create the survey";
-      //     toast.error(message);
-      //   },
-      // });
+      await createSurvey(payload, {
+        onSuccess: () => {
+          toast.success("Survey ");
+        },
+        onError: (error: any) => {
+          const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Failed to create the survey";
+          toast.error(message);
+        },
+      });
     }
   };
 

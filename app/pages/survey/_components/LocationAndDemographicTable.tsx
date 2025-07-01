@@ -2,7 +2,7 @@
 
 import { CountryAndCity } from "@/app/lib/type";
 import { IconButton, Table } from "@radix-ui/themes";
-import { Delete, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 
 type Props = {
   demographicData: CountryAndCity[];
