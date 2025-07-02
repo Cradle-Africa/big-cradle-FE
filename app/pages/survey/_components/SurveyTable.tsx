@@ -50,6 +50,9 @@ const SurveyTable = ({ data }: Props) => {
               Survey Status
             </th>
             <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
+              Payment Status
+            </th>
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Created on
             </th>
             <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
@@ -72,6 +75,17 @@ const SurveyTable = ({ data }: Props) => {
                 ) : (
                   <span className="inline-block px-4 py-1 text-xs font-medium  text-red-700 rounded-full border-1">
                     Active
+                  </span>
+                )}
+              </td>
+              <td className="px-3 lg:px-6 py-4">
+                {survey.paymentStatus !== "not-paid" ? (
+                  <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
+                    Paid
+                  </span>
+                ) : (
+                  <span className="inline-block px-4 py-1 text-xs font-medium  text-red-700 rounded-full border-1">
+                    Not Paid
                   </span>
                 )}
               </td>
