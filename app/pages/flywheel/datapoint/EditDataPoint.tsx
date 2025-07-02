@@ -90,7 +90,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
 
         mutate(payload, {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+                queryClient.invalidateQueries({ queryKey: ["data-points"] });
                 toast.success("Data point updated successfully");
                 setEditingDataPoint(false);
             },

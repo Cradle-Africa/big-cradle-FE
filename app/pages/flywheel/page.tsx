@@ -8,9 +8,10 @@ import NewDataPoint from "./datapoint/NewDataPoint";
 import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
-import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines } from "./_features/hook";
+import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines, useFetchPipelinesByDepartment } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
+import { getBusinessId } from "@/app/utils/user/userData";
 
 type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points';
 
@@ -19,7 +20,8 @@ const Flywheel = () => {
 
 	const tabs: TabKey[] = ['Overview', 'Data Pipelines', 'Data Points'];
 	const [selectedTab, setSelectedTab] = useState<TabKey>('Overview');
-
+	const businessUserId = getBusinessId()
+	const [selectedDepartment, setSelectedDepartment] = useState('');
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
 	const [creatingDataPoint, setCreatingDataPoint] = useState(false);
@@ -29,16 +31,6 @@ const Flywheel = () => {
 	const [pipelinePage, setPipelinePage] = useState(1);
 	const [pipelineLimit, setPipelineLimit] = useState(10);
 
-	const { isLoading: isLoadingDataPoints, data: pipelineData } = useFetchPipelines({
-		axios,
-		queryParams: { page: pipelinePage, limit: pipelineLimit }
-	});
-	const pipelines = pipelineData?.data ?? [];
-	const paginationDataPipeline = {
-		page: pipelineData?.page || 1, limit: pipelineData?.limit || 10, total: pipelineData?.total || 0,
-		pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
-	};
-
 	const { data: dataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: { page: pointsPage, limit: pointsLimit }
@@ -47,6 +39,51 @@ const Flywheel = () => {
 	const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
 
 	const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
+
+	const {
+		isLoading: isLoadingDataPoints,
+		data: pipelineData
+	} = useFetchPipelines({
+		axios,
+		queryParams: { page: pipelinePage, limit: pipelineLimit }
+	});
+
+	const {
+		data: filteredPipelineData,
+		isLoading: isLoadingFilteredPipeline,
+	} = useFetchPipelinesByDepartment({
+		axios,
+		queryParams: {
+			businessUserId: businessUserId!,
+			departmentId: selectedDepartment,
+			page: pipelinePage,
+			limit: pipelineLimit,
+		},
+		enabled: !!selectedDepartment, // only fetch when department is selected
+	});
+
+	// Simplified pipelines to render logic
+	const pipelinesToRender = selectedDepartment
+		? filteredPipelineData?.data ?? []
+		: pipelineData?.data ?? [];
+
+	const isLoadingPipelines = selectedDepartment
+		? isLoadingFilteredPipeline
+		: isLoadingDataPoints;
+
+	const pipelinePaginationToRender = selectedDepartment
+		? {
+			page: filteredPipelineData?.page || 1,
+			limit: filteredPipelineData?.limit || 10,
+			total: filteredPipelineData?.total || 0,
+			pages: Math.ceil((filteredPipelineData?.total || 0) / (filteredPipelineData?.limit || 10)),
+		}
+		: {
+			page: pipelineData?.page || 1,
+			limit: pipelineData?.limit || 10,
+			total: pipelineData?.total || 0,
+			pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
+		};
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -112,15 +149,34 @@ const Flywheel = () => {
 								Build a new Pipeline
 							</button>
 						</div>
-						<Pipeline
-							data={pipelines}
-							pagination={paginationDataPipeline}
-							onPageChange={setPipelinePage}
-							onLimitChange={(newLimit) => {
-								setPipelineLimit(newLimit);
-								setPipelinePage(1);
-							}}
-						/>
+
+						{/* Add proper loading and empty state handling */}
+						{isLoadingPipelines ? (
+							<div className="mt-5">Loading pipelines...</div>
+						) : (
+							<>
+								{pipelinesToRender.length === 0 ? (
+									<div className="mt-5">
+										{selectedDepartment
+											? "No pipelines found for this department"
+											: "No pipelines found"}
+									</div>
+								) : (
+									<Pipeline
+										pipelineData={pipelinesToRender}
+										pagination={pipelinePaginationToRender}
+										onPageChange={setPipelinePage}
+										onLimitChange={(newLimit) => {
+											setPipelineLimit(newLimit);
+											setPipelinePage(1);
+										}}
+										selectedDepartment={selectedDepartment}
+										setSelectedDepartment={setSelectedDepartment}
+										loading={false} // Set to false here since we already checked loading state
+									/>
+								)}
+							</>
+						)}
 					</>
 				)}
 			</div>
@@ -133,7 +189,7 @@ const Flywheel = () => {
 						<NewDataPoint
 							creatingDataPoint={creatingDataPoint}
 							setCreatingDataPoint={setCreatingDataPoint}
-							pipelines={pipelines}
+							pipelines={pipelinesToRender}
 						/>
 					</>
 				) : (

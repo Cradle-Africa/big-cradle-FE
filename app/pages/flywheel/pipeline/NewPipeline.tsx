@@ -47,7 +47,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 			{ ...data, businessUserId, employeeUserId },
 			{
 				onSuccess: () => {
-					queryClient.invalidateQueries({ queryKey: ["data-points"] });
+					queryClient.invalidateQueries({ queryKey: ["pipelines"] });
 					toast.success("New data pipeline created successfully");
 					reset(); // clear form
 					setCreatingPipeline(false);
@@ -58,7 +58,6 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 			}
 		);
 	};
-
 
 	//call department list api
 	const { data: departments } = useFetchDepartments({
@@ -79,7 +78,7 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 					{...register("departmentId")}
 					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
 				>
-					<option>Select the department</option>
+					<option value="">Select the department</option>
 					{departmentData.map((department, index) =>
 						<option key={index} value={department?.id}>{department?.departmentName}</option>
 					)}
@@ -99,7 +98,6 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 					placeholder="Data pipeline Description"
 					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
 				/>
-
 				<ErrorMessage>{errors.dataPointDescription?.message}</ErrorMessage>
 
 				<button

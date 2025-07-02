@@ -91,7 +91,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
 
         mutate(payload, {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["pipelines"] });
+                queryClient.invalidateQueries({ queryKey: ["data-points"] });
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");

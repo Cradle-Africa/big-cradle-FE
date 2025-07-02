@@ -15,7 +15,7 @@ if (user?.role === 'business') {
     businessUserId = user?.businessUserId || null;
 }
 
-export const fetchPipelines = async (
+export const fetchDataPoints = async (
     axios: AxiosInstance,
     queryParams?: {
         page?: number;
@@ -190,7 +190,7 @@ export const editPipeline = async (
     }
 };
 
-export const fetchDataPoints = async (
+export const fetchPipelines = async (
     axios: AxiosInstance,
     queryParams?: {
         page?: number;
@@ -227,6 +227,51 @@ export const fetchDataPoints = async (
         };
     }
 };
+
+export const fetchPipelinesByDepartment = async (
+	axios: AxiosInstance,
+	queryParams: {
+		departmentId: string;
+		businessUserId: string;
+		page?: number;
+		limit?: number;
+	}
+): Promise<{
+	data: Pipeline[];
+	limit: number;
+	page: number;
+	total: number;
+	pages: number;
+}> => {
+	try {
+		const { departmentId, businessUserId, page = 1, limit = 10 } = queryParams;
+		const params = { departmentId, businessUserId, page, limit };
+
+		const res = await axios.get("/data-point-mgt/data-points-by-department", { params });
+
+		const pagination = res.data.pagination || {};
+
+		return {
+			data: res.data.data ?? [],
+			limit: Number(pagination.limit) || limit,
+			page: Number(pagination.page) || page,
+			total: Number(pagination.total) || 0,
+			pages: Number(pagination.pages) || 1,
+		};
+	} catch (error: any) {
+		console.error("fetchPipelinesByDepartment error:", error);
+		return {
+			data: [],
+			limit: 10,
+			page: 1,
+			total: 0,
+			pages: 1,
+		};
+	}
+};
+
+
+
 
 export const createDataPoint = async (
     axios: AxiosInstance,

@@ -2,7 +2,7 @@ import { DataEntry, DataFlyOverview, DataPoint, PaginationMeta, Pipeline } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UseQueryResult } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
+import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -29,8 +29,8 @@ export const useFetchDataPoints = ({
 		data: DataPoint[]
 		pagination: PaginationMeta;
 	}>({
-		queryKey: ["pipelines", queryParams],
-		queryFn: () => fetchPipelines(axios, queryParams),
+		queryKey: ["data-points", queryParams],
+		queryFn: () => fetchDataPoints(axios, queryParams),
 		staleTime: 60 * 1000 * 5,
 		// retry: 3,
 	});
@@ -94,11 +94,42 @@ export const useFetchPipelines = ({ axios, queryParams }: UseFetchPipelines) => 
 		limit: number;
 		total: number;
 	}>({
-		queryKey: ["data-points", queryParams],
-		queryFn: () => fetchDataPoints(axios, queryParams),
+		queryKey: ["pipelines", queryParams],
+		queryFn: () => fetchPipelines(axios, queryParams),
 		staleTime: 60 * 1000 * 5,
 	});
 };
+
+
+type UseFetchPipelinesByDepartmentArgs = {
+	axios: AxiosInstance;
+	queryParams: {
+		departmentId: string;
+		businessUserId: string;
+		page?: number;
+		limit?: number;
+	};
+	enabled?: boolean;
+};
+
+export const useFetchPipelinesByDepartment = ({
+	axios,
+	queryParams,
+	enabled = true,
+}: UseFetchPipelinesByDepartmentArgs) => {
+	return useQuery<{
+		data: Pipeline[];
+		page: number;
+		limit: number;
+		total: number;
+		pages: number;
+	}>({
+		queryKey: ["pipelines-by-department", queryParams],
+		queryFn: () => fetchPipelinesByDepartment(axios, queryParams),
+		enabled,
+	});
+};
+
 
 
 
