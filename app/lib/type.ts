@@ -226,6 +226,7 @@ export type Pipeline = {
   id?: string;
   businessUserId?: string | null;
   employeeUserId?: string | null;
+  departmentId: string;
   dataPointName: string;
   dataPointDescription: string;
   createdAt?: string | undefined;
