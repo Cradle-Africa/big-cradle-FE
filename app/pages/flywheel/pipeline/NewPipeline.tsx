@@ -10,6 +10,7 @@ import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useCreatePipeline } from "../_features/hook";
+import { useFetchDepartments } from "../../user/department/_features/hook";
 
 type Props = {
 	setCreatingPipeline: (value: boolean) => void;
@@ -59,12 +60,32 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 	};
 
 
+	//call department list api
+	const { data: departments } = useFetchDepartments({
+		axios,
+		queryParams: {
+			businessUserId: businessUserId || undefined,
+		},
+	});
+	const departmentData = departments?.data ?? [];
+
 
 	return (
 		<div className="mt-5 py-5">
 			<h2 className="text-gray-800 text-lg font-normal">New Data Pipeline</h2>
 
 			<form onSubmit={handleSubmit(onButtonClick)} className="lg:w-3/4">
+				<select
+					{...register("departmentId")}
+					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
+				>
+					<option>Select the department</option>
+					{departmentData.map((department, index) =>
+						<option key={index} value={department?.id}>{department?.departmentName}</option>
+					)}
+				</select>
+				<ErrorMessage>{errors.departmentId?.message}</ErrorMessage>
+
 				<input
 					{...register("dataPointName")}
 					type="text"
@@ -72,7 +93,6 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
 				/>
 				<ErrorMessage>{errors.dataPointName?.message}</ErrorMessage>
-
 
 				<textarea
 					{...register("dataPointDescription")}

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const pipeLineSchema = z.object({
+  departmentId:  z.string().min(1, "Select the department"),
   dataPointName: z.string().min(1, "Enter the data point name"),
   dataPointDescription: z.string().min(1, "Enter the desciption"),
 });
