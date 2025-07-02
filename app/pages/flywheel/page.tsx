@@ -11,7 +11,7 @@ import PopUp from "./_components/Popup";
 import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines, useFetchPipelinesByDepartment } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
-import { getBusinessId } from "@/app/utils/user/userData";
+import { getBusinessId, getUser } from "@/app/utils/user/userData";
 
 type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points';
 
@@ -20,7 +20,14 @@ const Flywheel = () => {
 
 	const tabs: TabKey[] = ['Overview', 'Data Pipelines', 'Data Points'];
 	const [selectedTab, setSelectedTab] = useState<TabKey>('Overview');
-	const businessUserId = getBusinessId()
+	const user = getUser();	
+	let businessUserId = '';
+	if (user?.role === 'business'){
+		businessUserId = getBusinessId() ?? ''
+	}else if(user?.role === 'employee'){
+		businessUserId = user.businessUserId
+	}
+
 	const [selectedDepartment, setSelectedDepartment] = useState('');
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
@@ -54,7 +61,7 @@ const Flywheel = () => {
 	} = useFetchPipelinesByDepartment({
 		axios,
 		queryParams: {
-			businessUserId: businessUserId!,
+			businessUserId: businessUserId,
 			departmentId: selectedDepartment,
 			page: pipelinePage,
 			limit: pipelineLimit,
@@ -155,13 +162,13 @@ const Flywheel = () => {
 							<div className="mt-5">Loading pipelines...</div>
 						) : (
 							<>
-								{pipelinesToRender.length === 0 ? (
+								{/* {pipelinesToRender.length === 0 ? (
 									<div className="mt-5">
 										{selectedDepartment
 											? "No pipelines found for this department"
 											: "No pipelines found"}
 									</div>
-								) : (
+								) : ( */}
 									<Pipeline
 										pipelineData={pipelinesToRender}
 										pagination={pipelinePaginationToRender}
@@ -174,7 +181,7 @@ const Flywheel = () => {
 										setSelectedDepartment={setSelectedDepartment}
 										loading={false} // Set to false here since we already checked loading state
 									/>
-								)}
+								{/* )} */}
 							</>
 						)}
 					</>
