@@ -1,7 +1,6 @@
 import { DashboardMenu } from "@/app/lib/type";
 import axios from "@/app/lib/axios";
 import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
-import { getUser } from "@/app/utils/user/userData";
 import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import DashboardCharts from "../charts/DashboardCharts";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
