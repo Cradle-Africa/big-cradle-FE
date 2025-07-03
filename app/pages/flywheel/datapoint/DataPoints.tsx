@@ -2,7 +2,7 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, List, Pencil, Plus, Share2 } from "lucide-react";
+import { Eye, List, MoreVertical, Pencil, Plus, Share2, Database } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
@@ -32,43 +32,58 @@ const DataPoints = ({
     const [shareDataPoint, setShareDataPoint] = useState(false);
     const [viewDataEntries, setViewDataEntries] = useState(false);
 
+    const menuRef = useRef<HTMLUListElement>(null);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const optionRef = useRef<HTMLUListElement | null>(null);
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
     const [uniqueDataEntry, setUniqueDataEntry] = useState<string>('')
 
     const handleViewDataPoint = (id: any) => {
         setOpenViewDataPoit(true)
+        setOpenIndex(null);
         setUniqueDataPoint(id)
     }
 
     const handleEditDataPoint = (id: any) => {
         setEditingDataPoint(true)
+        setOpenIndex(null);
         setUniqueDataPoint(id)
     }
 
     const handleShareDataPoint = (id: any) => {
         setShareDataPoint(true)
+        setOpenIndex(null);
         setUniqueDataPoint(id)
     }
 
     const handleViewDataEntries = (id: any) => {
         setViewDataEntries(true)
+        setOpenIndex(null);
         setUniqueDataEntry(id)
     }
-
-    const [openOptionIndex, setOpenOptionIndex] = useState<string | null>(null);
-    const optionRef = useRef<HTMLUListElement | null>(null);
 
     // Close dropdown if clicked outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (optionRef.current && !optionRef.current.contains(event.target as Node)) {
-                setOpenOptionIndex(null);
+                setOpenIndex(null);
+                setOpenIndex(null);
             }
         };
 
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setOpenIndex(null);
+            }
+        };
+        document.addEventListener("mousedown", handler);
+        return () => document.removeEventListener("mousedown", handler);
     }, []);
     return (
         <div>
@@ -125,18 +140,15 @@ const DataPoints = ({
                         </div>
 
                     </div>
-                    <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
+                    <div className="overflow-x-auto pb-14 rounded-[8px] border border-gray-200 mt-5">
                         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-3 py-3 text-left text-sm font-semibold">
+                                    <th className="px-6 py-3 text-left text-sm font-semibold">
                                         #
                                     </th>
                                     <th className="px-3 py-3 text-left text-sm font-semibold">
                                         Pipeline name
-                                    </th>
-                                    <th className="hidden md:block py-3 text-left text-sm font-semibold">
-                                        Fields
                                     </th>
                                     <th className="px-3 py-3 text-left text-sm font-semibold">
                                         Date
@@ -149,91 +161,56 @@ const DataPoints = ({
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                 {data.map((dataPoints, index) => (
                                     <tr key={index} className="">
-                                        <td className="px-3 py-4 align-top">{index + 1}</td>
-                                        <td className="px-3 py-3 align-top">{dataPoints?.dataPointName }</td>
-                                        <td className="hidden md:block py-4 align-top">
-                                            <table className="w-full">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className=" align-top">
-                                                            {dataPoints.field.map((field: any, idx: number) => (
-                                                                <div key={idx} className="mb-4 px-3 py-3 text-sm border rounded border-gray-300 bg-gray-50 pb-2 hover:bg-blue-50">
-                                                                    <div className="flex gap-x-4">
-                                                                        <span className="lg:min-w-[250px] font-medium flex flex-wrap">{field.label}</span>
-                                                                        <span className="lg:min-w-[100px]">{field.type}</span>
-                                                                        <span className="lg:min-w-[100px]">{field.required ? "Required" : "Optional"}</span>
-                                                                    </div>
-
-                                                                    {field.options && field.options.length > 0 && (
-                                                                        <div className="relative mt-1">
-                                                                            <button
-                                                                                onClick={() =>
-                                                                                    setOpenOptionIndex(
-                                                                                        openOptionIndex === `${dataPoints.id}-${idx}` ? null : `${dataPoints.id}-${idx}`
-                                                                                    )
-                                                                                }
-                                                                                className="text-blue-600 cursor-pointer underline text-sm"
-                                                                            >
-                                                                                View options
-                                                                            </button>
-
-                                                                            {openOptionIndex === `${dataPoints.id}-${idx}` && (
-                                                                                <ul
-                                                                                    ref={optionRef}
-                                                                                    className="absolute left-0 top-full mt-2 bg-white shadow-lg border border-gray-200 rounded-lg z-50 w-64 max-w-xs text-sm"
-                                                                                >
-                                                                                    {field.options.map((opt: string, i: number) => (
-                                                                                        <li key={i} className="px-4 py-2 border-b border-gray-100 last:border-none hover:bg-gray-100">
-                                                                                            {opt}
-                                                                                        </li>
-                                                                                    ))}
-                                                                                </ul>
-                                                                            )}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            ))}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-
-                                            </table>
-                                        </td>
-
+                                        <td className="px-6 py-4 align-top">{index + 1}</td>
+                                        <td className="px-3 py-3 align-top">{dataPoints?.dataPointName}</td>
                                         <td className="px-3 py-4 align-top text-left text-sm">
                                             {formatDate(dataPoints?.createdAt ?? "")}
                                         </td>
-                                        <td className="px-3 pb-4 text-center align-top">
-                                            <div className="flex flex-wrap gap-1 lg:inline">
-                                                <Eye
-                                                    size={30}
-                                                    onClick={() => handleViewDataPoint(dataPoints?.id)}
-                                                    className="cursor-pointer bg-gray-100 rounded-full 
-                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
-                                                        w-7 h-8 lg:w-9 lg:h-9 lg:mt-5"
-                                                />
-
-                                                <Pencil
-                                                    size={30}
-                                                    onClick={() => handleEditDataPoint(dataPoints?.id)}
-                                                    className="cursor-pointer bg-gray-100 rounded-full 
-                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
-                                                        w-7 h-7 lg:w-9 lg:h-9 lg:mt-5"
-                                                />
-                                                <Share2
-                                                    size={30}
-                                                    onClick={() => handleShareDataPoint(dataPoints?.id)}
-                                                    className="cursor-pointer bg-gray-100 rounded-full 
-                                                        px-2 py-1 hover:bg-blue-600 hover:text-white 
-                                                        w-7 h-7 lg:w-9 lg:h-9 lg:mt-5"
-                                                />
-                                                <button
-                                                    onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
-                                                    className="cursor-pointer bg-gray-100 rounded-full 
-                                                        px-2 py-1 hover:bg-blue-600 hover:text-white w-32 text-xs lg:mt-5"
-                                                >View Entries
-                                                </button>
-                                            </div>
+                                        <td className="px-6 py-4 mb-10 border-r border-gray-100 whitespace-nowrap relative">
+                                            <button
+                                                className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
+                                                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                            >
+                                                <MoreVertical size={18} />
+                                            </button>
+                                            {openIndex === index && (
+                                                <ul
+                                                    ref={menuRef}
+                                                    className="absolute z-60 right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100"
+                                                >
+                                                    <li className="px-2 w-full">
+                                                        <button
+                                                            onClick={() => handleViewDataPoint(dataPoints?.id)}
+                                                            className="flex items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
+                                                        >
+                                                            <Eye size={13} className="inline mr-1" />
+                                                            View data point
+                                                        </button>
+                                                    </li>
+                                                    <li className="px-2 w-full">
+                                                        <button
+                                                            onClick={() => handleEditDataPoint(dataPoints?.id)}
+                                                            className="w-full flex items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
+                                                        >
+                                                            <Pencil size={13} className="inline mr-1" /> Edit
+                                                        </button>
+                                                    </li>
+                                                    <li className="px-2 w-full">
+                                                        <button
+                                                            onClick={() => handleShareDataPoint(dataPoints?.id)}
+                                                            className="flex items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
+                                                        > <Share2 size={13} className="inline mr-1" /> Share Data point
+                                                        </button>
+                                                    </li>
+                                                    <li className="px-2 w-full">
+                                                        <button
+                                                            onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
+                                                            className="flex w-full items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
+                                                        > <Database size={13} className="inline mr-1" /> View Entries
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

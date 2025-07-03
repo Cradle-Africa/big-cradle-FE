@@ -4,7 +4,7 @@ import axios from "@/app/lib/axios";
 import { useFetchDataPointOfDataEntries } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ChartLine, Plus } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useState } from "react";
 import Pagination from "../_components/Pagination";
@@ -90,7 +90,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
                             onClick={() => setAnalyseData(true)}
                         >
-                            <ChartLine size={15} color="white" className="mr-1 inline animate-pulse " />
+                            <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
                             Analyse data
                         </button>
 

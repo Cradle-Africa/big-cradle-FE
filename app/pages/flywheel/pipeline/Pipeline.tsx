@@ -85,7 +85,7 @@ const PipelinePage = ({
                 <div className="grid grid-cols-1 md:grid md:grid-cols-2  2xl:grid 2xl:grid-cols-3 w-full gap-5 mt-5">
                     {
                         pipelineData.map((pipeline, index) =>
-                            <div key={index} className="border bg-white border-gray-200 rounded-lg px-6 py-6">
+                            <div key={index} className="border bg-white border-gray-200 rounded-lg px-6 py-6 hover:border hover:border-blue-300">
                                 <div className="flex flex-nowrap items-center ">
                                     <LetterText size={16} className="text-[#0C0C0C]" />
                                     <h2 className="ml-2 text-[18px] text-[#0C0C0C]">
@@ -95,28 +95,28 @@ const PipelinePage = ({
                                 <p className="text-[#494949] text-[14px] mt-5">
                                     {pipeline.dataPointDescription}
                                 </p>
-                                <div className="flex w-full justify-start mt-5 pb-3">
+                                <div className="flex w-full justify-between mt-10 pb-3">
                                     <div className="flex items-center ">
                                         <Calendar size={12} />
                                         <h6 className="ml-1 text-[#494949] text-[12px]">{formatDate(pipeline?.createdAt ?? '')}</h6>
                                     </div>
-                                </div>
-                                <div className="flex justify-end gap-2 mt-5">
-                                    <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} bg-gray-100 rounded-md px-2 py-1 cursor-pointer`}>
-                                        <Share2
-                                            size={14}
-                                            onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
-                                            className="hover:bg-blue-600 hover:text-white"
-                                        />
+
+                                    <div className="flex justify-end gap-2">
+                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} bg-gray-100 rounded-md px-2 py-1 cursor-pointer`}>
+                                            <Share2
+                                                size={14}
+                                                onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
+                                                className="hover:bg-blue-600 hover:text-white"
+                                            />
+                                        </div>
+
+                                        <Link
+                                            href={`/pages/flywheel/data-entry/${pipeline.id}`}
+                                            className="flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white ">
+                                            <Eye size={15} className='mr-1 inline' /> View Entries
+                                        </Link>
                                     </div>
-
-                                    <Link
-                                        href={`/pages/flywheel/data-entry/${pipeline.id}`}
-                                        className="flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white ">
-                                        <Eye size={15} className='mr-1 inline' /> View Entries
-                                    </Link>
                                 </div>
-
                             </div>
                         )
                     }

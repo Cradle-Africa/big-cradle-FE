@@ -6,6 +6,14 @@ export const pipeLineSchema = z.object({
   dataPointDescription: z.string().min(1, "Enter the desciption"),
 });
 
+export const analyseSocialMediaSchema = z.object({
+  socialMediaType:  z.string().min(1, "Select media type"),
+  socialMediaLink: z.string().min(1, "Enter social Media. Link"),
+  startDate: z.string().min(1, "Entrer the start date"),
+  endDate: z.string().min(1, "Entrer the start date")
+});
+
+
 export const departmentSchema = z.object({
   departmentName: z.string().min(1, "Enter the department name"),
   departmentDescription: z.string().min(1, "Enter the department desciption"),

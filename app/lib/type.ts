@@ -232,7 +232,17 @@ export type Pipeline = {
   createdAt?: string | undefined;
   fieldId?: string;
 };
+
+export type AnalyseSocialMedia = {
+  socialMediaType: string;
+  socialMediaLink: string;
+  startDate: string;
+  endDate: string;
+};
+
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;
+
+// export type AnalyseSocialMediaSchema = z.infer<typeof analyseSocialMediaSchema>;
 
 export type DataFlyOverview = {
   totalDataPoints: string,

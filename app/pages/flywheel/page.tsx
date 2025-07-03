@@ -12,19 +12,37 @@ import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines, useFetchPi
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
+import { useSearchParams } from "next/navigation";
 
-type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points';
+type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points' | '';
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
-
 	const tabs: TabKey[] = ['Overview', 'Data Pipelines', 'Data Points'];
-	const [selectedTab, setSelectedTab] = useState<TabKey>('Overview');
-	const user = getUser();	
+	const [selectedTab, setSelectedTab] = useState<TabKey>('');
+	const searchParams = useSearchParams();
+
+	useEffect(() => {
+		const tabParam = searchParams.get('tab')?.toLowerCase().trim();
+
+		switch (tabParam) {
+			case 'pipelines':
+				setSelectedTab('Data Pipelines');
+				break;
+			case 'data-points':
+				setSelectedTab('Data Points');
+				break;
+			default:
+				setSelectedTab('Overview');
+		}
+	}, [searchParams]);
+
+
+	const user = getUser();
 	let businessUserId = '';
-	if (user?.role === 'business'){
+	if (user?.role === 'business') {
 		businessUserId = getBusinessId() ?? ''
-	}else if(user?.role === 'employee'){
+	} else if (user?.role === 'employee') {
 		businessUserId = user.businessUserId
 	}
 
@@ -112,13 +130,17 @@ const Flywheel = () => {
 	if (isError || !dataOverview) return (
 		<div>
 			<DashboardLayout>
-				Error loading overview data
+				No  data overview
 			</DashboardLayout>
 		</div>
 	)
 
 	// const TabContent = {
 	const TabContent: Record<TabKey, () => JSX.Element> = {
+
+		"": () => (
+			<p>Loading ...</p>
+		), 
 
 		"Overview": () => (
 			<Overview
@@ -169,18 +191,18 @@ const Flywheel = () => {
 											: "No pipelines found"}
 									</div>
 								) : ( */}
-									<Pipeline
-										pipelineData={pipelinesToRender}
-										pagination={pipelinePaginationToRender}
-										onPageChange={setPipelinePage}
-										onLimitChange={(newLimit) => {
-											setPipelineLimit(newLimit);
-											setPipelinePage(1);
-										}}
-										selectedDepartment={selectedDepartment}
-										setSelectedDepartment={setSelectedDepartment}
-										loading={false} // Set to false here since we already checked loading state
-									/>
+								<Pipeline
+									pipelineData={pipelinesToRender}
+									pagination={pipelinePaginationToRender}
+									onPageChange={setPipelinePage}
+									onLimitChange={(newLimit) => {
+										setPipelineLimit(newLimit);
+										setPipelinePage(1);
+									}}
+									selectedDepartment={selectedDepartment}
+									setSelectedDepartment={setSelectedDepartment}
+									loading={false} // Set to false here since we already checked loading state
+								/>
 								{/* )} */}
 							</>
 						)}
