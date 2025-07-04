@@ -102,11 +102,11 @@ const PipelinePage = ({
                                     </div>
 
                                     <div className="flex justify-end gap-2">
-                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} bg-gray-100 rounded-md px-2 py-1 cursor-pointer`}>
+                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} hover:bg-blue-600 hover:text-white bg-gray-100 rounded-md px-2 py-1 cursor-pointer`}>
                                             <Share2
                                                 size={14}
                                                 onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
-                                                className="hover:bg-blue-600 hover:text-white"
+                                                className=""
                                             />
                                         </div>
 

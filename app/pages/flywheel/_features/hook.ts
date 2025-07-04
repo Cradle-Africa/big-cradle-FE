@@ -2,7 +2,7 @@ import { DataEntry, DataFlyOverview, DataPoint, PaginationMeta, Pipeline } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UseQueryResult } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { analyseData, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
+import { analyseData, createBulkDataEntry, createDataEntry, createDataPoint, createPipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -131,8 +131,6 @@ export const useFetchPipelinesByDepartment = ({
 };
 
 
-
-
 export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, DataPoint>({
 		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
@@ -145,6 +143,11 @@ export const useCreateDataEntry = ({ axios }: { axios: AxiosInstance }) => {
 	});
 };
 
+export const useCreateBulkDataEntry = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<void, Error, DataEntry[]>({
+    mutationFn: (entries: DataEntry[]) => createBulkDataEntry(axios, entries),
+  });
+};
 
 
 type UseFetchDataEntries = {

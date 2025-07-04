@@ -7,10 +7,9 @@ export const pipeLineSchema = z.object({
 });
 
 export const analyseSocialMediaSchema = z.object({
-  socialMediaType:  z.string().min(1, "Select media type"),
-  socialMediaLink: z.string().min(1, "Enter social Media. Link"),
-  startDate: z.string().min(1, "Entrer the start date"),
-  endDate: z.string().min(1, "Entrer the start date")
+  platform:  z.string().min(1, "Select media type"),
+  link: z.string().min(1, "Enter social Media. Link"),
+  prompt: z.string().min(1, "Enter the prompt"),
 });
 
 

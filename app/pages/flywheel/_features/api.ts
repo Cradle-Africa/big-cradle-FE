@@ -334,6 +334,36 @@ export const createDataEntry = async (
 };
 
 
+export const createBulkDataEntry = async (
+  axios: AxiosInstance,
+  entries: DataEntry[]
+) => {
+  try {
+    const res = await axios.post(`/data-point-mgt/bulk-pipeline-fields-entry`, {
+      entries,
+    });
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.data?.message || error?.response?.message;
+
+    switch (statusCode) {
+      case 400:
+        if (Array.isArray(message)) message = message.join("\n");
+        break;
+      case 401:
+        removeUser();
+        message = "Unauthorized access. Please log in again.";
+        break;
+      default:
+        message = typeof message === "string" ? message : "An unexpected error occurred";
+    }
+
+    return Promise.reject({ message });
+  }
+};
+
+
 export const fetchDataEntries = async (
     axios: AxiosInstance,
     queryParams?: {

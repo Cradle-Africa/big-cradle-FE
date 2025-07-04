@@ -8,6 +8,7 @@ import {
   reviewBusinessKycSchema,
   reviewAdminKycSchema,
   demographicSchema,
+  analyseSocialMediaSchema,
 } from "./validationSchemas";
 import { ReactNode } from "react";
 
@@ -233,16 +234,15 @@ export type Pipeline = {
   fieldId?: string;
 };
 
-export type AnalyseSocialMedia = {
-  socialMediaType: string;
-  socialMediaLink: string;
-  startDate: string;
-  endDate: string;
-};
-
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;
 
-// export type AnalyseSocialMediaSchema = z.infer<typeof analyseSocialMediaSchema>;
+export type AnalyseSocialMedia = {
+  platform: string;
+  link: string;
+  prompt: string;
+};
+
+export type AnalyseSocialMediaSchema = z.infer<typeof analyseSocialMediaSchema>;
 
 export type DataFlyOverview = {
   totalDataPoints: string,

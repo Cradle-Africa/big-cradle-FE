@@ -15,7 +15,7 @@ interface PopUpProps {
     refetchEntries: () => void;
 }
 
-const NewDataPoint: React.FC<PopUpProps> = ({
+const NewDataEntry: React.FC<PopUpProps> = ({
     openNewDataEntry,
     onClose,
     uniqueId,
@@ -253,4 +253,4 @@ const NewDataPoint: React.FC<PopUpProps> = ({
     );
 };
 
-export default NewDataPoint;
+export default NewDataEntry;
