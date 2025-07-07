@@ -87,7 +87,7 @@ const SocialMediaPage = () => {
                                 )}
                             </div>
 
-                            <div className='w-full'>
+                            <div className='w-full mt-5'>
                                 <textarea
                                     {...register('prompt')}
                                     placeholder="Enter the analysis prompt"

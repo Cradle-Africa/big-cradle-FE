@@ -39,9 +39,9 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                             <Network className="" />
                                         </div>
                                     </div>
-                                    <p className="mt-3 text-md text-gray-800">Social media pipeline</p>
+                                    <p className="mt-3 text-md text-gray-800">Connect social media account</p>
                                     <p className="text-sm mt-3">
-                                        Connect social media account
+                                        Analyse your Social media account
                                     </p>
                                 </Link>
                             </div>

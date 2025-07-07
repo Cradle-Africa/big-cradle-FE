@@ -72,10 +72,9 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
     return (
         <div className="w-full pb-5">
-            {isLoading && <p className="">Loading...</p>}
-
+            <h2 className="text-xl mb-4">Data entries</h2>
             <>
-                <div className="flex justify-between gap-5 mt-3">
+                <div className={` ${ entries && entries.length > 0 ? '' : 'justify-end' } flex justify-between gap-5 mt-3`}>
                     {!isLoading && entries && entries.length > 0 && (
                         <>
                             <button
@@ -85,18 +84,28 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
                                 Analyse data
                             </button>
-
-                            <button
-                                className="px-5 py-1 w-[200px] flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                                onClick={() => setOpenEntry(true)}
-                            >
-                                <Plus size={15} color="white" className="mr-1 inline" />
-                                Create a New Entry
-                            </button>
                         </>
                     )}
 
+                    <div className="flex justify-between gap-2 ">
+                        <button
+                            className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                            onClick={() => setOpenEntry(true)}
+                        >
+                            <Plus size={15} color="white" className="mr-1 inline" />
+                            New Entry
+                        </button>
+                        <Link
+                            className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
+                            href={`/pages/flywheel?tab=${backParams}`}
+                        >
+                            <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
+                        </Link>
+                    </div>
                 </div>
+
+                {isLoading && <p className="">Loading...</p>}
+
                 {!isLoading && entries && entries.length > 0 && (
                     <>
                         <div className="flex items-center justify-between mt-5 gap-2 flex-wrap">
@@ -121,48 +130,34 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold">Data</th>
-                                        <th className="px-6 py-3 text-left text-sm font-semibold">Created On</th>
+                                        <th className="px-6 py-3 text-left  text-sm font-normal">#</th>
+                                        {entries[0].data && typeof entries[0].data === 'object' && (
+                                            Object.entries(entries[0].data).length > 0 && (
+                                                Object.entries(entries[0].data).map(([key]) => (
+                                                    <th key={key} className="px-6 py-2 text-left font-normal">
+                                                        {toSentenceCase(key)}
+                                                    </th>
+                                                ))
+                                            )
+                                        )}
+                                        <th className="px-6 py-3 text-left text-sm font-normal">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                     {entries.map((entry, index) => (
                                         <tr key={index} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 font-medium align-top">{index + 1}</td>
-                                            <td className="px-6 py-2 align-top">
-                                                <table className="text-md">
-                                                    <tbody>
-                                                        {entry.data && typeof entry.data === 'object' ? (
-                                                            Object.entries(entry.data).length > 0 ? (
-                                                                Object.entries(entry.data).map(([key, value]) => (
-                                                                    <tr key={key}
-                                                                        className="flex justify-between lg:min-w-[500px] lg:max-w-[500px]
-                                                            border-b border-gray-200 last:border-b-0
-                                                            "
-                                                                    >
-                                                                        <td className="font-medium flex flex-wrap lg:min-w-[250px] lg:max-w-[230px] py-2">{toSentenceCase(key)}:</td>
-                                                                        <td className="flex flex-wrap justify-end lg:min-w-[250px] lg:max-w-[250px] py-2">{renderValue(value)}</td>
-                                                                    </tr>
-                                                                ))
-                                                            ) : (
-                                                                <tr>
-                                                                    <td colSpan={2} className="text-gray-400 italic">
-                                                                        Empty data object
-                                                                    </td>
-                                                                </tr>
-                                                            )
-                                                        ) : (
-                                                            <tr>
-                                                                <td colSpan={2} className="text-gray-400 italic">
-                                                                    No data available
-                                                                </td>
-                                                            </tr>
-                                                        )}
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                            <td className="px-6 py-4 align-top">
+                                            <td className="px-6 py-4 text-left">{index + 1}</td>
+                                            {entry.data && typeof entry.data === 'object' && (
+                                                Object.entries(entry.data).length > 0 && (
+                                                    Object.entries(entry.data).map(([key, value]) => (
+                                                        <td key={key} className="px-6 py-2 text-left">
+                                                            {renderValue(value)}
+                                                        </td>
+
+                                                    ))
+                                                )
+                                            )}
+                                            <td className="px-6 py-4 text-left">
                                                 {formatDate(entry.createdAt ?? '')}
                                             </td>
                                         </tr>
@@ -188,12 +183,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         <p>
                             No entries found in this pipeline
                         </p>
-                        <Link
-                            className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
-                            href={`/pages/flywheel?tab=${backParams}`}
-                        >
-                            <ArrowLeft size={14} className='mr-1 inline' /> Back
-                        </Link>
                     </div>
                 )}
 
