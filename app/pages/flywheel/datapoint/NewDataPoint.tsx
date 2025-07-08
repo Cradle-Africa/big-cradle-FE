@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/caseFormat';
 import SelectOptionManager from "../_components/SelectOptionManager";
-import { Check, List } from "lucide-react";
+import { ArrowLeft, Check, List } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
 import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
@@ -11,19 +11,31 @@ import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/user
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 
 interface DataPointProps {
-    pipelines: Pipeline[]
-    setCreatingDataPoint: (value: boolean) => void;
-    creatingDataPoint: boolean,
+    pipelines?: Pipeline[]
+    pipelineId?: string,
+    pipelineName?: string,
+    setCreatingDataPoint?: (value: boolean) => void;
+    creatingDataPoint?: boolean,
 }
 
-const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoint }) => {
+const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipelines, creatingDataPoint, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<DataPointForm>({
         dataPointId: "",
-        field: [],
+        field: [
+            {
+                label: "",
+                key: "",
+                type: "text",
+                required: false,
+                options: [],
+            }
+        ],
     });
+    const backParams: string = 'pipelines';
     const user = getUser()
 
     let businessUserId: string | null = null;
@@ -85,7 +97,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
         const payload: DataPoint = {
             businessUserId,
             employeeUserId,
-            dataPointId: form.dataPointId,
+            dataPointId: form.dataPointId || pipelineId || "",
             field: form.field,
         };
 
@@ -95,7 +107,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");
-                setCreatingDataPoint(false)
+                setCreatingDataPoint?.(false);
             },
             onError: (error: any) => {
                 toast.error(error.message || "Failed to create data point");
@@ -106,37 +118,51 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelines, setCreatingDataPoin
     return (
         <>
             <div className="flex justify-between mt-5">
-                <h2 className="text-md text-black">Build a New Data Point</h2>
-                <button
-                    className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
-                    onClick={() => setCreatingDataPoint(false)}
-                >
-                    <List size={18} color="white" className="mr-1" />
-                    View Data Points
-                </button>
+                <h2 className="text-lg text-black">Build a New Data Point</h2>
+                {creatingDataPoint && setCreatingDataPoint ? (
+                    <button
+                        className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
+                        onClick={() => setCreatingDataPoint(false)}
+                    >
+                        <List size={18} color="white" className="mr-1" />
+                        <span className="hidden md:inline">View Data Points</span>
+                    </button>
+                ) : (
+                    <Link
+                        className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
+                        href={`/pages/flywheel?tab=${backParams}`}
+                    >
+                        <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
+                    </Link>
+                )}
             </div>
+            <h2 className="text-lg mt-5 text-blue-600">Pipeline name: {pipelineName} </h2>
 
             <form
                 onSubmit={handleSubmit}
                 className="w-full lg:w-3/4 py-6 rounded-md space-y-6"
             >
-                <div className="w-full">
-                    <select
-                        value={form.dataPointId}
-                        onChange={(e) =>
-                            setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
-                        }
-                        required
-                        className="w-full border bg-white border-gray-300 rounded px-3 py-2 outline-blue-600"
-                    >
-                        <option value="">Select a pipeline</option>
-                        {pipelines.map((dp: any) => (
-                            <option key={dp.id} value={dp.id}>
-                                {dp.dataPointName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                {pipelines && (
+                    <div className="w-full">
+                        <select
+                            value={form.dataPointId}
+                            onChange={(e) =>
+                                setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
+                            }
+                            required
+                            className="w-full border bg-white border-gray-300 rounded px-3 py-2 outline-blue-600"
+                        >
+                            <option value="">Select a pipeline</option>
+                            <>
+                                {pipelines.map((dp: any) => (
+                                    <option key={dp.id} value={dp.id}>
+                                        {dp.dataPointName}
+                                    </option>
+                                ))}
+                            </>
+                        </select>
+                    </div>
+                )}
 
                 {form.field.map((field, index: any) => (
                     <div

@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Calendar, Eye, Funnel, LetterText, Share2 } from "lucide-react";
+import { Calendar, Eye, Funnel, LetterText, Plus, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useFetchDepartments } from "../../user/department/_features/hook";
@@ -114,6 +114,13 @@ const PipelinePage = ({
                                             className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white`}
                                         >
                                             <Eye size={15} className="mr-1 inline" /> View Entries
+                                        </Link>
+
+                                        <Link
+                                            href={`/pages/flywheel/datapoint/new/${pipeline?.id}`}
+                                            className={` ${pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white`}
+                                        >
+                                            <Plus size={15} className="mr-1 inline" /> Create a data point
                                         </Link>
 
                                     </div>
