@@ -12,6 +12,7 @@ import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface DataPointProps {
     pipelines?: Pipeline[]
@@ -37,7 +38,8 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
     });
     const backParams: string = 'pipelines';
     const user = getUser()
-
+    const route = useRouter();
+    
     let businessUserId: string | null = null;
 
     if (user?.role === 'business') {
@@ -103,7 +105,11 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
 
         mutate(payload, {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["data-points"] });
+                if(form.dataPointId){
+                    queryClient.invalidateQueries({ queryKey: ["data-points"] });
+                }else{
+                    route.push(`/pages/flywheel?tab=${backParams}`);
+                }
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");

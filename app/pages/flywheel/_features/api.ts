@@ -282,7 +282,7 @@ export const createDataPoint = async (
         return res.data;
     } catch (error: any) {
         const statusCode = error?.response?.status;
-        let message = error?.response?.message;
+        let message = error?.response?.message || error?.response?.data?.message || error?.message || "An unexpected error occurred";
 
         switch (statusCode) {
             case 400:

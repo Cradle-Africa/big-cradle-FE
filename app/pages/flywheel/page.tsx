@@ -37,7 +37,6 @@ const Flywheel = () => {
 		}
 	}, [searchParams]);
 
-
 	const user = getUser();
 	let businessUserId = '';
 	if (user?.role === 'business') {
@@ -67,7 +66,8 @@ const Flywheel = () => {
 
 	const {
 		isLoading: isLoadingDataPoints,
-		data: pipelineData
+		data: pipelineData,
+		refetch: refetchPipelines
 	} = useFetchPipelines({
 		axios,
 		queryParams: { page: pipelinePage, limit: pipelineLimit }
@@ -119,6 +119,10 @@ const Flywheel = () => {
 		document.addEventListener('mousedown', handler);
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
+
+	 useEffect(() => {
+        refetchPipelines();
+    }, [refetchPipelines, searchParams])
 
 	if (isLoadingDataOverview) return (
 		<div>

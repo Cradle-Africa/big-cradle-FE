@@ -32,7 +32,7 @@ export const useFetchDataPoints = ({
 		queryKey: ["data-points", queryParams],
 		queryFn: () => fetchDataPoints(axios, queryParams),
 		staleTime: 60 * 1000 * 5,
-		// retry: 3,
+		retry: 3,
 	});
 };
 
@@ -97,6 +97,7 @@ export const useFetchPipelines = ({ axios, queryParams }: UseFetchPipelines) => 
 		queryKey: ["pipelines", queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
 		staleTime: 60 * 1000 * 5,
+		retry: 3
 	});
 };
 
