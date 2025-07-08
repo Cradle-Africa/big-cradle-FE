@@ -171,7 +171,7 @@ const Flywheel = () => {
 						<div className="flex justify-between">
 							<h2 className="text-lg text-black">Data pipelines</h2>
 							<button
-								className="flex items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
+								className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
 								onClick={() => setPopupOpen(true)}
 							>
 								<Plus size={18} color="white" className="mr-1" />

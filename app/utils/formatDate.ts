@@ -1,20 +1,19 @@
 // utils/formatDate.ts
-export const formatDate = (
-    isoDate: string,
-    options: Intl.DateTimeFormatOptions = {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        // hour: "2-digit",
-        // minute: "2-digit",
-        // hour12: true,
-    },
-    locale: string = "en-US"
-): string => {
+export const formatDate = (isoDate: string): string => {
     try {
         const date = new Date(isoDate);
         if (isNaN(date.getTime())) return "Invalid date";
-        return date.toLocaleString(locale, options);
+
+        const day = date.getDate();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // ensure leading zero
+        const year = date.getFullYear();
+
+        let hours = date.getHours();
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        return `${day}-${month}-${year} at ${hours}:${minutes} ${ampm}`;
     } catch {
         return "Invalid date";
     }

@@ -1,13 +1,14 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import ViewDataEntries from "../ViewDataEntries";
 import { useState } from "react";
 import DashboardLayout from "@/app/DashboardLayout";
+import ViewDataEntries from "../../ViewDataEntries";
 
 const DataEntryPage = () => {
     const params = useParams();
-    const id = params.id as string;
+    const { pipelineId, fieldId } = params as { pipelineId: string; fieldId: string };
+
     const [viewDataEntries, setViewDataEntries] = useState(true);
 
     return (
@@ -15,7 +16,8 @@ const DataEntryPage = () => {
             <div className="w-full">
                 <ViewDataEntries
                     viewDataEntries={viewDataEntries}
-                    uniqueId={id}
+                    pipelineId={pipelineId}
+                    fieldId={fieldId}
                     setViewDataEntries={setViewDataEntries}
                 />
             </div>

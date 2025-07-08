@@ -111,7 +111,7 @@ const DataPoints = ({
                 <div className="flex justify-between">
                     <h2 className="text-md text-black">Data entries</h2>
                     <button
-                        className="flex w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
+                        className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
                         onClick={() => setViewDataEntries(false)}
                     >
                         <List size={18} color="white" className="mr-1" />
@@ -132,7 +132,7 @@ const DataPoints = ({
                         <h2 className="text-lg text-black">Data points</h2>
                         <div>
                             <button
-                                className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
+                                className="flex justify-center items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
                                 onClick={() => setCreatingDataPoint(true)}
                             >
                                 <Plus size={18} color="white" className="mr-1" />
@@ -160,7 +160,7 @@ const DataPoints = ({
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
-                                {data.map((dataPoints, index) => (
+                                {data.map((dataPoints: any, index) => (
                                     <tr key={index} className="">
                                         <td className="px-6 py-4 align-top">{index + 1}</td>
                                         <td className="px-3 py-3 align-top">{dataPoints?.dataPointName}</td>
@@ -211,7 +211,8 @@ const DataPoints = ({
                                                         </button> */}
 
                                                         <Link
-                                                            href={`/pages/flywheel/data-entry/${dataPoints.dataPointId}`}
+                                                            // href={`/pages/flywheel/data-entry/${dataPoints.dataPointId}`}
+                                                            href={`/pages/flywheel/data-entry/${dataPoints?.dataPointId}/${dataPoints?.id}`}
                                                             className="flex w-full items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md">
                                                             <Database size={15} className='mr-1 inline' /> View Entries
                                                         </Link>

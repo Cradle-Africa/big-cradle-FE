@@ -19,11 +19,12 @@ import toast from "react-hot-toast";
 const NewBulkDataEntry = () => {
     const router = useRouter();
     const params = useParams();
-    const uniqueId = params.id as string;
+
+    const {pipelineId, fieldId}  = params as {pipelineId: string, fieldId: string};
 
     const { data: datapoints, isLoading } = useFetchSingleDataPoint({
         axios,
-        id: uniqueId,
+        id: fieldId,
     });
 
     const { data: singlePipeline } = useFetchSinglePipeline({
@@ -176,7 +177,7 @@ const NewBulkDataEntry = () => {
                 businessUserId: datapoints.businessUserId ?? null,
                 employeeUserId: datapoints.employeeUserId ?? null,
                 dataPointId: datapoints.dataPointId,
-                fieldId: uniqueId,
+                fieldId: fieldId,
                 data: cleanedData,
             };
         });
@@ -185,7 +186,7 @@ const NewBulkDataEntry = () => {
             onSuccess: () => {
                 setEntries([getEmptyFormData()]);
                 toast.success("Entries submitted successfully!");
-                router.push(`/pages/flywheel/data-entry/${datapoints?.dataPointId}?t=${Date.now()}`);
+                router.push(`/pages/flywheel/data-entry/${pipelineId}/${fieldId}?t=${Date.now()}`);
             },
             onError: (err: any) => {
                 console.error(err);
@@ -194,6 +195,10 @@ const NewBulkDataEntry = () => {
         });
     };
 
+    if (!pipelineId || !fieldId) {
+        return <p className="text-red-500">Invalid pipeline or field ID</p>;
+    }
+    
     return (
         <DashboardLayout>
             <div className="relative w-full bg-white px-5">

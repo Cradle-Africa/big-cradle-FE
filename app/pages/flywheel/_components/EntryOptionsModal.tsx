@@ -6,6 +6,7 @@ import Link from "next/link";
 interface EntryOptionsModalProps {
   onClose: () => void;
   onNewEntry: () => void;
+  pipelineId: string;
   fieldId: string;
 }
 
@@ -13,6 +14,7 @@ const EntryOptionsModal: React.FC<EntryOptionsModalProps> = ({
   onClose,
   onNewEntry,
   fieldId,
+  pipelineId,
 }) => {
   return (
     <>
@@ -47,7 +49,7 @@ const EntryOptionsModal: React.FC<EntryOptionsModalProps> = ({
             />
             <Link
               className="mt-3 py-1 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
-              href={`/pages/flywheel/data-entry/new/bulk/${fieldId}`}
+              href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${fieldId}`}
             >
               Bulk Data Entry
             </Link>

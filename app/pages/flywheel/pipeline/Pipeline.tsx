@@ -109,13 +109,13 @@ const PipelinePage = ({
                                                 className=""
                                             />
                                         </div>
-
-                                        
                                         <Link
-                                            href={`/pages/flywheel/data-entry/${pipeline.id}`}
-                                            className="flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white ">
-                                            <Eye size={15} className='mr-1 inline' /> View Entries
+                                            href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
+                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white`}
+                                        >
+                                            <Eye size={15} className="mr-1 inline" /> View Entries
                                         </Link>
+
                                     </div>
                                 </div>
                             </div>

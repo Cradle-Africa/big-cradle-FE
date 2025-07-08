@@ -4,30 +4,32 @@ import axios from "@/app/lib/axios";
 import { useFetchDataPointOfDataEntries, useFetchSingleDataPoint } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ArrowLeft, Plus, Sparkles } from "lucide-react";
+import { ArrowLeft, FileStackIcon, Plus, Sparkles, X } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useEffect, useState } from "react";
 import Pagination from "../_components/Pagination";
-import NewDataPoint from "./new/NewDataEntry";
+import NewDataEntry from "./new/NewDataEntry";
 import { useSearchParams } from "next/navigation";
-import EntryOptionsModal from "../_components/EntryOptionsModal";
 import { ExportToExcel } from "../_components/ExportToExcel";
 import Link from "next/link";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
-    uniqueId: string;
+    pipelineId: string;
+    fieldId: string;
     setViewDataEntries: (value: boolean) => void;
 }
 
 const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     viewDataEntries,
-    uniqueId,
+    pipelineId,
+    fieldId,
 }) => {
 
     const [openNewDataEntry, setOpenNewDataEntry] = useState(false);
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('');
-    const [openEntry, setOpenEntry] = useState(false);
+    const [openOptionsEntry, setOpenOptionsEntry] = useState(false);
+
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [analyseData, setAnalyseData] = useState(false);
@@ -36,7 +38,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const { data, isLoading, refetch } = useFetchDataPointOfDataEntries({
         axios,
         queryParams: {
-            dataPoint: uniqueId,
+            dataPoint: pipelineId,
             page: page,
             limit: limit,
         },
@@ -47,15 +49,19 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
     const { data: datapoints } = useFetchSingleDataPoint({
         axios,
-        id: entries?.[0]?.fieldId ?? "",
-        enabled: !!entries?.[0]?.fieldId, // only run when ID is present
+        id: fieldId ?? "",
+        enabled: true, // only run when fieldId is present
     });
 
-    const handleNewDataEntry = (dataPointId: string) => {
-        setOpenNewDataEntry(true)
-        setOpenEntry(false);
-        setUniqueDataPoint(dataPointId)
-    }
+    const handleNewDataEntry = (fieldId: string) => {
+        setOpenOptionsEntry(false); // close EntryOptionsModal
+        setOpenNewDataEntry(true); // open NewDataEntry modal
+        setUniqueDataPoint(fieldId);
+    };
+
+    const handleCloseNewDataEntry = () => {
+        setOpenNewDataEntry(false);
+    };
 
     const searchParams = useSearchParams();
     useEffect(() => {
@@ -74,7 +80,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         <div className="w-full pb-5">
             <h2 className="text-xl mb-4">Data entries</h2>
             <>
-                <div className={` ${ entries && entries.length > 0 ? '' : 'justify-end' } flex justify-between gap-5 mt-3`}>
+                <div className={` ${entries && entries.length > 0 ? '' : 'justify-end'} flex justify-between gap-5 mt-3`}>
                     {!isLoading && entries && entries.length > 0 && (
                         <>
                             <button
@@ -90,11 +96,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     <div className="flex justify-between gap-2 ">
                         <button
                             className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                            onClick={() => setOpenEntry(true)}
+                            onClick={() => setOpenOptionsEntry(true)}
                         >
                             <Plus size={15} color="white" className="mr-1 inline" />
                             New Entry
                         </button>
+
                         <Link
                             className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
                             href={`/pages/flywheel?tab=${backParams}`}
@@ -191,24 +198,62 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
             <AnalyseData
                 analyseData={analyseData}
-                uniqueId={uniqueId}
+                uniqueId={pipelineId}
                 onClose={() => setAnalyseData(false)}
             />
 
-            <NewDataPoint
+            <NewDataEntry
                 openNewDataEntry={openNewDataEntry}
-                onClose={() => setOpenNewDataEntry(false)}
+                onClose={handleCloseNewDataEntry}
                 uniqueId={uniqueDataPoint}
                 refetchEntries={refetch}
             />
 
-            {openEntry && entries && entries.length > 0 && (
-                <EntryOptionsModal
-                    onClose={() => setOpenEntry(false)}
-                    onNewEntry={() => handleNewDataEntry(entries[0].fieldId)}
-                    fieldId={entries[0].fieldId}
-                />
+
+
+            {openOptionsEntry && (
+                <>
+                    <div className="fixed inset-0 bg-black/40 z-10" />
+                    <div className="w-3/4 md:w-2/4 text-center bg-white px-5 py-5 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div className="flex justify-end gap-2">
+                            <button onClick={() => setOpenOptionsEntry(false)}>
+                                <X size={20} className="text-red-500 cursor-pointer" />
+                            </button>
+                        </div>
+
+                        <div className="md:flex justify-between gap-5 mt-5">
+                            <div className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-5 hover:border hover:border-blue-300 h-28">
+                                <Plus
+                                    size={25}
+                                    color="white"
+                                    className="mr-1 inline bg-blue-600 rounded-full p-1"
+                                />
+                                <button
+                                    className="mt-3 py-1 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
+                                    onClick={() => handleNewDataEntry(fieldId)}
+                                >
+                                    New Data Entry
+                                </button>
+                            </div>
+
+                            <div className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-5 hover:border hover:border-blue-300 h-28">
+                                <FileStackIcon
+                                    size={25}
+                                    color="white"
+                                    className="mr-1 inline bg-blue-600 rounded-full p-1"
+                                />
+                                <Link
+                                    className="mt-3 py-1 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
+                                    href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${fieldId}`}
+                                >
+                                    Bulk Data Entry
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
+
         </div >
     );
 };
