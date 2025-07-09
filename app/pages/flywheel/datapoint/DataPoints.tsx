@@ -161,9 +161,11 @@ const DataPoints = ({
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                 {data.map((dataPoints: any, index) => (
-                                    <tr key={index} className="">
+                                    <tr key={index} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 align-top">{index + 1}</td>
-                                        <td className="px-3 py-3 align-top">{dataPoints?.dataPointName}</td>
+                                        <td className="px-3 py-3 align-top cursor-pointer text-left text-sm hover:text-blue-600 hover:underline"
+                                            onClick={() => handleViewDataPoint(dataPoints?.id)}
+                                        >{dataPoints?.dataPointName}</td>
                                         <td className="px-3 py-4 align-top text-left text-sm">
                                             {formatDate(dataPoints?.createdAt ?? "")}
                                         </td>

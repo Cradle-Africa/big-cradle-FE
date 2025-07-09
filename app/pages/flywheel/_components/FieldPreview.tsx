@@ -15,7 +15,7 @@ interface FieldPreviewProps {
     field: Field;
 }
 
-const baseStyle = "w-full px-3 py-2 bg-white border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed";
+const baseStyle = "w-1/2 w-full px-2 py-2 bg-white border-b border-dashed border-gray-300 bg-gray-100 cursor-not-allowed";
 
 const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
     switch (field.type) {

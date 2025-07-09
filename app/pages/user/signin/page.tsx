@@ -61,7 +61,7 @@ export default function SignInPage() {
       toast.loading("Loading...");
       const response = await signInService(payload);
       addUser(response.data);
-      addToken(response.accessToken);
+      addToken(response?.tokens?.accessToken);
 
       if (response.data.role === "business") {
         localStorage.setItem("successKwcVisible", "true");

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/caseFormat';
 import SelectOptionManager from "../_components/SelectOptionManager";
-import { ArrowLeft, Check, List } from "lucide-react";
+import { ArrowLeft, Check, List, Trash2 } from "lucide-react";
 import FieldPreview from "../_components/FieldPreview";
 import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { useCreateDataPoint } from '../_features/hook';
@@ -39,7 +39,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
     const backParams: string = 'pipelines';
     const user = getUser()
     const route = useRouter();
-    
+
     let businessUserId: string | null = null;
 
     if (user?.role === 'business') {
@@ -105,9 +105,9 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
 
         mutate(payload, {
             onSuccess: () => {
-                if(form.dataPointId){
+                if (form.dataPointId) {
                     queryClient.invalidateQueries({ queryKey: ["data-points"] });
-                }else{
+                } else {
                     route.push(`/pages/flywheel?tab=${backParams}`);
                 }
                 setForm({ dataPointId: "", field: [], }); // clear the form
@@ -122,7 +122,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
     };
 
     return (
-        <>
+        <div className="bg-blue-50 p-4 rounded-md">
             <div className="flex justify-between mt-5">
                 <h2 className="text-lg text-black">Build a New Data Point</h2>
                 {creatingDataPoint && setCreatingDataPoint ? (
@@ -142,7 +142,10 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                     </Link>
                 )}
             </div>
-            <h2 className="text-lg mt-5 text-blue-600">Pipeline name: {pipelineName} </h2>
+            <div className="lg:w-3/4 mt-5 border-2-t border-blue-600 bgwhite rounded-lg space-y-3 mb-5"
+            >
+                <h2 className="text-lg p-4">{pipelineName} </h2>
+            </div>
 
             <form
                 onSubmit={handleSubmit}
@@ -173,18 +176,18 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 {form.field.map((field, index: any) => (
                     <div
                         key={index}
-                        className="w-full p-4 border border-gray-300 rounded space-y-3 mb-2"
+                        className="w-full p-4 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
                     >
-                        <div className="w-full grid grid-cols-2 gap-2">
+                        <div className="w-full grid grid-cols-2 gap-2 lg:gap-5 mb-5">
                             <input
                                 type="text"
                                 required
-                                placeholder="Label"
+                                placeholder="Question"
                                 value={field.label}
                                 onChange={(e) =>
                                     handleFieldChange(index, "label", e.target.value)
                                 }
-                                className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 mt-1 outline-none"
+                                className="w-full bg-white border-b border-gray-200 px-2 py-2 mt-1 outline-none"
                             />
                             <select
                                 value={field.type}
@@ -206,19 +209,6 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                             </select>
                         </div>
 
-                        <div className="flex items-center mt-6 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                id={`${field.type}-${index}`}
-                                checked={field.required}
-                                onChange={(e) =>
-                                    handleFieldChange(index, "required", e.target.checked)
-                                }
-                                className="mr-2 outline-none"
-                            />
-                            <label htmlFor={`${field.type}-${index}`} className="text-sm" >Required</label>
-                        </div>
-
                         {/* Field Preview */}
                         <FieldPreview field={field} />
 
@@ -230,13 +220,26 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                             setFormFields={setForm}
                         />
 
-                        <div className="flex justify-end">
+                        <div className="flex justify-end items-center gap-5 mt-5 border-t border-gray-100 pt-3">
+                            <div className="flex items-center cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    id={`${field.type}-${index}`}
+                                    checked={field.required}
+                                    onChange={(e) =>
+                                        handleFieldChange(index, "required", e.target.checked)
+                                    }
+                                    className="mr-2 outline-none"
+                                />
+                                <label htmlFor={`${field.type}-${index}`} className="text-sm" >Required</label>
+                            </div>
+
                             <button
                                 type="button"
                                 onClick={() => removeField(index)}
-                                className="text-red-500 text-sm border border-red-300 px-3 py-1 rounded hover:bg-red-50 cursor-pointer"
+                                className="flex items-center text-sm  cursor-pointer"
                             >
-                                - Remove
+                                <Trash2 size={15} className="inline mr-1 text-gray-500" /> Remove
                             </button>
                         </div>
                     </div>
@@ -261,7 +264,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                     </button>
                 </div>
             </form>
-        </>
+        </div>
 
     );
 };
