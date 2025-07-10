@@ -75,6 +75,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         if (typeof value === 'object') return JSON.stringify(value);
         return String(value);
     };
+    const headers = entries && entries.length > 0 ? Object.keys(entries[0].data) : [];
 
     return (
         <div className="w-full pb-5">
@@ -134,19 +135,17 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         </div>
 
                         <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
+
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left  text-sm font-normal">#</th>
-                                        {entries[0].data && typeof entries[0].data === 'object' && (
-                                            Object.entries(entries[0].data).length > 0 && (
-                                                Object.entries(entries[0].data).map(([key]) => (
-                                                    <th key={key} className="px-6 py-2 text-left font-normal">
-                                                        {toSentenceCase(key)}
-                                                    </th>
-                                                ))
-                                            )
-                                        )}
+                                        <th className="px-6 py-3 text-left text-sm font-normal">#</th>
+                                        {/** Get unique keys across all entries */}
+                                        {headers.map((key) => (
+                                            <th key={key} className="px-6 py-2 text-left font-normal">
+                                                {toSentenceCase(key)}
+                                            </th>
+                                        ))}
                                         <th className="px-6 py-3 text-left text-sm font-normal">Date</th>
                                     </tr>
                                 </thead>
@@ -154,16 +153,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                     {entries.map((entry, index) => (
                                         <tr key={index} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 text-left">{index + 1}</td>
-                                            {entry.data && typeof entry.data === 'object' && (
-                                                Object.entries(entry.data).length > 0 && (
-                                                    Object.entries(entry.data).map(([key, value]) => (
-                                                        <td key={key} className="px-6 py-2 text-left">
-                                                            {renderValue(value)}
-                                                        </td>
-
-                                                    ))
-                                                )
-                                            )}
+                                            {headers.map((key) => (
+                                                <td key={key} className="px-6 py-2 text-left">
+                                                    {renderValue(entry.data?.[key] ?? '')}
+                                                </td>
+                                            ))}
                                             <td className="px-6 py-4 text-left">
                                                 {formatDate(entry.createdAt ?? '')}
                                             </td>
@@ -171,6 +165,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                     ))}
                                 </tbody>
                             </table>
+
 
                         </div>
                         <Pagination

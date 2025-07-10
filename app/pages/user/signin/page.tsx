@@ -1,7 +1,7 @@
 "use client";
 import LoginImage from "@/app/components/LoginImage";
 import ForgotPassword from "@/app/components/user/ForgotPassword";
-import { addToken, addUser } from "@/app/utils/user/userData";
+import { addRefreshToken, addToken, addUser } from "@/app/utils/user/userData";
 import LogoWithText from "@/public/images/logo-with-text.png";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
@@ -62,7 +62,8 @@ export default function SignInPage() {
       const response = await signInService(payload);
       addUser(response.data);
       addToken(response?.tokens?.accessToken);
-
+      addRefreshToken(response?.tokens?.refreshToken);
+      
       if (response.data.role === "business") {
         localStorage.setItem("successKwcVisible", "true");
         localStorage.setItem("businessId", response.data.id);
@@ -196,11 +197,10 @@ export default function SignInPage() {
 
             <button
               type="submit"
-              className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${
-                isSubmitting
+              className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting
                   ? "bg-gray-300"
                   : "shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90"
-              }`}
+                }`}
               disabled={isSubmitting}
             >
               {isSubmitting ? "Logging in..." : "Log In"}

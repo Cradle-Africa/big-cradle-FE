@@ -64,19 +64,19 @@ const data: DashboardMenu[]=[
   {
     title: 'Pipelines',
     subTitle: 'Total pipelines',
-    value: '10',
+    value: '0',
     icon: <ArrowDownUp />,    
   },
   {
     title: 'Data points',
     subTitle: 'Total data points',
-    value: '50',
+    value: '0',
     icon: <Database/>,    
   },
   {
     title: 'Surveys',
     subTitle: 'Total survey',
-    value: '30',
+    value: '0',
     icon: <Scan/>,    
   }
 ]

@@ -55,7 +55,7 @@ const Flywheel = () => {
 	const [pipelinePage, setPipelinePage] = useState(1);
 	const [pipelineLimit, setPipelineLimit] = useState(10);
 
-	const { data: dataPoints } = useFetchDataPoints({
+	const { data: dataPoints, refetch: refetchDataPoints } = useFetchDataPoints({
 		axios,
 		queryParams: { page: pointsPage, limit: pointsLimit }
 	});
@@ -122,7 +122,8 @@ const Flywheel = () => {
 
 	 useEffect(() => {
         refetchPipelines();
-    }, [refetchPipelines, searchParams])
+		refetchDataPoints();
+    }, [refetchPipelines, refetchDataPoints, searchParams])
 
 	if (isLoadingDataOverview) return (
 		<div>

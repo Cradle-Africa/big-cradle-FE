@@ -143,7 +143,7 @@ export default function BusinessSignUp() {
                     name="contactName"
                     value={form.contactName}
                     onChange={handleChange}
-                    placeholder="Contact Name"
+                    placeholder="Contact Email"
                     className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                   />
                   {errors.contactName && (
@@ -351,25 +351,6 @@ export default function BusinessSignUp() {
                   errors={errors}
                 />
 
-                {/* <div className="flex justify-between gap-2 mt-5">
-                  <button
-                    type="button"
-                    onClick={back}
-                    className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
-                  >
-                    <ChevronLeft size={14} className="inline ml-1" />
-                    Back
-                  </button>
-                  <button
-                    type="button"
-                    onClick={next}
-                    className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
-                  >
-                    Next
-                    <ChevronRight size={14} className="inline ml-1" />
-                  </button>
-                </div> */}
-
                 <div className="flex justify-between gap-2 mt-5">
                   <button
                     type="button"
@@ -388,27 +369,6 @@ export default function BusinessSignUp() {
                     {isSubmitting ? "Submitting..." : "Create Account"}
                   </button>
                 </div>
-              </>
-            )}
-
-            {/* Step 4 */}
-            {step === 4 && (
-              <>
-                {/* <div className="relative mt-5">
-                  <label>Business Logo</label>
-                  <ImageUploader
-                    onChange={handleInputChange}
-                    text="Upload Business Logo"
-                    id="businessLogo"
-                    name="businessLogo"
-                  />
-                  {errors.businessLogo && (
-                    <p className="text-red-500 text-xs">
-                      {errors.businessLogo}
-                    </p>
-                  )}
-                </div> */}
-                
               </>
             )}
           </form>

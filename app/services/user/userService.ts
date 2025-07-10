@@ -94,6 +94,17 @@ export const signInService = async (payload: SignInPayload) => {
     }
 };
 
+// import axios from "../axios";
+export const refreshTokenService = async (email: string, refreshToken: string) => {
+  const response = await axios.post(`${BASE_URL}/authentication/refresh-token`, {
+    email,
+    refreshToken,
+  });
+  return response.data;
+};
+
+
+
 export const verifyOtpService = async (payload: VerifyOtpPayload) => {
     try {
         const response = await axios.post(`${BASE_URL}/authentication/verify-otp`, payload, {

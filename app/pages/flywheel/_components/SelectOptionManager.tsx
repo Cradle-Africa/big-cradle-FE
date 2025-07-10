@@ -54,7 +54,6 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 	return (
 		<div className="space-y-2">
 			<label className="text-sm font-medium mb-1 block">Options</label>
-
 			<div className="flex gap-2">
 				<input
 					type="text"
@@ -65,16 +64,18 @@ const SelectOptionManager: React.FC<SelectOptionManagerProps> = ({
 						updated[index] = e.target.value;
 						setNewOptions(updated);
 					}}
-					className="flex-1 border bg-white border-gray-300 rounded px-3 py-2"
+					className="flex-1 border-b bg-white border-gray-300 px-2 py-1 ou "
 				/>
 
-				<button
-					type="button"
-					className="text-blue-600 border border-blue-600 px-3 py-1 rounded-lg hover:bg-blue-50 cursor-pointer"
-					onClick={handleAddOption}
-				>
-					Add
-				</button>
+				<div>
+					<button
+						type="button"
+						className="text-gray-700 border border-gray-700 px-3 py-[3px] rounded-sm hover:bg-blue-50 cursor-pointer"
+						onClick={handleAddOption}
+					>
+						Add
+					</button>
+				</div>
 			</div>
 
 			{field.options && field.options.length > 0 && (

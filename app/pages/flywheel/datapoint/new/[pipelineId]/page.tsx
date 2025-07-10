@@ -21,6 +21,7 @@ const NewDataPointPage = () => {
                 <NewDataPoint
                     pipelineId={pipelineId}
                     pipelineName={singlePipeline?.dataPointName || ''}
+                    pipelineDescription={singlePipeline?.dataPointDescription || ''}
                 />
             </div>
         </DashboardLayout>

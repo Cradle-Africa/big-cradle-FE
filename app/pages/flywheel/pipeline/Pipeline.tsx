@@ -2,12 +2,13 @@ import axios from "@/app/lib/axios";
 import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Calendar, Eye, Funnel, LetterText, Plus, Share2 } from "lucide-react";
+import { Calendar, Eye, Funnel, LetterText, MoreVertical, Pencil, Plus, Share2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetchDepartments } from "../../user/department/_features/hook";
 import Pagination from "../_components/Pagination";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
+import EditPipeline from "./EditPipeline";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -32,6 +33,14 @@ const PipelinePage = ({
 }: DataPipelineProps) => {
     const [shareDataPipeline, setShareDataPipelie] = useState(false);
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
+    const menuRefs = useRef<Record<number, HTMLUListElement | null>>({});
+
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const [editOpen, setEditOpen] = useState(false);
+    const [selectedPipeline, setSelectedPipeline] = useState<Pipeline | null>(null);
+    const [uniqueId, setUniqueId] = useState<string>('');
+
+
     const handleShareDataPipeline = (dataPointId: string) => {
         setShareDataPipelie(true)
         setUniqueDataPoint(dataPointId)
@@ -54,6 +63,22 @@ const PipelinePage = ({
             businessUserId: businessUserId || undefined,
         },
     });
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (openIndex !== null) {
+                const ref = menuRefs.current[openIndex];
+                if (ref && !ref.contains(e.target as Node)) {
+                    setOpenIndex(null);
+                }
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [openIndex]);
+
+
 
     const departmentData = departments?.data ?? [];
     return (
@@ -86,11 +111,49 @@ const PipelinePage = ({
                     {
                         pipelineData.map((pipeline, index) =>
                             <div key={index} className="border bg-white border-gray-200 rounded-lg px-6 py-6 hover:border hover:border-blue-300">
-                                <div className="flex flex-nowrap items-center ">
-                                    <LetterText size={16} className="text-[#0C0C0C]" />
-                                    <h2 className="ml-2 text-[18px] text-[#0C0C0C]">
-                                        {pipeline.dataPointName}
-                                    </h2>
+                                <div className="flex flex-nowrap items-center justify-between">
+                                    <div className="flex flex-nowrap items-center">
+                                        <LetterText size={16} className="text-[#0C0C0C]" />
+                                        <h2 className="ml-2 text-[18px] text-[#0C0C0C]">
+                                            {pipeline.dataPointName}
+                                        </h2>
+                                    </div>
+
+                                    <div className="px-6 py-4 border-r border-gray-100 whitespace-nowrap relative">
+                                        <button
+                                            className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
+                                            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                        >
+                                            <MoreVertical size={18} />
+                                        </button>
+                                        {openIndex === index && (
+                                            <ul
+                                                ref={(el) => {
+                                                    menuRefs.current[index] = el;
+                                                }}
+
+                                                onClick={(e) => e.stopPropagation()}
+                                                onMouseLeave={() => setOpenIndex(null)}
+                                                className="absolute z-60 right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100"
+                                            >
+                                                <li className="px-2 py-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setUniqueId(pipeline?.id ?? '')
+                                                            setSelectedPipeline(pipeline);
+                                                            setEditOpen(true);
+                                                        }}
+                                                        className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
+                                                    >
+                                                        <div className="flex items-center gap-1">
+                                                            <Pencil size={13} />
+                                                            Edit
+                                                        </div>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        )}
+                                    </div>
                                 </div>
                                 <p className="text-[#494949] text-[14px] mt-5">
                                     {pipeline.dataPointDescription}
@@ -153,6 +216,12 @@ const PipelinePage = ({
                 onClose={() => setShareDataPipelie(false)}
                 uniqueId={uniqueDataPoint}
             />
+
+            {
+                editOpen && selectedPipeline && (
+                    <EditPipeline uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setEditOpen} />
+                )
+            }
         </div>
 
 

@@ -15,10 +15,11 @@ import { useQueryClient } from "@tanstack/react-query";
 interface EditDataPointProps {
     editingDataPoint: boolean,
     uniqueId: string;
+    pipelineName?: string,
     setEditingDataPoint: (value: boolean) => void;
 }
 
-const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueId, setEditingDataPoint }) => {
+const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueId, pipelineName, setEditingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<DataPointForm>({ dataPointId: '', field: [] });
 
@@ -106,9 +107,9 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
 
     if (!editingDataPoint) return null;
     return (
-        <>
-            <div className="flex justify-between">
-                <h2 className="text-md text-black">Edit the data point</h2>
+        <div className="bg-blue-50 p-4 rounded-md">       
+            <div className="flex justify-between mt-5">
+                <h2 className="text-lg text-black">Edit the data point</h2>
                 <button
                     className="flex justify-center w-[200px] items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
                     onClick={() => setEditingDataPoint(false)}
@@ -117,38 +118,59 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
                     View Data Points
                 </button>
             </div>
+
+            {pipelineName && (
+                <div className="lg:w-3/4 mt-10 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
+                >
+                    <div className="p-4">
+                        <h2 className="text-lg">{pipelineName} </h2>
+                    </div>
+                </div>
+            )}
+
             <form
                 onSubmit={handleSubmit}
-                className="w-full lg:w-3/4 bg-white py-6 rounded-md space-y-6"
+                className="w-full lg:w-3/4 rounded-md space-y-6"
             >
 
                 {form.field.map((field, index) => (
-                    <div key={index} className="w-full p-4 border border-gray-300 rounded space-y-3 mb-2">
-                        <div className="w-full grid grid-cols-2 gap-2">
+                    <div key={index} 
+                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
+                        >
+                        <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
                             <input
                                 type="text"
-                                placeholder="Label"
+                                required
+                                placeholder="Question"
                                 value={field.label}
-                                onChange={(e) => handleFieldChange(index, "label", e.target.value)}
-                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
+                                onChange={(e) =>
+                                    handleFieldChange(index, "label", e.target.value)
+                                }
+                                className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
                             />
+                            
                             <select
                                 value={field.type}
                                 onChange={(e) =>
                                     handleFieldChange(index, "type", e.target.value as FieldType)
                                 }
-                                className="w-full border border-gray-200 rounded px-3 py-2 mt-1 outline-none"
+                                className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
                             >
-                                <option value="">Select Type</option>
-                                <option value="text">Text</option>
-                                <option value="email">Email</option>
-                                <option value="tel">Tel</option>
+                                <option value="">Select the type of the answer</option>
+                                <option value="text">Short text</option>
+                                <option value="number">Number</option>
+                                <option value="email">Email Address</option>
+                                <option value="tel">Phone Number</option>
                                 <option value="select">Select</option>
-                                <option value="checkbox">Check box</option>
-                                <option value="radio">Radio</option>
+                                <option value="checkbox">Multiple Choices</option>
+                                <option value="radio">Single Choice</option>
                                 <option value="date">Date</option>
-                                <option value="textarea">Textarea</option>
+                                <option value="time">Time</option>    
+                                <option value="file">File Upload</option>      
+                                <option value="rating">Rating</option>
+                                <option value="textarea">Paragraph</option>
                             </select>
+
                         </div>
 
                         <div className="flex items-center mt-6 cursor-pointer">
@@ -203,7 +225,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
                     </button>
                 </div>
             </form>
-        </>
+        </div>
 
     );
 };

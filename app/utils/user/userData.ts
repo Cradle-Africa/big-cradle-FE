@@ -50,6 +50,19 @@ export const addToken = (token: string) => {
     localStorage.setItem('token', token);
 };
 
+
+
+export const addRefreshToken = (refreshToken: string) => {
+  localStorage.setItem("refreshToken", refreshToken);
+};
+
+export const getRefreshToken = (): string | null => {
+  return localStorage.getItem("refreshToken");
+};
+
+
+
+
 // Remove user data from local storage
 export const removeUser = (): void => {
     localStorage.clear(); // Clears all keys and values in localStorage

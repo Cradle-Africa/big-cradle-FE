@@ -18,11 +18,12 @@ interface DataPointProps {
     pipelines?: Pipeline[]
     pipelineId?: string,
     pipelineName?: string,
+    pipelineDescription?: string,
     setCreatingDataPoint?: (value: boolean) => void;
     creatingDataPoint?: boolean,
 }
 
-const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipelines, creatingDataPoint, setCreatingDataPoint }) => {
+const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipelineDescription, pipelines, creatingDataPoint, setCreatingDataPoint }) => {
     const [newOptions, setNewOptions] = useState<string[]>([]);
     const [form, setForm] = useState<DataPointForm>({
         dataPointId: "",
@@ -142,14 +143,21 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                     </Link>
                 )}
             </div>
-            <div className="lg:w-3/4 mt-5 border-2-t border-blue-600 bgwhite rounded-lg space-y-3 mb-5"
-            >
-                <h2 className="text-lg p-4">{pipelineName} </h2>
-            </div>
+            {pipelineName && (
+                <div className="lg:w-3/4 mt-5 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
+                >
+                    <div className="p-4">
+                        <h2 className="text-lg">{pipelineName} </h2>
+                        <p className="text-md mt-5">
+                            {pipelineDescription}
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <form
                 onSubmit={handleSubmit}
-                className="w-full lg:w-3/4 py-6 rounded-md space-y-6"
+                className="w-full lg:w-3/4 rounded-md space-y-6 mt-10"
             >
                 {pipelines && (
                     <div className="w-full">
@@ -159,7 +167,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
                             }
                             required
-                            className="w-full border bg-white border-gray-300 rounded px-3 py-2 outline-blue-600"
+                            className="w-full border bg-white border-gray-300 rounded-lg px-3 py-2 outline-blue-600"
                         >
                             <option value="">Select a pipeline</option>
                             <>
@@ -176,9 +184,9 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 {form.field.map((field, index: any) => (
                     <div
                         key={index}
-                        className="w-full p-4 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
+                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
                     >
-                        <div className="w-full grid grid-cols-2 gap-2 lg:gap-5 mb-5">
+                        <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
                             <input
                                 type="text"
                                 required
@@ -187,26 +195,31 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 onChange={(e) =>
                                     handleFieldChange(index, "label", e.target.value)
                                 }
-                                className="w-full bg-white border-b border-gray-200 px-2 py-2 mt-1 outline-none"
+                                className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
                             />
+                            
                             <select
                                 value={field.type}
                                 onChange={(e) =>
                                     handleFieldChange(index, "type", e.target.value as FieldType)
                                 }
-                                className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 mt-1 outline-none"
+                                className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
                             >
-                                <option value="">Select Type</option>
-                                <option value="text">Text</option>
+                                <option value="">Select the type of the answer</option>
+                                <option value="text">Short text</option>
                                 <option value="number">Number</option>
-                                <option value="email">Email</option>
-                                <option value="tel">Tel</option>
+                                <option value="email">Email Address</option>
+                                <option value="tel">Phone Number</option>
                                 <option value="select">Select</option>
-                                <option value="checkbox">Check box</option>
-                                <option value="radio">Radio</option>
+                                <option value="checkbox">Multiple Choices</option>
+                                <option value="radio">Single Choice</option>
                                 <option value="date">Date</option>
-                                <option value="textarea">Textarea</option>
+                                <option value="time">Time</option>    
+                                <option value="file">File Upload</option>      
+                                <option value="rating">Rating</option>
+                                <option value="textarea">Paragraph</option>
                             </select>
+
                         </div>
 
                         {/* Field Preview */}
@@ -239,7 +252,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 onClick={() => removeField(index)}
                                 className="flex items-center text-sm  cursor-pointer"
                             >
-                                <Trash2 size={15} className="inline mr-1 text-gray-500" /> Remove
+                                <Trash2 size={15} className="inline mr-1" /> Remove
                             </button>
                         </div>
                     </div>

@@ -5,7 +5,6 @@ import { getUser } from "../utils/user/userData";
 import { Button, Flex } from "@radix-ui/themes";
 import { Me } from "../lib/type";
 import { isRecent } from "../utils/isRecent2Day";
-import { formatDate } from "../utils/formatDate";
 
 interface KycVerificationProps {
   openBusinessKycVerification: boolean;
@@ -135,7 +134,7 @@ const KycVerification: React.FC<KycVerificationProps> = ({
           >
             <div className="md:mt-0 md:flex flex-col w-full text-green-500  hover:opacity-90 rounded-md">
               <div className="text-md font-bold">
-                Your KYC has been Successfully validated on { formatDate(user.updatedAt ?? '' )}
+                Your KYC has been Successfully validated
               </div>
             </div>
             <Button

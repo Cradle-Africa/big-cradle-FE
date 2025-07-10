@@ -38,6 +38,7 @@ const DataPoints = ({
     const optionRef = useRef<HTMLUListElement | null>(null);
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
+    const [pipelineName, setPipelineName] = useState<string>('');
     // const [uniqueDataEntry, setUniqueDataEntry] = useState<string>('')
 
     const handleViewDataPoint = (id: any) => {
@@ -46,10 +47,11 @@ const DataPoints = ({
         setUniqueDataPoint(id)
     }
 
-    const handleEditDataPoint = (id: any) => {
+    const handleEditDataPoint = (id: any, pipelineName: any) => {
         setEditingDataPoint(true)
         setOpenIndex(null);
-        setUniqueDataPoint(id)
+        setUniqueDataPoint(id);
+        setPipelineName(pipelineName);
     }
 
     const handleShareDataPoint = (id: any) => {
@@ -104,6 +106,7 @@ const DataPoints = ({
             <EditDataPoint
                 editingDataPoint={editingDataPoint}
                 uniqueId={uniqueDataPoint}
+                pipelineName={pipelineName}
                 setEditingDataPoint={setEditingDataPoint}
             />
 
@@ -192,7 +195,7 @@ const DataPoints = ({
                                                     </li>
                                                     <li className="px-2 w-full">
                                                         <button
-                                                            onClick={() => handleEditDataPoint(dataPoints?.id)}
+                                                            onClick={() => handleEditDataPoint(dataPoints?.id, dataPoints?.dataPointName)}
                                                             className="w-full flex items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
                                                         >
                                                             <Pencil size={13} className="inline mr-1" /> Edit

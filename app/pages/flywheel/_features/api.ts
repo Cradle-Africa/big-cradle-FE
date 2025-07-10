@@ -491,3 +491,33 @@ export const fetchDataOverview = async (
     return Promise.reject({ message });
   }
 };
+
+
+export const updatePipeline = async (
+  axios: AxiosInstance,
+  id: string,
+  data: Pipeline
+) => {
+  try {
+    const res = await axios.put(`/data-point-mgt/data-point/${id}`, data);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.message;
+
+    switch (statusCode) {
+      case 400:
+        message = error?.response?.data?.message;
+        break;
+
+      case 401:
+        removeUser();
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    throw new Error(message);
+  }
+};

@@ -7,8 +7,8 @@ export const analyseSocialMediaApi = async (
     data: AnalyseSocialMedia
 ) => {
     try {
-        const res = await axios.post(`/data-point-mgt/data-point/analyze-socials`, data);
-        return res.data;
+        const res = await axios.post(`/data-point-mgt/analyze-socials`, data);
+        return res.data; 
     } catch (error: any) {
         const statusCode = error?.response?.status;
         let message =

@@ -160,7 +160,18 @@ export type DemographicSchema = z.infer<typeof demographicSchema>;
 
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
 
-export type FieldType =
+// export type FieldType =
+//   | "text"
+//   | "email"
+//   | "tel"
+//   | "select"
+//   | "radio"
+//   | "checkbox"
+//   | "textarea"
+//   | "number"
+//   | "date";
+
+  export type FieldType =
   | "text"
   | "email"
   | "tel"
@@ -169,7 +180,11 @@ export type FieldType =
   | "checkbox"
   | "textarea"
   | "number"
-  | "date";
+  | "date"
+  | "file"       
+  | "time"       
+  | "rating";    
+
 
 export type Field = {
   label: string;

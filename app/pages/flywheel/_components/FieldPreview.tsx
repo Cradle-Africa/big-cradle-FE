@@ -2,6 +2,7 @@
 
 import React from "react";
 import { FieldType } from "@/app/lib/type";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 type Field = {
     label: string;
@@ -15,7 +16,8 @@ interface FieldPreviewProps {
     field: Field;
 }
 
-const baseStyle = "w-1/2 w-full px-2 py-2 bg-white border-b border-dashed border-gray-300 bg-gray-100 cursor-not-allowed";
+const baseStyle =
+    "w-full px-2 py-2 bg-white border-b border-gray-300 bg-gray-100 cursor-not-allowed";
 
 const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
     switch (field.type) {
@@ -24,6 +26,7 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
         case "tel":
         case "number":
         case "date":
+        case "time":
             return (
                 <input
                     type={field.type}
@@ -46,10 +49,7 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
         case "select":
             if (!field.options?.length) return null;
             return (
-                <select
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100`}
-                    disabled
-                >
+                <select className={baseStyle} disabled>
                     {field.options.map((opt, i) => (
                         <option key={i} value={opt}>
                             {opt}
@@ -63,17 +63,23 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
             return (
                 <div className="space-y-2">
                     {field.options.map((opt, i) => (
-                        <label key={i} className="flex gap-3 items-center space-x-2 cursor-not-allowed">
-                            <div>
-                                <input type="radio" name={field.key}
-                                    className={baseStyle} disabled />
-                            </div>
-                            <div>
-                                <span>{opt}</span>
-                            </div>
-
+                        <label key={i} className="flex gap-3 items-center">
+                            <input type="radio" disabled className="cursor-not-allowed" />
+                            <span>{opt}</span>
                         </label>
                     ))}
+                </div>
+            );
+
+        case "file":
+            return (
+                <div className="bg-gray-50 border border-dashed rounded-xl border-gray-300 px-6 py-6">
+                    <div className="flex flex-col items-center justify-center">
+                        <p className="text-gray-500">File Upload</p>
+                        <button className="bg-gray-300 mt-5 px-4 py-2 rounded-md cursor-not-allowed">
+                            <AiOutlineCloudUpload />
+                        </button>
+                    </div>
                 </div>
             );
 
@@ -82,14 +88,25 @@ const FieldPreview: React.FC<FieldPreviewProps> = ({ field }) => {
             return (
                 <div className="space-y-2">
                     {field.options.map((opt, i) => (
-                        <label key={i} className="flex gap-3 items-center space-x-2 cursor-not-allowed ">
-                            <div>
-                                <input type="checkbox" name={`${field.key}-${i}`} disabled
-                                    className={baseStyle}
-                                />
-                            </div>
-                            <div>{opt}</div>
+                        <label key={i} className="flex gap-3 items-center">
+                            <input type="checkbox" disabled className="cursor-not-allowed" />
+                            <span>{opt}</span>
                         </label>
+                    ))}
+                </div>
+            );
+
+        case "rating":
+            return (
+                <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                            key={star}
+                            type="button"
+                            className=''
+                        >
+                            ★
+                        </button>
                     ))}
                 </div>
             );

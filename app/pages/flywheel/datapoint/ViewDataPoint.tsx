@@ -3,6 +3,7 @@
 import axios from "@/app/lib/axios";
 import { useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
 import { X } from "lucide-react";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 interface PopUpProps {
 	openViewDataPoint: boolean;
@@ -102,6 +103,33 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 					</div>
 				);
 
+			case "rating":
+				return (
+					<div className="flex items-center gap-1">
+						{[1, 2, 3, 4, 5].map((star) => (
+							<button
+								key={star}
+								type="button"
+								className=''
+							>
+								★
+							</button>
+						))}
+					</div>
+				);
+
+			case "file":
+				return (
+					<div className="bg-gray-50 border border-dashed rounded-xl border-gray-300 px-6 py-6">
+						<div className="flex flex-col items-center justify-center">
+							<p className="text-gray-500">File Upload</p>
+							<button className="bg-gray-300 mt-5 px-4 py-2 rounded-md cursor-not-allowed">
+								<AiOutlineCloudUpload />
+							</button>
+						</div>
+					</div>
+				);
+
 			default:
 				return (
 					<input
@@ -135,7 +163,7 @@ const ViewDataPoint: React.FC<PopUpProps> = ({
 						<p className="flex justify-center px-10 py-10 text-gray-800 text-sm">Loading...</p>
 					) : (
 						<>
-							<h2 className="text-xl text-blue-600">{singlePipeline?.dataPointName }</h2>
+							<h2 className="text-xl text-blue-600">{singlePipeline?.dataPointName}</h2>
 							<div className="overflow-y-auto max-h-[70vh] py-8 ">
 								<form className="space-y-6 text-left text-sm">
 									{pipeline?.field.map((field, index) => (

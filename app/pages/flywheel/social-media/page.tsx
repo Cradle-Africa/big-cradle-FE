@@ -28,6 +28,17 @@ const SocialMediaPage = () => {
         mutate(data);
     };
 
+    const getResponseContent = () => {
+        try {
+            const message = data?.data?.choices?.[0]?.message?.content;
+            console.log('RESPONSE: ', message);
+            return typeof message === "string" ? message : "No valid content returned.";
+        } catch (err) {
+            console.error('Error extracting message:', err);
+            return "Failed to extract response content.";
+        }
+    };
+
     return (
         <div>
             <DashboardLayout>
@@ -75,14 +86,14 @@ const SocialMediaPage = () => {
                                 </div>
                             </div>
 
-                            <div className='mt-5'>
+                            <div className='mt-5 w-full'>
                                 {isError && (
                                     <div className="bg-gray-50 rounded-lg px-6 py-6 text-red-600 text-sm">{(error as any)?.message}</div>
                                 )}
 
                                 {data && (
                                     <div className=" bg-gray-50 rounded-lg px-6 py-6">
-                                        <pre>{JSON.stringify(data, null, 2)}</pre>
+                                        {getResponseContent()}
                                     </div>
                                 )}
                             </div>
