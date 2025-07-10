@@ -119,7 +119,7 @@ const PipelinePage = ({
                                         </h2>
                                     </div>
 
-                                    <div className="px-6 py-4 border-r border-gray-100 whitespace-nowrap relative">
+                                    <div className="whitespace-nowrap relative">
                                         <button
                                             className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
                                             onClick={() => setOpenIndex(openIndex === index ? null : index)}

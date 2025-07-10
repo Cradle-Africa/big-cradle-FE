@@ -7,12 +7,10 @@ import AccountVerification from '@/app/components/user/AccountVerification';
 import { AdminForm } from '@/app/pages/user/types/User';
 import { validateAdminSignUp, validateAdminStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
-import CountrySelect from '@/app/components/form/CountrySelect';
 import { AdminSignUpService } from '../../services/user/userService';
-import SearchSelect from '../form/SearchSelect';
-import cities from '../../utils/data/cities.json';
 import { removeEmptyProperties } from '../../utils/clean-data';
 import CredentialDetails from '../form/CredentialDetails';
+import { CitySelect, CountrySelect, StateSelect } from 'react-country-state-city';
 
 export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -32,6 +30,8 @@ export default function AdminSignUp() {
         city: '',
         state: '',
         country: '',
+		adminCountryCode: 0,
+		adminStateCode: 0,
         role: 'admin',
         password: '',
         confirmPassword: '',
@@ -52,9 +52,6 @@ export default function AdminSignUp() {
         }
     };
 
-    const handleSelectChange = (field: string, value: string) => {
-        setForm((prev) => ({ ...prev, [field]: value }));
-    };
 
     const handleCredentialChange = (field: string, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -97,7 +94,7 @@ export default function AdminSignUp() {
     };
 
     return (
-        <div className="max-h-screen flex bg-white">
+        <div className="max-h-80 flex bg-white">
             {showVerification && (
                 <AccountVerification
                     showAccountVerification={showVerification}
@@ -171,40 +168,78 @@ export default function AdminSignUp() {
                         {/* Step 2 */}
                         {step === 2 && (
                             <>
-                                <div className='md:flex w-full justify-between gap-2 mt-5'>
-                                    <div className='w-full md:w-1/2'>
-                                        <CountrySelect
-                                            value={form.country}
-                                            onChange={handleChange}
-                                            name="country"
-                                            className="border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                        />
-                                        {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
-                                    </div>
+                                <div className='mt-5 w-full'>
+									<CountrySelect
+										onChange={(country: any) => {
+											setForm((prev) => ({
+												...prev,
+												country: country.name,
+												adminCountryCode: country.id,
+												state: "",
+												adminStateCode: 0,
+												city: "",
+											}));
+										}}
+										value={form.country}
+										placeHolder="Select Country"
+										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										containerClassName="w-full"
+									/>
+									{errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
+								</div>
 
-                                    <div className='w-full md:w-1/2'>
-                                        <input name="state" value={form.state} onChange={handleChange} placeholder="State" className="w-full mt-5 md:mt-0 border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
-                                    </div>
+								<div className='w-full mt-5'>
+									<StateSelect
+										countryid={form.adminCountryCode}
+										onChange={(state: any) =>
+											setForm((prev) => ({
+												...prev,
+												state: state.name,
+												adminStateCode: state.id,
+												city: "",
+											}))
+										}
+										value={form.state}
+										placeHolder="Select State"
+										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										containerClassName="w-full"
+									/>
+									{errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
+								</div>
 
-                                </div>
-                                <div className='md:flex w-full justify-between gap-2 mt-5'>
-                                    <div className='w-full md:w-1/2'>
-                                        <input name="address" value={form.address} onChange={handleChange} placeholder="Address" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.address && <p className="text-red-500 text-xs">{errors.address}</p>}
-                                    </div>
-                                    <div className='w-full md:w-1/2 mt-5 md:mt-0'>
-                                        <SearchSelect
-                                            data={cities}
-                                            value={form.city}
-                                            onSelect={(value) => handleSelectChange('city', value)}
-                                            placeholder="Search for a city..."
-                                            name="city"
-                                            className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
-                                        />
-                                        {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
-                                    </div>
-                                </div>
+								<div className="w-full mt-5">
+									<CitySelect
+										countryid={form.adminCountryCode}
+										stateid={form.adminStateCode}
+										onChange={(city: any) =>
+											setForm((prev) => ({
+												...prev,
+												city: city.name,
+											}))
+										}
+										value={form.city}
+										placeHolder="Select City"
+										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										containerClassName="w-full"
+									/>
+									
+									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+								</div>
+
+								<div className="w-full mt-5">
+									<input
+										name="address"
+										value={form.address}
+										onChange={handleChange}
+										placeholder="Address"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+									/>
+									{errors.address && (
+										<p className="text-red-500 text-xs">
+											{errors.address}
+										</p>
+									)}
+								</div>
 
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
@@ -225,17 +260,6 @@ export default function AdminSignUp() {
                                 
                                 <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
                                 
-                                {/* <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
-                                        <ChevronLeft size={14} className="inline ml-1" />
-                                        Back
-                                    </button>
-                                    <button type="button" onClick={next} className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
-                                        Next
-                                        <ChevronRight size={14} className="inline ml-1" />
-                                    </button>
-                                </div> */}
-
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />

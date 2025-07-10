@@ -2,7 +2,7 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, List, MoreVertical, Pencil, Plus, Share2, Database } from "lucide-react";
+import { Eye, List, MoreVertical, Pencil, Plus, Share2, Database, Trash2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
@@ -10,6 +10,7 @@ import EditDataPoint from "./EditDataPoint";
 import ShareDataPoint from "./ShareDataPoint";
 // import ViewDataEntries from "../data-entry/ViewDataEntries";
 import Link from "next/link";
+import DeleteDataPoint from "./DeleteDataPoint";
 
 type DataPointsProps = {
     data: DataPoint[];
@@ -31,6 +32,7 @@ const DataPoints = ({
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
     const [editingDataPoint, setEditingDataPoint] = useState(false);
     const [shareDataPoint, setShareDataPoint] = useState(false);
+    const [deletingDataPoint, setDeletingDataPoint] = useState(false);
     const [viewDataEntries, setViewDataEntries] = useState(false);
 
     const menuRef = useRef<HTMLUListElement>(null);
@@ -39,7 +41,7 @@ const DataPoints = ({
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
     const [pipelineName, setPipelineName] = useState<string>('');
-    // const [uniqueDataEntry, setUniqueDataEntry] = useState<string>('')
+    const [dataPointName, setDataPointName] = useState<string>('');
 
     const handleViewDataPoint = (id: any) => {
         setOpenViewDataPoit(true)
@@ -60,11 +62,12 @@ const DataPoints = ({
         setUniqueDataPoint(id)
     }
 
-    // const handleViewDataEntries = (id: any) => {
-    //     setViewDataEntries(true)
-    //     setOpenIndex(null);
-    //     setUniqueDataEntry(id)
-    // }
+    const handleDeleteDataPoint = async (id: any, dataPointName: any) => {
+        setDeletingDataPoint(true);
+        setOpenIndex(null);
+        setUniqueDataPoint(id);
+        setDataPointName(dataPointName);
+    }
 
     // Close dropdown if clicked outside
     useEffect(() => {
@@ -110,6 +113,13 @@ const DataPoints = ({
                 setEditingDataPoint={setEditingDataPoint}
             />
 
+            <DeleteDataPoint
+                deletingDataPoint={deletingDataPoint}
+                uniqueId={uniqueDataPoint}
+                setDeletingDataPoint={setDeletingDataPoint}
+                dataPointName={dataPointName}
+            />
+
             {(viewDataEntries &&
                 <div className="flex justify-between">
                     <h2 className="text-md text-black">Data entries</h2>
@@ -122,12 +132,6 @@ const DataPoints = ({
                     </button>
                 </div>
             )}
-
-            {/* <ViewDataEntries
-                viewDataEntries={viewDataEntries}
-                uniqueId={uniqueDataEntry}
-                setViewDataEntries={setViewDataEntries}
-            /> */}
 
             {!editingDataPoint && !viewDataEntries && (
                 <>
@@ -184,6 +188,7 @@ const DataPoints = ({
                                                     ref={menuRef}
                                                     className="absolute z-60 right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100"
                                                 >
+                                                    
                                                     <li className="px-2 w-full">
                                                         <button
                                                             onClick={() => handleViewDataPoint(dataPoints?.id)}
@@ -192,6 +197,13 @@ const DataPoints = ({
                                                             <Eye size={13} className="inline mr-1" />
                                                             View data point
                                                         </button>
+                                                    </li>
+                                                    <li className="px-2 w-full">
+                                                        <Link
+                                                            href={`/pages/flywheel/data-entry/${dataPoints?.dataPointId}/${dataPoints?.id}`}
+                                                            className="flex w-full items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md">
+                                                            <Database size={15} className='mr-1 inline' /> View Entries
+                                                        </Link>
                                                     </li>
                                                     <li className="px-2 w-full">
                                                         <button
@@ -208,19 +220,13 @@ const DataPoints = ({
                                                         > <Share2 size={13} className="inline mr-1" /> Share Data point
                                                         </button>
                                                     </li>
+                                                    
                                                     <li className="px-2 w-full">
-                                                        {/* <button
-                                                            onClick={() => handleViewDataEntries(dataPoints.dataPointId)}
-                                                            className="flex w-full items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
-                                                        > <Database size={13} className="inline mr-1" /> View Entries
-                                                        </button> */}
-
-                                                        <Link
-                                                            // href={`/pages/flywheel/data-entry/${dataPoints.dataPointId}`}
-                                                            href={`/pages/flywheel/data-entry/${dataPoints?.dataPointId}/${dataPoints?.id}`}
-                                                            className="flex w-full items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md">
-                                                            <Database size={15} className='mr-1 inline' /> View Entries
-                                                        </Link>
+                                                        <button
+                                                            onClick={() => handleDeleteDataPoint(dataPoints?.id, dataPoints?.dataPointName)}
+                                                            className="flex items-center cursor-pointer px-2 py-2 hover:bg-red-200 hover:text-red-600 rounded-md"
+                                                        > <Trash2 size={13} className="inline mr-1" /> Delete Data point
+                                                        </button>
                                                     </li>
                                                 </ul>
                                             )}

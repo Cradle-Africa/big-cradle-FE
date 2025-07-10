@@ -7,12 +7,12 @@ import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessLinkForm } from '@/app/pages/user/types/User';
 import { validateBusinessLinkSignUp, validateBusinessLinkStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
-import CountrySelect from '@/app/components/form/CountrySelect';
 import { BusinessSignUpLinkService } from '../../services/user/userService';
-import SearchSelect from '../form/SearchSelect';
-import cities from '../../utils/data/cities.json';
 import ImageUploader from '../form/ImageUploader';
 import CredentialDetails from '../../components/form/CredentialDetails'
+import { CitySelect, CountrySelect, StateSelect } from 'react-country-state-city';
+import sectors from '@/app/utils/data/sectors.json';
+import SearchSelect from '../form/SearchSelect';
 
 interface BusinessSignUpProps {
     signUpToken: any;
@@ -20,7 +20,7 @@ interface BusinessSignUpProps {
     adminBusinessUserId: any;
 }
 
-export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBusinessUserId }:BusinessSignUpProps) {
+export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBusinessUserId }: BusinessSignUpProps) {
     const [step, setStep] = useState<number>(1);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [showVerification, setShowVerification] = useState<boolean>(false);
@@ -38,6 +38,8 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
         businessCity: '',
         businessState: '',
         businessCountry: '',
+        businessCountryCode: 0,
+        businessStateCode: 0,
         sector: '',
         organizationSize: '',
         email: businessEmail,
@@ -111,7 +113,7 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
     };
 
     return (
-        <div className="max-h-screen flex bg-white">
+        <div className="max-h-80 flex bg-white">
             {showVerification && (
                 <AccountVerification
                     showAccountVerification={showVerification}
@@ -132,7 +134,7 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                 </div>
 
                                 <div className='mt-5'>
-                                    <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="Contact Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="Contact Email" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
                                     {errors.contactName && <p className="text-red-500 text-xs">{errors.contactName}</p>}
                                 </div>
                                 <div className='mt-5'>
@@ -146,7 +148,7 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                 </div>
                                 <div className="md:flex w-full gap-2 mt-5">
                                     <div className='md:w-2/3'>
-                                        
+
                                         <CountryCodeSelect
                                             value={form.countryCode}
                                             onChange={handleChange}
@@ -173,43 +175,91 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                         {/* Step 2 */}
                         {step === 2 && (
                             <>
-                                <div className='md:flex w-full justify-between gap-2 mt-5'>
-                                    <div className='w-full md:w-1/2'>
-                                        <CountrySelect
-                                            value={form.businessCountry}
-                                            onChange={handleChange}
-                                            name="businessCountry"
-                                            className="border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                        />
-                                        {errors.businessCountry && <p className="text-red-500 text-xs">{errors.businessCountry}</p>}
-                                    </div>
 
-                                    <div className='w-full md:w-1/2'>
-                                        <input name="businessState" value={form.businessState} onChange={handleChange} placeholder="State" className="w-full mt-5 md:mt-0 border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.businessState && <p className="text-red-500 text-xs">{errors.businessState}</p>}
-                                    </div>
+                                <div className='mt-5 w-full'>
+                                    <CountrySelect
+                                        onChange={(country: any) => {
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                businessCountry: country.name,
+                                                businessCountryCode: country.id,
+                                                businessState: "",
+                                                businessStateCode: 0,
+                                                businessCity: "",
+                                            }));
+                                        }}
+                                        value={form.businessCountry}
+                                        placeHolder="Select Country"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
 
-                                </div>
-                                <div className='md:flex w-full justify-between gap-2 mt-5'>
-                                    <div className='w-full md:w-1/2'>
-                                        <input name="businessAddress" value={form.businessAddress} onChange={handleChange} placeholder="Address" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
-                                        {errors.businessAddress && <p className="text-red-500 text-xs">{errors.businessAddress}</p>}
-                                    </div>
-                                    <div className='w-full md:w-1/2 mt-5 md:mt-0'>
-                                        <SearchSelect
-                                            data={cities}
-                                            value={form.businessCity}
-                                            onSelect={(value) => handleSelectChange('businessCity', value)}
-                                            placeholder="Search for a city..."
-                                            name="businessCity"
-                                            className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
-                                        />
-                                        {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
-                                    </div>
+                                    {errors.businessCountry && <p className="text-red-500 text-xs">{errors.businessCountry}</p>}
                                 </div>
 
-                                <div className='mt-5'>
-                                    <input name="sector" value={form.sector} onChange={handleChange} placeholder="Sector" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                <div className='w-full mt-5'>
+                                    <StateSelect
+                                        countryid={form.businessCountryCode}
+                                        onChange={(state: any) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                businessState: state.name,
+                                                businessStateCode: state.id,
+                                                businessCity: "",
+                                            }))
+                                        }
+                                        value={form.businessState}
+                                        placeHolder="Select State"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
+                                    {errors.businessState && <p className="text-red-500 text-xs">{errors.businessState}</p>}
+                                </div>
+
+                                <div className="w-full mt-5">
+                                    <CitySelect
+                                        countryid={form.businessCountryCode}
+                                        stateid={form.businessStateCode}
+                                        onChange={(city: any) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                businessCity: city.name,
+                                            }))
+                                        }
+                                        value={form.businessCity}
+                                        placeHolder="Select City"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
+
+                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+                                </div>
+
+                                <div className="w-full mt-5">
+                                    <input
+                                        name="businessAddress"
+                                        value={form.businessAddress}
+                                        onChange={handleChange}
+                                        placeholder="Address"
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                    />
+                                    {errors.businessAddress && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.businessAddress}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mt-5">
+                                    <SearchSelect
+                                        data={sectors}
+                                        value={form.sector}
+                                        onSelect={(value: any) => handleSelectChange('sector', value)}
+                                        placeholder="Search for a sector..."
+                                        name="sector"
+                                        className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
+                                    />
+
                                     {errors.sector && <p className="text-red-500 text-xs">{errors.sector}</p>}
                                 </div>
 
@@ -221,9 +271,9 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                         className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
                                     >
                                         <option value="">Select Organization Size</option>
-                                        <option value="1-10">Small</option>
-                                        <option value="11-50">Medium</option>
-                                        <option value="51-200">Large</option>
+                                        <option value="1-10">Small (1-10)</option>
+                                        <option value="11-50">Medium (11-50)</option>
+                                        <option value="51-200">Large (51-200)</option>
                                     </select>
                                     {errors.organizationSize && <p className="text-red-500 text-xs">{errors.organizationSize}</p>}
                                 </div>
@@ -245,7 +295,6 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                         {step === 3 && (
                             <>
                                 <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
-
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />

@@ -4,7 +4,6 @@ import { List, Plus } from "lucide-react";
 import { JSX, useEffect, useRef, useState } from "react";
 import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
-import NewDataPoint from "./datapoint/NewDataPoint";
 import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
@@ -13,6 +12,7 @@ import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { useSearchParams } from "next/navigation";
+import NewDataPoint from "./datapoint/new/NewDataPoint";
 
 type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points' | '';
 

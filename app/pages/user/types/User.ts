@@ -38,6 +38,8 @@ export interface BusinessForm {
     businessCity: string;
     businessState: string;
     businessCountry: string;
+    businessCountryCode: number;
+    businessStateCode: number;
     sector: string;
     organizationSize: string;
     email: string;
@@ -59,6 +61,8 @@ export interface BusinessLinkForm {
     businessCity: string;
     businessState: string;
     businessCountry: string;
+    businessCountryCode: number;
+    businessStateCode: number;
     sector: string;
     organizationSize: string;
     email: string;
@@ -80,6 +84,8 @@ export interface AdminForm {
     city: string;
     state: string;
     country: string;
+	adminCountryCode: number;
+	adminStateCode: number;
     role: string;
     password: string;
     confirmPassword: string;

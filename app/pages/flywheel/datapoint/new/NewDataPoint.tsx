@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/caseFormat';
-import SelectOptionManager from "../_components/SelectOptionManager";
 import { ArrowLeft, Check, List, Trash2 } from "lucide-react";
-import FieldPreview from "../_components/FieldPreview";
 import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
-import { useCreateDataPoint } from '../_features/hook';
 import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import FieldPreview from "../../_components/FieldPreview";
+import SelectOptionManager from "../../_components/SelectOptionManager";
+import { useCreateDataPoint } from "../../_features/hook";
 
 interface DataPointProps {
     pipelines?: Pipeline[]

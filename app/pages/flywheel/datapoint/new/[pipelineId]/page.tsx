@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import DashboardLayout from "@/app/DashboardLayout";
 import { useFetchSinglePipeline } from "../../../_features/hook";
 import axios from "@/app/lib/axios";
-import NewDataPoint from "../../NewDataPoint";
+import NewDataPoint from "../NewDataPoint";
 
 const NewDataPointPage = () => {
     const params = useParams();
