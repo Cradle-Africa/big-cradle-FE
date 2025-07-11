@@ -72,6 +72,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
 
         try {
             const html2pdf = (await import("html2pdf.js")).default;
+
             await html2pdf()
                 .set({
                     margin: [0.5, 0.5, 0.5, 0.5],
@@ -90,9 +91,15 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                                 if (style.borderColor?.includes("oklch")) el.style.borderColor = "#cccccc";
                                 if (style.fill?.includes("oklch")) el.style.fill = "#578CFF";
                                 if (style.stroke?.includes("oklch")) el.style.stroke = "#578CFF";
+
+                                // 💡 Prevent content from being cut mid-element
+                                el.style.breakInside = "avoid";
+                                el.style.pageBreakInside = "avoid";
+                                el.style.overflowWrap = "break-word";
                             });
                         },
                     },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }, // Ensure page breaks are handled correctly
                     jsPDF: {
                         unit: "in",
                         format: "a4",
@@ -110,6 +117,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
             setIsDownloading(false);
         }
     };
+
 
 
     const handleCopy = async () => {
@@ -145,7 +153,9 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                                 <div className="mt-5 whitespace-pre-wrap max-h-80 overflow-auto">
                                     <div ref={analysisRef} className="space-y-6 text-md" id="analysis-content">
                                         {/* Insights */}
-                                        <div className="avoid-break">
+                                        {/* <div className="avoid-break"> */}
+                                        <div>
+
                                             <h3 className="text-base font-semibold mb-5">📌 Insights</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
                                                 {structuredData?.insights?.map((insight: string, index: number) => (
@@ -159,7 +169,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                                         </div>
 
                                         {/* Recommendations */}
-                                        <div className="avoid-break">
+                                        <div style={{ pageBreakBefore: 'always' }}>
                                             <h3 className="text-base font-semibold mb-1">✅ Recommendations</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
                                                 {structuredData?.recommendations?.map((rec: string, index: number) => (
@@ -173,7 +183,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                                         </div>
 
                                         {/* Visualization */}
-                                        <div className="avoid-break">
+                                        <div className="page-break" style={{ pageBreakBefore: 'always' }}>
                                             <h3 className="text-base font-semibold mb-5">📊 Visualization</h3>
                                             <div className="w-full h-80">
                                                 <AnalyseDataChart data={chartData} />

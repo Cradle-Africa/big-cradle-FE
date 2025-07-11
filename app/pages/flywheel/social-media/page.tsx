@@ -11,13 +11,14 @@ import { useAnalyseSocialMedia } from './_features/hook';
 import axios from '@/app/lib/axios';
 import SocialMediaChart from '@/app/components/charts/SocialMediaChart';
 import { marked } from 'marked';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import Spinner from '@/app/components/Spinner';
 
 const SocialMediaPage = () => {
     const backParams: string = 'pipelines';
     const socialMedias = ['Instagram', 'Facebook', 'TikTok', 'Snapchat', 'Linkedin'];
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const {
         register,
@@ -40,27 +41,59 @@ const SocialMediaPage = () => {
 
     const analysisRef = useRef<HTMLDivElement>(null);
     const handleDownload = async () => {
-        if (analysisRef.current) {
+        if (!analysisRef.current) {
+            toast.error("No content available for download");
+            return;
+        }
+
+        setIsDownloading(true);
+        const loadingToast = toast.loading("Preparing download...");
+
+        try {
             const html2pdf = (await import("html2pdf.js")).default;
 
-            html2pdf()
-                .from(analysisRef.current)
+            await html2pdf()
                 .set({
-                    margin: [0.5, 0.5, 0.5, 0.5], // top, right, bottom, left
-                    filename: 'social-media-analysis.pdf',
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: "data-analysis-report.pdf",
+                    image: { type: "jpeg", quality: 0.98 },
                     html2canvas: {
-                        scale: 10,           // improves quality
-                        useCORS: true,      // load fonts/images correctly
-                        backgroundColor: '#ffffff',
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: "#ffffff",
+                        onclone: (clonedDoc: Document) => {
+                            const allElements = clonedDoc.querySelectorAll<HTMLElement>("*");
+                            allElements.forEach((el) => {
+                                const style = window.getComputedStyle(el);
+                                if (style.color.includes("oklch")) el.style.color = "#333333";
+                                if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#ffffff";
+                                if (style.borderColor?.includes("oklch")) el.style.borderColor = "#cccccc";
+                                if (style.fill?.includes("oklch")) el.style.fill = "#578CFF";
+                                if (style.stroke?.includes("oklch")) el.style.stroke = "#578CFF";
+
+                                // 💡 Prevent content from being cut mid-element
+                                el.style.breakInside = "avoid";
+                                el.style.pageBreakInside = "avoid";
+                                el.style.overflowWrap = "break-word";
+                            });
+                        },
                     },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }, // Ensure page breaks are handled correctly
                     jsPDF: {
-                        unit: 'in',
-                        format: 'a4',
-                        orientation: 'portrait',
-                    }
+                        unit: "in",
+                        format: "a4",
+                        orientation: "portrait",
+                    },
                 })
+                .from(analysisRef.current)
                 .save();
 
+            toast.success("Download complete!", { id: loadingToast });
+        } catch (error) {
+            console.error("PDF generation failed:", error);
+            toast.error("Failed to generate PDF", { id: loadingToast });
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -138,7 +171,7 @@ const SocialMediaPage = () => {
                                                 </ul>
                                             </div>
 
-                                            <div className='avoid-break'>
+                                            <div style={{ pageBreakBefore: 'always' }}>
                                                 <h3 className="text-lg font-bold mb-2">✅ Recommendations</h3>
                                                 <ul className='list-disc list-inside space-y-1'>
                                                     {data.data.recommendations.map((rec: string, index: number) => (
@@ -165,9 +198,19 @@ const SocialMediaPage = () => {
                                         <button
                                             type="button"
                                             onClick={handleDownload}
+                                            disabled={isDownloading}
                                             className="border border-gray-400 text-gray-700 px-3 py-1 rounded-md hover:cursor-pointer"
                                         >
-                                            <Download size={13} className='inline mr-1' /> Download
+                                            {isDownloading ? (
+                                                <>
+                                                    <Spinner />
+                                                    Downloading...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Download size={12} className="inline mr-1" /> Download
+                                                </>
+                                            )}
                                         </button>
                                     </div>
                                 </div>
@@ -219,7 +262,7 @@ const SocialMediaPage = () => {
                                     className="mt-5 flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:cursor-pointer hover:bg-blue-700 disabled:opacity-50"
                                     disabled={isPending}
                                 >
-                                    {isPending && <Spinner/>}
+                                    {isPending && <Spinner />}
                                     <Sparkles size={16} className="ml-2 mr-1 animate-pulse" />
                                     {isPending ? 'Analysing ' : 'Analyse'}
                                 </button>
