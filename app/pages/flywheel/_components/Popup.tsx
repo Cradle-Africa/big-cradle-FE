@@ -30,9 +30,9 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                         </p>
 
                         <div className="md:flex justify-between gap-3 md:gap-5 mt-5 lg:mt-10">
-                            <div className="md:w-1/2 md:h-44 px-6 py-6 bg-[#FCEBFF] hover:border hover:border-[#d27ce1] hover:transition rounded-lg cursor-pointer">
+                            {/* <div className="md:w-1/2 md:h-44 px-6 py-6 bg-[#FCEBFF] hover:border hover:border-[#d27ce1] hover:transition rounded-lg cursor-pointer">
                                 <Link className="w-full h-full"
-                                    href="/pages/flywheel/social-media"
+                                href="/pages/flywheel/social-media"
                                 >
                                     <div className="flex justify-center">
                                         <div className="bg-white text-[#d27ce1] rounded-full p-3">
@@ -44,10 +44,10 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                         Analyse your Social media account
                                     </p>
                                 </Link>
-                            </div>
+                            </div> */}
 
                             <button
-                                className="mt-5 md:mt-0 md:w-1/2 md:h-44 px-6 py-6 bg-[#E6E9FF] hover:border hover:border-blue-500 hover:transition rounded-lg cursor-pointer"
+                                className="mt-5 md:mt-0 md:w-2/2 md:h-44 px-6 py-6 bg-[#E6E9FF] hover:border hover:border-blue-500 hover:transition rounded-lg cursor-pointer"
                                 onClick={() => {
                                     onBuildPipeline();
                                     onClose();

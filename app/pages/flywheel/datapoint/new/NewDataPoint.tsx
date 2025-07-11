@@ -184,7 +184,11 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 {form.field.map((field, index: any) => (
                     <div
                         key={index}
-                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
+                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5 
+                        hover:border-0 hover:border-l-8 hover:border-blue-600 
+                        transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
+                        focus-within:border-blue-600 focus-within:border-l-8
+                        "
                     >
                         <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
                             <input
@@ -197,7 +201,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 }
                                 className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
                             />
-                            
+
                             <select
                                 value={field.type}
                                 onChange={(e) =>
@@ -214,8 +218,8 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 <option value="checkbox">Multiple Choices</option>
                                 <option value="radio">Single Choice</option>
                                 <option value="date">Date</option>
-                                <option value="time">Time</option>    
-                                <option value="file">File Upload</option>      
+                                <option value="time">Time</option>
+                                <option value="file">File Upload</option>
                                 <option value="rating">Rating</option>
                                 <option value="textarea">Paragraph</option>
                             </select>

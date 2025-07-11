@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useAnalyseData } from "../_features/hook";
 import { getBusinessId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { Check, Copy, Download, X } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import { handleDownloadAnalysis } from "@/app/utils/handleDownload";
+import Spinner from "@/app/components/Spinner";
+import { marked } from "marked";
+import AnalyseDataChart from "@/app/components/charts/AnalyseDataChart";
 
 interface AnalyseDataProps {
     analyseData: boolean;
@@ -16,29 +17,14 @@ interface AnalyseDataProps {
 }
 
 const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueId }) => {
-    const modalRef = useRef<HTMLDivElement>(null);
     const [prompt, setPrompt] = useState("");
+    const [structuredData, setStructuredData] = useState<any>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const businessUserId = getBusinessId() || "";
     const endpoint = "pipeline-fields-entry-attached-to-data-point";
 
-
     const mutation = useAnalyseData({ axios });
-
-    useEffect(() => {
-        const handleOutsideClick = (e: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-                onClose();
-            }
-        };
-
-        if (analyseData) {
-            document.addEventListener("mousedown", handleOutsideClick);
-        }
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-        };
-    }, [analyseData, onClose]);
 
     const handleSubmit = () => {
         mutation.mutate(
@@ -49,8 +35,15 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                 prompt,
             },
             {
-                onSuccess: () => {
+                onSuccess: (data) => {
                     toast.success("Data analysis completed successfully");
+                    try {
+                        setStructuredData(data);
+                    } catch (err) {
+                        console.log(err);
+                        toast.error("Failed to parse response");
+                        setStructuredData(null);
+                    }
                 },
                 onError: (error: any) => {
                     toast.error(error?.message || "Data analysis failed");
@@ -59,93 +52,195 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
         );
     };
 
+    const chartData = structuredData?.visualization?.data?.labels?.map(
+        (label: string, index: number) => ({
+            name: label,
+            value: structuredData.visualization.data.datasets[0].data[index],
+        })
+    ) || [];
 
 
-    const getResponseContent = () => {
+    const analysisRef = useRef<HTMLDivElement>(null);
+    const handleDownload = async () => {
+        if (!analysisRef.current) {
+            toast.error("No content available for download");
+            return;
+        }
+
+        setIsDownloading(true);
+        const loadingToast = toast.loading("Preparing download...");
+
         try {
-            const message = mutation.data?.choices?.[0]?.message?.content;
-            return typeof message === "string" ? message : "No valid content returned.";
-        } catch {
-            return "Failed to extract response content.";
+            const html2pdf = (await import("html2pdf.js")).default;
+            await html2pdf()
+                .set({
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: "data-analysis-report.pdf",
+                    image: { type: "jpeg", quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        backgroundColor: "#ffffff",
+                        onclone: (clonedDoc: Document) => {
+                            const allElements = clonedDoc.querySelectorAll<HTMLElement>("*");
+                            allElements.forEach((el) => {
+                                const style = window.getComputedStyle(el);
+                                if (style.color.includes("oklch")) el.style.color = "#333333";
+                                if (style.backgroundColor.includes("oklch")) el.style.backgroundColor = "#ffffff";
+                                if (style.borderColor?.includes("oklch")) el.style.borderColor = "#cccccc";
+                                if (style.fill?.includes("oklch")) el.style.fill = "#578CFF";
+                                if (style.stroke?.includes("oklch")) el.style.stroke = "#578CFF";
+                            });
+                        },
+                    },
+                    jsPDF: {
+                        unit: "in",
+                        format: "a4",
+                        orientation: "portrait",
+                    },
+                })
+                .from(analysisRef.current)
+                .save();
+
+            toast.success("Download complete!", { id: loadingToast });
+        } catch (error) {
+            console.error("PDF generation failed:", error);
+            toast.error("Failed to generate PDF", { id: loadingToast });
+        } finally {
+            setIsDownloading(false);
         }
     };
 
+
     const handleCopy = async () => {
-        const content = getResponseContent();
+        const content = document.getElementById('analysis-content')?.innerText || '';
         await navigator.clipboard.writeText(content);
         toast.success("Response copied to clipboard");
     };
 
-    const handleDownload = () => {
-        const content = getResponseContent();
-        handleDownloadAnalysis(content);
-    };
 
     if (!analyseData) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="fixed inset-0 bg-black/40" />
             <div
-                ref={modalRef}
-                className="relative z-50 bg-gray-50 max-h-[90%] w-full max-w-[400px] md:max-w-[600px] xl:max-w-[900px] mx-4 md:mx-auto rounded-xl shadow-xl p-6 space-y-4"
+                className="relative z-50 bg-gray-50 max-h-[98%] px-5 lg:px-20 py-5 w-full h-screen ma-w-[500px] m:max-w-[700px] x:max-w-[1000px] mx-4 md:mx-auto rounded-xl shadow-xl p-6 space-y-4"
             >
-                <h2 className="text-xl font-semibold text-blue-600">Analyse Data</h2>
+                <div>
+                    <div className="flex justify-between">
+                        <h2 className="text-xl font-semibold text-blue-600">Analyse Data</h2>
+                        <button onClick={() => onClose()} >
+                            <X size={20} className="text-red-500 mr-1 hover:cursor-pointer" />
+                        </button>
+                    </div>
 
-                {mutation.isError && (
-                    <p className="text-sm text-red-600">{mutation.error?.message}</p>
-                )}
+                    {mutation.isError && (
+                        <p className="text-sm text-red-600">{mutation.error?.message}</p>
+                    )}
 
-                {mutation.isSuccess && (
-                    <>
-                        <div className=" bg-gray-100 border border-gray-300 rounded-lg p-4 max-h-60 overflow-auto text-left text-sm">
-                            <strong>Response:</strong>
-                            <div className="mt-2 whitespace-pre-wrap"><ReactMarkdown>{getResponseContent()}</ReactMarkdown></div>
-                        </div>
-                        <div className="flex space-x-3">
+                    {mutation.isSuccess && (
+                        <>
+                            <div className="bg-gray-100 rounded-lg p-8 text-left text-md mt-3">
+                                <strong>Response:</strong>
+                                <div className="mt-5 whitespace-pre-wrap max-h-80 overflow-auto">
+                                    <div ref={analysisRef} className="space-y-6 text-md" id="analysis-content">
+                                        {/* Insights */}
+                                        <div className="avoid-break">
+                                            <h3 className="text-base font-semibold mb-5">📌 Insights</h3>
+                                            <ul className="list-disc list-inside pl-4 space-y-1">
+                                                {structuredData?.insights?.map((insight: string, index: number) => (
+                                                    <p
+                                                        key={index}
+                                                        className="text-gray-800"
+                                                        dangerouslySetInnerHTML={{ __html: marked.parse(insight, { async: false }) as string }}
+                                                    />
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        {/* Recommendations */}
+                                        <div className="avoid-break">
+                                            <h3 className="text-base font-semibold mb-1">✅ Recommendations</h3>
+                                            <ul className="list-disc list-inside pl-4 space-y-1">
+                                                {structuredData?.recommendations?.map((rec: string, index: number) => (
+                                                    <p
+                                                        key={index}
+                                                        className="text-gray-800"
+                                                        dangerouslySetInnerHTML={{ __html: marked.parse(rec, { async: false }) as string }}
+                                                    />
+                                                ))}
+                                            </ul>
+                                        </div>
+
+                                        {/* Visualization */}
+                                        <div className="avoid-break">
+                                            <h3 className="text-base font-semibold mb-5">📊 Visualization</h3>
+                                            <div className="w-full h-80">
+                                                <AnalyseDataChart data={chartData} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex space-x-3 mt-3">
+                                <button
+                                    type="button"
+                                    onClick={handleCopy}
+                                    className="px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
+                                >
+                                    <Copy size={12} className="inline mr-1" /> Copy
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleDownload}
+                                    disabled={isDownloading}
+                                    className="flex items-center px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer disabled:opacity-50"
+                                >
+                                    {isDownloading ? (
+                                        <>
+                                            <Spinner />
+                                            Downloading...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Download size={12} className="inline mr-1" /> Download
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="absolute w-[87.7%] bottom-3">
+                        <textarea
+                            className="w-full h-24 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg p-3 text-md outline-none resize-none"
+                            rows={6}
+                            placeholder="Enter your prompt here ..."
+                            value={prompt}
+                            onChange={(e) => setPrompt(e.target.value)}
+                        />
+
+                        <div className="flex justify-end space-x-3 mt-3">
                             <button
-                                onClick={handleCopy}
-                                className="px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
+                                onClick={onClose}
+                                className="flex items-center px-4 py-1 text-md font-medium text-gray-700 cursor-pointer border border-gray-300 rounded-md hover:bg-gray-100"
                             >
-                                <Copy size={12} className="inline mr-1" /> Copy
+                                <X size={13} className='inline mr-1' /> Close
                             </button>
                             <button
-                                onClick={handleDownload}
-                                className="flex items-center px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
+                                onClick={handleSubmit}
+                                disabled={mutation.isPending || !prompt.trim()}
+                                className={`flex gap-2 items-center px-4 py-1 text-md font-medium cursor-pointer text-white rounded-md ${mutation.isPending || !prompt.trim()
+                                    ? "bg-blue-400 cursor-not-allowed"
+                                    : "bg-blue-600 hover:bg-blue-700"
+                                    }`}
                             >
-                                <Download size={12} className="inline mr-1" /> Download
+                                {mutation.isPending && (<Spinner />)}
+                                {!mutation.isPending && (<Check size={13} className="inline ml-2 mr-1" />)}
+                                {mutation.isPending ? " Analysing... " : "Submit"}
                             </button>
                         </div>
-                    </>
-
-                )}
-
-                <textarea
-                    className="w-full text-gray-700 bg-gray-100 border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-1 focus:ring-gray-300"
-                    rows={6}
-                    placeholder="Enter your prompt here ..."
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                />
-
-                <div className="flex justify-end space-x-3">
-                    <button
-                        onClick={onClose}
-                        className="flex items-center px-4 py-1 text-md font-medium text-gray-700 cursor-pointer border border-gray-300 rounded-md hover:bg-gray-100"
-                    >
-                        <X size={13} className='inline mr-1' /> Close
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={mutation.isPending || !prompt.trim()}
-                        className={`flex items-center px-4 py-1 text-md font-medium cursor-pointer text-white rounded-md ${mutation.isPending || !prompt.trim()
-                            ? "bg-blue-400 cursor-not-allowed"
-                            : "bg-blue-600 hover:bg-blue-700"
-                            }`}
-                    >
-                        <Check size={13} className="inline mr-1" />
-                        {mutation.isPending ? "Analysing..." : "Submit"}
-                    </button>
+                    </div>
                 </div>
             </div>
         </div>

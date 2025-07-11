@@ -30,8 +30,8 @@ export default function AdminSignUp() {
         city: '',
         state: '',
         country: '',
-		adminCountryCode: 0,
-		adminStateCode: 0,
+        adminCountryCode: 0,
+        adminStateCode: 0,
         role: 'admin',
         password: '',
         confirmPassword: '',
@@ -169,77 +169,77 @@ export default function AdminSignUp() {
                         {step === 2 && (
                             <>
                                 <div className='mt-5 w-full'>
-									<CountrySelect
-										onChange={(country: any) => {
-											setForm((prev) => ({
-												...prev,
-												country: country.name,
-												adminCountryCode: country.id,
-												state: "",
-												adminStateCode: 0,
-												city: "",
-											}));
-										}}
-										value={form.country}
-										placeHolder="Select Country"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
-									/>
-									{errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
-								</div>
+                                    <CountrySelect
+                                        onChange={(country: any) => {
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                country: country.name,
+                                                adminCountryCode: country.id,
+                                                state: "",
+                                                adminStateCode: 0,
+                                                city: "",
+                                            }));
+                                        }}
+                                        value={form.country}
+                                        placeHolder="Select Country"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
+                                    {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
+                                </div>
 
-								<div className='w-full mt-5'>
-									<StateSelect
-										countryid={form.adminCountryCode}
-										onChange={(state: any) =>
-											setForm((prev) => ({
-												...prev,
-												state: state.name,
-												adminStateCode: state.id,
-												city: "",
-											}))
-										}
-										value={form.state}
-										placeHolder="Select State"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
-									/>
-									{errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
-								</div>
+                                <div className='w-full mt-5'>
+                                    <StateSelect
+                                        countryid={form.adminCountryCode}
+                                        onChange={(state: any) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                state: state.name,
+                                                adminStateCode: state.id,
+                                                city: "",
+                                            }))
+                                        }
+                                        value={form.state}
+                                        placeHolder="Select State"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
+                                    {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
+                                </div>
 
-								<div className="w-full mt-5">
-									<CitySelect
-										countryid={form.adminCountryCode}
-										stateid={form.adminStateCode}
-										onChange={(city: any) =>
-											setForm((prev) => ({
-												...prev,
-												city: city.name,
-											}))
-										}
-										value={form.city}
-										placeHolder="Select City"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
-									/>
-									
-									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
-								</div>
+                                <div className="w-full mt-5">
+                                    <CitySelect
+                                        countryid={form.adminCountryCode}
+                                        stateid={form.adminStateCode}
+                                        onChange={(city: any) =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                city: city.name,
+                                            }))
+                                        }
+                                        value={form.city}
+                                        placeHolder="Select City"
+                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        containerClassName="w-full"
+                                    />
 
-								<div className="w-full mt-5">
-									<input
-										name="address"
-										value={form.address}
-										onChange={handleChange}
-										placeholder="Address"
-										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-									/>
-									{errors.address && (
-										<p className="text-red-500 text-xs">
-											{errors.address}
-										</p>
-									)}
-								</div>
+                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+                                </div>
+
+                                <div className="w-full mt-5">
+                                    <input
+                                        name="address"
+                                        value={form.address}
+                                        onChange={handleChange}
+                                        placeholder="Address"
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                    />
+                                    {errors.address && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.address}
+                                        </p>
+                                    )}
+                                </div>
 
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
@@ -257,18 +257,23 @@ export default function AdminSignUp() {
                         {/* Step 3 */}
                         {step === 3 && (
                             <>
-                                
+
                                 <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
-                                
+
                                 <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
+                                    <button type="button" onClick={back}
+										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+                                    >
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="rounded px-2 py-2 hover:cursor-pointer bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white">
+                                        className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-blue-600 text-white hover:bg-blue-700"
+                                            }`} >
                                         <Check size={14} className="inline mr-1" />
                                         {isSubmitting ? 'Submitting...' : 'Create Account'}
                                     </button>
@@ -276,21 +281,6 @@ export default function AdminSignUp() {
                             </>
                         )}
 
-                        {/* Step 4 */}
-                        {/* {step === 4 && (
-                            <>
-                                <div className='relative mt-5'>
-                                    <label>Image</label>
-                                    <ImageUploader
-                                        onChange={handleInputChange}
-                                        text="Upload Image"
-                                        id="image"
-                                        name="image"
-                                    />
-                                    {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
-                                </div>
-                            </>
-                        )} */}
                     </form>
                 </div>
             </div>

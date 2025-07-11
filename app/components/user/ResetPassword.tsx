@@ -62,7 +62,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, resetToken, setope
             toast.dismiss();
             if (error instanceof Error) {
                 toast.error(error?.message || 'Request failed');
-            }else{
+            } else {
                 toast.error('Request failed');
             }
         } finally {
@@ -121,7 +121,10 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, resetToken, setope
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-gray-300 text-gray-500 py-2 rounded-md hover:cursor-pointer hover:text-white hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)]"
+                            className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                                ? "bg-blue-500 text-white"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
+                                }`}
                         >
                             Reset Password
                         </button>

@@ -114,65 +114,15 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                             </div>
                         </div>
 
-                        {/* <div className='mt-5'>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                            />
-                            {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                        </div> */}
-
-                        {/* <div className='relative mt-5'>
-                            <label>Profile picture</label>
-                            <ImageUploader
-                                onChange={handleFileChange}
-                                text="Upload Profile Image"
-                                id="image"
-                                name="image"
-                            />
-                            {errors.image && <p className="text-red-500 text-xs">{errors.image}</p>}
-                        </div> */}
-                        {/* 
-                        <div className="relative">
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                name="password"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
-                            />
-                            <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </div>
-                            {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
-                        </div>
-
-                        <div className="relative">
-                            <input
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                name="confirmPassword"
-                                placeholder="Confirm Password"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 pr-10 outline-none"
-                            />
-                            <div className="absolute right-3 top-2.5 cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                            </div>
-                            {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-                        </div> */}
                         <CredentialDetails formData={formData} onChange={handleCredentialChange} errors={errors} />
 
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
-
+                            className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                                ? "bg-blue-500 text-white"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
+                                }`}
                         >
                             {isSubmitting ? 'Submitting...' : 'Create account'}
                         </button>

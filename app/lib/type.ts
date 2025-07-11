@@ -317,6 +317,9 @@ export type Me = {
   updatedAt: string;
   __v: number;
   kycReviewReason: string;
+  firstName: string;
+  businessFirstName: string;
+  fullName: string;
 };
 
 export type SurveyListResponse = {

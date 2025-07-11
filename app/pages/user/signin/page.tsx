@@ -136,17 +136,7 @@ export default function SignInPage() {
               Sign up
             </Link>
           </p>
-          {/* <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md text-gray-700 py-2 hover:cursor-pointer">
-            <FcGoogle className="text-md font-semibold" />
-            Continue with Google
-          </button>
-
-          <div className="flex items-center gap-2">
-            <hr className="flex-grow border-gray-300" />
-            <span className="text-sm text-gray-500">OR</span>
-            <hr className="flex-grow border-gray-300" />
-          </div> */}
-
+         
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
@@ -197,9 +187,9 @@ export default function SignInPage() {
 
             <button
               type="submit"
-              className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-400 bg-gray-200 ${isSubmitting
-                  ? "bg-gray-300"
-                  : "shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90"
+              className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                  ? "bg-blue-500 text-white"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
                 }`}
               disabled={isSubmitting}
             >

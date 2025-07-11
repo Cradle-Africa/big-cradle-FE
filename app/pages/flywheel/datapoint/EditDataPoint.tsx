@@ -134,9 +134,14 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
             >
 
                 {form.field.map((field, index) => (
-                    <div key={index} 
-                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5"
-                        >
+                    <div
+                        key={index}
+                        className="w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 mb-5 
+                        hover:border-0 hover:border-l-8 hover:border-blue-600 
+                        transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
+                        focus-within:border-blue-600 focus-within:border-l-8
+                        "
+                    >
                         <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
                             <input
                                 type="text"

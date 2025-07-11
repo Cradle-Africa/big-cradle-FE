@@ -275,7 +275,7 @@ export default function BusinessSignUp() {
 										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
 										containerClassName="w-full"
 									/>
-									
+
 									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
 								</div>
 
@@ -297,13 +297,13 @@ export default function BusinessSignUp() {
 
 								<div className="mt-5">
 									<SearchSelect
-                                            data={sectors}
-                                            value={form.sector}
-                                            onSelect={(value: any) => handleSelectChange('sector', value)}
-                                            placeholder="Search for a sector..."
-                                            name="sector"
-                                            className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
-                                        />
+										data={sectors}
+										value={form.sector}
+										onSelect={(value: any) => handleSelectChange('sector', value)}
+										placeholder="Search for a sector..."
+										name="sector"
+										className='w-full border border-gray-300 rounded-md px-3 py-2 outline-none'
+									/>
 									{errors.sector && <p className="text-red-500 text-xs">{errors.sector}</p>}
 								</div>
 
@@ -360,7 +360,7 @@ export default function BusinessSignUp() {
 									<button
 										type="button"
 										onClick={back}
-										className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
+										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
 									>
 										<ChevronLeft size={14} className="inline ml-1" />
 										Back
@@ -368,10 +368,13 @@ export default function BusinessSignUp() {
 									<button
 										type="submit"
 										disabled={isSubmitting}
-										className="rounded px-2 py-2 hover:cursor-pointer bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white"
+										className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+											? "bg-blue-500 text-white"
+											: "bg-blue-600 text-white hover:bg-blue-700"
+											}`}
 									>
 										<Check size={14} className="inline mr-1" />
-										{isSubmitting ? "Submitting..." : "Create Account"}
+										{isSubmitting ? "Submitting..." : "Create an Account"}
 									</button>
 								</div>
 							</>

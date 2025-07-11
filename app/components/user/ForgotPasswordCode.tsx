@@ -44,7 +44,7 @@ const ForgotPasswordCode: React.FC<ResetPasswordProps> = ({
 
                     <div className='flex justify-between gap-2'>
                         <button
-                            onClick={ () => setOpenResetCode(false)}
+                            onClick={() => setOpenResetCode(false)}
                             className="w-full mt-4 bg-gray-300 text-gray-500 hover:bg-red-700 hover:text-white hover:cursor-pointer py-2 rounded-md"
                         >
                             Cancel
@@ -52,7 +52,10 @@ const ForgotPasswordCode: React.FC<ResetPasswordProps> = ({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full mt-4 bg-gray-300 text-gray-500 py-2 hover:text-white hover:cursor-pointer hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)] rounded-md"
+                            className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                                ? "bg-blue-500 text-white"
+                                : "bg-blue-600 text-white hover:bg-blue-700"
+                                }`}
                         >
                             Verify Code
                         </button>

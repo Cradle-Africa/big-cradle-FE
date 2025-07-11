@@ -28,16 +28,16 @@ const ForgotPassword: React.FC<ResetPasswordProps> = ({
         toast.loading('Sending OTP...');
         try {
             await forgotPasswordService({ email: inputEmail });
-            setEmail(inputEmail); 
+            setEmail(inputEmail);
             toast.dismiss();
             toast.success('Password reset email sent successfully!');
             setOpenReset(false);
             setOpenResetCode(true);
         } catch (error: unknown) {
             toast.dismiss();
-            if(error instanceof Error){
+            if (error instanceof Error) {
                 toast.error(error?.message || 'Request Failed');
-            }else{
+            } else {
                 toast.error('Request Failed');
             }
         } finally {
@@ -66,7 +66,10 @@ const ForgotPassword: React.FC<ResetPasswordProps> = ({
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-gray-300 text-gray-500 py-2 rounded-md hover:cursor-pointer hover:text-white hover:bg-[linear-gradient(to_bottom_right,#5E8FF9,#074BDF)]"
+                        className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                            ? "bg-blue-500 text-white"
+                            : "bg-blue-600 text-white hover:bg-blue-700"
+                            }`}
                     >
                         Reset Password
                     </button>

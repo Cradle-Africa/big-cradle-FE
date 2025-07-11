@@ -322,14 +322,20 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                     {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
                                 </div>
                                 <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
+                                    <button type="button" onClick={back} 
+										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+                                    >
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="rounded px-2 py-2 hover:cursor-pointer bg-gradient-to-br from-[#578CFF] to-[#0546D2] text-white">
+                                        className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-blue-600 text-white hover:bg-blue-700"
+                                            }`}
+                                    >
                                         <Check size={14} className="inline mr-1" />
                                         {isSubmitting ? 'Submitting...' : 'Create Account'}
                                     </button>
