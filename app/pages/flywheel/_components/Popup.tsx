@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import Link from 'next/link'
-import { ArrowUpDown, Network } from "lucide-react";
+// import Link from 'next/link'
+// import { ArrowUpDown, Network } from "lucide-react";
 
 interface PopUpProps {
     openPopup: boolean;
