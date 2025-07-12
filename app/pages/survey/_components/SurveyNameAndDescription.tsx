@@ -1,8 +1,8 @@
+"use client";
+
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import { SurveySchema } from "@/app/lib/type";
-import { Button, IconButton } from "@radix-ui/themes";
-import { ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Button } from "@radix-ui/themes";
 import "react-country-state-city/dist/react-country-state-city.css";
 import {
   FieldErrors,
@@ -23,15 +23,18 @@ const SurveyNameAndDescription = ({
   onSubmit,
   register,
 }: Props) => {
-  const router = useRouter();
+  // const router = useRouter();
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="my-8 flex flex-col gap-4 max-w-3xl mx-auto"
     >
-      <IconButton type="button" onClick={() => router.back()}>
+      <p className="mt-5 mb-8">
+          Enter the name and description of your survey. This information will help participants understand the purpose and content of the survey.
+      </p>
+      {/* <IconButton type="button" onClick={() => router.back()}>
         <ArrowLeft />
-      </IconButton>
+      </IconButton> */}
       <div>
         <h6 className="mb-2">Name</h6>
         <input
@@ -52,7 +55,7 @@ const SurveyNameAndDescription = ({
       </div>
       <div>
         <Button mt="3">
-          <span className="px-4">Next</span>
+          <span className="px-4 ">Next</span>
         </Button>
       </div>
       {/* <button className="bg-blue-600 rounded-md py-2 px-8 mr-auto">

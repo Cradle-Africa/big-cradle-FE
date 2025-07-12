@@ -9,7 +9,7 @@ const AgeGroupSelect = ({ registration }: Props) => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>("");
 
   return (
-    <div className="mb-4">
+    <div className="mt-4 mb-4">
       <label htmlFor="age-group" className="block mb-2 font-medium">
         Select Age Group
       </label>
@@ -31,8 +31,8 @@ const AgeGroupSelect = ({ registration }: Props) => {
 };
 
 const ageGroups: AgeGroupOption[] = [
-  { value: "0-12 : Children", label: "0–12: Children" },
-  { value: "13-17: Teens / Adolescents", label: "13–17: Teens / Adolescents" },
+  // { value: "0-12 : Children", label: "0–12: Children" },
+  // { value: "13-17: Teens / Adolescents", label: "13–17: Teens / Adolescents" },
   { value: "18-24: Young Adults", label: "18–24: Young Adults" },
   {
     value: "25-34: Millennials / Early career",

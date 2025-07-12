@@ -1,3 +1,6 @@
+
+'use client';
+
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios from "@/app/lib/axios";
 import {
@@ -23,6 +26,7 @@ import {
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
 import Spinner from "@/app/components/Spinner";
+import { IconButton } from "@radix-ui/themes";
 
 type Props = {
   form: DataPointForm;
@@ -59,6 +63,7 @@ const SurveyPayementArea = ({
     resolver: zodResolver(surveyPaymentSchema),
   });
 
+  console.log('errors', errors);
   const user = getUser();
 
   let businessUserId: string | null = null;
@@ -131,8 +136,8 @@ const SurveyPayementArea = ({
             email: user?.email || "",
           },
           customizations: {
-            title: data.title,
-            description: data.description,
+            title: 'Survey Budget',  // data.title,
+            description: 'Budget allocation for the survey ' + surveyName,  // data.description,
           },
         });
       },
@@ -155,16 +160,12 @@ const SurveyPayementArea = ({
 
   return (
     <div className="max-w-3xl mx-auto my-8">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="text-red-600 border border-red-600 px-4 py-1 cursor-pointer rounded-lg hover:bg-blue-50 mb-8"
-      >
+      <IconButton type="button" onClick={() => router.back()}>
         <ArrowLeft />
-      </button>
-      <p className="text-3xl font-bold mb-1">Payment</p>
+      </IconButton>
+      <p className="text-3xl font-bold mt-8 mb-1">Payment</p>
       <p className="mb-8">
-        Fill the fields down and click on the proceed button to make payment
+        Please enter the amount you wish to allocate as your survey budget. Once you have specified your budget, you can proceed to make a secure payment to launch your survey.
       </p>
       <form
         onSubmit={handleSubmit(submitSurvey)}
@@ -196,18 +197,18 @@ const SurveyPayementArea = ({
             </select>
           </div> */}
         </div>
-        <input
+        {/* <input
           {...register("title")}
           placeholder="Title of the payment"
           className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none "
         />
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <textarea
-          {...register("email")}
+          {...register("description")}
           placeholder="Description of the payment"
           className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none "
         />
-        <ErrorMessage>{errors.email?.message}</ErrorMessage>
+        <ErrorMessage>{errors.description?.message}</ErrorMessage> */}
 
         <button
           disabled={isMakingPayment || isCreatingSurvey}

@@ -247,7 +247,7 @@ const SurveyPage = () => {
               className="flex bg-[#3352FF] rounded-md px-4 py-1 lg:py-2 cursor-pointer"
               //   onClick={() => setOpen(true)}
             >
-              <Link href="/pages/survey/new?survey=location-and-demographic">
+              <Link href="/pages/survey/new?survey=survey-name-and-description">
                 <div className="flex items-center gap-2">
                   <Plus size={18} color="white" />
                   <span className="text-white">Create new survey</span>

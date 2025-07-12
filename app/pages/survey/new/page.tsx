@@ -36,7 +36,15 @@ const NewSurveyPage = () => {
 
   const [form, setForm] = useState<DataPointForm>({
     dataPointId: "",
-    field: [],
+    field: [
+      {
+        label: "",
+        key: "",
+        type: "text",
+        required: false,
+        options: [],
+      }
+    ],
   });
 
   const {
@@ -93,14 +101,14 @@ const NewSurveyPage = () => {
     if (countriesAndCities.length < 1) {
       toast.error("Please select regions");
     } else {
-      router.push(`/pages/survey/new?survey=survey-name-and-description`);
+      router.push(`/pages/survey/new?survey=survey-questions`);
       console.log(JSON.stringify(countriesAndCities));
     }
   };
 
   const onSubmit = () => {
     // console.log(JSON.stringify(data));
-    router.push(`/pages/survey/new?survey=survey-questions`);
+    router.push(`/pages/survey/new?survey=location-and-demographic`);
   };
 
   // const { data : singleSurvey, isLoading: isLoadingSingleSurvey } = useFetchSingleSurvey({
@@ -111,26 +119,14 @@ const NewSurveyPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="lg:flex lg:gap-4 items-center justify-center">
-        <SurveyTabButton
-          // onClick={() =>
-          //   router.push(`/pages/survey/new?survey=survey-name-and-description`)
-          // }
-          isSelected={paramSurvey === "location-and-demographic"}
-        >
-          <div className="flex justify-center gap-1 lg:gap-4 items-center">
-            <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
-              <p>1</p>
-            </div>
-            <p>Location and demographic</p>
-          </div>
-        </SurveyTabButton>
+      <div className="lg:flex lg:gap-3 items-center justify-center">
+
         <SurveyTabButton
           isSelected={paramSurvey === "survey-name-and-description"}
         >
-          <div className="flex justify-center gap-1 lg:gap-4 items-center">
+          <div className="flex justify-center gap-1 lg:gap-2 items-center">
             <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
-              <p>2</p>
+              <p>1</p>
             </div>
             <p>Survey name and description</p>
           </div>
@@ -138,11 +134,26 @@ const NewSurveyPage = () => {
 
         <SurveyTabButton
           // onClick={() =>
+          //   router.push(`/pages/survey/new?survey=survey-name-and-description`)
+          // }
+          isSelected={paramSurvey === "location-and-demographic"}
+        >
+          <div className="flex justify-center gap-1 lg:gap-2 items-center">
+            <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
+              <p>2</p>
+            </div>
+            <p>Location and demographic</p>
+          </div>
+        </SurveyTabButton>
+
+
+        <SurveyTabButton
+          // onClick={() =>
           //   router.push(`/pages/survey/new?survey=survey-questions`)
           // }
           isSelected={paramSurvey === "survey-questions"}
         >
-          <div className="flex justify-center gap-1 lg:gap-4 items-center">
+          <div className="flex justify-center gap-1 lg:gap-2 items-center">
             <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
               <p>3</p>
             </div>
@@ -157,7 +168,7 @@ const NewSurveyPage = () => {
             // }
             isSelected={paramSurvey === "survey-payment"}
           >
-            <div className="flex justify-center gap-1 lg:gap-4 items-center">
+            <div className="flex justify-center gap-1 lg:gap-2 items-center">
               <div className="rounded-full border-2 border-green-600 h-[20px] w-[20px] flex items-center justify-center">
                 <p>4</p>
               </div>
@@ -280,7 +291,7 @@ const FormArea = ({
         countryAndCitiesList={countryAndCitiesList}
         onDeleteClick={onDeleteClick}
         onNextClicked={onNextClicked}
-        // setCountriesAndCities={setCountriesAndCities}
+      // setCountriesAndCities={setCountriesAndCities}
       />
     );
   } else if (survey === "survey-name-and-description") {

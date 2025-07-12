@@ -45,7 +45,7 @@ export const surveySchema = z.object({
 
 export const surveyPaymentSchema = z.object({
   amount: z.string(),
-  title: z.string(),
-  email: z.string(),
+  title: z.string().optional(),
+  email: z.string().optional(),
   description: z.string().optional(),
 });

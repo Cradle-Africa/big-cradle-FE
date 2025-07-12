@@ -1,7 +1,11 @@
+"use client";
+
+
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import { Country, CountryAndCity, DemographicSchema } from "@/app/lib/type";
-import { Button } from "@radix-ui/themes";
-import { Plus } from "lucide-react";
+import { Button, IconButton } from "@radix-ui/themes";
+import { ArrowLeft, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CountrySelect, StateSelect } from "react-country-state-city";
 import {
@@ -14,6 +18,7 @@ import {
 import AgeGroupSelect from "./AgeGroupSelect";
 import LocationAndDemographicTable from "./LocationAndDemographicTable";
 
+
 type Props = {
   register: UseFormRegister<DemographicSchema>;
   control: Control<DemographicSchema>;
@@ -22,7 +27,7 @@ type Props = {
   onSubmit: (data: DemographicSchema) => void;
   countryAndCitiesList: CountryAndCity[];
   onDeleteClick: (val: CountryAndCity) => void;
-  onNextClicked : () => void;
+  onNextClicked: () => void;
   // setCountriesAndCities: React.Dispatch<React.SetStateAction<CountryAndCity[]>>;
   // onAddCountryClicked : (val : CountryAndCity) => void;
 };
@@ -37,12 +42,20 @@ const LocationAndDemographic = ({
   onDeleteClick,
   onNextClicked,
 }: // setCountriesAndCities,
-Props) => {
+  Props) => {
+  const router = useRouter();  
   const [country, setCountry] = useState<Country | null>(null);
-
   return (
     <div className="my-8 flex flex-col gap-4 max-w-3xl mx-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
+
+        <IconButton type="button"  onClick={() => router.back()}>
+          <ArrowLeft />
+        </IconButton>
+
+        <p className="mt-5 mb-8">
+          Please enter the age demographic for your survey participants. This information will help ensure that your survey reaches the right audience.
+        </p>
         <AgeGroupSelect registration={register("ageDemographics")} />
         <ErrorMessage>{errors.ageDemographics?.message}</ErrorMessage>
         <Controller

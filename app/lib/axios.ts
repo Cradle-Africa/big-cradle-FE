@@ -88,16 +88,21 @@ apiClient_.interceptors.response.use(
         const refreshToken = getRefreshToken();
         const user = getUser();
         if (!refreshToken || !user?.email) throw new Error("Missing refresh token or email");
-
+        // Attempt to refresh the access token
         const refreshed = await refreshTokenService(user.email, refreshToken);
         const newAccessToken = refreshed.tokens.accessToken;
-
+        if (!newAccessToken) {
+          throw new Error("Failed to refresh access token");
+        }else{
+          console.log("Access token refreshed successfully");
+        }
         addToken(newAccessToken);
 
         // Retry original request with new access token
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
+        // console.error("Error refreshing access token:", refreshError);
         removeUser();
         return Promise.reject(refreshError);
       }
