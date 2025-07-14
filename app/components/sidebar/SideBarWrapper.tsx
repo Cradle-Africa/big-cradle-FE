@@ -11,7 +11,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
 
   return (
     <div
-      className={` ${open ? 'bg-white shadow-md' : '' } h-full rounded-md mt-[-10px] lg:mt-0 px-5 lg:pl-0 lg:w-64 flex flex-col pt-2 pb-10 lg:bg-[#002648] `}
+      className={` ${open ? 'bg-white shadow-md' : '' } h-full rounded-md mt-[-10px] lg:mt-0 px-5 lg:px-0 lg:w-64 flex flex-col pt-2 pb-10 lg:bg-[#002648] `}
     >
       {/* Mobile toggle - unchanged */}
       <div
@@ -58,7 +58,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
               className={` ${open ? "hidden" : "w-auto h-13"}`}
             />
           </Link>
-          <div className="h-[1px] bg-[#004484] my-4" />
+          <div className="h-[1px] w-full bg-[#004484] my-4" />
           {children}
         </div>
       </div>

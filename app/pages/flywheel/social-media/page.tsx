@@ -17,7 +17,7 @@ import Spinner from '@/app/components/Spinner';
 
 const SocialMediaPage = () => {
     const backParams: string = 'pipelines';
-    const socialMedias = ['Instagram', 'Facebook', 'TikTok', 'Snapchat', 'Linkedin'];
+    const socialMedias = ['Instagram', 'Facebook', 'TikTok', 'Snapchat', 'Linkedin', 'x', 'Youtube'];
     const [isDownloading, setIsDownloading] = useState(false);
 
     const {
@@ -106,7 +106,7 @@ const SocialMediaPage = () => {
     return (
         <DashboardLayout>
             <div className='flex justify-center md:px-5'>
-                <div className="w-full md:w-3/4 bg-gray-50 rounded-lg py-5">
+                <div className="w-full md:w-3/4 bg-gray-50 rounded-lg pt-5">
                     <div className='flex flex-nowrap justify-between px-5'>
                         <h2 className='text-xl'>Connect your social media Account to get insights</h2>
                         <Link
@@ -118,8 +118,9 @@ const SocialMediaPage = () => {
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className='relative mt-10'>
-                        <div className='md:flex justify-between gap-2 px-5 pb-5'>
+                        <div className='md:flex justify-between gap-4 px-5 pb-5'>
                             <div className="w-full md:w-1/2">
+                                <label> Select the plaform </label>
                                 <select
                                     {...register('platform')}
                                     className="w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
@@ -137,10 +138,11 @@ const SocialMediaPage = () => {
                             </div>
 
                             <div className="md:w-1/2 md:mt-0 mt-5">
+                                <label> Enter your social media link </label>
                                 <input
                                     {...register('link')}
                                     type="text"
-                                    placeholder="Enter the link"
+                                    placeholder="https://instagram.com/username"
                                     className="w-full bg-white border border-gray-300 rounded-md px-3 py-[6.1px] outline-none"
                                 />
                                 {errors.link && (
@@ -149,7 +151,7 @@ const SocialMediaPage = () => {
                             </div>
                         </div>
 
-                        <div className='w-full max-h-96 lg:max-h-90 rounded-lg overflow-y-auto scroll-smooth'>
+                        <div className='w-full max-h-96 lg:max-h-53 xl:max-h-55 2xl:max-h-90 rounded-lg overflow-y-auto scroll-smooth'>
                             {isError && (
                                 <div className="bg-gray-50 rounded-lg px-6 py-6 text-red-600 text-sm">{(error as any)?.message}</div>
                             )}
@@ -186,41 +188,44 @@ const SocialMediaPage = () => {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div className="flex space-x-3">
-                                        <button
-                                            type="button"
-                                            onClick={handleCopy}
-                                            className="px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
-                                        >
-                                            <Copy size={12} className="inline mr-1" /> Copy
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={handleDownload}
-                                            disabled={isDownloading}
-                                            className="border border-gray-400 text-gray-700 px-3 py-1 rounded-md hover:cursor-pointer"
-                                        >
-                                            {isDownloading ? (
-                                                <>
-                                                    <Spinner />
-                                                    Downloading...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Download size={12} className="inline mr-1" /> Download
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
                                 </div>
                             )}
                         </div>
 
+                        {/* Cpy and download. button  */}
+                        {data && (
+                            <div className="flex space-x-3 pt-5 px-5">
+                                <button
+                                    type="button"
+                                    onClick={handleCopy}
+                                    className="px-3 py-1 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
+                                >
+                                    <Copy size={12} className="inline mr-1" /> Copy
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleDownload}
+                                    disabled={isDownloading}
+                                    className="border border-gray-400 text-gray-700 px-3 py-1 rounded-md hover:cursor-pointer"
+                                >
+                                    {isDownloading ? (
+                                        <div className='text-gray-400'>
+                                            <Spinner />
+                                            Downloading...
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <Download size={12} className="inline mr-1" /> Download
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        )}
+
 
                         {data && (
                             <div className="relative mt-5">
-                                <div className="fixed w-[90%] md:w-[56%] bottom-5 bg-white z-50">
+                                <div className="fixed w-[90%] md:w-[54%] lg:w-[56%] xl:w-[54.5%] 2xl:w-[58.5%]  bottom-5 bg-white z-50">
                                     <div className='w-full relative'>
                                         <textarea
                                             {...register('prompt')}
@@ -247,7 +252,7 @@ const SocialMediaPage = () => {
 
                         {/* Default textarea if no data */}
                         {!data && (
-                            <div className='w-full mt-5 px-5'>
+                            <div className='w-full px-5'>
                                 <textarea
                                     {...register('prompt')}
                                     placeholder="Enter the analysis prompt"

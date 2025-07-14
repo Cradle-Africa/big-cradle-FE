@@ -162,7 +162,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                     </div>
                 )}
                 {pipelines && (
-                    <div className="w-13/14">
+                    <div className="w-full">
                         <select
                             value={form.dataPointId}
                             onChange={(e) =>
@@ -184,9 +184,9 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 )}
 
                 {form.field.map((field, index: any) => (
-                    <div key={index} className="flex justify-between gap-2">
-                        <div
-                            className={` ${index !== form.field.length - 1 ? "w-13/14" : "w-full"} py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
+                    <div>
+                        <div key={index}
+                            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
                             hover:border-0 hover:border-l-8 hover:border-blue-600 
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
                             focus-within:border-blue-600 focus-within:border-l-8
@@ -247,17 +247,15 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                             />
                         </div>
 
-                        <AddFieldButton
-                            index={index}
-                            totalFields={form.field.length}
-                            onAdd={addField}
-                        />
-
                     </div>
                 ))}
 
 
                 <div className="flex gap-3 mt-5">
+                    <AddFieldButton
+                        totalFields={form.field.length}
+                        onAdd={addField}
+                    />
                     <button
                         type="submit"
                         disabled={isPending}

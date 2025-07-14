@@ -165,39 +165,21 @@ const NewSurveyQuestionsForm = ({
   return (
     <form
       // onSubmit={handleSubmit}
-      className="w-full p-5 mt-8 bg-blue-50 rounded-md space-y-6 max-w-3xl mx-auto"
+      className="w-full p-5 mt-8 bg-blue-50 rounded-md space-y-6 "
     >
-      <IconButton type="button" onClick={() => router.back()}>
-        <ArrowLeft />
-      </IconButton>
-      <p className="mt-5 mb-8"> Please enter the questions you want to include in your survey. You can add multiple questions and specify the type of each question.</p>
-      {/* <div className="w-full">
-        <select
-          value={form.dataPointId}
-          onChange={(e) =>
-            setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
-          }
-          required
-          className="w-full border bg-white border-gray-300 rounded px-3 py-2 outline-blue-600"
-        >
-          <option value="">Select a pipeline</option>
-          {pipelines.map((dp: any) => (
-            <option key={dp.id} value={dp.id}>
-              {dp.dataPointName}
-            </option>
-          ))}
-        </select>
-      </div> */}
-
-      {form.field.map((field, index: any) => (
-        <div key={index} className="flex justify-between gap-2">
-          <div
-            className={` ${index !== form.field.length - 1 ? "w-13/14" : "w-full"} py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
-                        hover:border-0 hover:border-l-8 hover:border-blue-600 
-                        transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
-                        focus-within:border-blue-600 focus-within:border-l-8
-                        `}
-          >
+      <div className="max-w-3xl mx-auto">
+        <IconButton type="button" onClick={() => router.back()}>
+          <ArrowLeft />
+        </IconButton>
+        <p className="mt-5 mb-8"> Please enter the questions you want to include in your survey. You can add multiple questions and specify the type of each question.</p>
+        
+        {form.field.map((field, index: any) => (
+          <div key={index}
+            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
+                            hover:border-0 hover:border-l-8 hover:border-blue-600 
+                            transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
+                            focus-within:border-blue-600 focus-within:border-l-8 mb-5
+                    `}>
             <div className="w-full grid grid-cols-2 gap-2 mb-5">
               <input
                 type="text"
@@ -254,44 +236,42 @@ const NewSurveyQuestionsForm = ({
 
           </div>
 
+        ))
+        }
+
+        <div className="flex gap-3 mt-5">
           <AddFieldButton
-            index={index}
             totalFields={form.field.length}
             onAdd={addField}
           />
+
+          {user?.role === "super admin" ? (
+            <button
+              onClick={submitSurvey}
+              type="button"
+              //   disabled={isPending}
+              className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+            >
+              <Check size={16} className="mr-1" />
+              {isCreatingSurvey || isCreatingSurvey ? (
+                <>
+                  <span className="mr-2">Submitting...</span>
+                  <Spinner />
+                </>
+              ) : (
+                "Submit"
+              )}
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={onNextButtonClicked}
+              className="border border-green-600 rounded-md py-2 px-8 mr-auto hover:cursor-pointer"
+            >
+              <span className="text-green-600">Next</span>
+            </button>
+          )}
         </div>
-
-      ))
-      }
-
-      <div className="flex gap-3 mt-5">
-
-        {user?.role === "super admin" ? (
-          <button
-            onClick={submitSurvey}
-            type="button"
-            //   disabled={isPending}
-            className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
-          >
-            <Check size={16} className="mr-1" />
-            {isCreatingSurvey || isCreatingSurvey ? (
-              <>
-                <span className="mr-2">Submitting...</span>
-                <Spinner />
-              </>
-            ) : (
-              "Submit"
-            )}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={onNextButtonClicked}
-            className="border border-green-600 rounded-md py-2 px-8 mr-auto hover:cursor-pointer"
-          >
-            <span className="text-green-600">Next</span>
-          </button>
-        )}
       </div>
     </form >
   );

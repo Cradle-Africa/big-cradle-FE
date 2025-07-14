@@ -13,7 +13,7 @@ export const analyseSocialMediaApi = async (
         const statusCode = error?.response?.status;
         let message =
             error?.response?.data?.message || error?.message || "An unexpected error occurred";
-
+     
         switch (statusCode) {
             case 400:
                 if (Array.isArray(message)) {

@@ -110,7 +110,7 @@ const sideBarLinks: {
 }[] = [
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
   {
-    label: "Survey",
+    label: "Research and Survey",
     href: "/pages/survey?status=active&page=1",
     icon: <File size={15} />,
   },
