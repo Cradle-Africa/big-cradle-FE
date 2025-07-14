@@ -11,6 +11,7 @@ export interface User {
     lastName: string;
     email: string;
     role: string;
+    sector: string;
     createdAt: string;
     updatedAt: string;
     isVerified: boolean;

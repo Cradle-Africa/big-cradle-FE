@@ -2,12 +2,12 @@
 
 
 import ErrorMessage from "@/app/components/form/ErrorMessage";
-import { Country, CountryAndCity, DemographicSchema } from "@/app/lib/type";
+import { Country, CountryAndCity, DemographicSchema, State } from "@/app/lib/type";
 import { Button, IconButton } from "@radix-ui/themes";
 import { ArrowLeft, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CountrySelect, StateSelect } from "react-country-state-city";
+import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import {
   Control,
   Controller,
@@ -43,13 +43,15 @@ const LocationAndDemographic = ({
   onNextClicked,
 }: // setCountriesAndCities,
   Props) => {
-  const router = useRouter();  
+  const router = useRouter();
   const [country, setCountry] = useState<Country | null>(null);
+  const [state, setState] = useState<State | null>(null);
+
   return (
     <div className="my-8 flex flex-col gap-4 max-w-3xl mx-auto">
       <form onSubmit={handleSubmit(onSubmit)}>
 
-        <IconButton type="button"  onClick={() => router.back()}>
+        <IconButton type="button" onClick={() => router.back()}>
           <ArrowLeft />
         </IconButton>
 
@@ -68,15 +70,42 @@ const LocationAndDemographic = ({
                 className="mb-1"
                 inputClassName=""
                 onChange={(_country: any) => {
-                  console.log(_country);
+                  // console.log(_country);
                   field.onChange(_country.name);
                   setCountry(_country);
+                  setState(null);       
                 }}
                 onTextChange={(_txt) => console.log(_txt)}
-                value={"field.name"}
+                value={field.name}
                 placeHolder="Select Country"
               />
               <ErrorMessage>{errors.country?.message}</ErrorMessage>
+            </div>
+          )}
+        />
+
+
+        <Controller
+          control={control}
+          name="state"
+          render={({ field }) => (
+            <div>
+              <h6 className="mb-2 mt-4">State</h6>
+              <StateSelect
+                className="mb-1"
+                countryid={country?.id!}
+                containerClassName="form-group"
+                inputClassName=""
+                onChange={(_state: any) => {
+                  // console.log('State', _state);
+                  field.onChange(_state.name);
+                  setState(_state);
+                }}
+                onTextChange={(_txt) => console.log(_txt)}
+                placeHolder="Select State"
+                value={field.name}
+              />
+              <ErrorMessage>{errors.state?.message}</ErrorMessage>
             </div>
           )}
         />
@@ -86,26 +115,28 @@ const LocationAndDemographic = ({
           name="city"
           render={({ field }) => (
             <div>
-              <h6 className="mb-2 mt-4">State</h6>
-              <StateSelect
+              <h6 className="mb-2 mt-4">City</h6>
+              <CitySelect
                 className="mb-1"
                 countryid={country?.id!}
+                stateid={state?.id!}
                 containerClassName="form-group"
                 inputClassName=""
                 onChange={(_city: any) => {
-                  console.log(JSON.stringify(_city));
+                  // console.log('City:', _city);
                   field.onChange(_city.name);
-                  setCountry(_city);
                 }}
                 onTextChange={(_txt) => console.log(_txt)}
-                // defaultValue={currentState}
-                placeHolder="Select State"
-                value={field.name}
+                placeHolder="Select city"
+                value={field.value}
               />
               <ErrorMessage>{errors.city?.message}</ErrorMessage>
             </div>
           )}
         />
+
+
+
         <Button variant="outline" mt="4" mb="6">
           <Plus />
           <span>Add Country and City to the list</span>

@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 type SearchSelectProps = {
     data: string[];
     name: string;
-    value: string;
+    value?: string;
     placeholder?: string;
     onSelect: (value: string) => void;
     className?: string;

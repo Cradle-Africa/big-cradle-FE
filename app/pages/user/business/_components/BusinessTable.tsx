@@ -1,8 +1,9 @@
 import { Business } from "@/app/lib/type";
-import { MoreVertical, Trash } from "lucide-react";
+import { Eye, MoreVertical, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "@/app/lib/axios";
 import { useDeleteBusinesses } from "../_features/hook";
+import Link from "next/link";
 
 const BusinessTable = ({ data }: { data: Business[] }) => {
 	const menuRef = useRef<HTMLUListElement>(null);
@@ -102,6 +103,18 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 											ref={menuRef}
 											className="absolute right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100 z-50"
 										>
+
+											<li className="px-1">
+												<Link
+													href={`/pages/survey/list?status=active&page=1&business=${business.id}`}
+													className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
+												>
+													<div className="flex items-center gap-1">
+														<Eye size={13} />
+														View Business Surveys
+													</div>
+												</Link>
+											</li>
 											<li className="px-1">
 												<button
 													onClick={() => handleDelete(business.id)}
@@ -113,6 +126,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 													</div>
 												</button>
 											</li>
+
 											{/* <li className="px-1">
                       <button
                         onClick={() => handleResetPassword(business.id)}

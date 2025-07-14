@@ -44,7 +44,13 @@ const SurveyTable = ({ data }: Props) => {
         <thead className="bg-gray-50">
           <tr>
             <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-              Survey Same
+              Survey Name
+            </th>
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
+              Sector
+            </th>
+            <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
+              Goal
             </th>
             <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
               Survey Status
@@ -67,7 +73,13 @@ const SurveyTable = ({ data }: Props) => {
               <td className="px-3 lg:px-6 py-4 font-medium">
                 {survey.surveyName}
               </td>
-              <td className="px-3 lg:px-6 py-4">
+              <td className="px-3 lg:px-6 py-4 font-medium">
+                {survey.sector}
+              </td>
+              <td className="px-3 lg:px-6 py-4 font-medium">
+                {survey.surveyGoal}
+              </td>
+              <td className="px-3 lg:px-6">
                 {survey.isActive ? (
                   <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
                     Active
@@ -78,17 +90,18 @@ const SurveyTable = ({ data }: Props) => {
                   </span>
                 )}
               </td>
-              <td className="px-3 lg:px-6 py-4">
+              <td className="px-3 lg:px-6 w-44 text-center align-middle">
                 {survey.paymentStatus !== "not-paid" ? (
-                  <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
+                  <span className="inline-block px-4 py-1 text-xs font-medium text-green-700 rounded-full border border-green-700">
                     Paid
                   </span>
                 ) : (
-                  <span className="inline-block px-4 py-1 text-xs font-medium  text-red-700 rounded-full border-1">
+                  <span className="inline-block px-4 py-1 text-xs font-medium text-red-700 rounded-full border border-red-700">
                     Not Paid
                   </span>
                 )}
               </td>
+
               <td className="px-3 lg:px-6 py-4">
                 {formattedDate(survey.createdAt)}
               </td>

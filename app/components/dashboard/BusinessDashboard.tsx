@@ -1,11 +1,14 @@
 import axios from "@/app/lib/axios";
-import { DashboardMenu } from "@/app/lib/type";
+// import { DashboardMenu } from "@/app/lib/type";
 import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import { useFetchMe } from "@/app/shared/_features/hooks";
-import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
+import { Album, ArrowDownUp, Database } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
+import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
+import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
+import { getBusinessId } from "@/app/utils/user/userData";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -14,6 +17,29 @@ const BusinessDashboard = () => {
     useState(false);
 
   const { data: user, isLoading } = useFetchMe({ axios });
+
+  const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
+
+  const {
+    data: surveysAnalyticsResponse,
+    // isSuccess: analyticsSuccess,
+    isLoading: analyticsLoading,
+  } = useFetchSurveyAnalyctics({
+    axios,
+    businessUserId: getBusinessId() ?? "",
+  });
+
+  if (isLoadingDataOverview || analyticsLoading) return (
+    <div>
+      Loading...
+    </div>
+  )
+  if (isError || !dataOverview || !surveysAnalyticsResponse) return (
+    <div>
+      No  data overview
+    </div>
+  )
+
 
   return (
     <div>
@@ -43,41 +69,37 @@ const BusinessDashboard = () => {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
-        {data.map((menu, index) => (
-          <BusinessCard
-            key={index}
-            title={menu.title}
-            subTitle={menu.subTitle}
-            value={menu.value}
-            icon={<UsersRound />}
-            isHighLighted={index === 0}
-          />
-        ))}
+        {/* {data.map((menu, index) => ( */}
+        <BusinessCard
+          title={'Pipelines'}
+          subTitle={'Total Pipelines'}
+          value={dataOverview.totalDataPoints}
+          icon={<ArrowDownUp size={14} color="blue" />}
+          isHighLighted={true}
+        />
+
+        <BusinessCard
+          title={'Data Points'}
+          subTitle={'Total Data Points'}
+          value={dataOverview.totalFields}
+          icon={<Database size={14} color="blue" />}
+          isHighLighted={false}
+        />
+
+        <BusinessCard
+          title={'Surveys'}
+          subTitle={'Total Surveys'}
+          value={surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
+          icon={<Album size={14} color="blue" />}
+          isHighLighted={false}
+        />
+
+
+        {/* ))} */}
       </div>
       <DashboardCharts />
     </div>
   );
 };
-
-const data: DashboardMenu[] = [
-  {
-    title: "Pipelines",
-    subTitle: "Total pipelines",
-    value: "0",
-    icon: <ArrowDownUp />,
-  },
-  {
-    title: "Data points",
-    subTitle: "Total data points",
-    value: "0",
-    icon: <Database />,
-  },
-  {
-    title: "Surveys",
-    subTitle: "Total survey",
-    value: "0",
-    icon: <Scan />,
-  },
-];
 
 export default BusinessDashboard;

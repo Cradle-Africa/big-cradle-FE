@@ -3,35 +3,35 @@
 import Pagination from "@/app/components/Pagination";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
-import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
+import { DashboardMenu } from "@/app/lib/type";
+import SurveyStatus, { statuses } from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
+import api_icon from "@/public/icons/api_icon.png";
+import build_pipeline from "@/public/icons/build_pipeline.png";
 import { FolderOpenDot, Plus, ShieldBan, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import SurveyCard from "./_components/SurveyCard";
-import { statuses } from "./_components/SurveyStatus";
-import SurveyTable from "./_components/SurveyTable";
-import {
-  useFetchSuperAdminSurvey,
-  useFetchSurvey,
-  useFetchSurveyAnalyctics,
-  useVerifySurveyPayment,
-} from "./_features/hooks";
-import SurveyPageLoading from "./loading";
+import { useFetchSurvey, useFetchSurveyAnalyctics, useVerifySurveyPayment } from "../_features/hooks";
+import SurveyPageLoading from "../loading";
+import SurveyCard from "../_components/SurveyCard";
+import SurveyTable from "../_components/SurveyTable";
+
+// import SurveyPageLoading from "./loading";
 
 const SurveyPage = () => {
-  const searchParam = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [surveyDashBoardItems, setSurveyDashBoardItems] =
     useState<DashboardMenu[]>();
 
-  const surveyStatus = searchParam.get("status");
+  const surveyStatus = searchParams.get("status");
   const page = searchParams.get("page") ?? "";
-
+  const business = searchParams.get('business');
   const user = getUser();
 
   const changeStatus = (status: string) => {
@@ -51,21 +51,22 @@ const SurveyPage = () => {
     axios,
   });
 
-  const { data: surveysListResponse, isLoading } = useFetchSurvey({
+  const { data: surveysListResponse, } = useFetchSurvey({
     axios,
     page,
-    businessUserId: user?.role === "business" ? user?.id : null,
-    enabled: user?.role === "business",
+    businessUserId: user?.role === "business" ? user?.id : business,
+    // enabled: user?.role === "business",
+    enabled: true
   });
 
-  const {
-    data: superAdminSurveysListResponse,
-    isLoading: isLoadingSuperAdminSurveys,
-  } = useFetchSuperAdminSurvey({
-    axios,
-    page,
-    enabled: user?.role === "super admin",
-  });
+  // const {
+  //   data: superAdminSurveysListResponse,
+  //   isLoading: isLoadingSuperAdminSurveys,
+  // } = useFetchSuperAdminSurvey({
+  //   axios,
+  //   page,
+  //   enabled: user?.role === "super admin",
+  // });
 
   const {
     data: surveysAnalyticsResponse,
@@ -73,16 +74,16 @@ const SurveyPage = () => {
     isLoading: analyticsLoading,
   } = useFetchSurveyAnalyctics({
     axios,
-    businessUserId: user?.id ?? "",
+    businessUserId: user?.role === "business" ? user?.id : business ?? '',
   });
 
   const filteredSurveys = useMemo(() => {
-    let surveys: SurveyListItem[] = [];
-    if (user?.role === "business") {
-      surveys = surveysListResponse?.survey || [];
-    } else if (user?.role === "super admin") {
-      surveys = superAdminSurveysListResponse?.data || [];
-    }
+    // let surveys: SurveyListItem[] = [];
+    // if (user?.role === "business") {
+    const surveys = surveysListResponse?.survey || [];
+    // } else if (user?.role === "super admin") {
+    //   surveys = superAdminSurveysListResponse?.data || [];
+    // }
 
     if (!surveyStatus || surveyStatus === "all") return surveys;
     if (surveyStatus.toLowerCase() === "active") {
@@ -93,9 +94,20 @@ const SurveyPage = () => {
   }, [
     surveyStatus,
     surveysListResponse?.survey,
-    superAdminSurveysListResponse?.data,
-    user?.role,
+    // superAdminSurveysListResponse?.data,
+    // user?.role,
   ]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+
+    return () => document.removeEventListener("mousedown", handler);
+  }, [setOpen]);
 
   const verifyPayementFunc = useCallback(async () => {
     try {
@@ -128,6 +140,20 @@ const SurveyPage = () => {
     paymentMadeData?.paymentResult.data.status,
   ]);
 
+  // const paginationDataEntries = dataEntries?.pagination ?? {
+  //   page: 1,
+  //   limit: 10,
+  //   pages: 1,
+  //   total: 0,
+  // };
+
+  // const paginationDataPoints = dataPointsData?.pagination ?? {
+  //   page: 1,
+  //   limit: 10,
+  //   pages: 1,
+  //   total: 0,
+  // };
+
   useEffect(() => {
     if (analyticsSuccess && surveysAnalyticsResponse) {
       const dashBoardValue: DashboardMenu[] = [
@@ -159,12 +185,55 @@ const SurveyPage = () => {
     if (isError) toast.error(`An error occured when verifing your payment`);
   }, [isError, txRef, verifyPayementFunc]);
 
-  if (isLoading || isLoadingSuperAdminSurveys || analyticsLoading || isVerifing)
+  if (analyticsLoading || isVerifing)
     return <SurveyPageLoading />;
 
   return (
     <DashboardLayout>
-      
+      {open && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40" />
+          <div
+            className="text-center bg-white px-5 py-5 md:px-8 md:py-8 rounded-lg w-82 md:w-full max-w-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            ref={menuRef}
+          >
+            <h2 className="text-gray-800 text-lg font-normal">
+              How would you like to collect your data?
+            </h2>
+            <p className="mt-5 text-gray-700">
+              Choose an integration method or build your own feedback tool
+            </p>
+            <div className="flex justify-between gap-5 mt-10">
+              <div className="w-1/2 px-6 py-6 bg-[#FCEBFF] rounded-lg cursor-pointer">
+                <div className="flex justify-center">
+                  <Image alt="api icon" src={api_icon} width={40} height={40} />
+                </div>
+                <p className="mt-3 text-md text-gray-800">Connect via API</p>
+                <p className="text-sm mt-3">
+                  Integrate with your existing apps, websites, or CRM
+                </p>
+              </div>
+
+              <div className="w-1/2 px-6 py-6 bg-[#E6E9FF] rounded-lg cursor-pointer">
+                <div className="flex justify-center">
+                  <Image
+                    alt="build icon"
+                    src={build_pipeline}
+                    width={40}
+                    height={40}
+                  />
+                </div>
+                <p className="mt-3 text-md text-gray-800">
+                  Build Custom Pipeline
+                </p>
+                <p className="text-sm mt-3">
+                  Use our form builder to create your own survey
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
       <div className="w-full">
         <div className="flex justify-between">
           <p className="font-medium text-black">Surveys</p>
@@ -216,9 +285,9 @@ const SurveyPage = () => {
           pageSize={10}
           currentPage={parseInt(page)}
           itemCount={
-            (surveysListResponse?.pagination.total ||
-              superAdminSurveysListResponse?.pagination.total) ??
-            0
+            surveysListResponse?.pagination.total ?? 0 //||
+            //   superAdminSurveysListResponse?.pagination.total) ??
+            // 0
           }
           className="mt-4"
         />

@@ -4,6 +4,7 @@ import ErrorMessage from "@/app/components/form/ErrorMessage";
 import { SurveySchema } from "@/app/lib/type";
 import { Button } from "@radix-ui/themes";
 import "react-country-state-city/dist/react-country-state-city.css";
+
 import {
   FieldErrors,
   UseFormHandleSubmit,
@@ -21,16 +22,17 @@ const SurveyNameAndDescription = ({
   errors,
   handleSubmit,
   onSubmit,
-  register,
+  register
 }: Props) => {
   // const router = useRouter();
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="my-8 flex flex-col gap-4 max-w-3xl mx-auto"
     >
       <p className="mt-5 mb-8">
-          Enter the name and description of your survey. This information will help participants understand the purpose and content of the survey.
+        Enter the name and description of your survey. This information will help participants understand the purpose and content of the survey.
       </p>
       {/* <IconButton type="button" onClick={() => router.back()}>
         <ArrowLeft />
@@ -43,6 +45,15 @@ const SurveyNameAndDescription = ({
           className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
         />
         <ErrorMessage>{errors.surveyName?.message}</ErrorMessage>
+      </div>
+      <div>
+        <h6 className="mb-2">Survey Goal</h6>
+        <input
+          {...register("surveyGoal")}
+          placeholder="Survey Goal"
+          className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
+        />
+        <ErrorMessage>{errors.surveyGoal?.message}</ErrorMessage>
       </div>
       <div>
         <h6 className="mb-2">Description</h6>

@@ -291,11 +291,6 @@ export const createDataPoint = async (
                 }
                 break;
 
-            case 401:
-                removeUser();
-                message = "Unauthorized access. Please log in again.";
-                break;
-
             default:
                 message = typeof message === 'string' ? message : "An unexpected error occurred";
         }

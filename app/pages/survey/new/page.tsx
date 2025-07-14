@@ -68,8 +68,11 @@ const NewSurveyPage = () => {
   });
 
   const surveyName = watch("surveyName");
+  const sector = getUser()?.sector ?? '';
+  const surveyGoal = watch("surveyGoal");
   const surveyDescription = watch("surveyDescription");
   const country = watchDemographic("country");
+  const state = watchDemographic("state");
   const city = watchDemographic("city");
   const ageDemographics = watchDemographic("ageDemographics");
   const user = getUser();
@@ -81,7 +84,7 @@ const NewSurveyPage = () => {
     if (!valueExist) {
       setCountriesAndCities((prev: CountryAndCity[]) => [
         ...(prev ?? []),
-        { country: data.country, city: data.city },
+        { city: data.city, state: data.state, country: data.country },
       ]);
       toast.success("Country and region added successfully to the list");
     } else {
@@ -195,6 +198,8 @@ const NewSurveyPage = () => {
         register={register}
         surveyName={surveyName}
         surveyDescription={surveyDescription}
+        sector={sector}
+        surveyGoal={surveyGoal}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         onSubmitDemographic={onDemographicSubmit}
@@ -210,6 +215,7 @@ const NewSurveyPage = () => {
         onDeleteClick={onDeleteClick}
         onNextClicked={onNextClicked}
         countriesAndCities={countriesAndCities}
+        state={state}
       />
     </DashboardLayout>
   );
@@ -240,7 +246,10 @@ type FormAreaProps = {
   register: UseFormRegister<SurveySchema>;
   surveyName: string;
   surveyDescription: string;
+  sector: string;
+  surveyGoal: string;
   country: string;
+  state: string;
   city: string;
 
   //
@@ -262,6 +271,8 @@ const FormArea = ({
   handleSubmitDemographic,
   surveyName,
   surveyDescription,
+  sector,
+  surveyGoal,
   ageDemographics,
   handleSubmit,
   onSubmit,
@@ -282,6 +293,8 @@ const FormArea = ({
 }: FormAreaProps) => {
   if (survey === "location-and-demographic") {
     return (
+      <>
+      
       <LocationAndDemographic
         register={registerDemographic}
         handleSubmit={handleSubmitDemographic}
@@ -293,6 +306,9 @@ const FormArea = ({
         onNextClicked={onNextClicked}
       // setCountriesAndCities={setCountriesAndCities}
       />
+
+      </>
+      
     );
   } else if (survey === "survey-name-and-description") {
     return (
@@ -308,6 +324,8 @@ const FormArea = ({
       <NewSurveyQuestionsForm
         surveyName={surveyName}
         surveyDescription={surveyDescription}
+        sector={sector}
+        surveyGoal={surveyGoal}
         form={form}
         setForm={setForm}
         countriesAndCities={countriesAndCities}
@@ -319,6 +337,8 @@ const FormArea = ({
       <SurveyPayementArea
         surveyName={surveyName}
         surveyDescription={surveyDescription}
+        sector={sector}
+        surveyGoal={surveyGoal}
         form={form}
         setForm={setForm}
         countriesAndCities={countriesAndCities}

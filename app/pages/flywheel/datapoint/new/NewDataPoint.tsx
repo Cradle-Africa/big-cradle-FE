@@ -184,72 +184,68 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 )}
 
                 {form.field.map((field, index: any) => (
-                    <div>
-                        <div key={index}
-                            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
+                    <div key={index}
+                        className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
                             hover:border-0 hover:border-l-8 hover:border-blue-600 
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
                             focus-within:border-blue-600 focus-within:border-l-8
                     `}>
-                            <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Question"
-                                    value={field.label}
-                                    onChange={(e) =>
-                                        handleFieldChange(index, "label", e.target.value)
-                                    }
-                                    className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
-                                />
-
-                                <select
-                                    value={field.type}
-                                    onChange={(e) =>
-                                        handleFieldChange(index, "type", e.target.value as FieldType)
-                                    }
-                                    className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
-                                >
-                                    <option value="">Select the type of the answer</option>
-                                    <option value="text">Short text</option>
-                                    <option value="number">Number</option>
-                                    <option value="email">Email Address</option>
-                                    <option value="tel">Phone Number</option>
-                                    <option value="select">Select</option>
-                                    <option value="checkbox">Multiple Choices</option>
-                                    <option value="radio">Single Choice</option>
-                                    <option value="date">Date</option>
-                                    <option value="time">Time</option>
-                                    <option value="file">File Upload</option>
-                                    <option value="rating">Rating</option>
-                                    <option value="textarea">Paragraph</option>
-                                </select>
-
-                            </div>
-
-                            {/* Field Preview */}
-                            <FieldPreview field={field} />
-
-                            <SelectOptionManager
-                                index={index}
-                                newOptions={newOptions}
-                                setNewOptions={setNewOptions}
-                                formFields={form.field}
-                                setFormFields={setForm}
+                        <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
+                            <input
+                                type="text"
+                                required
+                                placeholder="Question"
+                                value={field.label}
+                                onChange={(e) =>
+                                    handleFieldChange(index, "label", e.target.value)
+                                }
+                                className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
                             />
 
-                            <FieldFooter
-                                index={index}
-                                fieldType={field.type}
-                                isRequired={field.required}
-                                onToggleRequired={(i, value) => handleFieldChange(i, "required", value)}
-                                onRemove={removeField}
-                            />
+                            <select
+                                value={field.type}
+                                onChange={(e) =>
+                                    handleFieldChange(index, "type", e.target.value as FieldType)
+                                }
+                                className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
+                            >
+                                <option value="">Select the type of the answer</option>
+                                <option value="text">Short text</option>
+                                <option value="number">Number</option>
+                                <option value="email">Email Address</option>
+                                <option value="tel">Phone Number</option>
+                                <option value="select">Select</option>
+                                <option value="checkbox">Multiple Choices</option>
+                                <option value="radio">Single Choice</option>
+                                <option value="date">Date</option>
+                                <option value="time">Time</option>
+                                {/* <option value="file">File Upload</option> */}
+                                <option value="rating">Rating</option>
+                                <option value="textarea">Paragraph</option>
+                            </select>
+
                         </div>
 
+                        {/* Field Preview */}
+                        <FieldPreview field={field} />
+
+                        <SelectOptionManager
+                            index={index}
+                            newOptions={newOptions}
+                            setNewOptions={setNewOptions}
+                            formFields={form.field}
+                            setFormFields={setForm}
+                        />
+
+                        <FieldFooter
+                            index={index}
+                            fieldType={field.type}
+                            isRequired={field.required}
+                            onToggleRequired={(i, value) => handleFieldChange(i, "required", value)}
+                            onRemove={removeField}
+                        />
                     </div>
                 ))}
-
 
                 <div className="flex gap-3 mt-5">
                     <AddFieldButton

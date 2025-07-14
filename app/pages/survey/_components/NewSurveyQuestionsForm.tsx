@@ -31,6 +31,8 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
   surveyDescription: string;
+  sector: string;
+  surveyGoal: string;
   locationAndDemographic: string;
   countriesAndCities: CountryAndCity[];
 };
@@ -40,6 +42,8 @@ const NewSurveyQuestionsForm = ({
   setForm,
   surveyName,
   surveyDescription,
+  sector,
+  surveyGoal,
   locationAndDemographic,
   countriesAndCities,
 }: Props) => {
@@ -67,19 +71,21 @@ const NewSurveyQuestionsForm = ({
     if (form.field.length < 1) {
       toast.error("Please add some questions before you can pass");
     } else {
-      const demographicsToPost: string[] = [];
+      const demographicsToPost = countriesAndCities.map((v) => ({
+        country: v.country,
+        state: v.state,
+        city: v.city,
+      }));
 
-      for (const v of countriesAndCities) {
-        demographicsToPost.push(`${v.country}, ${v.city}`);
-      }
-
-      console.log(JSON.stringify(demographicsToPost));
+      console.log('--', JSON.stringify(demographicsToPost));
       console.log(JSON.stringify(locationAndDemographic));
 
       const payload: Survey = {
         businessUserId,
         employeeUserId,
         surveyName: surveyName,
+        sector: sector,
+        surveyGoal: surveyGoal,
         surveyDescription: surveyDescription,
         amount: 0,
         field: form.field,
@@ -172,7 +178,7 @@ const NewSurveyQuestionsForm = ({
           <ArrowLeft />
         </IconButton>
         <p className="mt-5 mb-8"> Please enter the questions you want to include in your survey. You can add multiple questions and specify the type of each question.</p>
-        
+
         {form.field.map((field, index: any) => (
           <div key={index}
             className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
@@ -208,7 +214,7 @@ const NewSurveyQuestionsForm = ({
                 <option value="radio">Single Choice</option>
                 <option value="date">Date</option>
                 <option value="time">Time</option>
-                <option value="file">File Upload</option>
+                {/* <option value="file">File Upload</option> */}
                 <option value="rating">Rating</option>
                 <option value="textarea">Paragraph</option>
               </select>

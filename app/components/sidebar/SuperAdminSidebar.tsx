@@ -4,7 +4,7 @@ import {
   Building2,
   ChevronDown,
   ChevronUp,
-  File,
+  // File,
   House,
   UsersRound,
 } from "lucide-react";
@@ -109,9 +109,9 @@ const sideBarLinks: {
   icon: JSX.Element;
 }[] = [
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
-  {
-    label: "Research and Survey",
-    href: "/pages/survey?status=active&page=1",
-    icon: <File size={15} />,
-  },
+  // {
+  //   label: "Research and Survey",
+  //   href: "/pages/survey?status=active&page=1",
+  //   icon: <File size={15} />,
+  // },
 ];

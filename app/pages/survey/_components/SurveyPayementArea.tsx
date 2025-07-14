@@ -33,6 +33,8 @@ type Props = {
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
   surveyDescription: string;
+  sector: string;
+  surveyGoal: string;
   locationAndDemographic: string;
   countriesAndCities: CountryAndCity[];
   ageDemographics: string;
@@ -43,6 +45,8 @@ const SurveyPayementArea = ({
   setForm,
   surveyName,
   surveyDescription,
+  sector,
+  surveyGoal,
   locationAndDemographic,
   countriesAndCities,
 }: Props) => {
@@ -99,20 +103,22 @@ const SurveyPayementArea = ({
   };
 
   const submitSurvey = async (data: SurveyPaymentSchema) => {
-    const demographicsToPost: string[] = [];
+    const demographicsToPost = countriesAndCities.map((v) => ({
+      country: v.country,
+      state: v.state,
+      city: v.city,
+    }));
 
-    for (const v of countriesAndCities) {
-      demographicsToPost.push(`${v.country}, ${v.city}`);
-    }
-
-    console.log(JSON.stringify(demographicsToPost));
-    console.log(JSON.stringify(locationAndDemographic));
+    // console.log(JSON.stringify(JSON.stringify(demographicsToPost)));
+    // console.log(JSON.stringify(countriesAndCities));
 
     const payload: Survey = {
       businessUserId,
       employeeUserId,
       surveyName: surveyName,
       surveyDescription: surveyDescription,
+      sector: sector,
+      surveyGoal: surveyGoal,
       amount: parseInt(`${data.amount}`),
       field: form.field,
       surveyLocations: demographicsToPost,

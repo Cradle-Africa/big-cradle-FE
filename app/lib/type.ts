@@ -43,6 +43,13 @@ export type Country = {
   hasStates: boolean;
 };
 
+export type State = {
+  id: number;
+  name: string;
+  state_code: string;
+  hasCities: boolean;
+};
+
 export interface PaginationMeta {
   total: number;
   page: number;
@@ -58,7 +65,7 @@ export interface Pagination {
 }
 
 export type Department = {
-  id?: string;                                                        
+  id?: string;
   businessUserId: string | null;
   departmentName: string;
   departmentDescription: string;
@@ -83,7 +90,7 @@ export type ReviewAdminKyc = {
   adminUserId: string;
 };
 
-export type CountryAndCity = { country: string; city: string };
+export type CountryAndCity = { country: string; state: string; city: string };
 
 export type Business = {
   id: string;
@@ -171,7 +178,7 @@ export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
 //   | "number"
 //   | "date";
 
-  export type FieldType =
+export type FieldType =
   | "text"
   | "email"
   | "tel"
@@ -181,9 +188,9 @@ export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
   | "textarea"
   | "number"
   | "date"
-  | "file"       
-  | "time"       
-  | "rating";    
+  | "file"
+  | "time"
+  | "rating";
 
 
 export type Field = {
@@ -226,17 +233,25 @@ export interface DataPoint {
   dataPointName?: string;
 }
 
+
 export interface Survey {
   id?: string;
   businessUserId: string | null;
   employeeUserId: string | null;
   surveyName: string;
   surveyDescription: string;
-  surveyLocations: string[];
+  sector: string;
+  surveyGoal: string;
+  surveyLocations: {
+    country: string;
+    state: string;
+    city: string;
+  }[];
   ageDemographics: string;
   amount: number;
   field: Field[];
 }
+
 
 export type Pipeline = {
   id?: string;
@@ -354,6 +369,8 @@ export type SurveyListItem = {
   id: string;
   businessUserId: string;
   surveyName: string;
+  sector: string;
+  surveyGoal: string;
   amount: number;
   surveyDescription: string;
   field: Field[];

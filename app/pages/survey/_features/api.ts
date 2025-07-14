@@ -7,11 +7,13 @@ export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
     return res.data;
   } catch (error: any) {
     const statusCode = error?.response?.status;
-    let message = "";
+    let message = error?.response?.message || error?.response?.data?.message || error?.message || "An unexpected error occurred";
 
     switch (statusCode) {
       case 400:
-        message = "The Survey with this name already exist. Use another name";
+        if (Array.isArray(message)) {
+          message = message.join('\n');
+        }
         break;
 
       default:
@@ -33,7 +35,9 @@ export const updateSurvey = async (axios: AxiosInstance, data: Survey) => {
 
     switch (statusCode) {
       case 400:
-        message = "The Survey with this name already exist. Use another name";
+        if (Array.isArray(message)) {
+          message = message.join('\n');
+        }
         break;
 
       default:

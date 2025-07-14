@@ -29,6 +29,7 @@ const LocationAndDemographicTable = ({
           <Table.Row key={data.country + index} align="center">
             <Table.Cell>{index + 1}</Table.Cell>
             <Table.Cell>{data.country}</Table.Cell>
+            <Table.Cell>{data.state}</Table.Cell>
             <Table.Cell>{data.city}</Table.Cell>
             <Table.Cell>
               {
@@ -54,6 +55,7 @@ const demographicColumns: {
 }[] = [
   { label: "N" },
   { label: "Country" },
+  { label: "State"},
   { label: "City" },
   { label: "Action" },
 ];

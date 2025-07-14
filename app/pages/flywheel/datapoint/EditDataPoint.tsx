@@ -170,7 +170,7 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
                                 <option value="radio">Single Choice</option>
                                 <option value="date">Date</option>
                                 <option value="time">Time</option>
-                                <option value="file">File Upload</option>
+                                {/* <option value="file">File Upload</option> */}
                                 <option value="rating">Rating</option>
                                 <option value="textarea">Paragraph</option>
                             </select>

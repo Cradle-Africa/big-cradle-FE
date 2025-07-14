@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { Album } from "lucide-react";
 import { JSX } from "react";
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
   isHighLighted: boolean;
 };
 
-const BusinessCard = ({ title, value, subTitle, isHighLighted }: Props) => {
+const BusinessCard = ({ title, value, subTitle, icon, isHighLighted }: Props) => {
   return (
     <div
       className={classNames({
@@ -22,7 +21,7 @@ const BusinessCard = ({ title, value, subTitle, isHighLighted }: Props) => {
       <div className="flex justify-between items-center">
         <p>{title}</p>
         <div className="rounded-full border border-[#3352FF] bg-blue-100 p-1 lg:p-2">
-          <Album size={14} color="blue" />
+         { icon }
         </div>
       </div>
       <span
