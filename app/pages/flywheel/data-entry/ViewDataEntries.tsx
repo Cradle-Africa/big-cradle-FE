@@ -4,7 +4,7 @@ import axios from "@/app/lib/axios";
 import { useFetchDataPointOfDataEntries, useFetchSingleDataPoint } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
-import { ArrowLeft, FileStackIcon, Plus, Sparkles, X } from "lucide-react";
+import { ArrowLeft, FileStackIcon, Plus, Share2, Sparkles, X } from "lucide-react";
 import AnalyseData from "../_components/AnalyseData";
 import { useEffect, useState } from "react";
 import Pagination from "../_components/Pagination";
@@ -12,6 +12,7 @@ import NewDataEntry from "./new/NewDataEntry";
 import { useSearchParams } from "next/navigation";
 import { ExportToExcel } from "../_components/ExportToExcel";
 import Link from "next/link";
+import ShareDataPoint from "../datapoint/ShareDataPoint";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -29,6 +30,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const [openNewDataEntry, setOpenNewDataEntry] = useState(false);
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('');
     const [openOptionsEntry, setOpenOptionsEntry] = useState(false);
+    const [shareDataPoint, setShareDataPoint] = useState(false);
+    const [, setOpenIndex] = useState<number | null>(null);
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -62,6 +65,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const handleCloseNewDataEntry = () => {
         setOpenNewDataEntry(false);
     };
+
+    const handleShareDataPoint = (id: any) => {
+        setShareDataPoint(true)
+        setOpenIndex(null);
+        setUniqueDataPoint(id)
+    }
 
     const searchParams = useSearchParams();
     useEffect(() => {
@@ -121,14 +130,21 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 {'Pipeline name: ' + entries[0]?.dataPointName}
                             </h2>
 
-                            <div className="flex gap-2 flex-wrap">
-                                {/* <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Template"} /> */}
+                            <div className="">
                                 {datapoints && entries.length > 0 && (
-                                    <ExportToExcel
-                                        data={entries.map(e => e.data)}
-                                        datapoints={datapoints}
-                                        dataPointName={entries[0]?.dataPointName || "Export"}
-                                    />
+                                    <div className="flex gap-2 flex-wrap">
+                                        <button
+                                            onClick={() => handleShareDataPoint(fieldId)}
+                                            className="flex items-center cursor-pointer px-2 py-1 border border-blue-600 text-blue-600 rounded-md"
+                                        > <Share2 size={13} className="inline mr-1" /> Share Data point
+                                        </button>
+                                        <ExportToExcel
+                                            data={entries.map(e => e.data)}
+                                            datapoints={datapoints}
+                                            dataPointName={entries[0]?.dataPointName || "Export"}
+                                        />
+                                    </div>
+
                                 )}
 
                             </div>
@@ -139,28 +155,26 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-sm font-normal">#</th>
                                         {/** Get unique keys across all entries */}
+                                        <th className="px-6 py-3 text-left font-normal">Created at</th>
                                         {headers.map((key) => (
                                             <th key={key} className="px-6 py-2 text-left font-normal">
                                                 {toSentenceCase(key)}
                                             </th>
                                         ))}
-                                        <th className="px-6 py-3 text-left text-sm font-normal">Date</th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                                     {entries.map((entry, index) => (
                                         <tr key={index} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 text-left">{index + 1}</td>
+                                            <td className="px-6 py-4 text-left">
+                                                {formatDate(entry.createdAt ?? '')}
+                                            </td>
                                             {headers.map((key) => (
                                                 <td key={key} className="px-6 py-2 text-left">
                                                     {renderValue(entry.data?.[key] ?? '')}
                                                 </td>
                                             ))}
-                                            <td className="px-6 py-4 text-left">
-                                                {formatDate(entry.createdAt ?? '')}
-                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -204,6 +218,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 refetchEntries={refetch}
             />
 
+            <ShareDataPoint
+                shareDataPoint={shareDataPoint}
+                onClose={() => setShareDataPoint(false)}
+                uniqueId={uniqueDataPoint}
+            />
 
 
             {openOptionsEntry && (

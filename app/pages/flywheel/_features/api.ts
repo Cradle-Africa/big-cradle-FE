@@ -543,3 +543,30 @@ export const deleteDataPoint = async (axios: AxiosInstance, id: string) => {
     throw new Error(message);
   }
 };
+
+
+export const deletePipeline = async (axios: AxiosInstance, id: string) => {
+  try {
+    const response = await axios.delete(`/data-point-mgt/data-point/${id}`);
+    return response.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.message;
+
+    switch (statusCode) {
+      case 400:
+        message = error?.response?.data?.message || 'Invalid request';
+        break;
+      case 401:
+        message = 'Unauthorized';
+        break;
+      case 404:
+        message = 'Data pipeline not found';
+        break;
+      default:
+        message = 'An unexpected error occurred';
+    }
+
+    throw new Error(message);
+  }
+};

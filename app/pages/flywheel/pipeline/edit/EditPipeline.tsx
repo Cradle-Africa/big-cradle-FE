@@ -8,9 +8,9 @@ import { Pencil } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { useUpdatePipeline } from '../_features/hook';
+import { useUpdatePipeline } from '../../_features/hook';
 import { getBusinessId } from '@/app/utils/user/userData';
-import { useFetchDepartments } from '../../user/department/_features/hook';
+import { useFetchDepartments } from '../../../user/department/_features/hook';
 
 interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;

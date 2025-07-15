@@ -7,7 +7,7 @@ import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/
 import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import FieldPreview from "../../_components/FieldPreview";
@@ -93,7 +93,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
         setNewOptions((prev) => [...prev, ""]);
     };
 
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -108,11 +108,11 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
 
         mutate(payload, {
             onSuccess: () => {
-                if (form.dataPointId) {
-                    queryClient.invalidateQueries({ queryKey: ["data-points"] });
-                } else {
-                    route.push(`/pages/flywheel?tab=${backParams}`);
-                }
+                // if (form.dataPointId) {
+                //     queryClient.invalidateQueries({ queryKey: ["data-points"] });
+                // } else {
+                route.push(`/pages/flywheel?tab=${backParams}`);
+                // }
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");
@@ -151,7 +151,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                 className="w-full lg:w-3/4 rounded-md space-y-6 mt-10"
             >
                 {pipelineName && (
-                    <div className="lg:w-13/14 mt-5 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
+                    <div className="w-full mt-5 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
                     >
                         <div className="p-4">
                             <h2 className="text-lg">{pipelineName} </h2>

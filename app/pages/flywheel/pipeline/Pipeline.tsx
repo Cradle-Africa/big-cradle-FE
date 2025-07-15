@@ -2,13 +2,17 @@ import axios from "@/app/lib/axios";
 import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Calendar, Eye, Funnel, LetterText, MoreVertical, Pencil, Plus, Share2 } from "lucide-react";
+import { Calendar, Eye, Funnel, MoreVertical, Pencil, Plus, Share2, Trash } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFetchDepartments } from "../../user/department/_features/hook";
 import Pagination from "../_components/Pagination";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
-import EditPipeline from "./EditPipeline";
+import EditPipeline from "./edit/EditPipeline";
+import radialIcon from '@/public/radial.png'
+// import 	{ RiLoader3Line } from 'react-icons/ri'
+import Image from "next/image";
+import DeletePipeline from "./DeletePipeline";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -37,6 +41,8 @@ const PipelinePage = ({
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+
     const [selectedPipeline, setSelectedPipeline] = useState<Pipeline | null>(null);
     const [uniqueId, setUniqueId] = useState<string>('');
 
@@ -110,18 +116,32 @@ const PipelinePage = ({
                 <div className="grid grid-cols-1 md:grid md:grid-cols-2  2xl:grid 2xl:grid-cols-3 w-full gap-5 mt-5">
                     {
                         pipelineData.map((pipeline, index) =>
-                            <div key={index} className="border bg-white border-gray-200 rounded-lg px-6 py-6 hover:border hover:border-blue-300">
+                            <div key={index}
+                                className="group border bg-white border-gray-200 rounded-lg px-6 py-6
+                                hover:bg-blue-600 hover:text-white
+                                transition-all ease-in-out duration-900
+                                "
+                            >
                                 <div className="flex flex-nowrap items-center justify-between">
-                                    <div className="flex flex-nowrap items-center">
-                                        <LetterText size={16} className="text-[#0C0C0C]" />
-                                        <h2 className="ml-2 text-[18px] text-[#0C0C0C]">
+                                    <Link
+                                        href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
+                                        className="inline-block items-center">
+
+                                        <Image
+                                            src={radialIcon}
+                                            width={15}
+                                            height={8}
+                                            alt={'Big cradle logo'}
+                                            className="inline text-inherit"
+                                        />
+                                        <h2 className="inline ml-2 text-[18px] text-[#0C0C0C] group-hover:text-white">
                                             {pipeline.dataPointName}
                                         </h2>
-                                    </div>
+                                    </Link>
 
                                     <div className="whitespace-nowrap relative">
                                         <button
-                                            className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
+                                            className="bg-inherit rounded-lg px-2 py-1 cursor-pointer hover:text-blue-600 hover:bg-white"
                                             onClick={() => setOpenIndex(openIndex === index ? null : index)}
                                         >
                                             <MoreVertical size={18} />
@@ -131,12 +151,11 @@ const PipelinePage = ({
                                                 ref={(el) => {
                                                     menuRefs.current[index] = el;
                                                 }}
-
                                                 onClick={(e) => e.stopPropagation()}
                                                 onMouseLeave={() => setOpenIndex(null)}
-                                                className="absolute z-60 right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100"
+                                                className="absolute z-60 right-10 py-1 w-auto bg-white rounded-md shadow-md border border-gray-100"
                                             >
-                                                <li className="px-2 py-2">
+                                                <li className="px-2 py-1">
                                                     <button
                                                         onClick={() => {
                                                             setUniqueId(pipeline?.id ?? '')
@@ -147,7 +166,23 @@ const PipelinePage = ({
                                                     >
                                                         <div className="flex items-center gap-1">
                                                             <Pencil size={13} />
-                                                            Edit
+                                                            Edit Pipeline
+                                                        </div>
+                                                    </button>
+                                                </li>
+
+                                                <li className="px-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setUniqueId(pipeline?.id ?? '')
+                                                            setSelectedPipeline(pipeline);
+                                                            setDeleteOpen(true);
+                                                        }}
+                                                        className="flex w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-200 hover:cursor-pointer"
+                                                    >
+                                                        <div className="flex items-center gap-1">
+                                                            <Trash size={13} />
+                                                            Delete Pipeline
                                                         </div>
                                                     </button>
                                                 </li>
@@ -155,37 +190,51 @@ const PipelinePage = ({
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-[#494949] text-[14px] mt-5">
-                                    {pipeline.dataPointDescription}
-                                </p>
-                                <div className="flex w-full justify-between mt-10 pb-3">
-                                    <div className="flex items-center ">
-                                        <Calendar size={12} />
-                                        <h6 className="ml-1 text-[#494949] text-[12px]">{formatDate(pipeline?.createdAt ?? '')}</h6>
-                                    </div>
 
-                                    <div className="flex justify-end gap-2">
-                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} hover:bg-blue-600 hover:text-white bg-gray-100 rounded-md px-2 py-1 cursor-pointer`}>
+                                <Link
+                                    href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
+                                    className="flex text-[#494949] text-[14px] mt-5 group-hover:text-white">
+                                    {pipeline.dataPointDescription}
+                                </Link>
+
+                                <Link
+                                    href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
+                                    className="flex justify-end mt-5 items-center ">
+                                    <Calendar size={12} />
+                                    <h6 className="ml-1 text-[#494949] text-[12px] group-hover:text-white">
+                                        {formatDate(pipeline?.createdAt ?? '')}
+                                    </h6>
+                                </Link>
+
+                                <div className="flex w-full justify-end border-t border-gray-100 mt-5">
+                                    <div className="flex items-center justify-end gap-2 mt-3">
+                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex bg-white text-blue-600 hover:text-blue-600 hover:bg-white rounded-md px-2 py-[10px] cursor-pointer`}>
                                             <Share2
-                                                size={14}
+                                                size={15}
                                                 onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
                                                 className=""
                                             />
                                         </div>
                                         <Link
                                             href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
-                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white`}
+                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
                                         >
                                             <Eye size={15} className="mr-1 inline" /> View Entries
                                         </Link>
 
                                         <Link
+                                            href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
+                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
+                                        >
+                                            <Pencil size={15} className="mr-1 inline" /> Edit data point
+                                        </Link>
+
+                                        <Link
                                             href={`/pages/flywheel/datapoint/new/${pipeline?.id}`}
-                                            className={` ${pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer bg-gray-100 rounded-md px-3 py-1 hover:bg-blue-600 hover:text-white`}
+                                            className={` ${pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
                                         >
                                             <Plus size={15} className="mr-1 inline" /> Create a data point
                                         </Link>
-
                                     </div>
                                 </div>
                             </div>
@@ -217,11 +266,19 @@ const PipelinePage = ({
                 uniqueId={uniqueDataPoint}
             />
 
+
             {
                 editOpen && selectedPipeline && (
                     <EditPipeline uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setEditOpen} />
                 )
             }
+
+            {
+                deleteOpen && selectedPipeline && (
+                    <DeletePipeline uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setDeleteOpen} />
+                )
+            }
+
         </div>
 
 

@@ -315,8 +315,8 @@ const NewDataEntry: React.FC<PopUpProps> = ({
                                 type="button"
                                 onClick={() => handleChange(field.key, star)}
                                 className={`text-2xl ${star <= (formData[field.key] || 0)
-                                        ? "text-yellow-400"
-                                        : "text-gray-300"
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
                                     }`}
                             >
                                 ★
@@ -354,16 +354,18 @@ const NewDataEntry: React.FC<PopUpProps> = ({
             employeeUserId: datapoints.employeeUserId ?? null,
             dataPointId: datapoints.dataPointId,
             fieldId: uniqueId,
-            data: cleanedData, // data fields objects
+            data: cleanedData, 
         };
+
+        console.log('DATA: ', payload);
 
         submitEntry(payload, {
             onSuccess: () => {
-                setFormData({ data: {} })
+                setFormData({}); 
                 queryClient.invalidateQueries({ queryKey: ['data-entries'] });
                 toast.success("Entry submitted successfully!");
                 onClose(); // close the modal
-                refetchEntries()
+                refetchEntries();
             },
             onError: (err: any) => {
                 console.log(err);
@@ -371,6 +373,7 @@ const NewDataEntry: React.FC<PopUpProps> = ({
             },
         });
     };
+
 
     if (!openNewDataEntry) return (null)
     return (

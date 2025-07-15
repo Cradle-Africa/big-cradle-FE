@@ -246,6 +246,10 @@ export interface Survey {
     country: string;
     state: string;
     city: string;
+    location: {
+        type: string,
+        coordinates: []
+      }
   }[];
   ageDemographics: string;
   amount: number;

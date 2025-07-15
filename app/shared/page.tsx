@@ -177,7 +177,7 @@ const DataEntryPage = () => {
 
         submitEntry(payload, {
             onSuccess: () => {
-                setFormData({ data: {} })
+                setFormData({})
                 toast.success("Entry submitted successfully!");
             },
             onError: (err: any) => {
@@ -186,6 +186,7 @@ const DataEntryPage = () => {
             },
         });
     };
+
 
     const dataBackground = '/images/data-background.jpg';
 

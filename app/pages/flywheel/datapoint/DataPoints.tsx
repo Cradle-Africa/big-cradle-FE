@@ -2,11 +2,11 @@
 
 import { DataPoint, PaginationMeta } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, List, MoreVertical, Pencil, Plus, Share2, Database, Trash2 } from "lucide-react";
+import { Eye, List, MoreVertical, Pencil, Share2, Database, Trash2 } from "lucide-react";
 import Pagination from "../_components/Pagination";
 import { useEffect, useRef, useState } from "react";
 import ViewDataPoint from "./ViewDataPoint";
-import EditDataPoint from "./EditDataPoint";
+// import EditDataPoint from "./EditDataPoint";
 import ShareDataPoint from "./ShareDataPoint";
 // import ViewDataEntries from "../data-entry/ViewDataEntries";
 import Link from "next/link";
@@ -26,11 +26,11 @@ const DataPoints = ({
     pagination,
     onPageChange,
     onLimitChange,
-    setCreatingDataPoint
+    // setCreatingDataPoint
 }: DataPointsProps) => {
 
     const [openViewDataPoint, setOpenViewDataPoit] = useState(false);
-    const [editingDataPoint, setEditingDataPoint] = useState(false);
+    // const [editingDataPoint, setEditingDataPoint] = useState(false);
     const [shareDataPoint, setShareDataPoint] = useState(false);
     const [deletingDataPoint, setDeletingDataPoint] = useState(false);
     const [viewDataEntries, setViewDataEntries] = useState(false);
@@ -40,7 +40,7 @@ const DataPoints = ({
     const optionRef = useRef<HTMLUListElement | null>(null);
 
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
-    const [pipelineName, setPipelineName] = useState<string>('');
+    // const [pipelineName, setPipelineName] = useState<string>('');
     const [dataPointName, setDataPointName] = useState<string>('');
 
     const handleViewDataPoint = (id: any) => {
@@ -49,12 +49,7 @@ const DataPoints = ({
         setUniqueDataPoint(id)
     }
 
-    const handleEditDataPoint = (id: any, pipelineName: any) => {
-        setEditingDataPoint(true)
-        setOpenIndex(null);
-        setUniqueDataPoint(id);
-        setPipelineName(pipelineName);
-    }
+    
 
     const handleShareDataPoint = (id: any) => {
         setShareDataPoint(true)
@@ -106,12 +101,7 @@ const DataPoints = ({
                 uniqueId={uniqueDataPoint}
             />
 
-            <EditDataPoint
-                editingDataPoint={editingDataPoint}
-                uniqueId={uniqueDataPoint}
-                pipelineName={pipelineName}
-                setEditingDataPoint={setEditingDataPoint}
-            />
+          
 
             <DeleteDataPoint
                 deletingDataPoint={deletingDataPoint}
@@ -133,19 +123,11 @@ const DataPoints = ({
                 </div>
             )}
 
-            {!editingDataPoint && !viewDataEntries && (
+            { !viewDataEntries && (
                 <>
                     <div className="flex justify-between w-full">
                         <h2 className="text-lg text-black">Data points</h2>
-                        <div>
-                            <button
-                                className="flex justify-center items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
-                                onClick={() => setCreatingDataPoint(true)}
-                            >
-                                <Plus size={18} color="white" className="mr-1" />
-                                New Data Point
-                            </button>
-                        </div>
+                        
 
                     </div>
                     <div className="overflow-x-auto pb-14 rounded-[8px] border border-gray-200 mt-5">
@@ -188,7 +170,7 @@ const DataPoints = ({
                                                     ref={menuRef}
                                                     className="absolute z-60 right-10 py-1 mt-2 w-auto bg-white rounded-md shadow-md border border-gray-100"
                                                 >
-                                                    
+
                                                     <li className="px-2 w-full">
                                                         <button
                                                             onClick={() => handleViewDataPoint(dataPoints?.id)}
@@ -206,12 +188,13 @@ const DataPoints = ({
                                                         </Link>
                                                     </li>
                                                     <li className="px-2 w-full">
-                                                        <button
-                                                            onClick={() => handleEditDataPoint(dataPoints?.id, dataPoints?.dataPointName)}
+                                                        <Link
+                                                            href={`/pages/flywheel/datapoint/edit/${dataPoints?.id}/${dataPoints?.dataPointName}`}
                                                             className="w-full flex items-center cursor-pointer px-2 py-2 hover:bg-blue-200 hover:text-blue-600 rounded-md"
                                                         >
                                                             <Pencil size={13} className="inline mr-1" /> Edit
-                                                        </button>
+                                                        </Link>
+
                                                     </li>
                                                     <li className="px-2 w-full">
                                                         <button
@@ -220,7 +203,7 @@ const DataPoints = ({
                                                         > <Share2 size={13} className="inline mr-1" /> Share Data point
                                                         </button>
                                                     </li>
-                                                    
+
                                                     <li className="px-2 w-full">
                                                         <button
                                                             onClick={() => handleDeleteDataPoint(dataPoints?.id, dataPoints?.dataPointName)}

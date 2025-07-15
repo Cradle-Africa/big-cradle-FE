@@ -2,7 +2,7 @@ import { DataEntry, DataFlyOverview, DataPoint, PaginationMeta, Pipeline } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UseQueryResult } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { analyseData, createBulkDataEntry, createDataEntry, createDataPoint, createPipeline, deleteDataPoint, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline, updatePipeline } from "./api";
+import { analyseData, createBulkDataEntry, createDataEntry, createDataPoint, createPipeline, deleteDataPoint, deletePipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline, updatePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -235,5 +235,13 @@ export const useUpdatePipeline = ({ axios }: { axios: AxiosInstance }) => {
 export const useDeleteDataPoint = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<void, Error, { id: string }>({
     mutationFn: ({ id }) => deleteDataPoint(axios, id),
+  });
+};
+
+
+
+export const useDeletePipeline = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: ({ id }) => deletePipeline(axios, id),
   });
 };
