@@ -90,7 +90,11 @@ export type ReviewAdminKyc = {
   adminUserId: string;
 };
 
-export type CountryAndCity = { country: string; state: string; city: string };
+export type CountryAndCity = { 
+  country: string; 
+  state: string; 
+  city: string, 
+};
 
 export type Business = {
   id: string;
@@ -242,14 +246,12 @@ export interface Survey {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  startDate: string;
+  endDate: string;
   surveyLocations: {
     country: string;
     state: string;
     city: string;
-    location: {
-        type: string,
-        coordinates: []
-      }
   }[];
   ageDemographics: string;
   amount: number;
@@ -375,6 +377,8 @@ export type SurveyListItem = {
   surveyName: string;
   sector: string;
   surveyGoal: string;
+  startDate: string;
+  endDate: string;
   amount: number;
   surveyDescription: string;
   field: Field[];

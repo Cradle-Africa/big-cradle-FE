@@ -2,7 +2,7 @@
 export const formatDate = (isoDate: string): string => {
     try {
         const date = new Date(isoDate);
-        if (isNaN(date.getTime())) return "Invalid date";
+        if (isNaN(date.getTime())) return "-";
 
         const day = date.getDate();
         const month = String(date.getMonth() + 1).padStart(2, "0"); // ensure leading zero
@@ -15,6 +15,6 @@ export const formatDate = (isoDate: string): string => {
 
         return `${day}-${month}-${year} at ${hours}:${minutes} ${ampm}`;
     } catch {
-        return "Invalid date";
+        return "-";
     }
 };

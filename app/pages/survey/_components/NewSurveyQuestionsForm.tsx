@@ -33,6 +33,8 @@ type Props = {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  startDate: string,
+  endDate: string,
   locationAndDemographic: string;
   countriesAndCities: CountryAndCity[];
 };
@@ -44,6 +46,8 @@ const NewSurveyQuestionsForm = ({
   surveyDescription,
   sector,
   surveyGoal,
+  startDate,
+  endDate,
   locationAndDemographic,
   countriesAndCities,
 }: Props) => {
@@ -86,6 +90,8 @@ const NewSurveyQuestionsForm = ({
         surveyName: surveyName,
         sector: sector,
         surveyGoal: surveyGoal,
+        startDate: startDate,
+        endDate: endDate,
         surveyDescription: surveyDescription,
         amount: 0,
         field: form.field,

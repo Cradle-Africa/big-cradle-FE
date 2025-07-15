@@ -74,6 +74,8 @@ const NewSurveyPage = () => {
   const country = watchDemographic("country");
   const state = watchDemographic("state");
   const city = watchDemographic("city");
+  const startDate = watch('startDate');
+  const endDate = watch('endDate');
   const ageDemographics = watchDemographic("ageDemographics");
   const user = getUser();
 
@@ -200,6 +202,8 @@ const NewSurveyPage = () => {
         surveyDescription={surveyDescription}
         sector={sector}
         surveyGoal={surveyGoal}
+        startDate={startDate}
+        endDate={endDate}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         onSubmitDemographic={onDemographicSubmit}
@@ -248,6 +252,8 @@ type FormAreaProps = {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  startDate: string;
+  endDate: string;
   country: string;
   state: string;
   city: string;
@@ -273,6 +279,8 @@ const FormArea = ({
   surveyDescription,
   sector,
   surveyGoal,
+  startDate,
+  endDate,
   ageDemographics,
   handleSubmit,
   onSubmit,
@@ -326,6 +334,8 @@ const FormArea = ({
         surveyDescription={surveyDescription}
         sector={sector}
         surveyGoal={surveyGoal}
+        startDate={startDate}
+        endDate={endDate}
         form={form}
         setForm={setForm}
         countriesAndCities={countriesAndCities}
@@ -341,6 +351,8 @@ const FormArea = ({
         surveyGoal={surveyGoal}
         form={form}
         setForm={setForm}
+        startDate={startDate}
+        endDate={endDate}
         countriesAndCities={countriesAndCities}
         locationAndDemographic={ageDemographics}
         ageDemographics={ageDemographics}

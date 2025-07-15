@@ -35,6 +35,8 @@ type Props = {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  startDate: string;
+  endDate: string;
   locationAndDemographic: string;
   countriesAndCities: CountryAndCity[];
   ageDemographics: string;
@@ -46,6 +48,8 @@ const SurveyPayementArea = ({
   surveyName,
   surveyDescription,
   sector,
+  startDate,
+  endDate,
   surveyGoal,
   locationAndDemographic,
   countriesAndCities,
@@ -119,6 +123,8 @@ const SurveyPayementArea = ({
       surveyDescription: surveyDescription,
       sector: sector,
       surveyGoal: surveyGoal,
+      startDate: startDate,
+      endDate: endDate,
       amount: parseInt(`${data.amount}`),
       field: form.field,
       surveyLocations: demographicsToPost,

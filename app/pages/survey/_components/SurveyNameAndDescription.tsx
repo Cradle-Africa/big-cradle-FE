@@ -55,6 +55,30 @@ const SurveyNameAndDescription = ({
         />
         <ErrorMessage>{errors.surveyGoal?.message}</ErrorMessage>
       </div>
+      <div className="flex gap-3">
+        <div className="md:w-1/2">
+          <h6 className="mb-2">Start date</h6>
+          <input
+            {...register("startDate")}
+            placeholder="Survey start date"
+            type="date"
+            className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
+          />
+          <ErrorMessage>{errors.startDate?.message}</ErrorMessage>
+        </div>
+
+        <div className="md:w-1/2">
+          <h6 className="mb-2">End date</h6>
+          <input
+            {...register("endDate")}
+            placeholder="Survey end date"
+            type="date"
+            className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
+          />
+          <ErrorMessage>{errors.endDate?.message}</ErrorMessage>
+        </div>
+      </div>
+
       <div>
         <h6 className="mb-2">Description</h6>
         <textarea

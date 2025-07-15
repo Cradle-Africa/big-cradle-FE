@@ -6,7 +6,7 @@ import { Album, ArrowDownUp, Database } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
+// import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
 import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
 import { getBusinessId } from "@/app/utils/user/userData";
 
@@ -18,12 +18,12 @@ const BusinessDashboard = () => {
 
   const { data: user, isLoading } = useFetchMe({ axios });
 
-  const {
-    data: dataOverview,
-    isLoading: isLoadingDataOverview,
-    isSuccess: dataOverviewSuccess,
-    isError
-  } = useFetchDataOverview(axios);
+  // const {
+  //   data: dataOverview,
+  //   isLoading: isLoadingDataOverview,
+  //   isSuccess: dataOverviewSuccess,
+  //   isError
+  // } = useFetchDataOverview(axios);
 
   const {
     data: surveysAnalyticsResponse,
@@ -34,12 +34,12 @@ const BusinessDashboard = () => {
     businessUserId: getBusinessId() ?? "",
   });
 
-  if (isLoadingDataOverview || analyticsLoading) return (
+  if ( analyticsLoading) return (
     <div>
       Loading...
     </div>
   )
-  if (isError || !dataOverview || !surveysAnalyticsResponse) return (
+  if ( !surveysAnalyticsResponse) return (
     <div>
       No  data overview
     </div>
@@ -74,12 +74,12 @@ const BusinessDashboard = () => {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
-        {dataOverviewSuccess && (
+        {/* {dataOverviewSuccess && ( */}
           <>
             <BusinessCard
               title={'Pipelines'}
               subTitle={'Total Pipelines'}
-              value={dataOverview.totalDataPoints}
+              value={'0'} //{dataOverview.totalDataPoints}
               icon={<ArrowDownUp size={14} color="blue" />}
               isHighLighted={true}
             />
@@ -87,12 +87,12 @@ const BusinessDashboard = () => {
             <BusinessCard
               title={'Data Points'}
               subTitle={'Total Data Points'}
-              value={dataOverview.totalFields}
+              value={'0'} //{dataOverview.totalFields}
               icon={<Database size={14} color="blue" />}
               isHighLighted={false}
             />
           </>
-        )}
+        {/* )} */}
 
         {analyticsSuccess && (
           <BusinessCard
