@@ -7,12 +7,12 @@ import { axiosWithoutAuth } from '@/app/lib/axios';
 
 const user = getUser()
 const employeeUserId = getEmployeeUserId()
-let businessUserId: string | null = null;
+let businessUserId: string;
 
 if (user?.role === 'business') {
-    businessUserId = getBusinessId() || null;
+    businessUserId = getBusinessId() ?? '';
 } else {
-    businessUserId = user?.businessUserId || null;
+    businessUserId = user?.businessUserId ?? '';
 }
 
 export const fetchDataPoints = async (

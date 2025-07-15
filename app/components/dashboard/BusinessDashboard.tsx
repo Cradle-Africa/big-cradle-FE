@@ -18,11 +18,16 @@ const BusinessDashboard = () => {
 
   const { data: user, isLoading } = useFetchMe({ axios });
 
-  const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
+  const {
+    data: dataOverview,
+    isLoading: isLoadingDataOverview,
+    isSuccess: dataOverviewSuccess,
+    isError
+  } = useFetchDataOverview(axios);
 
   const {
     data: surveysAnalyticsResponse,
-    // isSuccess: analyticsSuccess,
+    isSuccess: analyticsSuccess,
     isLoading: analyticsLoading,
   } = useFetchSurveyAnalyctics({
     axios,
@@ -69,33 +74,36 @@ const BusinessDashboard = () => {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
-        {/* {data.map((menu, index) => ( */}
-        <BusinessCard
-          title={'Pipelines'}
-          subTitle={'Total Pipelines'}
-          value={dataOverview.totalDataPoints}
-          icon={<ArrowDownUp size={14} color="blue" />}
-          isHighLighted={true}
-        />
+        {dataOverviewSuccess && (
+          <>
+            <BusinessCard
+              title={'Pipelines'}
+              subTitle={'Total Pipelines'}
+              value={dataOverview.totalDataPoints}
+              icon={<ArrowDownUp size={14} color="blue" />}
+              isHighLighted={true}
+            />
 
-        <BusinessCard
-          title={'Data Points'}
-          subTitle={'Total Data Points'}
-          value={dataOverview.totalFields}
-          icon={<Database size={14} color="blue" />}
-          isHighLighted={false}
-        />
+            <BusinessCard
+              title={'Data Points'}
+              subTitle={'Total Data Points'}
+              value={dataOverview.totalFields}
+              icon={<Database size={14} color="blue" />}
+              isHighLighted={false}
+            />
+          </>
+        )}
 
-        <BusinessCard
-          title={'Surveys'}
-          subTitle={'Total Surveys'}
-          value={surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
-          icon={<Album size={14} color="blue" />}
-          isHighLighted={false}
-        />
+        {analyticsSuccess && (
+          <BusinessCard
+            title={'Surveys'}
+            subTitle={'Total Surveys'}
+            value={surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
+            icon={<Album size={14} color="blue" />}
+            isHighLighted={false}
+          />
+        )}
 
-
-        {/* ))} */}
       </div>
       <DashboardCharts />
     </div>
