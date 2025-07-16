@@ -2,23 +2,23 @@
 import DashboardLayout from "@/app/DashboardLayout";
 import { List, Plus } from "lucide-react";
 import { JSX, useEffect, useRef, useState } from "react";
-import DataPoints from "./datapoint/DataPoints";
+// import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
 import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
-import { useFetchDataOverview, useFetchDataPoints, useFetchPipelines, useFetchPipelinesByDepartment } from "./_features/hook";
+import { useFetchDataOverview, useFetchPipelines, useFetchPipelinesByDepartment } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { useSearchParams } from "next/navigation";
-import NewDataPoint from "./datapoint/new/NewDataPoint";
+// import NewDataPoint from "./datapoint/new/NewDataPoint";
 
-type TabKey = 'Overview' | 'Data Pipelines' | 'Data Points' | '';
+type TabKey = 'Overview' | 'Data Pipelines' | '';
 
 const Flywheel = () => {
 	const menuRef = useRef<HTMLDivElement>(null);
-	const tabs: TabKey[] = ['Overview', 'Data Pipelines', 'Data Points'];
+	const tabs: TabKey[] = ['Overview', 'Data Pipelines', ''];
 	const [selectedTab, setSelectedTab] = useState<TabKey>('');
 	const searchParams = useSearchParams();
 
@@ -29,9 +29,9 @@ const Flywheel = () => {
 			case 'pipelines':
 				setSelectedTab('Data Pipelines');
 				break;
-			case 'data-points':
-				setSelectedTab('Data Points');
-				break;
+			// case 'data-points':
+			// 	setSelectedTab('Data Points');
+			// 	break;
 			default:
 				setSelectedTab('Overview');
 		}
@@ -48,19 +48,19 @@ const Flywheel = () => {
 	const [selectedDepartment, setSelectedDepartment] = useState('');
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
-	const [creatingDataPoint, setCreatingDataPoint] = useState(false);
+	// const [creatingDataPoint, setCreatingDataPoint] = useState(false);
 
-	const [pointsPage, setPointsPage] = useState(1);
-	const [pointsLimit, setPointsLimit] = useState(10);
+	// const [pointsPage, setPointsPage] = useState(1);
+	// const [pointsLimit, setPointsLimit] = useState(10);
 	const [pipelinePage, setPipelinePage] = useState(1);
 	const [pipelineLimit, setPipelineLimit] = useState(10);
 
-	const { data: dataPoints, refetch: refetchDataPoints } = useFetchDataPoints({
-		axios,
-		queryParams: { page: pointsPage, limit: pointsLimit }
-	});
-	const datapoints = dataPoints?.data ?? [];
-	const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
+	// const { data: dataPoints, refetch: refetchDataPoints } = useFetchDataPoints({
+	// 	axios,
+	// 	queryParams: { page: pointsPage, limit: pointsLimit }
+	// });
+	// const datapoints = dataPoints?.data ?? [];
+	// const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
 
 	const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
 
@@ -122,8 +122,8 @@ const Flywheel = () => {
 
 	 useEffect(() => {
         refetchPipelines();
-		refetchDataPoints();
-    }, [refetchPipelines, refetchDataPoints, searchParams])
+		// refetchDataPoints();
+    }, [refetchPipelines, searchParams])
 
 	if (isLoadingDataOverview) return (
 		<div>
@@ -216,38 +216,38 @@ const Flywheel = () => {
 			</div>
 		),
 
-		"Data Points": () => (
-			<div className="mt-5">
-				{creatingDataPoint ? (
-					<>
-						<NewDataPoint
-							creatingDataPoint={creatingDataPoint}
-							setCreatingDataPoint={setCreatingDataPoint}
-							pipelines={pipelinesToRender}
-						/>
-					</>
-				) : (
-					<>
-						{isLoadingDataPoints ? (
-							<div className="mt-5">Loading ...</div>
-						) : (
-							<DataPoints
-								data={datapoints}
-								pagination={paginationDataPoints}
-								onPageChange={setPointsPage}
-								onLimitChange={(newLimit) => {
-									setPointsLimit(newLimit);
-									setPointsPage(1);
-								}}
-								creatingDataPoint={creatingDataPoint}
-								setCreatingDataPoint={setCreatingDataPoint}
-							/>
+		// "Data Points": () => (
+		// 	<div className="mt-5">
+		// 		{creatingDataPoint ? (
+		// 			<>
+		// 				<NewDataPoint
+		// 					creatingDataPoint={creatingDataPoint}
+		// 					setCreatingDataPoint={setCreatingDataPoint}
+		// 					pipelines={pipelinesToRender}
+		// 				/>
+		// 			</>
+		// 		) : (
+		// 			<>
+		// 				{isLoadingDataPoints ? (
+		// 					<div className="mt-5">Loading ...</div>
+		// 				) : (
+		// 					<DataPoints
+		// 						data={datapoints}
+		// 						pagination={paginationDataPoints}
+		// 						onPageChange={setPointsPage}
+		// 						onLimitChange={(newLimit) => {
+		// 							setPointsLimit(newLimit);
+		// 							setPointsPage(1);
+		// 						}}
+		// 						creatingDataPoint={creatingDataPoint}
+		// 						setCreatingDataPoint={setCreatingDataPoint}
+		// 					/>
 
-						)}
-					</>
-				)}
-			</div>
-		)
+		// 				)}
+		// 			</>
+		// 		)}
+		// 	</div>
+		// )
 	};
 
 	return (
@@ -257,13 +257,13 @@ const Flywheel = () => {
 				onClose={() => setPopupOpen(false)}
 				onBuildPipeline={() => {
 					setCreatingPipeline(true);
-					setCreatingDataPoint(false);
+					// setCreatingDataPoint(false);
 				}}
 			/>
 
 			<div className="flex justify-between">
 				<div className="flex flex-col gap-2">
-					<p className="font-medium text-black">Data flywheel</p>
+					<p className="font-semibold text-lg text-black">Data flywheel</p>
 					<p>Transform insights into actions that accelerate your business growth</p>
 				</div>
 			</div>

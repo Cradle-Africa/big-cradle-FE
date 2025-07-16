@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Calendar, Eye, Funnel, MoreVertical, Pencil, Plus, Share2, Trash } from "lucide-react";
+import { Calendar, Funnel, MoreVertical, Pencil, Plus, Share2, Trash, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFetchDepartments } from "../../user/department/_features/hook";
@@ -13,6 +13,8 @@ import radialIcon from '@/public/radial.png'
 // import 	{ RiLoader3Line } from 'react-icons/ri'
 import Image from "next/image";
 import DeletePipeline from "./DeletePipeline";
+import { useRouter } from 'next/navigation'; // for App Router
+import DeleteDataPoint from "../datapoint/DeleteDataPoint";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -38,6 +40,7 @@ const PipelinePage = ({
     const [shareDataPipeline, setShareDataPipelie] = useState(false);
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
     const menuRefs = useRef<Record<number, HTMLUListElement | null>>({});
+    const router = useRouter();
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
@@ -45,12 +48,22 @@ const PipelinePage = ({
 
     const [selectedPipeline, setSelectedPipeline] = useState<Pipeline | null>(null);
     const [uniqueId, setUniqueId] = useState<string>('');
+    const [deletingDataPoint, setDeletingDataPoint] = useState(false);
+    const [dataPointName, setDataPointName] = useState<string>('');
 
 
     const handleShareDataPipeline = (dataPointId: string) => {
         setShareDataPipelie(true)
         setUniqueDataPoint(dataPointId)
     }
+
+    const handleDeleteDataPoint = async (id: any, dataPointName: any) => {
+        setDeletingDataPoint(true);
+        setOpenIndex(null);
+        setUniqueDataPoint(id);
+        setDataPointName(dataPointName);
+    }
+
     const [, setPage] = useState(pagination.page);
     const [limit, setLimit] = useState(pagination.limit);
 
@@ -114,19 +127,20 @@ const PipelinePage = ({
                 <div className="mt-5">Loading pipelines...</div>
             ) : (
                 <div className="grid grid-cols-1 md:grid md:grid-cols-2  2xl:grid 2xl:grid-cols-3 w-full gap-5 mt-5">
-                    {
-                        pipelineData.map((pipeline, index) =>
-                            <div key={index}
-                                className="group border bg-white border-gray-200 rounded-lg px-6 py-6
-                                hover:bg-blue-600 hover:text-white
-                                transition-all ease-in-out duration-900
-                                "
+                    {pipelineData.map((pipeline, index) => {
+
+                        return (
+                            <div
+                                key={index}
+                                onClick={() =>
+                                    router.push(`/pages/flywheel/data-entry/${pipeline?.id}`)
+                                }
+                                // className="group border bg-white border-gray-200 rounded-lg px-6 py-6 hover:bg-blue-600 hover:text-white transition-all ease-in-out duration-900 cursor-pointer"
+                                className="flex flex-col group border bg-white border-gray-200 rounded-lg px-6 py-6 hover:bg-blue-600 hover:text-white transition-all ease-in-out duration-900 cursor-pointer"
+
                             >
                                 <div className="flex flex-nowrap items-center justify-between">
-                                    <Link
-                                        href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
-                                        className="inline-block items-center">
-
+                                    <div className="inline-block items-center">
                                         <Image
                                             src={radialIcon}
                                             width={15}
@@ -137,12 +151,17 @@ const PipelinePage = ({
                                         <h2 className="inline ml-2 text-[18px] text-[#0C0C0C] group-hover:text-white">
                                             {pipeline.dataPointName}
                                         </h2>
-                                    </Link>
+                                    </div>
 
-                                    <div className="whitespace-nowrap relative">
+                                    <div
+                                        className="whitespace-nowrap relative"
+                                        onClick={(e) => e.stopPropagation()} // ⛔ Prevent outer div from firing
+                                    >
                                         <button
                                             className="bg-inherit rounded-lg px-2 py-1 cursor-pointer hover:text-blue-600 hover:bg-white"
-                                            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                                            onClick={() =>
+                                                setOpenIndex(openIndex === index ? null : index)
+                                            }
                                         >
                                             <MoreVertical size={18} />
                                         </button>
@@ -158,7 +177,7 @@ const PipelinePage = ({
                                                 <li className="px-2 py-1">
                                                     <button
                                                         onClick={() => {
-                                                            setUniqueId(pipeline?.id ?? '')
+                                                            setUniqueId(pipeline?.id ?? '');
                                                             setSelectedPipeline(pipeline);
                                                             setEditOpen(true);
                                                         }}
@@ -170,11 +189,10 @@ const PipelinePage = ({
                                                         </div>
                                                     </button>
                                                 </li>
-
                                                 <li className="px-2">
                                                     <button
                                                         onClick={() => {
-                                                            setUniqueId(pipeline?.id ?? '')
+                                                            setUniqueId(pipeline?.id ?? '');
                                                             setSelectedPipeline(pipeline);
                                                             setDeleteOpen(true);
                                                         }}
@@ -191,55 +209,64 @@ const PipelinePage = ({
                                     </div>
                                 </div>
 
-                                <Link
-                                    href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
-                                    className="flex text-[#494949] text-[14px] mt-5 group-hover:text-white">
-                                    {pipeline.dataPointDescription}
-                                </Link>
+                                <div className="flex text-[#494949] text-[14px] mt-5 group-hover:text-white">
+                                    {pipeline.dataPointDescription?.length > 200
+                                        ? pipeline.dataPointDescription.slice(0, 150) + "..."
+                                        : pipeline.dataPointDescription}
+                                </div>
 
-                                <Link
-                                    href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
-                                    className="flex justify-end mt-5 items-center ">
+
+                                <div className="flex justify-end mt-5 items-center mb-2">
                                     <Calendar size={12} />
                                     <h6 className="ml-1 text-[#494949] text-[12px] group-hover:text-white">
                                         {formatDate(pipeline?.createdAt ?? '')}
                                     </h6>
-                                </Link>
+                                </div>
 
-                                <div className="flex w-full justify-end border-t border-gray-100 mt-5">
+                                <div
+                                    className="flex w-full justify-end border-t border-gray-100 mt-auto"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
                                     <div className="flex items-center justify-end gap-2 mt-3">
-                                        <div className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex bg-white text-blue-600 hover:text-blue-600 hover:bg-white rounded-md px-2 py-[10px] cursor-pointer`}>
-                                            <Share2
-                                                size={15}
-                                                onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
-                                                className=""
-                                            />
-                                        </div>
-                                        <Link
-                                            href={`/pages/flywheel/data-entry/${pipeline?.id}/${pipeline?.fieldId}`}
-                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
-                                        >
-                                            <Eye size={15} className="mr-1 inline" /> View Entries
-                                        </Link>
+                                        {!!pipeline?.fieldId && (
+                                            <>
+                                                <div
+                                                    className="flex bg-white text-blue-600 hover:text-blue-600 hover:bg-white rounded-md px-2 py-[10px] cursor-pointer"
+                                                    onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
+                                                >
+                                                    <Share2 size={15} />
+                                                </div>
 
-                                        <Link
-                                            href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
-                                            className={` ${!pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
-                                        >
-                                            <Pencil size={15} className="mr-1 inline" /> Edit data point
-                                        </Link>
+                                                <button
+                                                    onClick={() => handleDeleteDataPoint(pipeline?.fieldId, pipeline?.dataPointName)}
+                                                    className="flex bg-white text-blue-600 hover:text-red-500 hover:bg-red-100 rounded-md px-2 py-[10px] cursor-pointer"
+                                                >
+                                                    <Trash2 size={15} className="inline" />
+                                                </button>
 
-                                        <Link
-                                            href={`/pages/flywheel/datapoint/new/${pipeline?.id}`}
-                                            className={` ${pipeline?.fieldId ? 'hidden' : 'inline'} flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600`}
-                                        >
-                                            <Plus size={15} className="mr-1 inline" /> Create a data point
-                                        </Link>
+                                                <Link
+                                                    href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
+                                                    className="flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600"
+                                                >
+                                                    <Pencil size={15} className="mr-1 inline" /> Edit data point
+                                                </Link>
+                                            </>
+                                        )}
+
+                                        {!pipeline?.fieldId && (
+                                            <Link
+                                                href={`/pages/flywheel/datapoint/new/${pipeline?.id}`}
+                                                className="flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600"
+                                            >
+                                                <Plus size={15} className="mr-1 inline" /> Create a data point
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             </div>
-                        )
-                    }
+                        );
+                    })}
+
                 </div>
             )}
 
@@ -276,6 +303,17 @@ const PipelinePage = ({
             {
                 deleteOpen && selectedPipeline && (
                     <DeletePipeline uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setDeleteOpen} />
+                )
+            }
+
+            {
+                deletingDataPoint && (
+                    <DeleteDataPoint
+                        deletingDataPoint={deletingDataPoint}
+                        uniqueId={uniqueDataPoint}
+                        setDeletingDataPoint={setDeletingDataPoint}
+                        dataPointName={dataPointName}
+                    />
                 )
             }
 

@@ -7,8 +7,8 @@ import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
 // import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
-import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
-import { getBusinessId } from "@/app/utils/user/userData";
+// import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
+// import { getBusinessId } from "@/app/utils/user/userData";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -25,25 +25,25 @@ const BusinessDashboard = () => {
   //   isError
   // } = useFetchDataOverview(axios);
 
-  const {
-    data: surveysAnalyticsResponse,
-    isSuccess: analyticsSuccess,
-    isLoading: analyticsLoading,
-  } = useFetchSurveyAnalyctics({
-    axios,
-    businessUserId: getBusinessId() ?? "",
-  });
+  // const {
+  //   data: surveysAnalyticsResponse,
+  //   isSuccess: analyticsSuccess,
+  //   isLoading: analyticsLoading,
+  // } = useFetchSurveyAnalyctics({
+  //   axios,
+  //   businessUserId: getBusinessId() ?? "",
+  // });
 
-  if ( analyticsLoading) return (
-    <div>
-      Loading...
-    </div>
-  )
-  if ( !surveysAnalyticsResponse) return (
-    <div>
-      No  data overview
-    </div>
-  )
+  // if ( analyticsLoading) return (
+  //   <div>
+  //     Loading...
+  //   </div>
+  // )
+  // if ( !surveysAnalyticsResponse) return (
+  //   <div>
+  //     No  data overview
+  //   </div>
+  // )
 
 
   return (
@@ -94,15 +94,15 @@ const BusinessDashboard = () => {
           </>
         {/* )} */}
 
-        {analyticsSuccess && (
+        { /* } {analyticsSuccess && ( */}
           <BusinessCard
             title={'Surveys'}
             subTitle={'Total Surveys'}
-            value={surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
+            value={'0'} //{surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
             icon={<Album size={14} color="blue" />}
             isHighLighted={false}
           />
-        )}
+        { /*)} */ }
 
       </div>
       <DashboardCharts />

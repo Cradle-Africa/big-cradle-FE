@@ -31,7 +31,7 @@ export const ExportToExcel = ({ data, datapoints, dataPointName }: ExportToExcel
         <button
             type="button"
             onClick={handleExportToExcel}
-            className="flex items-center gap-1 text-sm text-blue-600 border border-blue-600 px-1 py-1 rounded cursor-pointer hover:bg-blue-50"
+            className="flex items-center gap-1 text-sm text-blue-600 border border-blue-600 px-1 py-[6px] rounded cursor-pointer hover:bg-blue-50"
         >
             <FileDown size={14} />
             Export

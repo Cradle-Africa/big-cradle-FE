@@ -23,14 +23,9 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                         className="text-center bg-white px-5 py-5 md:px-8 md:py-8 rounded-lg w-82 md:w-full max-w-2xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                         ref={menuRef}
                     >
-                        <h2 className="text-gray-800 text-sm lg:text-lg font-normal">
-                            How would you like to collect your data?
-                        </h2>
-                        <p className="mt-5 text-gray-700 hidden lg:block">
-                            Choose an integration method or build your own feedback tool
-                        </p>
 
-                        <div className="md:flex justify-between gap-3 md:gap-5 mt-5 lg:mt-10">
+
+                        <div className="md:flex justify-between gap-3 md:gap-5 mt-5">
                             {/* <div className="md:w-1/2 md:h-44 px-6 py-6 bg-[#FCEBFF] hover:border hover:border-[#d27ce1] hover:transition rounded-lg cursor-pointer">
                                 <Link className="w-full h-full"
                                 href="/pages/flywheel/social-media"
@@ -47,23 +42,36 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                 </Link>
                             </div> */}
 
-                            <button
-                                className="mt-5 md:mt-0 md:w-2/2 md:h-44 px-6 py-6 bg-[#E6E9FF] hover:border hover:border-blue-500 hover:transition rounded-lg cursor-pointer"
-                                onClick={() => {
-                                    onBuildPipeline();
-                                    onClose();
-                                }}
-                            >
-                                <div className="flex justify-center">
-                                    <div className="bg-white text-blue-600 rounded-full p-3">
-                                        <ArrowUpDown className="" />
+                            <div className="md:w-full">
+                                <button
+                                    onClick={() => {
+                                        onBuildPipeline();
+                                        onClose();
+                                    }}
+                                    className="md:mt-0 w-full md:h-44 px-6 py-6 border-2 border-dashed border-blue-500 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer"
+
+                                >
+                                    <div className="flex justify-center">
+                                        <div className="bg-white text-blue-600 rounded-full p-3">
+                                            <ArrowUpDown className="" />
+                                        </div>
                                     </div>
-                                </div>
-                                <p className="mt-3 text-md text-gray-800">Build Custom Pipeline</p>
-                                <p className="text-sm mt-3">
-                                    Use our form builder to create your own survey
-                                </p>
-                            </button>
+                                    <p className="mt-3 text-md text-gray-800">How would you like to collect your data</p>
+                                    <p className="text-sm mt-3">
+                                        Build your own data pipeline
+                                    </p>
+                                </button>
+                                <button
+                                    className="w-full mt-5 bg-blue-600 text-white px-5 py-2 rounded-md flex justify-center hover:cursor-pointer"
+                                    onClick={() => {
+                                        onBuildPipeline();
+                                        onClose();
+                                    }}
+                                >
+                                    Build your pipeline
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

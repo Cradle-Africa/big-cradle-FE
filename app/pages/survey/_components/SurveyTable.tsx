@@ -45,13 +45,13 @@ const SurveyTable = ({ data }: Props) => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
+                Created At
+              </th>
+              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
                 Survey Name
               </th>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
                 Sector
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Goal
               </th>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
                 Survey Status
@@ -60,13 +60,10 @@ const SurveyTable = ({ data }: Props) => {
                 Payment Status
               </th>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Start date
+                Start Date
               </th>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                End date
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Created on
+                End Date
               </th>
               <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
                 Action
@@ -77,14 +74,18 @@ const SurveyTable = ({ data }: Props) => {
             {/* Example row */}
             {data.map((survey) => (
               <tr key={survey.id}>
+                <td className="px-3 lg:px-6 py-4">
+                  <div className="w-44">
+                    {formatDate(survey.createdAt ?? '')}
+                  </div>
+                </td>
                 <td className="px-3 lg:px-6 py-4 font-medium">
-                  {survey.surveyName}
+                  <div className="w-48">
+                    {survey.surveyName}
+                  </div>
                 </td>
                 <td className="px-3 lg:px-6 py-4 font-medium">
                   {survey.sector}
-                </td>
-                <td className="px-3 lg:px-6 py-4 font-medium">
-                  {survey.surveyGoal}
                 </td>
                 <td className="px-3 w-62 lg:px-6">
                   {survey.isActive ? (
@@ -109,13 +110,14 @@ const SurveyTable = ({ data }: Props) => {
                   )}
                 </td>
                 <td className="px-3 lg:px-6 py-4">
-                  {formatDate(survey.startDate ?? '')}
+                  <div className="w-44">
+                    {formatDate(survey.startDate ?? '')}
+                  </div>
                 </td>
                 <td className="px-3 lg:px-6 py-4">
-                  {formatDate(survey.endDate ?? '')}
-                </td>
-                <td className="px-3 lg:px-6 py-4">
-                  {formatDate(survey.createdAt ?? '')}
+                  <div className="w-44">
+                    {formatDate(survey.endDate ?? '')}
+                  </div>
                 </td>
                 <td className="px-3 lg:px-6 py-4 relative">
                   <button

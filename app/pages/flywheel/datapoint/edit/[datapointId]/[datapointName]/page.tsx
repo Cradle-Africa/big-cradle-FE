@@ -20,7 +20,7 @@ const EditDataPoint = () => {
 
     const params = useParams();
     const router = useRouter();
-    const backParams = 'data-points';
+    const backParams = 'pipelines';
     const { datapointId, datapointName: encodedName } = params as { datapointId: string; datapointName: string };
     const datapointName = decodeURIComponent(encodedName);
 

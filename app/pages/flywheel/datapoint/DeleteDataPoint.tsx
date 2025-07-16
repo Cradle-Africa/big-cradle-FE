@@ -61,7 +61,7 @@ const DeleteDataPoint: React.FC<Props> = ({ deletingDataPoint, uniqueId, setDele
                         </div>
                     </div>
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-gray-700 mb-4">Delete the Data Point : {dataPointName} </h2>
+                        <h2 className="text-md font-semibold text-gray-700 mb-4">Do you need to delete the data point of {dataPointName} pipeline ? </h2>
                         <p className="text-sm text-red-500">This action cannot be undone.</p>
                         <p className="text-sm text-gray-500">Are you sure you want to delete this data point?</p>
                     </div>

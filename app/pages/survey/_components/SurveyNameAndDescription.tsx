@@ -56,7 +56,7 @@ const SurveyNameAndDescription = ({
         <ErrorMessage>{errors.surveyGoal?.message}</ErrorMessage>
       </div>
       <div className="flex gap-3">
-        <div className="md:w-1/2">
+        <div className="w-1/2">
           <h6 className="mb-2">Start date</h6>
           <input
             {...register("startDate")}
@@ -67,7 +67,7 @@ const SurveyNameAndDescription = ({
           <ErrorMessage>{errors.startDate?.message}</ErrorMessage>
         </div>
 
-        <div className="md:w-1/2">
+        <div className="w-1/2">
           <h6 className="mb-2">End date</h6>
           <input
             {...register("endDate")}

@@ -67,13 +67,14 @@ const LocationAndDemographic = ({
             <div>
               <h6 className="mb-2">Country</h6>
               <CountrySelect
-                className="mb-1"
-                inputClassName=""
+                className="mb-1 border-none"
+                containerClassName="relative w-full !border-none"
+                inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(_country: any) => {
                   // console.log(_country);
                   field.onChange(_country.name);
                   setCountry(_country);
-                  setState(null);       
+                  setState(null);
                 }}
                 onTextChange={(_txt) => console.log(_txt)}
                 value={field.name}
@@ -92,10 +93,10 @@ const LocationAndDemographic = ({
             <div>
               <h6 className="mb-2 mt-4">State</h6>
               <StateSelect
-                className="mb-1"
+                className="mb-1 border-none"
+                containerClassName="relative w-full !border-none"
+                inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                 countryid={country?.id!}
-                containerClassName="form-group"
-                inputClassName=""
                 onChange={(_state: any) => {
                   // console.log('State', _state);
                   field.onChange(_state.name);
@@ -117,11 +118,11 @@ const LocationAndDemographic = ({
             <div>
               <h6 className="mb-2 mt-4">City</h6>
               <CitySelect
-                className="mb-1"
+                className="mb-1 border-none"
+                containerClassName="relative w-full !border-none"
+                inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                 countryid={country?.id!}
                 stateid={state?.id!}
-                containerClassName="form-group"
-                inputClassName=""
                 onChange={(_city: any) => {
                   // console.log('City:', _city);
                   field.onChange(_city.name);

@@ -26,7 +26,7 @@ export const DownloadTemplate = ({ data, dataPointName }: DownloadTemplateProps)
         <button
             type="button"
             onClick={handleDownloadTemplate}
-            className="flex items-center gap-1 text-sm text-blue-700 border border-blue-600 px-1 py-1 rounded cursor-pointer hover:bg-blue-50"
+            className="flex items-center gap-1 text-sm text-blue-700 border border-blue-600 px-1  py-[6px] rounded cursor-pointer hover:bg-blue-50"
         >
             <Download size={14} />
             Template

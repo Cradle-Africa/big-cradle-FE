@@ -40,7 +40,7 @@ export const useFetchDataPoints = ({
 export const useFetchSingleDataPoint = ({
 	axios,
 	id,
-	enabled = true, //disable query if ID is undefined
+	enabled = true,
 }: {
 	axios: AxiosInstance;
 	id: string;
@@ -48,11 +48,15 @@ export const useFetchSingleDataPoint = ({
 }) => {
 	return useQuery<DataPoint>({
 		queryKey: ["single-datapoint", id],
-		queryFn: () => fetchSingleDataPoint(axios, id),
-		enabled: !!id && enabled,
+		queryFn: () => {
+			console.log("Running queryFn for fieldId:", id);
+			return fetchSingleDataPoint(axios, id); // return the promise
+		},
+		enabled: !!id && enabled, 
 		staleTime: 1000 * 60 * 5,
 	});
 };
+
 
 export const useFetchSinglePipeline = ({
 	axios,
@@ -145,9 +149,9 @@ export const useCreateDataEntry = ({ axios }: { axios: AxiosInstance }) => {
 };
 
 export const useCreateBulkDataEntry = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<void, Error, DataEntry[]>({
-    mutationFn: (entries: DataEntry[]) => createBulkDataEntry(axios, entries),
-  });
+	return useMutation<void, Error, DataEntry[]>({
+		mutationFn: (entries: DataEntry[]) => createBulkDataEntry(axios, entries),
+	});
 };
 
 
@@ -215,33 +219,33 @@ export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
 
 
 export const useFetchDataOverview = (
-  axios: AxiosInstance
+	axios: AxiosInstance
 ): UseQueryResult<DataFlyOverview> => {
-  return useQuery<DataFlyOverview>({
-    queryKey: ["data-flywheel-overview"],
-    queryFn: () => fetchDataOverview(axios),
-    staleTime: 5 * 60 * 1000,
-  });
+	return useQuery<DataFlyOverview>({
+		queryKey: ["data-flywheel-overview"],
+		queryFn: () => fetchDataOverview(axios),
+		staleTime: 5 * 60 * 1000,
+	});
 };
 
 
 export const useUpdatePipeline = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<void, Error, { id: string; data: Pipeline }>({
-	mutationFn: ({ id, data }) => updatePipeline(axios, id, data),
-  });
+	return useMutation<void, Error, { id: string; data: Pipeline }>({
+		mutationFn: ({ id, data }) => updatePipeline(axios, id, data),
+	});
 };
 
 
 export const useDeleteDataPoint = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<void, Error, { id: string }>({
-    mutationFn: ({ id }) => deleteDataPoint(axios, id),
-  });
+	return useMutation<void, Error, { id: string }>({
+		mutationFn: ({ id }) => deleteDataPoint(axios, id),
+	});
 };
 
 
 
 export const useDeletePipeline = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<void, Error, { id: string }>({
-    mutationFn: ({ id }) => deletePipeline(axios, id),
-  });
+	return useMutation<void, Error, { id: string }>({
+		mutationFn: ({ id }) => deletePipeline(axios, id),
+	});
 };

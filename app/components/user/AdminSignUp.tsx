@@ -11,6 +11,7 @@ import { AdminSignUpService } from '../../services/user/userService';
 import { removeEmptyProperties } from '../../utils/clean-data';
 import CredentialDetails from '../form/CredentialDetails';
 import { CitySelect, CountrySelect, StateSelect } from 'react-country-state-city';
+import "react-country-state-city/dist/react-country-state-city.css";
 
 export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -157,7 +158,7 @@ export default function AdminSignUp() {
                                     </div>
                                 </div>
                                 <div className='flex justify-end mt-5'>
-                                    <button type="button" onClick={next} className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
+                                    <button type="button" onClick={next} className="rounded px-2 py-2 bg-blue-600 text-white">
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
                                     </button>
@@ -182,8 +183,9 @@ export default function AdminSignUp() {
                                         }}
                                         value={form.country}
                                         placeHolder="Select Country"
-                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                        containerClassName="w-full"
+                                        className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
                                 </div>
@@ -201,8 +203,9 @@ export default function AdminSignUp() {
                                         }
                                         value={form.state}
                                         placeHolder="Select State"
-                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                        containerClassName="w-full"
+                                        className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
                                 </div>
@@ -219,8 +222,9 @@ export default function AdminSignUp() {
                                         }
                                         value={form.city}
                                         placeHolder="Select City"
-                                        inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                        containerClassName="w-full"
+                                        className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
 
                                     {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
@@ -242,11 +246,11 @@ export default function AdminSignUp() {
                                 </div>
 
                                 <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
+                                    <button type="button" onClick={back} className="px-2 py-2 rounded bg-blue-600 text-white">
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
-                                    <button type="button" onClick={next} className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white">
+                                    <button type="button" onClick={next} className="rounded px-2 py-2 bg-blue-600 text-white">
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
                                     </button>

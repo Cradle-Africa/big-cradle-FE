@@ -15,6 +15,7 @@ import CredentialDetails from "../../components/form/CredentialDetails";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import sectors from '@/app/utils/data/sectors.json';
 import SearchSelect from "../form/SearchSelect";
+import "react-country-state-city/dist/react-country-state-city.css";
 
 export default function BusinessSignUp() {
 	const [step, setStep] = useState<number>(1);
@@ -209,7 +210,7 @@ export default function BusinessSignUp() {
 									<button
 										type="button"
 										onClick={next}
-										className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
+										className="rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
 									>
 										Next
 										<ChevronRight size={14} className="inline ml-1" />
@@ -221,7 +222,7 @@ export default function BusinessSignUp() {
 						{/* Step 2 */}
 						{step === 2 && (
 							<>
-								<div className='mt-5 w-full'>
+								<div className="">
 									<CountrySelect
 										onChange={(country: any) => {
 											setForm((prev) => ({
@@ -233,13 +234,21 @@ export default function BusinessSignUp() {
 												businessCity: "",
 											}));
 										}}
+										onTextChange={(_txt) => console.log(_txt)}
 										value={form.businessCountry}
 										placeHolder="Select Country"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
+										showFlag={true}
+										className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
 									/>
-									{errors.businessCountry && <p className="text-red-500 text-xs">{errors.businessCountry}</p>}
+									{errors.businessCountry && (
+										<p className="text-red-500 text-xs mt-1">
+											{errors.businessCountry}
+										</p>
+									)}
 								</div>
+
 
 								<div className='w-full mt-5'>
 									<StateSelect
@@ -254,8 +263,9 @@ export default function BusinessSignUp() {
 										}
 										value={form.businessState}
 										placeHolder="Select State"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
+										className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
 									/>
 									{errors.businessState && <p className="text-red-500 text-xs">{errors.businessState}</p>}
 								</div>
@@ -272,8 +282,9 @@ export default function BusinessSignUp() {
 										}
 										value={form.businessCity}
 										placeHolder="Select City"
-										inputClassName="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-										containerClassName="w-full"
+										className="mb-1 border-none"
+										containerClassName="relative w-full !border-none"
+										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
 									/>
 
 									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
@@ -330,7 +341,7 @@ export default function BusinessSignUp() {
 									<button
 										type="button"
 										onClick={back}
-										className="bg-gray-300 text-gray-500 px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
+										className="px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white"
 									>
 										<ChevronLeft size={14} className="inline ml-1" />
 										Back
@@ -338,7 +349,7 @@ export default function BusinessSignUp() {
 									<button
 										type="button"
 										onClick={next}
-										className="bg-gray-300 text-gray-500 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:text-white"
+										className="rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
 									>
 										Next
 										<ChevronRight size={14} className="inline ml-1" />

@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchDataPointOfDataEntries, useFetchSingleDataPoint } from "../_features/hook";
+import { useFetchDataPointOfDataEntries, useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
 import { ArrowLeft, FileStackIcon, Plus, Share2, Sparkles, X } from "lucide-react";
@@ -17,14 +17,12 @@ import ShareDataPoint from "../datapoint/ShareDataPoint";
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
     pipelineId: string;
-    fieldId: string;
     setViewDataEntries: (value: boolean) => void;
 }
 
 const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     viewDataEntries,
     pipelineId,
-    fieldId,
 }) => {
 
     const [openNewDataEntry, setOpenNewDataEntry] = useState(false);
@@ -47,19 +45,29 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         },
     });
 
+    const { data: singlePipeline } = useFetchSinglePipeline({
+            axios,
+            id: pipelineId || '',
+            enabled: true,
+        });
+    const dataPointId = singlePipeline?.fieldId
+        // console.log('data pipeline: ', singlePipeline );
+
+
     const entries = data?.entries
     const pagination = data?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
     const { data: datapoints } = useFetchSingleDataPoint({
         axios,
-        id: fieldId ?? "",
-        enabled: true, // only run when fieldId is present
+        id: singlePipeline?.fieldId ?? '',
+        enabled: !singlePipeline?.fieldId, // only run when fieldId is present
     });
 
-    const handleNewDataEntry = (fieldId: string) => {
+
+    const handleNewDataEntry = (dataPointId: string) => {
         setOpenOptionsEntry(false); // close EntryOptionsModal
         setOpenNewDataEntry(true); // open NewDataEntry modal
-        setUniqueDataPoint(fieldId);
+        setUniqueDataPoint(dataPointId);
     };
 
     const handleCloseNewDataEntry = () => {
@@ -88,8 +96,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
     return (
         <div className="w-full pb-5">
-            <h2 className="text-xl mb-4">Data entries</h2>
+            {/* <h2 className="text-xl mb-4">Data entries</h2> */}
             <>
+                <h2 className="text-lg font-semibold text-blue-600">
+                    {singlePipeline?.dataPointName}
+                </h2>
+
                 <div className={` ${entries && entries.length > 0 ? '' : 'justify-end'} flex justify-between gap-5 mt-3`}>
                     {!isLoading && entries && entries.length > 0 && (
                         <>
@@ -104,20 +116,51 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     )}
 
                     <div className="flex justify-between gap-2 ">
-                        <button
-                            className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                            onClick={() => setOpenOptionsEntry(true)}
-                        >
-                            <Plus size={15} color="white" className="mr-1 inline" />
-                            New Entry
-                        </button>
 
+                        {!isLoading && entries && entries.length > 0 && (
+                            <div className="">
+                                {datapoints && entries.length > 0 && (
+                                    <div className="flex gap-2 flex-wrap">
+                                        <ExportToExcel
+                                            data={entries.map(e => e.data)}
+                                            datapoints={datapoints}
+                                            dataPointName={singlePipeline?.dataPointName || "Export"}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        <button
+                            onClick={() => handleShareDataPoint(singlePipeline?.fieldId)}
+                            className="flex items-center cursor-pointer px-3 py-1 border border-blue-600 text-blue-600 rounded-md"
+                        > <Share2 size={13} className="inline mr-1" /> Share
+                        </button>
+                        
+                        {!singlePipeline?.fieldId ? (
+                            <Link
+                                className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                href={`/pages/flywheel/datapoint/new/${pipelineId}`}
+                            >
+                                <Plus size={15} color="white" className="mr-1 inline" />
+                                New Data point
+                            </Link>
+                        ) : (
+                            <button
+                                className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                onClick={() => setOpenOptionsEntry(true)}
+                            >
+                                <Plus size={15} color="white" className="mr-1 inline" />
+                                New Entry
+                            </button>
+                        )}
+                        
                         <Link
-                            className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
+                            className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600'
                             href={`/pages/flywheel?tab=${backParams}`}
                         >
                             <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
                         </Link>
+
                     </div>
                 </div>
 
@@ -125,30 +168,19 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
                 {!isLoading && entries && entries.length > 0 && (
                     <>
-                        <div className="flex items-center justify-between mt-5 gap-2 flex-wrap">
-                            <h2 className="text-lg text-blue-600">
-                                {'Pipeline name: ' + entries[0]?.dataPointName}
-                            </h2>
-
+                        {/* <div className="flex items-center justify-between mt-5 gap-2 flex-wrap">
                             <div className="">
                                 {datapoints && entries.length > 0 && (
                                     <div className="flex gap-2 flex-wrap">
-                                        <button
-                                            onClick={() => handleShareDataPoint(fieldId)}
-                                            className="flex items-center cursor-pointer px-2 py-1 border border-blue-600 text-blue-600 rounded-md"
-                                        > <Share2 size={13} className="inline mr-1" /> Share Data point
-                                        </button>
                                         <ExportToExcel
                                             data={entries.map(e => e.data)}
                                             datapoints={datapoints}
                                             dataPointName={entries[0]?.dataPointName || "Export"}
                                         />
                                     </div>
-
                                 )}
-
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
 
@@ -244,7 +276,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 />
                                 <button
                                     className="mt-3 py-1 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
-                                    onClick={() => handleNewDataEntry(fieldId)}
+                                    onClick={() => handleNewDataEntry(dataPointId ?? '')}
                                 >
                                     New Data Entry
                                 </button>
@@ -258,7 +290,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 />
                                 <Link
                                     className="mt-3 py-1 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
-                                    href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${fieldId}`}
+                                    href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`}
                                 >
                                     Bulk Data Entry
                                 </Link>

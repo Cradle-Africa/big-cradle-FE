@@ -54,7 +54,7 @@ export const ImportExcel = ({ data, setEntries }: ImportExcelProps) => {
     };
 
     return (
-        <label className="flex items-center gap-1 text-sm text-blue-700 border border-blue-600 px-1 py-1 rounded cursor-pointer hover:bg-blue-50">
+        <label className="flex items-center gap-1 text-sm text-blue-700 border border-blue-600 px-1 py-[6px] rounded cursor-pointer hover:bg-blue-50">
             <Upload size={14} />
             Import
             <input

@@ -79,24 +79,24 @@ const KycVerification: React.FC<KycVerificationProps> = ({
       )}
 
       {user?.kycStatus === "not-submitted" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-red-400 text-white px-5 py-3 rounded-md mb-4">
-          <div className="text-md">
-            Upload your certificate for KYC verification
+        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-red-50 border border-red-500 text-white px-5 py-3 rounded-md mb-4">
+          <div className="text-md font-bold text-black">
+            Upload your certificate for <span className="text-red-500">KYC verification</span>
           </div>
           <button
             onClick={handleSubmit}
-            className="bg-red-700 text-white rounded-md mt-5 md:mt-0 px-5 py-1 h-8 text-sm hover:border hover:border-white hover:cursor-pointer"
+            className="bg-red-200 text-red-500 rounded-md mt-5 md:mt-0 px-5 py-1 h-8 text-sm hover:border hover:border-white hover:cursor-pointer"
           >
             <UploadCloud size={14} className="inline" />
-            <span className="ml-1">Verify KYC</span>
+            <span className="ml-1 font-bold">Verify KYC</span>
           </button>
         </div>
       )}
 
       {user?.kycStatus === "pending" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-blue-600 text-white px-5 py-3 rounded-md mb-4">
+        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-blue-400 text-white px-5 py-3 rounded-md mb-4">
           <div className="text-md">
-            Your KYC has been submitted and is under review
+            Your <span className="bg-blue-400">KYC</span> has been submitted and is under review
           </div>
         </div>
       )}
@@ -107,16 +107,16 @@ const KycVerification: React.FC<KycVerificationProps> = ({
           justify="between"
           gap="2"
           align="center"
-          className="border border-red-500 rounded-md p-4"
+          className="bg-red-50 border border-red-500 rounded-lg p-3"
         >
           <div className="md:mt-0 md:flex flex-col w-full text-red-500  hover:opacity-90 rounded-md">
-            <div className="text-md font-bold">Your KYC has been Rejected</div>
-            <div className="text-md bg-white mr-auto rounded-md text-red-500">
+            <div className="text-md font-bold text-black">Your <span className="text-red-500">KYC</span>  has been Rejected</div>
+            <div className="text-md p-2 mr-auto rounded-md text-red-500">
               {" "}
               {userData?.kycReviewReason}
             </div>
           </div>
-          <Button color="red" variant="soft" onClick={handleSubmit}>
+          <Button color="red" variant="soft" className="hover:cursor-pointer" onClick={handleSubmit}>
             Upload documents
           </Button>
         </Flex>
@@ -130,11 +130,11 @@ const KycVerification: React.FC<KycVerificationProps> = ({
             justify="between"
             gap="2"
             align="start"
-            className="border border-green-500 rounded-md p-4"
+            className="border bg-[#f5fef8] border-green-500 rounded-lg p-3"
           >
             <div className="md:mt-0 md:flex flex-col w-full text-green-500  hover:opacity-90 rounded-md">
-              <div className="text-md font-bold">
-                Your KYC has been Successfully validated
+              <div className="text-md font-bold text-black">
+                Your <span className="text-green-500">KYC</span> has been Successfully validated
               </div>
             </div>
             <Button
@@ -146,7 +146,6 @@ const KycVerification: React.FC<KycVerificationProps> = ({
             >
               <Flex align="center" gap="1">
                 <X />
-                <p>Close</p>
               </Flex>
             </Button>
           </Flex>
