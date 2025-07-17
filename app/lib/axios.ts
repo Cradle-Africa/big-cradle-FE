@@ -2,7 +2,7 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import {
   getToken,
-  removeUser,
+  // removeUser,
   addToken,
 } from "../utils/user/userData";
 import { refreshTokenService } from "../services/user/userService";
@@ -39,7 +39,9 @@ apiClient_.interceptors.response.use(
 
       try {
         const refreshed = await refreshTokenService();
-        const newAccessToken = refreshed.tokens.accessToken;
+        const newAccessToken = refreshed.accessToken;
+
+        console.log('NEW ACCESS TOKEN:', newAccessToken)
         if (!newAccessToken) {
           throw new Error("Failed to refresh access token");
         }
@@ -53,7 +55,9 @@ apiClient_.interceptors.response.use(
 
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
-        removeUser();
+        // removeUser();
+        console.log("Failed to refresh Access token", refreshError);
+        alert(refreshError);
         return Promise.reject(refreshError);
       }
     }

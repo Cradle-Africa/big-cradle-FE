@@ -10,6 +10,7 @@ import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useReviewBusinessKyc } from '../_features/hook';
+import { Spinner } from '@radix-ui/themes';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,7 +34,7 @@ const ReviewBusinessKyc: React.FC<Props> = ({ setOpen, businessUserId }) => {
     isSuccess: isReviewSuccess,
   } = useReviewBusinessKyc({ axios });
 
-const onSubmit = async (data: ReviewBusinessKycSchema) => {
+  const onSubmit = async (data: ReviewBusinessKycSchema) => {
     try {
       await reviewBusiness({ ...data, businessUserId, adminUserId });
     } catch (error: any) {
@@ -109,8 +110,11 @@ const onSubmit = async (data: ReviewBusinessKycSchema) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
+              className="w-full flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
             >
+              {isSubmitting && (
+                <Spinner className='inline mr-1' />
+              )}
               {isSubmitting ? "Processing..." : "Submit"}
             </button>
           </div>

@@ -10,6 +10,7 @@ import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useInviteBusiness } from '../_features/hook';
+import { Spinner } from '@radix-ui/themes';
 
 interface Props {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -77,7 +78,7 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5 lg:mt-12">
           <div className='relative'>
-            <Mail size={17} className='top-1/3 ml-2 text-gray-400 absolute'/>
+            <Mail size={17} className='top-1/3 ml-2 text-gray-400 absolute' />
             <input
               {...register("email")}
               type="email"
@@ -99,8 +100,11 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
+              className="w-full flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
             >
+              {isSubmitting && (
+                <Spinner className='inline mr-1' />
+              )}
               {isSubmitting ? "Processing..." : "Submit"}
             </button>
           </div>

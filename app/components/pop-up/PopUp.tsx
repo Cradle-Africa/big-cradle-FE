@@ -5,6 +5,7 @@ import { apiPostService } from '../../services/apiService';
 import { LucideIcon } from 'lucide-react';
 import IconComponent from './IconComponent';
 import FormPopup from '../../components/pop-up/PopUpForm';
+import { Spinner } from '@radix-ui/themes';
 
 interface PopUpProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,8 +89,11 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={'w-full py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300  shadow-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white'}
+                                className={'w-full flex justify-between items-center py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300  shadow-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white'}
                             >
+                                {isSubmitting && (
+                                    <Spinner className='inline mr-1'/>
+                                )}
                                 {isSubmitting ? 'Processing...' : title}
                             </button>
                         </div>

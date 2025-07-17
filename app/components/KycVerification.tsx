@@ -63,15 +63,15 @@ const KycVerification: React.FC<KycVerificationProps> = ({
             { name: "email", label: "", type: "hidden", required: true },
             {
               name: "certificateOfIncorporation",
-              label: "Certificate of Incorporation",
-              type: "file",
-              required: true,
+              label: (user?.userType === "corporate") ? "Certificate of Incorporation" : '',
+              type: (user?.userType === "corporate") ? "file" : 'hidden',
+              required: (user?.userType === "corporate") ? true : false,
             },
             {
               name: "individualValidMeansOfId",
-              label: "Individual ID",
-              type: "file",
-              required: true,
+              label: (user?.userType === "individual") ? "Individual ID" : '',
+              type: (user?.userType === "individual") ? "file" : 'hidden',
+              required: (user?.userType === "individual") ? true : false,
             },
           ]}
           defaultValues={{ email: user?.email }}
@@ -94,9 +94,9 @@ const KycVerification: React.FC<KycVerificationProps> = ({
       )}
 
       {user?.kycStatus === "pending" && (
-        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-blue-400 text-white px-5 py-3 rounded-md mb-4">
-          <div className="text-md">
-            Your <span className="bg-blue-400">KYC</span> has been submitted and is under review
+        <div className="mt-14 md:mt-0 md:flex w-full justify-between items-center text-center md:text-center-no bg-blue-50 border border-blue-600 text-white px-5 py-5 rounded-lg mb-4">
+          <div className="text-md font-bold text-black">
+            Your <span className="text-blue-600">KYC</span> has been submitted and is under review
           </div>
         </div>
       )}

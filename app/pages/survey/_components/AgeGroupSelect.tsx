@@ -9,8 +9,8 @@ const AgeGroupSelect = ({ registration }: Props) => {
   const [selectedAgeGroup, setSelectedAgeGroup] = useState<string>("");
 
   return (
-    <div className="mt-4 mb-4">
-      <label htmlFor="age-group" className="block mb-2 font-medium">
+    <div className="mb-4">
+      <label htmlFor="age-group" className="block mb-2">
         Select Age Group
       </label>
       <select

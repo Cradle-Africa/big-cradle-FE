@@ -40,7 +40,7 @@ const SurveyTable = ({ data }: Props) => {
 
   return (
     <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
-      <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
+      <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-14">
         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
           <thead className="bg-gray-50">
             <tr>

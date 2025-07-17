@@ -6,6 +6,7 @@ import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
+import { Spinner } from "@radix-ui/themes";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -19,7 +20,7 @@ const EmployeeDashboard = () => {
     <div>
       {isLoading ? (
         <div>
-          <p>Loading kwc verification... </p>
+          <p><Spinner/> </p>
         </div>
       ) : (
         <KycVerification

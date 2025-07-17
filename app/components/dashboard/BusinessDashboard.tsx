@@ -6,6 +6,7 @@ import { Album, ArrowDownUp, Database } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
+import { Spinner } from "@radix-ui/themes";
 // import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
 // import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
 // import { getBusinessId } from "@/app/utils/user/userData";
@@ -50,7 +51,7 @@ const BusinessDashboard = () => {
     <div>
       {isLoading ? (
         <div>
-          <p>Loading kwc verification... </p>
+          <p><Spinner/> </p>
         </div>
       ) : (
         <KycVerification

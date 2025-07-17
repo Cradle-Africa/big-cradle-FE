@@ -49,7 +49,7 @@ function BuildSignUpPage() {
 				setAdminBusinessUserId(decodedData.adminBusinessUserId);
 				if (decodedData.departmentId) {
 					setEmployeeSignUp(true);
-				}else{
+				} else {
 					setBusinessSignUpLink(true);
 				}
 
@@ -124,11 +124,15 @@ function BuildSignUpPage() {
 					</div> */}
 
 					{
-					// superAdminSignUp ||
-						adminSignUp ||
-						(businessSignUp && (
-							<div className="overflow-x-auto whitespace-nowrap flex w-full justify-between border border-gray-200 px-1 py-1 rounded-md text-sm text-gray-700">
-								{/* <button
+						// superAdminSignUp ||
+						(
+							adminSignUp &&
+							businessSignUp || (
+								<div
+									className="flex w-full justify-start gap-5 text-md border-b-2 
+								border-blue-600">
+
+									{/* <button
 									onClick={() => {
 										setSuperAdminSignUp(true);
 										setBusinessSignUp(false);
@@ -142,38 +146,42 @@ function BuildSignUpPage() {
 								>
 									Super admin
 								</button> */}
-								<button
-									onClick={() => {
-										setAdminSignUp(true);
-										setBusinessSignUp(false);
-										setEmployeeSignUp(false);
-										setSuperAdminSignUp(false);
-									}}
-									className={`py-2 px-2 rounded-md hover:cursor-pointer ${adminSignUp
-											? "bg-blue-600 text-white"
-											: " text-gray-700"
-										}`}
-								>
-									Investor
-								</button>
-								<button
-									onClick={() => {
-										setBusinessSignUp(true);
-										setSuperAdminSignUp(false);
-										setEmployeeSignUp(false);
-										setAdminSignUp(false);
-									}}
-									className={`py-2 px-2 rounded-md hover:cursor-pointer ${businessSignUp
-											? "bg-blue-600 text-white"
-											: " text-gray-700"
-										}`}
-								>
-									Business
-								</button>
-							</div>
-						))}
+									<button
+										onClick={() => {
+											setAdminSignUp(true);
+											setBusinessSignUp(false);
+											setEmployeeSignUp(false);
+											setSuperAdminSignUp(false);
+										}}
+										className={`py-2 px-2 hover:cursor-pointer
+												transition-all ease-in-out duration-500 hover:tracking-tight
+											 ${adminSignUp
+												? "border-b-2 border-blue-600"
+												: ''
+											}`}
+									>
+										Investor
+									</button>
+									<button
+										onClick={() => {
+											setBusinessSignUp(true);
+											setSuperAdminSignUp(false);
+											setEmployeeSignUp(false);
+											setAdminSignUp(false);
+										}}
+										className={`py-2 px-2 hover:cursor-pointer text-back 
+												transition-all ease-in-out duration-500 hover:tracking-tight"
+											${businessSignUp
+												? "border-b-2 border-blue-600 "
+												: ''
+											}`}
+									>
+										Business
+									</button>
+								</div>
+							))}
 
-					<div>
+					<div className="">
 						{superAdminSignUp && <SuperAdminSignUp />}
 						{businessSignUp && <BusinessSignUp />}
 						{adminSignUp && <AdminSignUp />}
@@ -203,9 +211,9 @@ function BuildSignUpPage() {
 const SignUpPage = () => {
 	return (
 		<Suspense>
-			<BuildSignUpPage/>
+			<BuildSignUpPage />
 		</Suspense>
-  )
+	)
 }
 
 export default SignUpPage

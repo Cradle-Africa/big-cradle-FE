@@ -7,6 +7,7 @@ import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 import { useFetchMe } from "@/app/shared/_features/hooks";
 import KycVerification from "../KycVerification";
 import { useState } from "react";
+import { Spinner } from "@radix-ui/themes";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -23,7 +24,7 @@ const BusinessDashboard = () => {
     <div>
       {isLoading ? (
         <div>
-          <p>Loading kwc verification... </p>
+          <p><Spinner/> </p>
         </div>
       ) : (
         <KycVerification

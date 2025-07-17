@@ -6,6 +6,7 @@ import { convertToBase64 } from '../../utils/covertToBase64';
 import { FormPopupProps, OptionType } from './types/PopUp';
 import { validateFields } from './validation/formValidator';
 import ImageUpload from '../form/ImageUploader';
+import { Spinner } from '@radix-ui/themes';
 
 const FormPopup: React.FC<FormPopupProps> = ({
     setOpen,
@@ -114,16 +115,16 @@ const FormPopup: React.FC<FormPopupProps> = ({
         <>
             <div className="fixed inset-0 bg-black/40 z-40" />
             <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
-                <h2 className="text-center text-md font-semibold text-gray-700 mb-2">{title}</h2>
+                <h2 className="text-center text-md font-semibold text-black mb-2">{title}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 mt-5">
                     {fields.map(field => (
                         <div key={field.name}>
-                            <label className="block text-sm text-gray-600 mb-1">{field.label}</label>
+                            <label className="block text-md text-black mb-1">{field.label}</label>
                             {field.type === 'file' ? (
-                                <div className='relative bg-gray-100 rounded'>
+                                <div className='relative bg-blue-100 rounded'>
                                     <ImageUpload
                                         onChange={handleInputChange}
-                                        text="Upload Certificate of incorparation"
+                                        text="Upload Certificate of incorporation"
                                         id="image"
                                         name={field.name}
                                     />
@@ -133,7 +134,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
                                     name={field.name}
                                     value={formData[field.name] || ''}
                                     onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm outline-none"
+                                    className="w-full border border-gray-300 rounded px-4 py-2 text-sm outline-none"
                                 >
                                     <option value="">Select {field.label}</option>
                                     {(field.options || dynamicOptions[field.name] || []).map(option => (
@@ -161,7 +162,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
                     <div className="flex gap-5 justify-center mt-6">
                         <button
                             type="button"
-                            className="w-full bg-gray-300 text-gray-600 py-2 rounded-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:cursor-pointer hover:text-white"
+                            className="w-full py-2 rounded-md hover:bg-blue-600 hover:text-white hover:cursor-pointer"
                             onClick={() => setOpen(false)}
                         >
                             Cancel
@@ -169,8 +170,11 @@ const FormPopup: React.FC<FormPopupProps> = ({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full py-2 rounded-md bg-gray-300 text-gray-600 hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:cursor-pointer hover:opacity-90 "
+                            className="w-full flex justify-between py-2 rounded-md bg-blue-600 text-white hover:cursor-pointer"
                         >
+                            {isSubmitting && (
+                                <Spinner className='inline mr-1'/>
+                            )}
                             {isSubmitting ? 'Processing...' : title}
                         </button>
                     </div>

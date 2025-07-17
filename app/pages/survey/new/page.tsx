@@ -4,7 +4,8 @@ import DashboardLayout from "@/app/DashboardLayout";
 import {
   CountryAndCity,
   DataPointForm,
-  DemographicSchema,
+  DemographicFormValues,
+  DemographicSubmitValues,
   SurveySchema,
 } from "@/app/lib/type";
 import { demographicSchema, surveySchema } from "@/app/lib/validationSchemas";
@@ -63,9 +64,10 @@ const NewSurveyPage = () => {
     handleSubmit: handleSubmitDemographic,
     control: controlDemographic,
     formState: { errors: errorsDemographic },
-  } = useForm<DemographicSchema>({
+  } = useForm<DemographicFormValues, any, DemographicFormValues>({
     resolver: zodResolver(demographicSchema),
   });
+
 
   const surveyName = watch("surveyName");
   const sector = getUser()?.sector ?? '';
@@ -77,25 +79,34 @@ const NewSurveyPage = () => {
   const startDate = watch('startDate');
   const endDate = watch('endDate');
   const ageDemographics = watchDemographic("ageDemographics");
+  const gender = watchDemographic("gender");
   const user = getUser();
 
-  const onDemographicSubmit = (data: DemographicSchema) => {
-    // Make sure the region doesn't exist in the list
+  // In parent component
+  const onDemographicSubmit = (data: DemographicFormValues) => {
+    // Handle adding to countriesAndCities list
     const valueExist = countriesAndCities.some((v) => v.city === data.city);
-
     if (!valueExist) {
       setCountriesAndCities((prev: CountryAndCity[]) => [
         ...(prev ?? []),
         { city: data.city, state: data.state, country: data.country },
       ]);
-      toast.success("Country and region added successfully to the list");
-    } else {
-      toast.error(
-        "City or region already exist in the list, please select a new one"
-      );
-    }
-    // router.push(`/pages/survey/new?survey=survey-name-and-description`);
+      toast.success("Country, region, age and gender added successfully to the list");
+    } 
+    // else {
+    //   toast.error("City or region already exist in the list, please select a new one");
+    // }
   };
+
+  // Create a separate handler for the final submission
+  const handleFinalDemographicSubmit = (data: DemographicSubmitValues) => {
+    // This will be called when user clicks "Next"
+    // You can process the array data here if needed
+    console.log("Final demographic data:", data);
+  };
+
+
+
 
   const onDeleteClick = (data: CountryAndCity) => {
     const filteredList = countriesAndCities.filter((v) => v.city !== data.city);
@@ -207,10 +218,12 @@ const NewSurveyPage = () => {
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
         onSubmitDemographic={onDemographicSubmit}
+        handleFinalDemographicSubmit={handleFinalDemographicSubmit}
         errors={errors}
         country={country}
         city={city}
-        ageDemographics={ageDemographics}
+        ageDemographics={Array.isArray(ageDemographics) ? ageDemographics : [ageDemographics]}
+        gender={Array.isArray(gender) ? gender : [gender]}
         errorsDemographic={errorsDemographic}
         handleSubmitDemographic={handleSubmitDemographic}
         registerDemographic={registerDemographic}
@@ -237,11 +250,15 @@ type FormAreaProps = {
   onNextClicked: () => void;
 
   // demographic
-  ageDemographics: string;
-  handleSubmitDemographic: UseFormHandleSubmit<DemographicSchema>;
-  registerDemographic: UseFormRegister<DemographicSchema>;
-  controlDemographic: Control<DemographicSchema>;
-  errorsDemographic: FieldErrors<DemographicSchema>;
+  ageDemographics: string[];
+  gender: string[];
+  onSubmitDemographic: (data: DemographicSubmitValues) => void;
+  handleSubmitDemographic: UseFormHandleSubmit<DemographicFormValues>;
+  handleFinalDemographicSubmit: (data: DemographicSubmitValues) => void;
+
+  registerDemographic: UseFormRegister<DemographicFormValues>;
+  controlDemographic: Control<DemographicFormValues>;
+  errorsDemographic: FieldErrors<DemographicFormValues>;
 
   //
   countriesAndCities: CountryAndCity[];
@@ -261,7 +278,6 @@ type FormAreaProps = {
   //
   handleSubmit: UseFormHandleSubmit<SurveySchema>;
   onSubmit: (data: SurveySchema) => void;
-  onSubmitDemographic: (data: DemographicSchema) => void;
   errors: FieldErrors<SurveySchema>;
 
   //
@@ -282,9 +298,11 @@ const FormArea = ({
   startDate,
   endDate,
   ageDemographics,
+  gender,
   handleSubmit,
   onSubmit,
   onSubmitDemographic,
+  handleFinalDemographicSubmit,
   errors,
   errorsDemographic,
   controlDemographic,
@@ -299,24 +317,27 @@ const FormArea = ({
   //
   countryAndCitiesList,
 }: FormAreaProps) => {
+  // Convert string values to arrays as needed
+  const ageArray = typeof ageDemographics === 'string' ? [ageDemographics] : ageDemographics;
+  const genderArray = typeof gender === 'string' ? [gender] : gender;
+
   if (survey === "location-and-demographic") {
     return (
       <>
-      
-      <LocationAndDemographic
-        register={registerDemographic}
-        handleSubmit={handleSubmitDemographic}
-        onSubmit={onSubmitDemographic}
-        control={controlDemographic}
-        errors={errorsDemographic}
-        countryAndCitiesList={countryAndCitiesList}
-        onDeleteClick={onDeleteClick}
-        onNextClicked={onNextClicked}
-      // setCountriesAndCities={setCountriesAndCities}
-      />
 
+        <LocationAndDemographic
+          register={registerDemographic}
+          handleSubmit={handleSubmitDemographic}
+          onSubmit={handleFinalDemographicSubmit}  // Pass the final submit handler
+          control={controlDemographic}
+          errors={errorsDemographic}
+          countryAndCitiesList={countryAndCitiesList}
+          onDeleteClick={onDeleteClick}
+          onNextClicked={onNextClicked}
+          onAddLocation={onSubmitDemographic}
+        />
       </>
-      
+
     );
   } else if (survey === "survey-name-and-description") {
     return (
@@ -339,7 +360,8 @@ const FormArea = ({
         form={form}
         setForm={setForm}
         countriesAndCities={countriesAndCities}
-        locationAndDemographic={ageDemographics}
+        locationAndDemographic={ageArray}
+        gender={genderArray}
       />
     );
   } else if (survey === "survey-payment") {
@@ -355,7 +377,8 @@ const FormArea = ({
         endDate={endDate}
         countriesAndCities={countriesAndCities}
         locationAndDemographic={ageDemographics}
-        ageDemographics={ageDemographics}
+        ageDemographics={ageArray}
+        gender={genderArray}
       />
     );
   }

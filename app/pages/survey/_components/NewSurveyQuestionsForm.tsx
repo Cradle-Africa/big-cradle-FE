@@ -35,7 +35,8 @@ type Props = {
   surveyGoal: string;
   startDate: string,
   endDate: string,
-  locationAndDemographic: string;
+  locationAndDemographic: string[];
+  gender: string[];
   countriesAndCities: CountryAndCity[];
 };
 
@@ -49,6 +50,7 @@ const NewSurveyQuestionsForm = ({
   startDate,
   endDate,
   locationAndDemographic,
+  gender,
   countriesAndCities,
 }: Props) => {
   const router = useRouter();
@@ -96,7 +98,8 @@ const NewSurveyQuestionsForm = ({
         amount: 0,
         field: form.field,
         surveyLocations: demographicsToPost,
-        ageDemographics: locationAndDemographic
+        ageDemographics: locationAndDemographic,
+        gender: gender
       };
 
       await createSurvey(payload, {

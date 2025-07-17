@@ -171,17 +171,6 @@ export type DemographicSchema = z.infer<typeof demographicSchema>;
 
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
 
-// export type FieldType =
-//   | "text"
-//   | "email"
-//   | "tel"
-//   | "select"
-//   | "radio"
-//   | "checkbox"
-//   | "textarea"
-//   | "number"
-//   | "date";
-
 export type FieldType =
   | "text"
   | "email"
@@ -236,6 +225,20 @@ export interface DataPoint {
   createdAt?: string;
   dataPointName?: string;
 }
+
+
+// In your type definitions file
+export interface DemographicFormValues {
+  country: string;
+  state: string;
+  city: string;
+  ageDemographics: string[];
+  gender: string[];          
+}
+
+
+export type DemographicSubmitValues = DemographicFormValues;
+
 
 export interface Survey {
   id?: string;
@@ -341,6 +344,7 @@ export type Me = {
   firstName: string;
   businessFirstName: string;
   fullName: string;
+  userType: string;
 };
 
 export type SurveyListResponse = {

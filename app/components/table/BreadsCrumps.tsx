@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react'
 import { getBusinessId, getToken } from '../../utils/user/userData';
 import FormPopup from '../pop-up/PopUpForm'
-import { BASE_URL } from '@/app/services/base'
 import { Department } from './types/Table';
 import { BreadsCrumpsProps } from './types/Table'
+import { BASE_URL } from '@/app/lib/axios';
 
 
 const BreadsCrumps: React.FC<BreadsCrumpsProps> = (

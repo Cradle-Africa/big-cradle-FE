@@ -46,7 +46,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange, text, id, name 
     };
 
     return (
-        <div className="rounded-lg w-full py-2 bg-gray-100 text-gray-500 p-1 flex flex-col items-center" >
+        <div className="rounded-lg w-full py-5 border border-dashed border-blue-500 hover:border-1  bg-blue-50 text-blue-500 p-1 flex flex-col items-center" >
             {!preview ? (
                 <>
                     <input

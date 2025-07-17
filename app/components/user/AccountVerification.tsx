@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import OtpInput from './OtpInput';
 import { verifyOtpService, resendOtpService } from '../../services/user/userService';
 import { useRouter } from 'next/navigation';
+import { Spinner } from '@radix-ui/themes';
 
 interface AccountVerificationProps {
     showAccountVerification: boolean;
@@ -110,7 +111,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                     <div className="flex gap-5 justify-center mt-5">
                         <button
                             type="button"
-                            className="w-full hover:cursor-pointer text-gray-500 py-2 h-10 rounded-md hover:border border-gray-400"
+                            className="w-full hover:cursor-pointer py-2 h-10 rounded-md hover:bg-blue-600 hover:text-white"
                             onClick={() => setShowAccountVerification(false)}
                         >
                             Close
@@ -119,9 +120,12 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300 ${isSubmitting ? 'bg-gray-300' : 'shadow-md hover:text-white hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90'}`}
+                            className={`w-full flex justify-center items-center px-5 py-2 rounded-md bg-blue-600 text-white hover:cursor-pointer'}`}
 
                         >
+                            {isSubmitting && (
+                                <Spinner className='inline mr-1'/>
+                            )}
                             {isSubmitting ? 'Verifying...' : 'Verify'}
                         </button>
                     </div>
