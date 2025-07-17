@@ -1,28 +1,34 @@
 
-import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, {
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+  AxiosHeaders
+} from "axios";
+
 import {
   getToken,
   // removeUser,
   addToken,
-  removeUser,
 } from "../utils/user/userData";
 import { refreshTokenService } from "../services/user/userService";
 
-// export const BASE_URL = "https://big-cradle-be-dev.onrender.com";
+// export const BASE_URL = "https://big-cradle-be-dev.onre/nder.com";
 export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
 
 const apiClient_ = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
-  withCredentials: true, // <-- required for cookies
+  withCredentials: true, // Important: ensures refresh token cookie is sent
 });
 
 // === Request Interceptor
 apiClient_.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getToken();
-    if (token) {
-      config.headers.set("Authorization", `Bearer ${token}`);
+    if (token && config.headers) {
+      // Correctly using .set() for AxiosHeaders
+      (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
     }
     return config;
   },
@@ -39,26 +45,30 @@ apiClient_.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshed = await refreshTokenService();
-        const newAccessToken = refreshed.accessToken;
+        const { accessToken } = await refreshTokenService();
+        if (!accessToken) throw new Error("No access token returned from refresh");
 
-        console.log('NEW ACCESS TOKEN:', newAccessToken)
-        if (!newAccessToken) {
-          throw new Error("Failed to refresh access token");
+        addToken(accessToken);
+
+        // Use .set if headers is AxiosHeaders instance
+        if (originalRequest.headers) {
+          if (typeof (originalRequest.headers as AxiosHeaders).set === 'function') {
+            // It's an instance of AxiosHeaders – use set method
+            (originalRequest.headers as AxiosHeaders).set('Authorization', `Bearer ${accessToken}`);
+            console.log("Set new access token -");
+
+          } else {
+            // It's a plain object – mutate directly
+            (originalRequest.headers as Record<string, string>)['Authorization'] = `Bearer ${accessToken}`;
+            console.log("Set new access token --");
+
+          }
         }
-
-        console.log("Access token refreshed successfully");
-
-        addToken(newAccessToken);
-
-        // Update Authorization header safely
-        (originalRequest.headers as any).set('Authorization', `Bearer ${newAccessToken}`);
 
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
-        removeUser();
-        console.log("Failed to refresh Access token", refreshError);
-        // alert(refreshError);
+        console.error("Failed to refresh Access token", refreshError);
+        // removeUser();
         return Promise.reject(refreshError);
       }
     }
@@ -69,6 +79,7 @@ apiClient_.interceptors.response.use(
 
 export default apiClient_;
 
+
 export const axiosWithoutAuth = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -76,4 +87,3 @@ export const axiosWithoutAuth = axios.create({
   },
   withCredentials: true,
 });
-

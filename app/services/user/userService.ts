@@ -86,6 +86,7 @@ export const signInService = async (payload: SignInPayload) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            withCredentials: true, // This allows the browser to store the refresh token cookie
         });
         return response.data;
     } catch (error: any) {
@@ -95,13 +96,13 @@ export const signInService = async (payload: SignInPayload) => {
 
 // services/user/userService.ts
 export const refreshTokenService = async () => {
-  const response = await axios.post(`${BASE_URL}/authentication/refresh-token`,
-    {},
-    {
-      withCredentials: true, // ensure the refresh cookie is sent
-    }
-  );
-  return response.data;
+    const response = await axios.post(`${BASE_URL}/authentication/refresh-token`,
+        {},
+        {
+            withCredentials: true, // ensure the refresh cookie is sent
+        }
+    );
+    return response.data;
 };
 
 

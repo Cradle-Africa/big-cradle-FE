@@ -8,7 +8,7 @@ import {
   File,
   House,
   MonitorCog,
-  ChartNoAxesCombined,
+  // ChartNoAxesCombined,
   Users,
   UsersRound,
 } from "lucide-react";
@@ -101,11 +101,11 @@ const sideBarLinks: {
     href: "/pages/flywheel",
     icon: <Database size={15} />,
   },
-  {
-    label: "Social Media",
-    href:"/pages/flywheel/social-media",
-    icon: <ChartNoAxesCombined size={15} />,
-  },
+  // {
+  //   label: "Social Media",
+  //   href:"/pages/flywheel/social-media",
+  //   icon: <ChartNoAxesCombined size={15} />,
+  // },
   {
     label: "Department",
     href: "/pages/user/department",

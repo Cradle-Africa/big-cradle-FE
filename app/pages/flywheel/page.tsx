@@ -12,6 +12,7 @@ import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { useSearchParams } from "next/navigation";
+import { Spinner } from "@radix-ui/themes";
 // import NewDataPoint from "./datapoint/new/NewDataPoint";
 
 type TabKey = 'Overview' | 'Data Pipelines' | '';
@@ -67,7 +68,7 @@ const Flywheel = () => {
 	const {
 		isLoading: isLoadingDataPoints,
 		data: pipelineData,
-		refetch: refetchPipelines
+		refetch
 	} = useFetchPipelines({
 		axios,
 		queryParams: { page: pipelinePage, limit: pipelineLimit }
@@ -120,15 +121,15 @@ const Flywheel = () => {
 		return () => document.removeEventListener('mousedown', handler);
 	}, []);
 
-	 useEffect(() => {
-        refetchPipelines();
+	useEffect(() => {
+		refetch();
 		// refetchDataPoints();
-    }, [refetchPipelines, searchParams])
+	}, [refetch, searchParams])
 
 	if (isLoadingDataOverview) return (
 		<div>
 			<DashboardLayout>
-				Loading...
+				<Spinner />
 			</DashboardLayout>
 		</div>
 	);
@@ -144,8 +145,8 @@ const Flywheel = () => {
 	const TabContent: Record<TabKey, () => JSX.Element> = {
 
 		"": () => (
-			<p>Loading ...</p>
-		), 
+			<Spinner />
+		),
 
 		"Overview": () => (
 			<Overview
@@ -186,7 +187,9 @@ const Flywheel = () => {
 
 						{/* Add proper loading and empty state handling */}
 						{isLoadingPipelines ? (
-							<div className="mt-5">Loading pipelines...</div>
+							<div className="mt-5">
+								<Spinner />
+							</div>
 						) : (
 							<>
 								{/* {pipelinesToRender.length === 0 ? (

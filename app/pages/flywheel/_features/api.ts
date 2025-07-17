@@ -212,7 +212,7 @@ export const fetchPipelines = async (
             removeUser();
         }
         return {
-            data: res.data.dataPoint ?? [],
+            data: res.data.data ?? [],
             limit: Number(res.data.limit),
             page: Number(res.data.page),
             total: Number(res.data.total),
