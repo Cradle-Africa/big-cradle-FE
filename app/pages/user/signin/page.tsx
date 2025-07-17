@@ -1,7 +1,7 @@
 "use client";
 import LoginImage from "@/app/components/LoginImage";
 import ForgotPassword from "@/app/components/user/ForgotPassword";
-import { addRefreshToken, addToken, addUser } from "@/app/utils/user/userData";
+import { addToken, addUser } from "@/app/utils/user/userData";
 import LogoWithText from "@/public/images/logo-with-text.png";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
@@ -61,8 +61,8 @@ export default function SignInPage() {
       toast.loading("Loading...");
       const response = await signInService(payload);
       addUser(response.data);
-      addToken(response?.tokens?.accessToken);
-      addRefreshToken(response?.tokens?.refreshToken);
+      addToken(response?.accessToken);
+      // addRefreshToken();
       
       if (response.data.role === "business") {
         localStorage.setItem("successKwcVisible", "true");
