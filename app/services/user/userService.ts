@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { BASE_URL } from "../base";
-
 import {
     SuperAdminSignUpPayload,
     BusinessSignUpPayload,
@@ -15,6 +13,7 @@ import {
     SuspendUserPayload,
     DeleteUserPayload,
 } from "../../pages/user/types/User";
+import { BASE_URL } from '@/app/lib/axios';
 
 export const SuperAdminSignUpService = async (payload: SuperAdminSignUpPayload) => {
     try {
@@ -94,14 +93,23 @@ export const signInService = async (payload: SignInPayload) => {
     }
 };
 
-// import axios from "../axios";
-export const refreshTokenService = async (email: string, refreshToken: string) => {
-  const response = await axios.post(`${BASE_URL}/authentication/refresh-token`, {
-    email,
-    refreshToken,
-  });
+// services/user/userService.ts
+export const refreshTokenService = async () => {
+  const response = await axios.post(`${BASE_URL}/authentication/refresh-token`,
+    {},
+    {
+      withCredentials: true, // ensure the refresh cookie is sent
+    }
+  );
   return response.data;
 };
+
+
+
+
+
+
+
 
 
 

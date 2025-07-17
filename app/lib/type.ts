@@ -237,7 +237,6 @@ export interface DataPoint {
   dataPointName?: string;
 }
 
-
 export interface Survey {
   id?: string;
   businessUserId: string | null;
@@ -253,7 +252,8 @@ export interface Survey {
     state: string;
     city: string;
   }[];
-  ageDemographics: string;
+  ageDemographics: string[];
+  gender:string[];
   amount: number;
   field: Field[];
 }

@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig, AxiosError, AxiosResponse } from 'axios';
-import { BASE_URL } from './base';
+
 import { getToken, removeUser, updateUserKycStatus } from '../utils/user/userData';
+import { BASE_URL } from '../lib/axios';
 
 // Axios instance
 const apiClient = axios.create({

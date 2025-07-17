@@ -62,8 +62,7 @@ export default function SignInPage() {
       const response = await signInService(payload);
       addUser(response.data);
       addToken(response?.accessToken);
-      // addRefreshToken();
-      
+
       if (response.data.role === "business") {
         localStorage.setItem("successKwcVisible", "true");
         localStorage.setItem("businessId", response.data.id);

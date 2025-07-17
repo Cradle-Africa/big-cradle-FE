@@ -1,66 +1,19 @@
-// import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
-// import { getToken, removeUser } from "../utils/user/userData";
-// export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
-// // const BASE_URL = "";
-
-// const apiClient_ = axios.create({
-//   baseURL: BASE_URL,
-//   headers: { "Content-Type": "application/json" },
-// });
-
-// apiClient_.interceptors.request.use(
-//     (config: InternalAxiosRequestConfig) => {
-//         const token = getToken();
-//         if (token) {
-//             config.headers.set('Authorization', `Bearer ${token}`);
-//         } else {
-//             throw new Error('No authentication token found');
-//         }
-//         return config;
-//     },
-//     (error: AxiosError) => Promise.reject(error)
-// );
-
-
-// apiClient_.interceptors.response.use(
-//     (response: AxiosResponse) => response,
-//     (error: AxiosError) => {
-//         if (error.response?.status === 401) {
-//             removeUser();
-//         }
-//         return Promise.reject(error);
-//     }
-// );
-
-// export default apiClient_;
-
-// export const axiosWithoutAuth = axios.create({
-//   baseURL: BASE_URL,
-//   headers: {
-//     'Content-Type': 'application/json',
-//   },
-// });
-
-
-
-
-// axios/index.ts
 
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import {
   getToken,
-  getRefreshToken,
-  getUser,
   removeUser,
   addToken,
 } from "../utils/user/userData";
 import { refreshTokenService } from "../services/user/userService";
 
+// export const BASE_URL = "https://big-cradle-be-dev.onrender.com";
 export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
 
 const apiClient_ = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
+  withCredentials: true, // <-- required for cookies
 });
 
 // === Request Interceptor
@@ -85,24 +38,21 @@ apiClient_.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = getRefreshToken();
-        const user = getUser();
-        if (!refreshToken || !user?.email) throw new Error("Missing refresh token or email");
-        // Attempt to refresh the access token
-        const refreshed = await refreshTokenService(user.email, refreshToken);
+        const refreshed = await refreshTokenService();
         const newAccessToken = refreshed.tokens.accessToken;
         if (!newAccessToken) {
           throw new Error("Failed to refresh access token");
-        }else{
-          console.log("Access token refreshed successfully");
         }
+
+        console.log("Access token refreshed successfully");
+
         addToken(newAccessToken);
 
-        // Retry original request with new access token
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        // Update Authorization header safely
+        (originalRequest.headers as any).set('Authorization', `Bearer ${newAccessToken}`);
+
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
-        // console.error("Error refreshing access token:", refreshError);
         removeUser();
         return Promise.reject(refreshError);
       }
@@ -119,4 +69,6 @@ export const axiosWithoutAuth = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
+

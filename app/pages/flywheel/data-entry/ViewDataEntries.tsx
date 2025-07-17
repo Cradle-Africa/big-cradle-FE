@@ -45,7 +45,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         },
     });
 
-    const { data: singlePipeline } = useFetchSinglePipeline({
+    const { data: singlePipeline, refetch: refreshSinglePipeline } = useFetchSinglePipeline({
             axios,
             id: pipelineId || '',
             enabled: true,
@@ -83,7 +83,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const searchParams = useSearchParams();
     useEffect(() => {
         refetch();
-    }, [refetch, searchParams])
+        refreshSinglePipeline();
+    }, [refetch, refreshSinglePipeline, searchParams])
 
     if (!viewDataEntries) return null;
 
