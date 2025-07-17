@@ -4,6 +4,7 @@ import {
   getToken,
   // removeUser,
   addToken,
+  removeUser,
 } from "../utils/user/userData";
 import { refreshTokenService } from "../services/user/userService";
 
@@ -55,9 +56,9 @@ apiClient_.interceptors.response.use(
 
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
-        // removeUser();
+        removeUser();
         console.log("Failed to refresh Access token", refreshError);
-        alert(refreshError);
+        // alert(refreshError);
         return Promise.reject(refreshError);
       }
     }
