@@ -7,7 +7,7 @@ import FlywheelTabs from "./_components/FlywheelTabs";
 import Overview from "./_components/Overview";
 import axios from "@/app/lib/axios";
 import PopUp from "./_components/Popup";
-import { useFetchDataOverview, useFetchPipelines, useFetchPipelinesByDepartment } from "./_features/hook";
+import { useFetchDataOverview, useFetchPipelines } from "./_features/hook";
 import NewPipeLine from '@/app/pages/flywheel/pipeline/NewPipeline';
 import Pipeline from '@/app/pages/flywheel/pipeline/Pipeline';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
@@ -25,14 +25,10 @@ const Flywheel = () => {
 
 	useEffect(() => {
 		const tabParam = searchParams.get('tab')?.toLowerCase().trim();
-
 		switch (tabParam) {
 			case 'pipelines':
 				setSelectedTab('Data Pipelines');
 				break;
-			// case 'data-points':
-			// 	setSelectedTab('Data Points');
-			// 	break;
 			default:
 				setSelectedTab('Overview');
 		}
@@ -47,69 +43,42 @@ const Flywheel = () => {
 	}
 
 	const [selectedDepartment, setSelectedDepartment] = useState('');
+	const [selectedStartDate, setSelectedStartDate] = useState('');
+	const [selectedEndDate, setSelectedEndDate] = useState('');
+	const [search, setSearch] = useState('');
+
 	const [popupOpen, setPopupOpen] = useState(false);
 	const [creatingPipeline, setCreatingPipeline] = useState(false);
-	// const [creatingDataPoint, setCreatingDataPoint] = useState(false);
 
-	// const [pointsPage, setPointsPage] = useState(1);
-	// const [pointsLimit, setPointsLimit] = useState(10);
 	const [pipelinePage, setPipelinePage] = useState(1);
 	const [pipelineLimit, setPipelineLimit] = useState(10);
 
-	// const { data: dataPoints, refetch: refetchDataPoints } = useFetchDataPoints({
-	// 	axios,
-	// 	queryParams: { page: pointsPage, limit: pointsLimit }
-	// });
-	// const datapoints = dataPoints?.data ?? [];
-	// const paginationDataPoints = dataPoints?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 }
 
 	const { data: dataOverview, isLoading: isLoadingDataOverview, isError } = useFetchDataOverview(axios);
 
 	const {
-		isLoading: isLoadingDataPoints,
+		isLoading: isLoadingPipelines,
 		data: pipelineData,
-		refetch
+		refetch,
 	} = useFetchPipelines({
 		axios,
-		queryParams: { page: pipelinePage, limit: pipelineLimit }
-	});
-
-	const {
-		data: filteredPipelineData,
-		isLoading: isLoadingFilteredPipeline,
-	} = useFetchPipelinesByDepartment({
-		axios,
 		queryParams: {
-			businessUserId: businessUserId,
-			departmentId: selectedDepartment,
+			businessUserId,
+			departmentId: selectedDepartment || '',
+			startDate: selectedStartDate,
+			endDate: selectedEndDate,
+			search: search,
 			page: pipelinePage,
 			limit: pipelineLimit,
 		},
-		enabled: !!selectedDepartment, // only fetch when department is selected
 	});
 
-	// Simplified pipelines to render logic
-	const pipelinesToRender = selectedDepartment
-		? filteredPipelineData?.data ?? []
-		: pipelineData?.data ?? [];
-
-	const isLoadingPipelines = selectedDepartment
-		? isLoadingFilteredPipeline
-		: isLoadingDataPoints;
-
-	const pipelinePaginationToRender = selectedDepartment
-		? {
-			page: filteredPipelineData?.page || 1,
-			limit: filteredPipelineData?.limit || 10,
-			total: filteredPipelineData?.total || 0,
-			pages: Math.ceil((filteredPipelineData?.total || 0) / (filteredPipelineData?.limit || 10)),
-		}
-		: {
-			page: pipelineData?.page || 1,
-			limit: pipelineData?.limit || 10,
-			total: pipelineData?.total || 0,
-			pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
-		};
+	const pagination = {
+		page: pipelineData?.page || 1,
+		limit: pipelineData?.limit || 10,
+		total: pipelineData?.total || 0,
+		pages: Math.ceil((pipelineData?.total || 0) / (pipelineData?.limit || 10)),
+	};
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -123,8 +92,15 @@ const Flywheel = () => {
 
 	useEffect(() => {
 		refetch();
-		// refetchDataPoints();
-	}, [refetch, searchParams])
+	}, [
+		refetch,
+		selectedStartDate,
+		selectedEndDate,
+		selectedDepartment,
+		search,
+		pipelinePage,
+		pipelineLimit,
+	]);
 
 	if (isLoadingDataOverview) return (
 		<div>
@@ -192,65 +168,30 @@ const Flywheel = () => {
 							</div>
 						) : (
 							<>
-								{/* {pipelinesToRender.length === 0 ? (
-									<div className="mt-5">
-										{selectedDepartment
-											? "No pipelines found for this department"
-											: "No pipelines found"}
-									</div>
-								) : ( */}
 								<Pipeline
-									pipelineData={pipelinesToRender}
-									pagination={pipelinePaginationToRender}
+									pipelineData={pipelineData?.data ?? []}
+									pagination={pagination}
 									onPageChange={setPipelinePage}
 									onLimitChange={(newLimit) => {
 										setPipelineLimit(newLimit);
 										setPipelinePage(1);
 									}}
 									selectedDepartment={selectedDepartment}
+									selectedStartDate={selectedStartDate}
+									selectedEndDate={selectedEndDate}
 									setSelectedDepartment={setSelectedDepartment}
+									setSelectedStartDate={setSelectedStartDate}
+									setSelectedEndDate={setSelectedEndDate}
+									search={search}
+									setSearch={setSearch}
 									loading={false} // Set to false here since we already checked loading state
 								/>
-								{/* )} */}
 							</>
 						)}
 					</>
 				)}
 			</div>
 		),
-
-		// "Data Points": () => (
-		// 	<div className="mt-5">
-		// 		{creatingDataPoint ? (
-		// 			<>
-		// 				<NewDataPoint
-		// 					creatingDataPoint={creatingDataPoint}
-		// 					setCreatingDataPoint={setCreatingDataPoint}
-		// 					pipelines={pipelinesToRender}
-		// 				/>
-		// 			</>
-		// 		) : (
-		// 			<>
-		// 				{isLoadingDataPoints ? (
-		// 					<div className="mt-5">Loading ...</div>
-		// 				) : (
-		// 					<DataPoints
-		// 						data={datapoints}
-		// 						pagination={paginationDataPoints}
-		// 						onPageChange={setPointsPage}
-		// 						onLimitChange={(newLimit) => {
-		// 							setPointsLimit(newLimit);
-		// 							setPointsPage(1);
-		// 						}}
-		// 						creatingDataPoint={creatingDataPoint}
-		// 						setCreatingDataPoint={setCreatingDataPoint}
-		// 					/>
-
-		// 				)}
-		// 			</>
-		// 		)}
-		// 	</div>
-		// )
 	};
 
 	return (
@@ -264,14 +205,7 @@ const Flywheel = () => {
 				}}
 			/>
 
-			<div className="flex justify-between">
-				<div className="flex flex-col gap-2">
-					<p className="font-semibold text-lg text-black">Data flywheel</p>
-					<p>Transform insights into actions that accelerate your business growth</p>
-				</div>
-			</div>
-
-			<div className="flex flex-col bg-[#fcfcfc] py-4 mt-5">
+			<div className="flex flex-col bg-[#fcfcfc] py-4">
 				<div className="flex gap-4 bg-[#fcfcfc]">
 					{tabs.map((tab) => (
 						<FlywheelTabs
@@ -281,6 +215,13 @@ const Flywheel = () => {
 							onClick={() => setSelectedTab(tab)}
 						/>
 					))}
+				</div>
+
+				<div className="flex justify-between mt-5">
+					<div className="flex flex-col gap-2">
+						<p className="font-semibold text-lg text-black">Data pipeline</p>
+						<p>Transform insights into actions that accelerate your business growth</p>
+					</div>
 				</div>
 
 				{/* Tab Layout Rendering */}

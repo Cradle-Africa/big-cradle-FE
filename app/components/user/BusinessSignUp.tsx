@@ -12,10 +12,11 @@ import {
 import CountryCodeSelect from "@/app/components/form/CountryCodeSelect";
 import { BusinessSignUpService } from "../../services/user/userService";
 import CredentialDetails from "../../components/form/CredentialDetails";
-import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
+import { CountrySelect, StateSelect } from "react-country-state-city";
 import sectors from '@/app/utils/data/sectors.json';
 import SearchSelect from "../form/SearchSelect";
 import "react-country-state-city/dist/react-country-state-city.css";
+import { Spinner } from "@radix-ui/themes";
 
 export default function BusinessSignUp() {
 	const [step, setStep] = useState<number>(1);
@@ -117,6 +118,7 @@ export default function BusinessSignUp() {
 			<div className="w-full py-4 bg-white">
 				<div className="w-full space-y-6">
 					<form onSubmit={handleSubmit} className="">
+
 						{/* Step 1 */}
 						{step === 1 && (
 							<>
@@ -206,16 +208,17 @@ export default function BusinessSignUp() {
 										)}
 									</div>
 								</div>
-								<div className="flex justify-end mt-5">
-									<button
-										type="button"
-										onClick={next}
-										className="rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
-									>
-										Next
-										<ChevronRight size={14} className="inline ml-1" />
-									</button>
+								<div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 4
 								</div>
+								<button
+									type="button"
+									onClick={next}
+									className="w-full mt-5 rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
+								>
+									Next
+									<ChevronRight size={14} className="inline ml-1" />
+								</button>
 							</>
 						)}
 
@@ -271,7 +274,20 @@ export default function BusinessSignUp() {
 								</div>
 
 								<div className="w-full mt-5">
-									<CitySelect
+
+									<input
+										name="businessCity"
+										value={form.businessCity}
+										onChange={handleChange}
+										placeholder="Enter the city name"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+									/>
+									{errors.businessCity && (
+										<p className="text-red-500 text-xs">
+											{errors.businessCity}
+										</p>
+									)}
+									{/* <CitySelect
 										countryid={form.businessCountryCode}
 										stateid={form.businessStateCode}
 										onChange={(city: any) =>
@@ -287,7 +303,7 @@ export default function BusinessSignUp() {
 										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
 									/>
 
-									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+									{errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>} */}
 								</div>
 
 								<div className="w-full mt-5">
@@ -337,19 +353,22 @@ export default function BusinessSignUp() {
 									)}
 								</div>
 
+								<div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 4
+								</div>
 								<div className="flex justify-between gap-2 mt-5">
 									<button
 										type="button"
 										onClick={back}
-										className="px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white"
+										className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"
 									>
-										<ChevronLeft size={14} className="inline ml-1" />
+										<ChevronLeft size={14} className="inline ml-2" />
 										Back
 									</button>
 									<button
 										type="button"
 										onClick={next}
-										className="rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
+										className="flex items-center justify-center w-1/2 rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
 									>
 										Next
 										<ChevronRight size={14} className="inline ml-1" />
@@ -367,25 +386,31 @@ export default function BusinessSignUp() {
 									errors={errors}
 								/>
 
+								<div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 4
+								</div>
 								<div className="flex justify-between gap-2 mt-5">
 									<button
 										type="button"
 										onClick={back}
-										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+										className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"
 									>
 										<ChevronLeft size={14} className="inline ml-1" />
 										Back
 									</button>
+
 									<button
 										type="submit"
 										disabled={isSubmitting}
-										className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-											? "bg-blue-500 text-white"
-											: "bg-blue-600 text-white hover:bg-blue-700"
-											}`}
+										className="flex items-center justify-center w-1/2 px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white"
 									>
+										{isSubmitting ? (
+											<Spinner className='inline mr-1' />
+										): (
 										<Check size={14} className="inline mr-1" />
-										{isSubmitting ? "Submitting..." : "Create an Account"}
+										)
+										}
+										{isSubmitting ? "Submitting..." : "Submit"}
 									</button>
 								</div>
 							</>

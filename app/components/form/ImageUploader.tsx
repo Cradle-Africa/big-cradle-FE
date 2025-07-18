@@ -46,7 +46,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange, text, id, name 
     };
 
     return (
-        <div className="rounded-lg w-full py-5 border border-dashed border-blue-500 hover:border-1  bg-blue-50 text-blue-500 p-1 flex flex-col items-center" >
+        <div className="cursor-pointer rounded-lg w-full py-5 border border-dashed border-blue-500 hover:border-1  bg-blue-50 text-blue-500 p-1 flex flex-col items-center" >
             {!preview ? (
                 <>
                     <input
@@ -57,7 +57,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onChange, text, id, name 
                         className="hidden"
                         onChange={onFileChange} // <-- Use onFileChange here
                     />
-                    <label htmlFor={id} className="cursor-pointer flex flex-row items-center gap-x-3" >
+                    <label htmlFor={id} className="flex flex-row items-center gap-x-3" >
                         <AiOutlineCloudUpload size={15} />
                         <p className="capitalize" > {text} </p>
                     </label>

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { apiPostService } from '../../services/apiService';
-import { LucideIcon } from 'lucide-react';
+import { Check, LucideIcon } from 'lucide-react';
 import IconComponent from './IconComponent';
 import FormPopup from '../../components/pop-up/PopUpForm';
 import { Spinner } from '@radix-ui/themes';
@@ -36,7 +36,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
         };
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
-    },[setOpen]);
+    }, [setOpen]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -80,7 +80,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
                         <div className="flex gap-5 justify-center mt-5">
                             <button
                                 type="button"
-                                className="w-full hover:cursor-pointer bg-gray-300 text-gray-500 py-2 rounded-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white"
+                                className="w-1/2 hover:cursor-pointer bg-gray-100 text-black py-2 rounded-md hover:bg-blue-600 hover:text-white cursor-pointer"
                                 onClick={() => { setOpen(false); }}
                             >
                                 Cancel
@@ -89,11 +89,14 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={'w-full flex justify-between items-center py-2 rounded-md hover:cursor-pointer text-gray-500 bg-gray-300  shadow-md hover:bg-gradient-to-br hover:from-[#578CFF] hover:to-[#0546D2] hover:opacity-90 hover:text-white'}
+                                className={'w-1/2 flex justify-center px-4 items-center py-2 rounded-md bg-blue-600 hover:text-white cursor-pointer'}
                             >
-                                {isSubmitting && (
-                                    <Spinner className='inline mr-1'/>
-                                )}
+                                {isSubmitting ? (
+                                    <Spinner className='inline mr-1' />
+                                ) : (
+                                    <Check size={14} className="inline mr-1" />
+                                )
+                                }
                                 {isSubmitting ? 'Processing...' : title}
                             </button>
                         </div>
@@ -149,7 +152,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
 
 
                                 ]}
-                                defaultValues={{ 
+                                defaultValues={{
                                     businessUserId: businessUserId || '',
                                     adminUserId: adminUserId || '',
                                 }}

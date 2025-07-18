@@ -40,23 +40,23 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 
 	return (
 		<>
-			<div className="overflow-x-auto pb-14 rounded-[8px] border border-gray-200">
+			<div className="overflow-x-auto  pb-14 rounded-[8px] border border-gray-200">
 				<table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
 					<thead className="bg-gray-50">
 						<tr>
-							<th className="px-6 py-3 text-left text-sm font-semibold">#</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Business Name</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">First Name</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Last Name</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Country</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">City</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">State</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Address</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Size</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">KYC Status</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">#</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Business Name</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Email</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">First Name</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Last Name</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Country</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">City</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">State</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Address</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Size</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">KYC Status</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Status</th>
+							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Actions</th>
 						</tr>
 					</thead>
 					<tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">

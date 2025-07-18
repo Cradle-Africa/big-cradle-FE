@@ -7,6 +7,7 @@ import Pagination from '@/app/components/table/Pagination';
 import { getBusinessId, getAdminUserId } from '../../utils/user/userData'
 import { TableData, TableComponentProps } from './types/Table';
 import BreadsCrumps from './BreadsCrumps'
+import { Spinner } from '@radix-ui/themes';
 
 const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, fields, breadcrumbs, actionConfig, rightAction, }) => {
     const [tableData, setTableData] = useState<TableData[]>(data || [])
@@ -70,7 +71,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                     </h2>
                 </div>
 
-                <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-10">
+                <div className="overflow-x-auto h-110 2xl:h-145 rounded-[8px] border border-gray-200 mt-5 pb-10">
                     <table className="min-w-[78%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                         <thead key="table-head">
                             <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
@@ -105,7 +106,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                         className="py-10 text-center text-sm text-gray-700"
                                         colSpan={fields.length + 1 + (actionConfig ? 1 : 0)} // 1 for index
                                     >
-                                        Loading...
+                                        <div className='flex justify-center'>
+                                            <Spinner/>
+                                        </div>
                                     </td>
                                 </tr>
                             ) : tableData?.length > 0 ? (

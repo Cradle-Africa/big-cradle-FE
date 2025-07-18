@@ -86,7 +86,7 @@ function BuildSignUpPage() {
 							Sign up as a Super admin
 						</h3>
 					)} */}
-					{adminSignUp && (
+					{/* {adminSignUp && (
 						<h3 className="text-lg font-semibold text-gray-700">
 							Sign up as an Investor
 						</h3>
@@ -105,81 +105,62 @@ function BuildSignUpPage() {
 						<h3 className="text-lg font-semibold text-gray-700">
 							Sign up as a Business{" "}
 						</h3>
-					)}
-
-					<p className="text-gray-700 text-sm">
+					)} */}
+					<h3 className="text-lg font-semibold text-black">
+						Welcome to Big cradle
+					</h3>
+					<p className="text-black text-sm">
 						Already have an account?
 						<Link href="/pages/user/signin" className="underline ml-1">
 							Sign in
 						</Link>
 					</p>
-					{/* <button className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-md py-2 text-gray-700">
-						<FcGoogle className="text-md" /> Continue with Google
-					</button>
 
-					<div className="flex items-center gap-2">
-						<hr className="flex-grow border-gray-300" />
-						<span className="text-sm text-gray-500">OR</span>
-						<hr className="flex-grow border-gray-300" />
-					</div> */}
 
-					{
-						// superAdminSignUp ||
-						(
-							adminSignUp &&
-							businessSignUp || (
-								<div
-									className="flex w-full justify-start gap-5 text-md border-b-2 
-								border-blue-600">
+					{adminSignUp && (
+						<>
+							<button
+								onClick={() => {
+									setBusinessSignUp(true);
+									setSuperAdminSignUp(false);
+									setEmployeeSignUp(false);
+									setAdminSignUp(false);
+								}}
+								className={'font-bold hover:cursor-pointer flex w-full justify-center px-5 py-2 border border-gray-200 rounded-lg'}
+							>
+								Continue as a business
+							</button>
 
-									{/* <button
-									onClick={() => {
-										setSuperAdminSignUp(true);
-										setBusinessSignUp(false);
-										setEmployeeSignUp(false);
-										setAdminSignUp(false);
-									}}
-									className={`py-2 px-2 rounded-md hover:cursor-pointer ${superAdminSignUp
-											? "bg-blue-600 text-white"
-											: " text-gray-700"
-										}`}
-								>
-									Super admin
-								</button> */}
-									<button
-										onClick={() => {
-											setAdminSignUp(true);
-											setBusinessSignUp(false);
-											setEmployeeSignUp(false);
-											setSuperAdminSignUp(false);
-										}}
-										className={`py-2 px-2 hover:cursor-pointer
-												transition-all ease-in-out duration-500 hover:tracking-tight
-											 ${adminSignUp
-												? "border-b-2 border-blue-600"
-												: ''
-											}`}
-									>
-										Investor
-									</button>
-									<button
-										onClick={() => {
-											setBusinessSignUp(true);
-											setSuperAdminSignUp(false);
-											setEmployeeSignUp(false);
-											setAdminSignUp(false);
-										}}
-										className={`py-2 px-2 hover:cursor-pointer text-back 
-												transition-all ease-in-out duration-500 hover:tracking-tight"
-											${businessSignUp
-												? "border-b-2 border-blue-600 "
-												: ''
-											}`}
-									>
-										Business
-									</button>
-								</div>
-							))}
+							<div className="flex w-full items-center gap-2 text-sm text-slate-600">
+								<div className="h-px w-full bg-slate-200"></div>
+								OR
+								<div className="h-px w-full bg-slate-200"></div>
+							</div>
+						</>
+					)}
+
+					{businessSignUp && (
+						<>
+						<button
+							onClick={() => {
+								setAdminSignUp(true);
+								setBusinessSignUp(false);
+								setEmployeeSignUp(false);
+								setSuperAdminSignUp(false);
+							}}
+							className={'font-bold hover:cursor-pointer flex w-full justify-center px-5 py-2 border border-gray-200 rounded-lg'}
+						>
+							Continue as an investor
+						</button>
+						<div className="flex w-full items-center gap-2 text-sm text-slate-600">
+								<div className="h-px w-full bg-slate-200"></div>
+								OR
+								<div className="h-px w-full bg-slate-200"></div>
+							</div>
+						</>
+						
+					)}
+
 
 					<div className="">
 						{superAdminSignUp && <SuperAdminSignUp />}

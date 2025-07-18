@@ -5,7 +5,7 @@ import { reviewAdminKycSchema } from '@/app/lib/validationSchemas';
 import { getBusinessId } from '@/app/utils/user/userData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Pencil } from 'lucide-react';
+import { Check, Pencil } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -102,7 +102,7 @@ const ReviewBusinessKyc: React.FC<Props> = ({ setOpen, adminUserId }) => {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="w-full border border-gray-400 hover:cursor-pointer py-2 rounded-md hover:text-white hover:bg-blue-600"
+              className="w-1/2 bg-gray-100 hover:cursor-pointer py-2 rounded-md hover:text-white hover:bg-blue-600"
             >
               Close
             </button>
@@ -110,11 +110,14 @@ const ReviewBusinessKyc: React.FC<Props> = ({ setOpen, adminUserId }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full felx justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
+              className={`w-1/2 flex justify-center items-center py-2 rounded-md text-white bg-blue-600 cursor-pointer hover:cursor-pointer"`}
             >
-              {isSubmitting && (
+              {isSubmitting ? (
                 <Spinner className='inline mr-1' />
-              )}
+              ) : (
+                <Check size={14} className="inline mr-1" />
+              )
+              }
               {isSubmitting ? "Processing..." : "Submit"}
             </button>
           </div>

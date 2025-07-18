@@ -192,30 +192,38 @@ export const editPipeline = async (
 
 export const fetchPipelines = async (
     axios: AxiosInstance,
-    queryParams?: {
-        page?: number;
-        limit?: number;
+    queryParams: {
+        businessUserId: string;
+        departmentId: string;
+        startDate: string;
+        endDate: string;
+        search: string;
+        page: number;
+        limit: number;
     }
 ): Promise<{
     data: Pipeline[];
     limit: number;
     page: number;
     total: number;
+    pages: number;
+
 }> => {
     try {
-        const params = {
-            page: queryParams?.page || 1,
-            limit: queryParams?.limit || 10,
-        };
-        const res = await axios.get(`/data-point-mgt/data-point?businessUserId=${businessUserId}`, { params });
-        if (res?.status === 401) {
-            removeUser();
-        }
+        const { departmentId, businessUserId, startDate, endDate, search, page = 1, limit = 10 } = queryParams;
+        const params = { departmentId, businessUserId, startDate, endDate, search, page, limit };
+
+        const res = await axios.get('/data-point-mgt/data-point', {
+            params: params, //pass query string
+        });
+        const pagination = res.data.pagination || {};
+
         return {
             data: res.data.data ?? [],
-            limit: Number(res.data.limit),
-            page: Number(res.data.page),
-            total: Number(res.data.total),
+            limit: Number(pagination.limit) || limit,
+            page: Number(pagination.page) || page,
+            total: Number(pagination.total) || 0,
+            pages: Number(pagination.pages) || 1,
         };
     } catch (error: any) {
         console.log(JSON.stringify(error));
@@ -224,50 +232,51 @@ export const fetchPipelines = async (
             limit: 10,
             page: 1,
             total: 0,
+            pages: 1,
         };
     }
 };
 
 export const fetchPipelinesByDepartment = async (
-	axios: AxiosInstance,
-	queryParams: {
-		departmentId: string;
-		businessUserId: string;
-		page?: number;
-		limit?: number;
-	}
+    axios: AxiosInstance,
+    queryParams: {
+        departmentId: string;
+        businessUserId: string;
+        page?: number;
+        limit?: number;
+    }
 ): Promise<{
-	data: Pipeline[];
-	limit: number;
-	page: number;
-	total: number;
-	pages: number;
+    data: Pipeline[];
+    limit: number;
+    page: number;
+    total: number;
+    pages: number;
 }> => {
-	try {
-		const { departmentId, businessUserId, page = 1, limit = 10 } = queryParams;
-		const params = { departmentId, businessUserId, page, limit };
+    try {
+        const { departmentId, businessUserId, page = 1, limit = 10 } = queryParams;
+        const params = { departmentId, businessUserId, page, limit };
 
-		const res = await axios.get("/data-point-mgt/data-points-by-department", { params });
+        const res = await axios.get("/data-point-mgt/data-points-by-department", { params });
 
-		const pagination = res.data.pagination || {};
+        const pagination = res.data.pagination || {};
 
-		return {
-			data: res.data.data ?? [],
-			limit: Number(pagination.limit) || limit,
-			page: Number(pagination.page) || page,
-			total: Number(pagination.total) || 0,
-			pages: Number(pagination.pages) || 1,
-		};
-	} catch (error: any) {
-		console.error("fetchPipelinesByDepartment error:", error);
-		return {
-			data: [],
-			limit: 10,
-			page: 1,
-			total: 0,
-			pages: 1,
-		};
-	}
+        return {
+            data: res.data.data ?? [],
+            limit: Number(pagination.limit) || limit,
+            page: Number(pagination.page) || page,
+            total: Number(pagination.total) || 0,
+            pages: Number(pagination.pages) || 1,
+        };
+    } catch (error: any) {
+        console.error("fetchPipelinesByDepartment error:", error);
+        return {
+            data: [],
+            limit: 10,
+            page: 1,
+            total: 0,
+            pages: 1,
+        };
+    }
 };
 
 
@@ -330,32 +339,32 @@ export const createDataEntry = async (
 
 
 export const createBulkDataEntry = async (
-  axios: AxiosInstance,
-  entries: DataEntry[]
+    axios: AxiosInstance,
+    entries: DataEntry[]
 ) => {
-  try {
-    const res = await axios.post(`/data-point-mgt/bulk-pipeline-fields-entry`, {
-      entries,
-    });
-    return res.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = error?.response?.data?.message || error?.response?.message;
+    try {
+        const res = await axios.post(`/data-point-mgt/bulk-pipeline-fields-entry`, {
+            entries,
+        });
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.data?.message || error?.response?.message;
 
-    switch (statusCode) {
-      case 400:
-        if (Array.isArray(message)) message = message.join("\n");
-        break;
-      case 401:
-        removeUser();
-        message = "Unauthorized access. Please log in again.";
-        break;
-      default:
-        message = typeof message === "string" ? message : "An unexpected error occurred";
+        switch (statusCode) {
+            case 400:
+                if (Array.isArray(message)) message = message.join("\n");
+                break;
+            case 401:
+                removeUser();
+                message = "Unauthorized access. Please log in again.";
+                break;
+            default:
+                message = typeof message === "string" ? message : "An unexpected error occurred";
+        }
+
+        return Promise.reject({ message });
     }
-
-    return Promise.reject({ message });
-  }
 };
 
 
@@ -460,113 +469,113 @@ export const analyseData = async (
 
 
 export const fetchDataOverview = async (
-  axios: AxiosInstance
+    axios: AxiosInstance
 ): Promise<DataFlyOverview> => {
-  try {
-    const res = await axios.get(`/data-point-mgt/dashboard-data?businessUserId=${businessUserId}`);
-    return res.data.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = error?.response?.data?.message || error?.response?.message;
+    try {
+        const res = await axios.get(`/data-point-mgt/dashboard-data?businessUserId=${businessUserId}`);
+        return res.data.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.data?.message || error?.response?.message;
 
-    switch (statusCode) {
-      case 400:
-        if (Array.isArray(message)) {
-          message = message.join('\n');
+        switch (statusCode) {
+            case 400:
+                if (Array.isArray(message)) {
+                    message = message.join('\n');
+                }
+                break;
+            case 401:
+                removeUser();
+                message = "Unauthorized access. Please log in again.";
+                break;
+            default:
+                message = typeof message === 'string' ? message : "An unexpected error occurred";
         }
-        break;
-      case 401:
-        removeUser();
-        message = "Unauthorized access. Please log in again.";
-        break;
-      default:
-        message = typeof message === 'string' ? message : "An unexpected error occurred";
-    }
 
-    return Promise.reject({ message });
-  }
+        return Promise.reject({ message });
+    }
 };
 
 
 export const updatePipeline = async (
-  axios: AxiosInstance,
-  id: string,
-  data: Pipeline
+    axios: AxiosInstance,
+    id: string,
+    data: Pipeline
 ) => {
-  try {
-    const res = await axios.put(`/data-point-mgt/data-point/${id}`, data);
-    return res.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = error?.response?.message;
+    try {
+        const res = await axios.put(`/data-point-mgt/data-point/${id}`, data);
+        return res.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
 
-    switch (statusCode) {
-      case 400:
-        message = error?.response?.data?.message;
-        break;
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message;
+                break;
 
-      case 401:
-        removeUser();
-        break;
+            case 401:
+                removeUser();
+                break;
 
-      default:
-        message = "An unexpected error occurred";
+            default:
+                message = "An unexpected error occurred";
+        }
+
+        throw new Error(message);
     }
-
-    throw new Error(message);
-  }
 };
 
 
 export const deleteDataPoint = async (axios: AxiosInstance, id: string) => {
-  try {
-    const response = await axios.delete(`/data-point-mgt/pipeline-fields/${id}`);
-    return response.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = error?.response?.message;
+    try {
+        const response = await axios.delete(`/data-point-mgt/pipeline-fields/${id}`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
 
-    switch (statusCode) {
-      case 400:
-        message = error?.response?.data?.message || 'Invalid request';
-        break;
-      case 401:
-        message = 'Unauthorized';
-        break;
-      case 404:
-        message = 'Data point not found';
-        break;
-      default:
-        message = 'An unexpected error occurred';
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Data point not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
     }
-
-    throw new Error(message);
-  }
 };
 
 
 export const deletePipeline = async (axios: AxiosInstance, id: string) => {
-  try {
-    const response = await axios.delete(`/data-point-mgt/data-point/${id}`);
-    return response.data;
-  } catch (error: any) {
-    const statusCode = error?.response?.status;
-    let message = error?.response?.message;
+    try {
+        const response = await axios.delete(`/data-point-mgt/data-point/${id}`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
 
-    switch (statusCode) {
-      case 400:
-        message = error?.response?.data?.message || 'Invalid request';
-        break;
-      case 401:
-        message = 'Unauthorized';
-        break;
-      case 404:
-        message = 'Data pipeline not found';
-        break;
-      default:
-        message = 'An unexpected error occurred';
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Data pipeline not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
     }
-
-    throw new Error(message);
-  }
 };

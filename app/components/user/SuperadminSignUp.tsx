@@ -111,10 +111,7 @@ export default function SuperAdminSignUp() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-                                    ? "bg-blue-500 text-white"
-                                    : "bg-blue-600 text-white hover:bg-blue-700"
-                                    }`}
+                                className={`w-full py-2 rounded-md hover:cursor-pointer bg-blue-600 text-white`}
                             >
                                 {isSubmitting ? 'Submitting...' : 'Create account'}
                             </button>

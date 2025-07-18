@@ -8,12 +8,12 @@ import axios, {
 
 import {
   getToken,
-  // removeUser,
   addToken,
+  removeUser,
 } from "../utils/user/userData";
 import { refreshTokenService } from "../services/user/userService";
 
-// export const BASE_URL = "https://big-cradle-be-dev.onre/nder.com";
+// export const BASE_URL = "https://big-cradle-be-dev.onrender.com/api/v1";
 export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
 
 const apiClient_ = axios.create({
@@ -68,7 +68,7 @@ apiClient_.interceptors.response.use(
         return apiClient_.request(originalRequest);
       } catch (refreshError) {
         console.error("Failed to refresh Access token", refreshError);
-        // removeUser();
+        removeUser();
         return Promise.reject(refreshError);
       }
     }

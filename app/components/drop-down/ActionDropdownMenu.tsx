@@ -183,7 +183,7 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 			)}
 
 			{open && (
-				<div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md border border-gray-100 z-50">
+				<div className="absolute right-0  w-40 bg-white rounded-md shadow-md border border-gray-100 z-50">
 					<ul className="py-1">
 						{onViewProfile && (
 							<li className="px-1">

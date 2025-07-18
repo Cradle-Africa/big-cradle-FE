@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { PaginationMeta, Pipeline } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Calendar, Funnel, MoreVertical, Pencil, Plus, Share2, Trash, Trash2 } from "lucide-react";
+import { ArrowRight, Calendar, MoreVertical, Pencil, Share2, Trash, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useFetchDepartments } from "../../user/department/_features/hook";
@@ -10,11 +10,14 @@ import Pagination from "../_components/Pagination";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
 import EditPipeline from "./edit/EditPipeline";
 import radialIcon from '@/public/radial.png'
-// import 	{ RiLoader3Line } from 'react-icons/ri'
 import Image from "next/image";
 import DeletePipeline from "./DeletePipeline";
 import { useRouter } from 'next/navigation'; // for App Router
 import DeleteDataPoint from "../datapoint/DeleteDataPoint";
+import SearchInput from "../../../components/filter/SearchInput";
+import DateInput from "../../../components/filter/DateInput";
+import DepartmentFilter from "../../../components/filter/DepartmentFilter";
+import { Spinner } from "@radix-ui/themes";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -23,15 +26,26 @@ type DataPipelineProps = {
     onLimitChange: (newLimit: number) => void;
     selectedDepartment: string;
     setSelectedDepartment: (val: string) => void;
+    selectedStartDate: string;
+    selectedEndDate: string;
+    setSelectedStartDate: (val: string) => void;
+    setSelectedEndDate: (val: string) => void;
+    search: string;
+    setSearch: (val: string) => void;
     loading: boolean;
 };
 
 
 const PipelinePage = ({
     pipelineData,
-    // departmentData,
     selectedDepartment,
     setSelectedDepartment,
+    selectedStartDate,
+    selectedEndDate,
+    setSelectedStartDate,
+    setSelectedEndDate,
+    search,
+    setSearch,
     pagination,
     onPageChange,
     onLimitChange,
@@ -41,6 +55,11 @@ const PipelinePage = ({
     const [uniqueDataPoint, setUniqueDataPoint] = useState<string>('')
     const menuRefs = useRef<Record<number, HTMLUListElement | null>>({});
     const router = useRouter();
+
+    const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
+    const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
+    const [tempDepartment, setTempDepartment] = useState(selectedDepartment);
+    const [tempSearch, setTempSearch] = useState(search);
 
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
@@ -102,29 +121,58 @@ const PipelinePage = ({
     const departmentData = departments?.data ?? [];
     return (
         <div>
-            <div className="relative lg:w-1/4">
-                <select
-                    className="mt-5 pl-6 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
-                    value={selectedDepartment}
-                    onChange={(e) => {
-                        const val = e.target.value;
-                        setSelectedDepartment(val); // Updates parent state
-                        onPageChange(1);            // Reset pagination in parent
-                        onLimitChange(limit);       // Reapply limit in parent
-                    }}
-                >
-                    <option value="">Filter by department </option>
-                    {departmentData.map((department, index) => (
-                        <option key={index} value={department?.id}>
-                            {department?.departmentName}
-                        </option>
-                    ))}
-                </select>
-                <Funnel size={14} className="absolute top-1/2 mt-[2px] ml-2" />
+            <div className="flex  justify-between w-full  gap-3 flex-wrap">
+                <div className="flex justify-start gap-3 flex-wrap">
+                    <SearchInput
+                        value={tempSearch}
+                        onChange={setTempSearch}
+                        onSubmit={() => {
+                            setSearch(tempSearch);
+                            onPageChange(1);
+                            onLimitChange(limit);
+                        }}
+                    />
+
+                </div>
+                <div className="flex justify-end gap-2 flex-wrap">
+
+                    <DateInput
+                        value={tempStartDate}
+                        onChange={(val) => setTempStartDate(val)}
+                        label="Start Date"
+                    />
+
+                    <DateInput
+                        value={tempEndDate}
+                        onChange={(val) => setTempEndDate(val)}
+                        label="End Date"
+                    />
+
+                    <DepartmentFilter
+                        value={tempDepartment}
+                        onChange={(val) => setTempDepartment(val)}
+                        options={departmentData}
+                    />
+
+                    <button
+                        className="px-4 py-1 mt-5 bg-blue-600 text-white rounded hover:bg-blue-700 transition hover:cursor-pointer"
+                        onClick={() => {
+                            setSelectedStartDate(tempStartDate);
+                            setSelectedEndDate(tempEndDate);
+                            setSelectedDepartment(tempDepartment);
+                            setSearch(tempSearch);
+                            onPageChange(1); // reset page when filtering
+                            onLimitChange(limit); // ensure correct limit
+                        }}
+                    >
+                        Filter
+                    </button>
+
+                </div>
             </div>
 
             {loading ? (
-                <div className="mt-5">Loading pipelines...</div>
+                <div className="mt-5"><Spinner /></div>
             ) : (
                 <div className="grid grid-cols-1 md:grid md:grid-cols-2  2xl:grid 2xl:grid-cols-3 w-full gap-5 mt-5">
                     {pipelineData.map((pipeline, index) => {
@@ -135,9 +183,8 @@ const PipelinePage = ({
                                 onClick={() =>
                                     router.push(`/pages/flywheel/data-entry/${pipeline?.id}`)
                                 }
-                                // className="group border bg-white border-gray-200 rounded-lg px-6 py-6 hover:bg-blue-600 hover:text-white transition-all ease-in-out duration-900 cursor-pointer"
-                                className="flex flex-col group border bg-white border-gray-200 rounded-lg px-6 py-6 hover:bg-blue-600 hover:text-white transition-all ease-in-out duration-900 cursor-pointer"
-
+                                className="flex flex-col group border-1 bg-white border-gray-200 rounded-lg px-6 py-6 cursor-pointer
+                                 hover:border-1 hover:border-blue-200 transition-all ease-in-out transform-fill hover:transform-fill "
                             >
                                 <div className="flex flex-nowrap items-center justify-between">
                                     <div className="inline-block items-center">
@@ -148,17 +195,17 @@ const PipelinePage = ({
                                             alt={'Big cradle logo'}
                                             className="inline text-inherit"
                                         />
-                                        <h2 className="inline ml-2 text-[18px] text-[#0C0C0C] group-hover:text-white">
+                                        <h2 className="inline ml-2 text-[18px] text-[#0C0C0C] ">
                                             {pipeline.dataPointName}
                                         </h2>
                                     </div>
 
                                     <div
                                         className="whitespace-nowrap relative"
-                                        onClick={(e) => e.stopPropagation()} // ⛔ Prevent outer div from firing
+                                        onClick={(e) => e.stopPropagation()} // Prevent outer div from firing
                                     >
                                         <button
-                                            className="bg-inherit rounded-lg px-2 py-1 cursor-pointer hover:text-blue-600 hover:bg-white"
+                                            className="bg-inherit flex justify-center items-center rounded-lg py-1 cursor-pointer hover:text-white hover:rounded-full w-8 h-8 hover:bg-blue-600"
                                             onClick={() =>
                                                 setOpenIndex(openIndex === index ? null : index)
                                             }
@@ -209,56 +256,77 @@ const PipelinePage = ({
                                     </div>
                                 </div>
 
-                                <div className="flex text-[#494949] text-[14px] mt-5 group-hover:text-white">
+                                <div className="flex text-[#494949] text-[14px] mt-5 ">
                                     {pipeline.dataPointDescription?.length > 200
                                         ? pipeline.dataPointDescription.slice(0, 150) + "..."
                                         : pipeline.dataPointDescription}
                                 </div>
 
 
-                                <div className="flex justify-end mt-5 items-center mb-2">
+                                <div className="flex justify-start mt-5 items-center mb-5">
                                     <Calendar size={12} />
-                                    <h6 className="ml-1 text-[#494949] text-[12px] group-hover:text-white">
+                                    <h6 className="ml-1 text-[#494949] text-[12px] ">
                                         {formatDate(pipeline?.createdAt ?? '')}
                                     </h6>
                                 </div>
 
                                 <div
-                                    className="flex w-full justify-end border-t border-gray-100 mt-auto"
+                                    className="flex w-full justify-center border-t border-gray-100 mt-auto"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <div className="flex items-center justify-end gap-2 mt-3">
+                                    <div className="flex w-full items-center justify-center gap-2 mt-5">
                                         {!!pipeline?.fieldId && (
-                                            <>
-                                                <div
-                                                    className="flex bg-white text-blue-600 hover:text-blue-600 hover:bg-white rounded-md px-2 py-[10px] cursor-pointer"
-                                                    onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
-                                                >
-                                                    <Share2 size={15} />
+                                            <div className="flex w-full justify-center gap-2">
+                                                <div className="w-2/3">
+                                                    <Link
+                                                        href={`/pages/flywheel/data-entry/${pipeline?.id}`}
+                                                        className="flex justify-center items-center text-sm cursor-pointer rounded-md px-3 py-2 bg-[#F0F8FF] text-[#0D89FF] hover:bg-blue-100  border border-[#0D89FF]"
+                                                    >
+                                                        View Entries
+                                                        <ArrowRight size={15} className="ml-1 inline" />
+                                                    </Link>
+                                                </div>
+                                                <div className="w-1/3 flex">
+                                                    <div
+                                                        onClick={() => handleShareDataPipeline(pipeline?.fieldId ?? '')}
+                                                        className="px-1"
+                                                    >
+                                                        <div
+                                                            className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white"
+                                                        >
+                                                            <Share2 size={15} />
+                                                        </div>
+                                                    </div>
+
+                                                    <button
+                                                        onClick={() => handleDeleteDataPoint(pipeline?.fieldId, pipeline?.dataPointName)}
+                                                        className="px-1"
+                                                    >
+                                                        <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
+                                                            <Trash2 size={15} className="" />
+                                                        </div>
+                                                    </button>
+
+                                                    <Link
+                                                        href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
+                                                        className="px-1"
+                                                    >
+                                                        <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
+                                                            <Pencil size={15} className="" />
+                                                        </div>
+                                                    </Link>
                                                 </div>
 
-                                                <button
-                                                    onClick={() => handleDeleteDataPoint(pipeline?.fieldId, pipeline?.dataPointName)}
-                                                    className="flex bg-white text-blue-600 hover:text-red-500 hover:bg-red-100 rounded-md px-2 py-[10px] cursor-pointer"
-                                                >
-                                                    <Trash2 size={15} className="inline" />
-                                                </button>
-
-                                                <Link
-                                                    href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
-                                                    className="flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600"
-                                                >
-                                                    <Pencil size={15} className="mr-1 inline" /> Edit data point
-                                                </Link>
-                                            </>
+                                            </div>
                                         )}
 
                                         {!pipeline?.fieldId && (
                                             <Link
                                                 href={`/pages/flywheel/datapoint/new/${pipeline?.id}`}
-                                                className="flex items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-white text-blue-600 hover:bg-white hover:text-blue-600"
+                                                className="flex w-full justify-center items-center text-center text-sm cursor-pointer rounded-md px-3 py-2 bg-[#FEF0FF] hover:bg-[#e9c9ed] text-[#FF0AFF] border border-[#FF0AFF]"
                                             >
-                                                <Plus size={15} className="mr-1 inline" /> Create a data point
+                                                Create a data point
+                                                <ArrowRight size={15} className="ml-1 inline" />
                                             </Link>
                                         )}
                                     </div>
@@ -266,7 +334,6 @@ const PipelinePage = ({
                             </div>
                         );
                     })}
-
                 </div>
             )}
 

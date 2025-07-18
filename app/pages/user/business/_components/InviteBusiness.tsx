@@ -5,7 +5,7 @@ import { inviteBusinessSchema } from '@/app/lib/validationSchemas';
 import { getAdminUserId } from '@/app/utils/user/userData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
-import { Mail } from 'lucide-react';
+import { Check, Mail } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -77,22 +77,22 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5 lg:mt-12">
-          <div className='relative'>
-            <Mail size={17} className='top-1/3 ml-2 text-gray-400 absolute' />
+          <div className='relative flex'>
             <input
               {...register("email")}
               type="email"
               placeholder="Enter email"
               className="pl-8 w-full border border-gray-200 rounded px-3 py-2 outline-none"
             />
-            <ErrorMessage>{errors.email?.message}</ErrorMessage>
+            <Mail size={17} className='top-[12px] ml-2 text-gray-400 absolute' />
           </div>
+          <ErrorMessage>{errors.email?.message}</ErrorMessage>
 
           <div className="flex justify-between mt-8 gap-5">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="w-full border border-gray-400 hover:cursor-pointer py-2 rounded-md hover:text-white hover:bg-blue-600"
+              className="w-full bg-gray-100 text-black hover:cursor-pointer py-2 rounded-md hover:text-white hover:bg-blue-600"
             >
               Close
             </button>
@@ -102,10 +102,13 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
               disabled={isSubmitting}
               className="w-full flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
             >
-              {isSubmitting && (
+              {isSubmitting ? (
                 <Spinner className='inline mr-1' />
-              )}
-              {isSubmitting ? "Processing..." : "Submit"}
+              ) : (
+                <Check size={14} className="inline mr-1" />
+              )
+              }
+              {isSubmitting ? "Inviting..." : "Submit"}
             </button>
           </div>
         </form>

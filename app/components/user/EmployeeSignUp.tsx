@@ -7,6 +7,8 @@ import CredentialDetails from '../../components/form/CredentialDetails';
 import AccountVerification from '../../components/user/AccountVerification';
 import { validateEmployeeSignUp } from '../../pages/user/validation/userValidation';
 import { EmployeeSignUpService } from '../../services/user/userService';
+import { Spinner } from '@radix-ui/themes';
+import { Check } from 'lucide-react';
 
 interface EmployeeSignUpProps {
     signUpToken: any;
@@ -88,30 +90,28 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
             <div className="w-full py-4 bg-white">
                 <div className="w-full max-w-md space-y-6">
                     <form onSubmit={handleSubmit} className="w-full space-y-4">
-                        <div className='md:flex w-full justify-between gap-2'>
-                            <div className='w-full md:w-1/2'>
-                                <input
-                                    type="text"
-                                    name="firstName"
-                                    placeholder="First Name"
-                                    value={formData.firstName}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                />
-                                {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
-                            </div>
+                        <div className='w-full'>
+                            <input
+                                type="text"
+                                name="firstName"
+                                placeholder="Enter Your First Name"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                            />
+                            {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
+                        </div>
 
-                            <div className='mt-4 md:mt-0 w-full md:w-1/2 '>
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    placeholder="Last Name"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                />
-                                {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
-                            </div>
+                        <div className='mt-4 w-full'>
+                            <input
+                                type="text"
+                                name="lastName"
+                                placeholder="Enter Your Last Name"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                            />
+                            {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
                         </div>
 
                         <CredentialDetails formData={formData} onChange={handleCredentialChange} errors={errors} />
@@ -119,11 +119,14 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-                                ? "bg-blue-500 text-white"
-                                : "bg-blue-600 text-white hover:bg-blue-700"
-                                }`}
+                            className={`w-full py-2 rounded-md hover:cursor-pointer text-white bg-blue-700`}
                         >
+                            {isSubmitting ? (
+                                <Spinner className='inline mr-1' />
+                            ) : (
+                                <Check size={14} className="inline mr-1" />
+                            )
+                            }
                             {isSubmitting ? 'Submitting...' : 'Create account'}
                         </button>
                     </form>

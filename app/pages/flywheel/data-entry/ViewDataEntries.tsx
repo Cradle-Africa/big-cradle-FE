@@ -183,7 +183,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </div>
                         </div> */}
 
-                        <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5">
+                        <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">
 
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                                 <thead className="bg-gray-50">
@@ -191,7 +191,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                         {/** Get unique keys across all entries */}
                                         <th className="px-6 py-3 text-left font-normal">Created at</th>
                                         {headers.map((key) => (
-                                            <th key={key} className="px-6 py-2 text-left font-normal">
+                                            <th key={key} className="px-6 py-2 text-left font-normal whitespace-nowrap">
                                                 {toSentenceCase(key)}
                                             </th>
                                         ))}

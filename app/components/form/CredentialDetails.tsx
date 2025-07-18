@@ -80,7 +80,7 @@ const CredentialDetails: React.FC<Props> = ({ formData, onChange, errors }) => {
                 />
                 {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
             </div>
-            <div className="relative mt-5">
+            {/* <div className="relative mt-5">
                 <button type="button" onClick={togglePasswordVisibility} >
                     {
                         passwordVisible ? (
@@ -98,7 +98,7 @@ const CredentialDetails: React.FC<Props> = ({ formData, onChange, errors }) => {
                     className="w-full pl-10 border border-gray-300 rounded-md px-3 py-2 outline-none pr-10"
                 />
                 {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword}</p>}
-            </div>
+            </div> */}
 
             {/* Password Rules */}
             <div className="space-y-1" >

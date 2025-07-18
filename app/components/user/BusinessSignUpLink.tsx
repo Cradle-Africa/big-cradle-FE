@@ -1,19 +1,20 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Check, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 import AccountVerification from '@/app/components/user/AccountVerification';
 import { BusinessLinkForm } from '@/app/pages/user/types/User';
 import { validateBusinessLinkSignUp, validateBusinessLinkStep } from '../../pages/user/validation/userValidation';
 import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
 import { BusinessSignUpLinkService } from '../../services/user/userService';
-import ImageUploader from '../form/ImageUploader';
+// import ImageUploader from '../form/ImageUploader';
 import CredentialDetails from '../../components/form/CredentialDetails'
-import { CitySelect, CountrySelect, StateSelect } from 'react-country-state-city';
+import { CountrySelect, StateSelect } from 'react-country-state-city';
 import "react-country-state-city/dist/react-country-state-city.css";
 import sectors from '@/app/utils/data/sectors.json';
 import SearchSelect from '../form/SearchSelect';
+import { Spinner } from '@radix-ui/themes';
 
 interface BusinessSignUpProps {
     signUpToken: any;
@@ -68,12 +69,12 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
         setForm((prev) => ({ ...prev, [field]: value }));
     };
 
-    const handleInputChange = (name: string, value: string) => {
-        setForm((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    // const handleInputChange = (name: string, value: string) => {
+    //     setForm((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
 
     const handleCredentialChange = (field: string, value: string) => {
         setForm(prev => ({ ...prev, [field]: value }));
@@ -114,7 +115,7 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
     };
 
     return (
-        <div className="max-h-80 flex bg-white">
+        <div className="max-h-85 flex bg-white">
             {showVerification && (
                 <AccountVerification
                     showAccountVerification={showVerification}
@@ -135,8 +136,13 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                 </div>
 
                                 <div className='mt-5'>
-                                    <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="Contact Email" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    <div className='relative flex '>
+                                        <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="Contact Email" className="w-full pl-8 border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                        <Mail size={17} className='top-[12px] ml-2 text-gray-400 absolute' />
+                                    </div>
+
                                     {errors.contactName && <p className="text-red-500 text-xs">{errors.contactName}</p>}
+
                                 </div>
                                 <div className='mt-5'>
                                     <input name="contactPersonFirstName" value={form.contactPersonFirstName} onChange={handleChange} placeholder="Contact First Name" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
@@ -164,8 +170,11 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                         {errors.contactNumber && <p className="text-red-500 text-xs">{errors.contactNumber}</p>}
                                     </div>
                                 </div>
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+                                    Step {step} out of 3
+                                </div>
                                 <div className='flex justify-end mt-5'>
-                                    <button type="button" onClick={next} className="rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
+                                    <button type="button" onClick={next} className="w-full rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
                                     </button>
@@ -192,8 +201,8 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                         value={form.businessCountry}
                                         placeHolder="Select Country"
                                         className="mb-1 border-none"
-										containerClassName="relative w-full !border-none"
-										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
+                                        containerClassName="relative w-full !border-none"
+                                        inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
 
                                     {errors.businessCountry && <p className="text-red-500 text-xs">{errors.businessCountry}</p>}
@@ -213,14 +222,26 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                         value={form.businessState}
                                         placeHolder="Select State"
                                         className="mb-1 border-none"
-										containerClassName="relative w-full !border-none"
-										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
+                                        containerClassName="relative w-full !border-none"
+                                        inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {errors.businessState && <p className="text-red-500 text-xs">{errors.businessState}</p>}
                                 </div>
 
-                                <div className="w-full mt-5">
-                                    <CitySelect
+                                <div className="flex gap-2 w-full mt-5">
+                                    <input
+                                        name="businessCity"
+                                        value={form.businessCity}
+                                        onChange={handleChange}
+                                        placeholder="Enter the city name"
+                                        className="w-1/2 border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                    />
+                                    {errors.businessCity && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.businessCity}
+                                        </p>
+                                    )}
+                                    {/* <CitySelect
                                         countryid={form.businessCountryCode}
                                         stateid={form.businessStateCode}
                                         onChange={(city: any) =>
@@ -236,23 +257,25 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
 										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
 
-                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>} */}
+
+                                    <div className="w-1/2">
+                                        <input
+                                            name="businessAddress"
+                                            value={form.businessAddress}
+                                            onChange={handleChange}
+                                            placeholder="Address"
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+                                        />
+                                        {errors.businessAddress && (
+                                            <p className="text-red-500 text-xs">
+                                                {errors.businessAddress}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
 
-                                <div className="w-full mt-5">
-                                    <input
-                                        name="businessAddress"
-                                        value={form.businessAddress}
-                                        onChange={handleChange}
-                                        placeholder="Address"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
-                                    />
-                                    {errors.businessAddress && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.businessAddress}
-                                        </p>
-                                    )}
-                                </div>
+
 
                                 <div className="mt-5">
                                     <SearchSelect
@@ -282,12 +305,17 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                     {errors.organizationSize && <p className="text-red-500 text-xs">{errors.organizationSize}</p>}
                                 </div>
 
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+                                    Step {step} out of 3
+                                </div>
                                 <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
+                                    <button type="button" onClick={back}
+                                        className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"
+                                    >
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
-                                    <button type="button" onClick={next} className="rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
+                                    <button type="button" onClick={next} className="w-1/2 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
                                     </button>
@@ -299,21 +327,49 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                         {step === 3 && (
                             <>
                                 <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
-                                <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="px-2 py-2 rounded hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
+
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+                                    Step {step} out of 3
+                                </div>
+                                {/* <div className="flex justify-between gap-2 mt-5">
+                                    <button type="button" onClick={back}
+                                        className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"
+                                    >
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
-                                    <button type="button" onClick={next} className="rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
+                                    <button type="button" onClick={next} className="w-1/2 rounded px-2 py-2 hover:cursor-pointer hover:bg-gradient-to-br bg-blue-600 text-white">
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
+                                    </button>
+                                </div> */}
+
+                                <div className="flex w-full justify-between gap-2 mt-5">
+                                    <button type="button" onClick={back}
+                                        className="w-1/2 items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
+                                    >
+                                        <ChevronLeft size={14} className="inline ml-1" />
+                                        Back
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className={`w-1/2 flex justify-center items-center py-2 rounded-md hover:cursor-pointer bg-blue-600 text-white`}
+                                    >
+                                        {isSubmitting ? (
+                                            <Spinner className='inline mr-1' />
+                                        ) : (
+                                            <Check size={14} className="inline mr-1" />
+                                        )
+                                        }
+                                        {isSubmitting ? 'Submitting...' : 'Create Account'}
                                     </button>
                                 </div>
                             </>
                         )}
 
                         {/* Step 4 */}
-                        {step === 4 && (
+                        {/* {step === 4 && (
                             <>
                                 <div className='relative mt-5'>
                                     <label>Business Logo</label>
@@ -325,30 +381,12 @@ export default function BusinessSignUpLink({ signUpToken, businessEmail, adminBu
                                     />
                                     {errors.businessLogo && <p className="text-red-500 text-xs">{errors.businessLogo}</p>}
                                 </div>
-                                <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} 
-										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
-                                    >
-                                        <ChevronLeft size={14} className="inline ml-1" />
-                                        Back
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-blue-600 text-white hover:bg-blue-700"
-                                            }`}
-                                    >
-                                        <Check size={14} className="inline mr-1" />
-                                        {isSubmitting ? 'Submitting...' : 'Create Account'}
-                                    </button>
-                                </div>
+
                             </>
-                        )}
+                        )} */}
                     </form>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

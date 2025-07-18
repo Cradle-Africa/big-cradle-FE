@@ -35,10 +35,6 @@ export const validateBusinessSignUp = (data: BusinessForm): { [key: string]: str
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
 
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
     return errors;
 };
 
@@ -78,7 +74,6 @@ export const validateBusinessStep = (step: number, form: BusinessForm) => {
             errors.password =
                 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
         }
-        if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     }
 
     return errors;
@@ -114,10 +109,6 @@ export const validateBusinessLinkSignUp = (data: BusinessLinkForm): { [key: stri
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
 
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
     return errors;
 };
 
@@ -157,7 +148,6 @@ export const validateBusinessLinkStep = (step: number, form: BusinessLinkForm) =
             errors.password =
                 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
         }
-        if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     }
 
     return errors;
@@ -197,11 +187,6 @@ export const validateAdminSignUp = (data: AdminForm): { [key: string]: string } 
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
 
     return errors;
 };
@@ -248,7 +233,6 @@ export const validateAdminStep = (step: number, form: AdminForm) => {
             errors.password =
                 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
         }
-        if (form.password !== form.confirmPassword) errors.confirmPassword = 'Passwords do not match';
     }
 
     return errors;
@@ -274,11 +258,6 @@ export const validateSignUp = (data: SuperAdminSignUpPayload): { [key: string]: 
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
 
     return errors;
 };
@@ -309,12 +288,6 @@ export const validateEmployeeSignUp = (data: EmployeeSignUpPayload): { [key: str
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
-
     return errors;
 };
 
@@ -344,11 +317,6 @@ export const validateResetPassword = (data: ResetPasswordFormData): { [key: stri
         errors.password =
             'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%?&)';
     }
-
-    if (!data.confirmPassword)
-        errors.confirmPassword = 'Please confirm your password';
-    else if (data.password !== data.confirmPassword)
-        errors.confirmPassword = 'Passwords do not match';
 
     return errors;
 };

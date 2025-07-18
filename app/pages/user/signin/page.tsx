@@ -3,7 +3,7 @@ import LoginImage from "@/app/components/LoginImage";
 import ForgotPassword from "@/app/components/user/ForgotPassword";
 import { addToken, addUser } from "@/app/utils/user/userData";
 import LogoWithText from "@/public/images/logo-with-text.png";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, LogIn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import ForgotPasswordCode from "../../../components/user/ForgotPasswordCode";
 import ResetPassword from "../../../components/user/ResetPassword";
 import { signInService } from "../../../services/user/userService";
 import { validateSignIn } from "../validation/userValidation";
+import { Spinner } from "@radix-ui/themes";
 
 export default function SignInPage() {
   const [openReset, setOpenReset] = useState(false);
@@ -135,7 +136,7 @@ export default function SignInPage() {
               Sign up
             </Link>
           </p>
-         
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
@@ -186,12 +187,15 @@ export default function SignInPage() {
 
             <button
               type="submit"
-              className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-                  ? "bg-blue-500 text-white"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-                }`}
+              className={`w-full flex justify-center items-center py-2 rounded-md hover:cursor-pointer text-white bg-blue-600`}
               disabled={isSubmitting}
             >
+              {isSubmitting ? (
+                <Spinner className='inline mr-1' />
+              ) : (
+                <LogIn size={14} className="inline mr-1" />
+              )
+              }
               {isSubmitting ? "Logging in..." : "Log In"}
             </button>
           </form>

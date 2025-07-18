@@ -36,11 +36,12 @@ const AdminKycTable = ({ data }: { data: AdminKyc[] }) => {
 
   return (
     <>
-      <div className="overflow-x-auto rounded-[8px] border border-gray-200">
+      <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200">
         <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Type</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">First Name</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Last Name</th>
@@ -48,7 +49,6 @@ const AdminKycTable = ({ data }: { data: AdminKyc[] }) => {
               <th className="px-6 py-3 text-left text-sm font-semibold">Country</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">City</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">State</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">KYC Status</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
             </tr>
@@ -57,15 +57,15 @@ const AdminKycTable = ({ data }: { data: AdminKyc[] }) => {
             {data.map((business, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 font-medium">{index + 1}</td>
-                <td className="px-6 py-4">{business?.userType }</td>
-                <td className="px-6 py-4 font-medium">{business?.firstName }</td>
-                <td className="px-6 py-4 font-medium">{business?.lastName }</td>
-                <td className="px-6 py-4 font-medium">{business?.email}</td>
-                <td className="px-6 py-4">{business?.country}</td>
-                <td className="px-6 py-4">{business?.city}</td>
-                <td className="px-6 py-4">{business?.state}</td>
-                <td className="px-6 py-4">{ formatDate(business?.createdAt) }</td>
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">{ formatDate(business?.createdAt) }</td>
+                <td className="px-6 py-4 whitespace-nowrap">{business?.userType }</td>
+                <td className="px-6 py-4 font-medium whitespace-nowrap">{business?.firstName }</td>
+                <td className="px-6 py-4 font-medium whitespace-nowrap">{business?.lastName }</td>
+                <td className="px-6 py-4 font-medium whitespace-nowrap">{business?.email}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{business?.country}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{business?.city}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{business?.state}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`
                     flex justify-center w-[140px]
                     ${business.kycStatus === 'approved'
@@ -75,7 +75,7 @@ const AdminKycTable = ({ data }: { data: AdminKyc[] }) => {
                     {business.kycStatus}
                   </span>
                 </td>
-                <td className="px-6 py-4 border-b border-r border-gray-100 whitespace-nowrap relative">
+                <td className="px-6 py-4 border-r border-gray-100 whitespace-nowrap relative">
                   <button
                     className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"
                     onClick={() => setOpenIndex(openIndex === index ? null : index)}

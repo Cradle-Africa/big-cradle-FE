@@ -5,6 +5,7 @@ import OtpInput from './OtpInput';
 import { verifyOtpService, resendOtpService } from '../../services/user/userService';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@radix-ui/themes';
+import { Check } from 'lucide-react';
 
 interface AccountVerificationProps {
     showAccountVerification: boolean;
@@ -41,7 +42,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
         try {
             toast.loading('Verifying OTP...');
             await verifyOtpService(payload);
-            setFormData({ ...formData, otp: '' }); 
+            setFormData({ ...formData, otp: '' });
             toast.dismiss();
             toast.success('OTP verified successfully!');
             setShowAccountVerification(false);
@@ -111,7 +112,7 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                     <div className="flex gap-5 justify-center mt-5">
                         <button
                             type="button"
-                            className="w-full hover:cursor-pointer py-2 h-10 rounded-md hover:bg-blue-600 hover:text-white"
+                            className="w-full hover:cursor-pointer py-2 h-10 rounded-md bg-gray-100 text-black hover:bg-blue-600 hover:text-white"
                             onClick={() => setShowAccountVerification(false)}
                         >
                             Close
@@ -123,9 +124,12 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                             className={`w-full flex justify-center items-center px-5 py-2 rounded-md bg-blue-600 text-white hover:cursor-pointer'}`}
 
                         >
-                            {isSubmitting && (
-                                <Spinner className='inline mr-1'/>
-                            )}
+                            {isSubmitting ? (
+                                <Spinner className='inline mr-1' />
+                            ) : (
+                                <Check size={14} className="inline mr-1" />
+                            )
+                            }
                             {isSubmitting ? 'Verifying...' : 'Verify'}
                         </button>
                     </div>

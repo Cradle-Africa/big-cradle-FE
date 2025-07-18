@@ -7,6 +7,7 @@ import { FormPopupProps, OptionType } from './types/PopUp';
 import { validateFields } from './validation/formValidator';
 import ImageUpload from '../form/ImageUploader';
 import { Spinner } from '@radix-ui/themes';
+import { Check } from 'lucide-react';
 
 const FormPopup: React.FC<FormPopupProps> = ({
     setOpen,
@@ -162,7 +163,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
                     <div className="flex gap-5 justify-center mt-6">
                         <button
                             type="button"
-                            className="w-full py-2 rounded-md hover:bg-blue-600 hover:text-white hover:cursor-pointer"
+                            className="w-1/2 py-2 rounded-md bg-gray-100 text-black hover:bg-blue-600 hover:text-white hover:cursor-pointer"
                             onClick={() => setOpen(false)}
                         >
                             Cancel
@@ -170,12 +171,15 @@ const FormPopup: React.FC<FormPopupProps> = ({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full flex justify-between py-2 rounded-md bg-blue-600 text-white hover:cursor-pointer"
-                        >
-                            {isSubmitting && (
-                                <Spinner className='inline mr-1'/>
-                            )}
-                            {isSubmitting ? 'Processing...' : title}
+                            className={`w-1/2 flex justify-center items-center py-2 rounded-md text-white bg-blue-600 cursor-pointer"`} 
+                            >
+                            {isSubmitting ? (
+                                <Spinner className='inline mr-1' />
+                            ) : (
+                                <Check size={14} className="inline mr-1" />
+                            )
+                            }
+                            {isSubmitting ? 'Processing...' : 'Submit'}
                         </button>
                     </div>
                 </form>

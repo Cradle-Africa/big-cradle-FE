@@ -10,8 +10,9 @@ import CountryCodeSelect from '@/app/components/form/CountryCodeSelect';
 import { AdminSignUpService } from '../../services/user/userService';
 import { removeEmptyProperties } from '../../utils/clean-data';
 import CredentialDetails from '../form/CredentialDetails';
-import { CitySelect, CountrySelect, StateSelect } from 'react-country-state-city';
+import { CountrySelect, StateSelect } from 'react-country-state-city';
 import "react-country-state-city/dist/react-country-state-city.css";
+import { Spinner } from '@radix-ui/themes';
 
 export default function AdminSignUp() {
     const [step, setStep] = useState<number>(1);
@@ -143,6 +144,7 @@ export default function AdminSignUp() {
                                         </div>
                                     </>
                                 )}
+
                                 <div className="md:flex w-full gap-2 mt-5">
                                     <div className='md:w-2/3'>
                                         <CountryCodeSelect
@@ -157,12 +159,15 @@ export default function AdminSignUp() {
                                         {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber}</p>}
                                     </div>
                                 </div>
-                                <div className='flex justify-end mt-5'>
-                                    <button type="button" onClick={next} className="rounded px-2 py-2 bg-blue-600 text-white">
-                                        Next
-                                        <ChevronRight size={14} className="inline ml-1" />
-                                    </button>
-                                </div>
+
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 3
+								</div>
+                                <button type="button" onClick={next}
+                                    className="flex w-full items-center justify-center mt-5 rounded px-2 py-2 bg-blue-600 text-white hover:cursor-pointer">
+                                    Next
+                                    <ChevronRight size={14} className="inline ml-1" />
+                                </button>
                             </>
                         )}
 
@@ -184,8 +189,8 @@ export default function AdminSignUp() {
                                         value={form.country}
                                         placeHolder="Select Country"
                                         className="mb-1 border-none"
-										containerClassName="relative w-full !border-none"
-										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
+                                        containerClassName="relative w-full !border-none"
+                                        inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {errors.country && <p className="text-red-500 text-xs">{errors.country}</p>}
                                 </div>
@@ -204,14 +209,21 @@ export default function AdminSignUp() {
                                         value={form.state}
                                         placeHolder="Select State"
                                         className="mb-1 border-none"
-										containerClassName="relative w-full !border-none"
-										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
+                                        containerClassName="relative w-full !border-none"
+                                        inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     {errors.state && <p className="text-red-500 text-xs">{errors.state}</p>}
                                 </div>
 
                                 <div className="w-full mt-5">
-                                    <CitySelect
+                                    <input
+                                        name="city"
+                                        value={form.city}
+                                        onChange={handleChange}
+                                        placeholder="City"
+                                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none" />
+                                    {errors.city && <p className="text-red-500 text-xs">{errors.city}</p>}
+                                    {/* <CitySelect
                                         countryid={form.adminCountryCode}
                                         stateid={form.adminStateCode}
                                         onChange={(city: any) =>
@@ -227,7 +239,7 @@ export default function AdminSignUp() {
 										inputClassName="w-full !border-none rounded-md px-3 !py-1 pr-10 outline-none focus:ring-2 focus:ring-blue-500"
                                     />
 
-                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>}
+                                    {errors.businessCity && <p className="text-red-500 text-xs">{errors.businessCity}</p>} */}
                                 </div>
 
                                 <div className="w-full mt-5">
@@ -246,15 +258,27 @@ export default function AdminSignUp() {
                                 </div>
 
                                 <div className="flex justify-between gap-2 mt-5">
-                                    <button type="button" onClick={back} className="px-2 py-2 rounded bg-blue-600 text-white">
+                                    <button
+                                        type="button"
+                                        onClick={back}
+                                        className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"
+                                    >
                                         <ChevronLeft size={14} className="inline ml-1" />
                                         Back
                                     </button>
-                                    <button type="button" onClick={next} className="rounded px-2 py-2 bg-blue-600 text-white">
+                                    <button
+                                        type="button"
+                                        onClick={next}
+                                        className="flex items-center justify-center w-1/2 rounded px-2 py-2 hover:cursor-pointer bg-blue-600 text-white"
+                                    >
                                         Next
                                         <ChevronRight size={14} className="inline ml-1" />
                                     </button>
                                 </div>
+
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 3
+								</div>
                             </>
                         )}
 
@@ -264,22 +288,27 @@ export default function AdminSignUp() {
 
                                 <CredentialDetails formData={form} onChange={handleCredentialChange} errors={errors} />
 
+                                <div className="flex justify-start mt-2 border-b border-gray-200 py-1 italic text-sm">
+									Step {step} out of 3
+								</div>
                                 <div className="flex justify-between gap-2 mt-5">
                                     <button type="button" onClick={back}
-										className="flex items-center px-2 py-2 rounded hover:cursor-pointer bg-blue-600 text-white hover:bg-blue-700"
-                                    >
-                                        <ChevronLeft size={14} className="inline ml-1" />
+                                        className="flex items-center justify-center w-1/2 px-2 py-2 rounded text-black bg-gray-100 hover:cursor-pointer hover:bg-blue-600 hover:text-white"                                    >
+                                        <ChevronLeft size={14} className="inline ml-2" />
                                         Back
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className={`w-full py-2 rounded-md hover:cursor-pointer ${isSubmitting
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-blue-600 text-white hover:bg-blue-700"
+                                        className={`w-1/2 flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer "
                                             }`} >
-                                        <Check size={14} className="inline mr-1" />
-                                        {isSubmitting ? 'Submitting...' : 'Create Account'}
+                                        {isSubmitting ? (
+                                            <Spinner className='inline mr-1' />
+                                        ) : (
+                                            <Check size={14} className="inline mr-1" />
+                                        )
+                                        }
+                                        {isSubmitting ? 'Submitting...' : 'Submit'}
                                     </button>
                                 </div>
                             </>

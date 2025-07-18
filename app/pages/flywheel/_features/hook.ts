@@ -13,14 +13,7 @@ type UseFetchDataPoints = {
 	};
 }
 
-type UseFetchPipelines = {
-	axios: AxiosInstance;
-	queryParams?: {
-		page?: number;
-		limit?: number;
-		total?: number;
-	};
-}
+
 
 export const useFetchDataPoints = ({
 	axios, queryParams
@@ -52,7 +45,7 @@ export const useFetchSingleDataPoint = ({
 			console.log("Running queryFn for fieldId:", id);
 			return fetchSingleDataPoint(axios, id); // return the promise
 		},
-		enabled: !!id && enabled, 
+		enabled: !!id && enabled,
 		staleTime: 1000 * 60 * 5,
 	});
 };
@@ -91,19 +84,30 @@ export const useCreatePipeline = ({ axios }: { axios: AxiosInstance }) => {
 	});
 };
 
-export const useFetchPipelines = ({ axios, queryParams }: UseFetchPipelines) => {
-	return useQuery<{
-		data: Pipeline[];
+
+export const useFetchPipelines = ({
+	axios,
+	queryParams,
+}: {
+	axios: AxiosInstance;
+	queryParams: {
+		businessUserId: string;
+		departmentId: string;
+		startDate: string;
+		endDate: string;
+		search: string;
 		page: number;
 		limit: number;
-		total: number;
-	}>({
-		queryKey: ["pipelines", queryParams],
+	};
+}) => {
+	return useQuery({
+		queryKey: ['pipelines', queryParams],
 		queryFn: () => fetchPipelines(axios, queryParams),
-		staleTime: 60 * 1000 * 5,
-		retry: 3
+		staleTime: 5 * 60 * 1000,
+		retry: 3,
 	});
 };
+
 
 
 type UseFetchPipelinesByDepartmentArgs = {
