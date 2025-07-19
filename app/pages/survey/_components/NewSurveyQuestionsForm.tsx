@@ -9,7 +9,7 @@ import {
 } from "@/app/lib/type";
 import axios from "@/app/lib/axios";
 import { toCamelCase } from "@/app/utils/caseFormat";
-import { ArrowLeft, Check } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import FieldPreview from "../../flywheel/_components/FieldPreview";
@@ -22,11 +22,12 @@ import {
   getUser,
 } from "@/app/utils/user/userData";
 import Spinner from "@/app/components/Spinner";
-import { IconButton } from "@radix-ui/themes";
 import FieldFooter from "../../../components/form/FieldFooter";
 import AddFieldButton from "@/app/components/form/AddFieldButton";
+import { JSX } from "react";
 
 type Props = {
+  surveyTab: JSX.Element;
   form: DataPointForm;
   setForm: React.Dispatch<React.SetStateAction<DataPointForm>>;
   surveyName: string;
@@ -41,6 +42,7 @@ type Props = {
 };
 
 const NewSurveyQuestionsForm = ({
+  surveyTab,
   form,
   setForm,
   surveyName,
@@ -180,20 +182,34 @@ const NewSurveyQuestionsForm = ({
   return (
     <form
       // onSubmit={handleSubmit}
-      className="w-full p-5 mt-8 bg-blue-50 rounded-md space-y-6 "
+      className="max-w-full mx-auto p-5 bg-gray-50 rounded-md space-y-4 "
     >
-      <div className="max-w-3xl mx-auto">
-        <IconButton type="button" onClick={() => router.back()}>
-          <ArrowLeft />
-        </IconButton>
+      <div className="gap-4 max-w-xl 2xl:max-w-3xl mx-auto">
+        <button
+          type="button"
+          className="bg-gray-100 w-10 h-10 flex justify-start items-center rounded-full p-2 
+				    	hover:cursor-pointer hover:bg-blue-600 hover:text-white transition duration-500 "
+          onClick={() => router.back()}
+        >
+          <ChevronLeft size={30} />
+        </button>
         <p className="mt-5 mb-8"> Please enter the questions you want to include in your survey. You can add multiple questions and specify the type of each question.</p>
 
+        <div
+          className="w-full py-4 px-5 border-t-4 border-blue-600 bg-white rounded-xl space-y-3 
+          hover:border-t-4 hover:border-blue-600 
+          transition-all duration-300 ease-in-out
+          focus-within:border-blue-600 focus-within:border-t-4 mb-5"
+        >
+          <h2 className="font-semibold">{surveyName}</h2>
+          <p className="mt-1">{surveyDescription}</p>
+        </div>
         {form.field.map((field, index: any) => (
           <div key={index}
-            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
-                            hover:border-0 hover:border-l-8 hover:border-blue-600 
+            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-xl space-y-3 
+                            hover:border-0 hover:border-l-4 hover:border-blue-600 
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
-                            focus-within:border-blue-600 focus-within:border-l-8 mb-5
+                            focus-within:border-blue-600 focus-within:border-l-4 mb-5
                     `}>
             <div className="w-full grid grid-cols-2 gap-2 mb-5">
               <input
@@ -254,18 +270,24 @@ const NewSurveyQuestionsForm = ({
         ))
         }
 
-        <div className="flex gap-3 mt-5">
-          <AddFieldButton
-            totalFields={form.field.length}
-            onAdd={addField}
-          />
+        {/* JSX type Tab step */}
+        <div className="w-full">
+          {surveyTab}
+        </div>
+
+        <div className="flex w-full gap-3 mt-5">
+          <div className="w-1/2 flex justify-center">
+            <AddFieldButton
+              totalFields={form.field.length}
+              onAdd={addField}
+            />
+          </div>
 
           {user?.role === "super admin" ? (
             <button
               onClick={submitSurvey}
               type="button"
-              //   disabled={isPending}
-              className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+              className="flex w-1/2 items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
             >
               <Check size={16} className="mr-1" />
               {isCreatingSurvey || isCreatingSurvey ? (
@@ -281,9 +303,10 @@ const NewSurveyQuestionsForm = ({
             <button
               type="button"
               onClick={onNextButtonClicked}
-              className="border border-green-600 rounded-md py-2 px-8 mr-auto hover:cursor-pointer"
+              className="w-1/2 flex justify-center items-center bg-blue-600 text-white rounded-md py-2 px-8 mr-auto hover:cursor-pointer"
             >
-              <span className="text-green-600">Next</span>
+              Next
+              <ChevronRight size={14} className="ml-1 iniline" />
             </button>
           )}
         </div>
