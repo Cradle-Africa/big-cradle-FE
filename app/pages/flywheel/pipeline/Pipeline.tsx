@@ -140,12 +140,14 @@ const PipelinePage = ({
                         value={tempStartDate}
                         onChange={(val) => setTempStartDate(val)}
                         label="Start Date"
+                        style="w-34 px-2 py-1 border border-gray-300 rounded-md focus:outline-none"
                     />
 
                     <DateInput
                         value={tempEndDate}
                         onChange={(val) => setTempEndDate(val)}
                         label="End Date"
+                        style="w-34 px-2 py-1 border border-gray-300 rounded-md focus:outline-none"
                     />
 
                     <DepartmentFilter
@@ -308,7 +310,7 @@ const PipelinePage = ({
                                                     </button>
 
                                                     <Link
-                                                        href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}/${pipeline.dataPointName}`}
+                                                        href={`/pages/flywheel/datapoint/edit/${pipeline?.fieldId}`}
                                                         className="px-1"
                                                     >
                                                         <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
@@ -337,7 +339,7 @@ const PipelinePage = ({
                 </div>
             )}
 
-            {pagination && (
+            {pagination && pipelineData.length > 0 ? (
                 <Pagination
                     currentPage={pagination.page}
                     totalPages={pagination.pages}
@@ -352,6 +354,8 @@ const PipelinePage = ({
                         onLimitChange(newLimit);
                     }}
                 />
+            ): (
+                <>No pipeline found</>
             )}
 
             <ShareDataPoint

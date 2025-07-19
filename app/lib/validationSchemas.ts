@@ -1,3 +1,4 @@
+import { isAfter, isBefore, parseISO, startOfToday } from "date-fns";
 import { z } from "zod";
 
 export const pipeLineSchema = z.object({
@@ -74,13 +75,30 @@ export const demographicSchema = z.object({
 export type DemographicFormValues = z.infer<typeof demographicSchema>;
 
 
-export const surveySchema = z.object({
-  surveyName: z.string().min(1, "Enter the survey name"),
-  surveyGoal: z.string().min(1, "Enter the survey goal"),
-  startDate: z.string().min(1, "Enter the survey start date"),
-  endDate: z.string().min(1, "Enter the survey end date"),
-  surveyDescription: z.string().min(1, "Enter the description name"),
-});
+export const surveySchema = z
+  .object({
+    surveyName: z.string().min(1, "Enter the survey name"),
+    surveyGoal: z.string().min(1, "Enter the survey goal"),
+    startDate: z.string().min(1, "Enter the survey start date"),
+    endDate: z.string().min(1, "Enter the survey end date"),
+    surveyDescription: z.string().min(1, "Enter the description"),
+  })
+  .refine((data) => {
+    const today = startOfToday();
+    const start = parseISO(data.startDate);
+    return !isBefore(start, today);
+  }, {
+    message: "Start date cannot be in the past",
+    path: ["startDate"],
+  })
+  .refine((data) => {
+    const start = parseISO(data.startDate);
+    const end = parseISO(data.endDate);
+    return isAfter(end, start);
+  }, {
+    message: "End date must be after start date",
+    path: ["endDate"],
+  });
 
 export const surveyPaymentSchema = z.object({
   amount: z.string(),

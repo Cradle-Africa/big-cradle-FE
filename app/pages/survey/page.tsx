@@ -167,11 +167,11 @@ const SurveyPage = () => {
       
       <div className="w-full">
         <div className="flex justify-between">
-          <p className="font-medium text-black">Surveys</p>
+          <p className="font-semibold text-lg text-black">Surveys</p>
 
           {user?.role === "business" && (
             <button
-              className="flex bg-[#3352FF] rounded-md px-4 py-1 lg:py-2 cursor-pointer"
+              className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer"
               //   onClick={() => setOpen(true)}
             >
               <Link href="/pages/survey/new?survey=survey-name-and-description">
@@ -183,10 +183,10 @@ const SurveyPage = () => {
             </button>
           )}
         </div>
-        <p className="mt-2">
+        {/* <p className="mt-2">
           View, manage, and track your survey tasks. Create new surveys to
           collect insights in real time
-        </p>
+        </p> */}
       </div>
       {/* Build the cards area */}
       <div className="grid grid-cols-2 md:grid md:grid-cols-3 2xl:grid 2xl:grid-cols-4 gap-3 lg:gap-6 mt-8">

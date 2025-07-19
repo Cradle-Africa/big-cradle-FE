@@ -99,9 +99,14 @@ export const refreshTokenService = async () => {
     const response = await axios.post(`${BASE_URL}/authentication/refresh-token`,
         {},
         {
-            withCredentials: true, // ensure the refresh cookie is sent
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            }
         }
     );
+
+    console.log('REFRESHED RESPONSE', response)
     return response.data;
 };
 

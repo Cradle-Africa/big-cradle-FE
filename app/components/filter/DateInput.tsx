@@ -8,15 +8,17 @@ export default function DateInput({
   value,
   onChange,
   label,
+  style
 }: {
   value: string;
   onChange: (val: string) => void;
   label: string;
+  style: string;
 }) {
   const selectedDate = value ? parseISO(value) : null;
 
   return (
-    <div className="relative mt-5 w-34">
+    <div className="relative mt-5">
       {/* <label className="block text-sm text-gray-500 mb-1">{label}</label> */}
       <div className="relative">
         <DatePicker
@@ -26,7 +28,7 @@ export default function DateInput({
           }
           placeholderText={label}
           dateFormat="yyyy-MM-dd"
-          className="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none"
+          className={style}
         />
         <Calendar
           size={14}

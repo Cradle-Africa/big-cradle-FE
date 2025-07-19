@@ -59,7 +59,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
           <div className="h-[1px] w-full bg-[#004484] my-4" />
           {children}
         </div>
-        <div className="bg-[#2B99FA] mt-auto rounded-lg mx-4 p-3 text-white">
+        <div className="bg-[#2B99FA] mt-5 md:mt-auto rounded-lg mx-4 p-3 text-white">
           <h2 className="flex items-center text-md font-semibold">
             <FilePlus size={14} className="inline mr-1"  />
             Survey

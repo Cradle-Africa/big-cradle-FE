@@ -6,11 +6,12 @@ import { pipeLineSchema } from "@/app/lib/validationSchemas";
 import { getBusinessId, getEmployeeUserId, getUser } from "@/app/utils/user/userData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { Check } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useCreatePipeline } from "../_features/hook";
 import { useFetchDepartments } from "../../user/department/_features/hook";
+import { Spinner } from "@radix-ui/themes";
 
 type Props = {
 	setCreatingPipeline: (value: boolean) => void;
@@ -70,10 +71,25 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 
 
 	return (
-		<div className="mt-5 py-5">
-			<h2 className="text-gray-800 text-lg font-normal">New Data Pipeline</h2>
+		<div
+			className="max-w-full mx-auto h-screen p-5 bg-gray-50 rounded-md space-y-4"
+		>
 
-			<form onSubmit={handleSubmit(onButtonClick)} className="lg:w-3/4">
+			<form onSubmit={handleSubmit(onButtonClick)}
+				className="gap-4 max-w-xl 2xl:max-w-3xl mx-auto"
+			>
+				<div className="flex justify-between items-center ">
+					<h2 className="text-black font-semibold text-lg">New Data Pipeline</h2>
+
+					<button
+						className="flex justify-end items-center bg-blue-600 text-white px-4 py-1 rounded-md cursor-pointer"
+						onClick={() => setCreatingPipeline(false)}
+					>
+						<ArrowLeft size={18} color="white" className="mr-1" />
+						Back
+					</button>
+				</div>
+
 				<select
 					{...register("departmentId")}
 					className="mt-5 w-full bg-white border border-gray-300 rounded-md px-3 py-2 outline-none"
@@ -103,9 +119,14 @@ const NewPipeline = ({ setCreatingPipeline }: Props) => {
 				<button
 					disabled={isPending}
 					type="submit"
-					className="mt-5 flex items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+					className="mt-5 w-full flex justify-center items-center bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer disabled:opacity-50"
 				>
-					<Check size={16} className="mr-1" />
+					{isPending ? (
+						<Spinner className='inline mr-1' />
+					) : (
+						<Check size={14} className="inline mr-1" />
+					)
+					}
 					{isPending ? "Submitting..." : "Submit"}
 				</button>
 			</form>

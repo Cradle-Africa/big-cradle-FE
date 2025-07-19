@@ -71,8 +71,8 @@ export const useFetchSinglePipeline = ({
 
 export const useEditPipeline = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation({
-		mutationFn: async (payload: DataPoint) => {
-			const res = await axios.put(`/data-point-mgt/pipeline-fields/${payload.dataPointId}`, payload);
+		mutationFn: async ({id, payload} :{id: string, payload: DataPoint}) => {
+			const res = await axios.put(`/data-point-mgt/pipeline-fields/${id}`, payload);
 			return res.data.data;
 		},
 	});

@@ -91,7 +91,10 @@ const EditDataPoint: React.FC<EditDataPointProps> = ({ editingDataPoint, uniqueI
             field: form.field,
         };
 
-        mutate(payload, {
+        mutate({
+            id: uniqueId,
+            payload,
+        }, {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ["data-points"] });
                 toast.success("Data point updated successfully");

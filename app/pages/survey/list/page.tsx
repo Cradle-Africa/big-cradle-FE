@@ -252,10 +252,10 @@ const SurveyPage = () => {
             </button>
           )}
         </div>
-        <p className="mt-2">
+        {/* <p className="mt-2">
           View, manage, and track your survey tasks. Create new surveys to
           collect insights in real time
-        </p>
+        </p> */}
       </div>
       {/* Build the cards area */}
       <div className="grid grid-cols-2 md:grid md:grid-cols-3 2xl:grid 2xl:grid-cols-4 gap-3 lg:gap-6 mt-8">

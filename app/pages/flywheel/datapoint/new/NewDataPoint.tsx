@@ -15,6 +15,7 @@ import SelectOptionManager from "../../_components/SelectOptionManager";
 import { useCreateDataPoint } from "../../_features/hook";
 import FieldFooter from "@/app/components/form/FieldFooter";
 import AddFieldButton from "@/app/components/form/AddFieldButton";
+import { Spinner } from "@radix-ui/themes";
 
 interface DataPointProps {
     pipelines?: Pipeline[]
@@ -125,143 +126,152 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
     };
 
     return (
-        <div className="bg-blue-50 p-4 rounded-md">
-            <div className="flex justify-between mt-5">
-                <h2 className="text-lg text-black font-semibold">Build a New Data Point</h2>
-                {creatingDataPoint && setCreatingDataPoint ? (
-                    <button
-                        className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
-                        onClick={() => setCreatingDataPoint(false)}
-                    >
-                        <List size={18} color="white" className="mr-1" />
-                        <span className="hidden md:inline">View Data Points</span>
-                    </button>
-                ) : (
-                    <Link
-                        className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
-                        href={`/pages/flywheel?tab=${backParams}`}
-                    >
-                        <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
-                    </Link>
-                )}
-            </div>
-
-            <form
-                onSubmit={handleSubmit}
-                className="w-full lg:w-3/4 rounded-md space-y-6 mt-10"
-            >
-                {pipelineName && (
-                    <div className="w-full mt-5 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
-                    >
-                        <div className="p-4">
-                            <h2 className="text-lg">{pipelineName} </h2>
-                            <p className="text-md mt-5">
-                                {pipelineDescription}
-                            </p>
-                        </div>
-                    </div>
-                )}
-                {pipelines && (
-                    <div className="w-full">
-                        <select
-                            value={form.dataPointId}
-                            onChange={(e) =>
-                                setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
-                            }
-                            required
-                            className="w-full border bg-white border-gray-300 rounded-lg px-3 py-2 outline-blue-600"
+        <div
+            className="max-w-full mx-auto h-screen p-5 bg-gray-50 rounded-md space-y-4"
+        >
+            <div className="gap-4 max-w-xl 2xl:max-w-3xl mx-auto">
+                <div className="flex justify-between mt-5">
+                    <h2 className="text-lg text-black font-semibold">Build a New Data Point</h2>
+                    {creatingDataPoint && setCreatingDataPoint ? (
+                        <button
+                            className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
+                            onClick={() => setCreatingDataPoint(false)}
                         >
-                            <option value="">Select a pipeline</option>
-                            <>
-                                {pipelines.map((dp: any) => (
-                                    <option key={dp.id} value={dp.id}>
-                                        {dp.dataPointName}
-                                    </option>
-                                ))}
-                            </>
-                        </select>
-                    </div>
-                )}
+                            <List size={18} color="white" className="mr-1" />
+                            <span className="hidden md:inline">View Data Points</span>
+                        </button>
+                    ) : (
+                        <Link
+                            className='flex px-3 py-2 items-center rounded-md text-white bg-blue-600'
+                            href={`/pages/flywheel?tab=${backParams}`}
+                        >
+                            <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
+                        </Link>
+                    )}
+                </div>
 
-                {form.field.map((field, index: any) => (
-                    <div key={index}
-                        className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-lg space-y-3 
-                            hover:border-0 hover:border-l-8 hover:border-blue-600 
-                            transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
-                            focus-within:border-blue-600 focus-within:border-l-8
-                    `}>
-                        <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
-                            <input
-                                type="text"
-                                required
-                                placeholder="Question"
-                                value={field.label}
+                <form
+                    onSubmit={handleSubmit}
+                    className="w-full rounded-md space-y-6 mt-10"
+                >
+                    {pipelineName && (
+                        <div className="w-full mt-5 border-t-8 border-blue-600 bg-white rounded-lg space-y-3 mb-5"
+                        >
+                            <div className="p-4">
+                                <h2 className="text-lg">{pipelineName} </h2>
+                                <p className="text-md mt-5">
+                                    {pipelineDescription}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    {pipelines && (
+                        <div className="w-full">
+                            <select
+                                value={form.dataPointId}
                                 onChange={(e) =>
-                                    handleFieldChange(index, "label", e.target.value)
+                                    setForm((prev) => ({ ...prev, dataPointId: e.target.value }))
                                 }
-                                className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
+                                required
+                                className="w-full border bg-white border-gray-300 rounded-lg px-3 py-2 outline-blue-600"
+                            >
+                                <option value="">Select a pipeline</option>
+                                <>
+                                    {pipelines.map((dp: any) => (
+                                        <option key={dp.id} value={dp.id}>
+                                            {dp.dataPointName}
+                                        </option>
+                                    ))}
+                                </>
+                            </select>
+                        </div>
+                    )}
+
+                    {form.field.map((field, index: any) => (
+                        <div key={index}
+                            className={`w-full py-4 px-5 border bg-white border-gray-200 rounded-xl space-y-3 
+                            hover:border-0 hover:border-l-6 hover:border-blue-600 
+                            transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
+                            focus-within:border-blue-600 focus-within:border-l-6
+                    `}>
+                            <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="Question"
+                                    value={field.label}
+                                    onChange={(e) =>
+                                        handleFieldChange(index, "label", e.target.value)
+                                    }
+                                    className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
+                                />
+
+                                <select
+                                    value={field.type}
+                                    onChange={(e) =>
+                                        handleFieldChange(index, "type", e.target.value as FieldType)
+                                    }
+                                    className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
+                                >
+                                    <option value="">Select the type of the answer</option>
+                                    <option value="text">Short text</option>
+                                    <option value="number">Number</option>
+                                    <option value="email">Email Address</option>
+                                    <option value="tel">Phone Number</option>
+                                    <option value="select">Select</option>
+                                    <option value="checkbox">Multiple Choices</option>
+                                    <option value="radio">Single Choice</option>
+                                    <option value="date">Date</option>
+                                    <option value="time">Time</option>
+                                    {/* <option value="file">File Upload</option> */}
+                                    <option value="rating">Rating</option>
+                                    <option value="textarea">Paragraph</option>
+                                </select>
+
+                            </div>
+
+                            {/* Field Preview */}
+                            <FieldPreview field={field} />
+
+                            <SelectOptionManager
+                                index={index}
+                                newOptions={newOptions}
+                                setNewOptions={setNewOptions}
+                                formFields={form.field}
+                                setFormFields={setForm}
                             />
 
-                            <select
-                                value={field.type}
-                                onChange={(e) =>
-                                    handleFieldChange(index, "type", e.target.value as FieldType)
-                                }
-                                className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
-                            >
-                                <option value="">Select the type of the answer</option>
-                                <option value="text">Short text</option>
-                                <option value="number">Number</option>
-                                <option value="email">Email Address</option>
-                                <option value="tel">Phone Number</option>
-                                <option value="select">Select</option>
-                                <option value="checkbox">Multiple Choices</option>
-                                <option value="radio">Single Choice</option>
-                                <option value="date">Date</option>
-                                <option value="time">Time</option>
-                                {/* <option value="file">File Upload</option> */}
-                                <option value="rating">Rating</option>
-                                <option value="textarea">Paragraph</option>
-                            </select>
-
+                            <FieldFooter
+                                index={index}
+                                fieldType={field.type}
+                                isRequired={field.required}
+                                onToggleRequired={(i, value) => handleFieldChange(i, "required", value)}
+                                onRemove={removeField}
+                            />
                         </div>
+                    ))}
 
-                        {/* Field Preview */}
-                        <FieldPreview field={field} />
-
-                        <SelectOptionManager
-                            index={index}
-                            newOptions={newOptions}
-                            setNewOptions={setNewOptions}
-                            formFields={form.field}
-                            setFormFields={setForm}
+                    <div className="flex gap-3 mt-5">
+                        <AddFieldButton
+                            totalFields={form.field.length}
+                            onAdd={addField}
                         />
-
-                        <FieldFooter
-                            index={index}
-                            fieldType={field.type}
-                            isRequired={field.required}
-                            onToggleRequired={(i, value) => handleFieldChange(i, "required", value)}
-                            onRemove={removeField}
-                        />
+                        <button
+                            type="submit"
+                            disabled={isPending}
+                            className="flex items-center justify-center w-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+                        >
+                            {isPending ? (
+                                <Spinner className='inline mr-1' />
+                            ) : (
+                                <Check size={14} className="inline mr-1" />
+                            )
+                            }
+                            {isPending ? "Submitting..." : "Submit"}
+                        </button>
                     </div>
-                ))}
-
-                <div className="flex gap-3 mt-5">
-                    <AddFieldButton
-                        totalFields={form.field.length}
-                        onAdd={addField}
-                    />
-                    <button
-                        type="submit"
-                        disabled={isPending}
-                        className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
-                    >
-                        <Check size={16} className="mr-1" />
-                        {isPending ? "Submitting..." : "Submit"}
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
     );

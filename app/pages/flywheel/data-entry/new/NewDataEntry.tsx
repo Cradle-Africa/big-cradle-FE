@@ -28,6 +28,7 @@ const NewDataEntry: React.FC<PopUpProps> = ({
         enabled: openNewDataEntry,
     });
 
+    
     const { data: singlePipeline } = useFetchSinglePipeline({
         axios,
         id: datapoints?.dataPointId || '',

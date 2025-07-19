@@ -1,6 +1,6 @@
 'use client';
 import DashboardLayout from "@/app/DashboardLayout";
-import { List, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { JSX, useEffect, useRef, useState } from "react";
 // import DataPoints from "./datapoint/DataPoints";
 import FlywheelTabs from "./_components/FlywheelTabs";
@@ -136,24 +136,19 @@ const Flywheel = () => {
 			<div className="mt-5">
 				{creatingPipeline ? (
 					<>
-						<div className="">
-							<button
-								className="flex justify-end items-center bg-blue-600 text-white px-4 mt-5 py-1 rounded-md cursor-pointer"
-								onClick={() => setCreatingPipeline(false)}
-							>
-								<List size={18} color="white" className="mr-1" />
-								View Pipelines
-							</button>
-						</div>
-
 						<NewPipeLine setCreatingPipeline={setCreatingPipeline} />
 					</>
 				) : (
 					<>
-						<div className="flex justify-between">
-							<h2 className="text-lg text-black">Data pipelines</h2>
+						<div className="flex justify-between mb-5">
+							<div className="flex justify-between">
+								<div className="flex flex-col gap-2">
+									<p className="font-semibold text-lg text-black">Data pipeline</p>
+									<p>Transform insights into actions that accelerate your business growth</p>
+								</div>
+							</div>
 							<button
-								className="flex items-center bg-blue-600 text-white px-3 py-1 rounded-md cursor-pointer"
+								className="flex items-center bg-blue-600 text-white px-3 h-[35px] rounded-md cursor-pointer"
 								onClick={() => setPopupOpen(true)}
 							>
 								<Plus size={18} color="white" className="mr-1" />
@@ -215,13 +210,6 @@ const Flywheel = () => {
 							onClick={() => setSelectedTab(tab)}
 						/>
 					))}
-				</div>
-
-				<div className="flex justify-between mt-5">
-					<div className="flex flex-col gap-2">
-						<p className="font-semibold text-lg text-black">Data pipeline</p>
-						<p>Transform insights into actions that accelerate your business growth</p>
-					</div>
 				</div>
 
 				{/* Tab Layout Rendering */}

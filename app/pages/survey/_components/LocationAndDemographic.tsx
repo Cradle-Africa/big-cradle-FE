@@ -101,6 +101,7 @@ const LocationAndDemographic = ({
 			toast.error("Please add at least one location");
 			return;
 		}
+		onNextClicked();
 
 		onSubmit({
 			country: demographicSelections[0].country,
@@ -285,7 +286,6 @@ const LocationAndDemographic = ({
 					rounded-md py-2 px-8 mr-auto hover:cursor-pointer"
 					onClick={() => {
 						handleFormSubmit();
-						onNextClicked();
 					}}
 				>
 					Next
