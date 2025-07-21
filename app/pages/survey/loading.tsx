@@ -1,10 +1,11 @@
 import DashboardLayout from "@/app/DashboardLayout";
+import { Spinner } from "@radix-ui/themes";
 
 const SurveyPageLoading = () => {
   return (
     <DashboardLayout>
       <div>
-        <p>Loading...</p>
+        <Spinner/>
       </div>
     </DashboardLayout>
   );

@@ -26,6 +26,8 @@ This is a **Next.js** project built with **TypeScript**, designed with modular a
 ├── app/                  # Main application code
 │   ├── layout.tsx        # Root layout file
 │   ├── page.tsx          # Landing page
+│   ├── components        # Components
+|   ├── pages             # Pages
 │   ├── utils/            # Utility functions (e.g., formatting, downloads)
 │   └── theme-config.css  # Custom theme styles
 ├── public/               # Static files (if any)
@@ -39,6 +41,25 @@ This is a **Next.js** project built with **TypeScript**, designed with modular a
 ```
 
 ---
+
+## Peroject modules
+
+📝 Survey Management Dashboard (Next.js)
+A full-featured survey management system built with Next.js 13+ App Router, designed for both business users and super admins. It allows survey creation, listing, analytics, payments, and filtering with date ranges and search.
+
+🚀 Features
+🔐 Role-based views (Business User / Super Admin)
+📊 Survey Analytics Dashboard
+🗂️ Survey List & Pagination
+📅 Date Filtering and Search
+✅ Payment Verification (Flutterwave-style)
+🔄 React Query-powered data fetching & caching
+📦 Modular component architecture
+♻️ Loading states, Toast notifications, Error handling
+
+
+
+
 
 ## 🛠️ Getting Started
 

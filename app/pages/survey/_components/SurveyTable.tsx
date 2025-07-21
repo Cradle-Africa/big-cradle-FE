@@ -1,161 +1,154 @@
-import { SurveyListItem } from "@/app/lib/type";
+import { PaginationMeta, SurveyListItem } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
-import { Eye, MoreVertical } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { ImFileEmpty } from "react-icons/im";
+import { Calendar } from "lucide-react";
+// import { ImFileEmpty } from "react-icons/im";
+import Image from "next/image";
+import radialIcon from '@/public/radial.png'
+import { useRouter } from "next/navigation";
+import DataPointActions from "../../flywheel/_components/DataPointActions";
+import { useState } from "react";
+import FilterBar from "./filter/FilterBar";
+import { Spinner } from "@radix-ui/themes";
+import Pagination from "./Pagination";
 
 type Props = {
-  data: SurveyListItem[];
+	data: SurveyListItem[];
+	pagination: PaginationMeta;
+	selectedStartDate: string;
+	selectedEndDate: string;
+	search: string;
+	setSearch: (val: string) => void;
+	setSelectedStartDate: (val: string) => void;
+	setSelectedEndDate: (val: string) => void;
+	onPageChange: (newPage: number) => void;
+	onLimitChange: (newLimit: number) => void;
+	loading: boolean;
 };
 
-const SurveyTable = ({ data }: Props) => {
-  const [openMenuId, setOpenMenuId] = useState(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
+const SurveyTable = ({
+	data,
+	pagination,
+	selectedStartDate,
+	selectedEndDate,
+	search,
+	setSearch,
+	setSelectedStartDate,
+	setSelectedEndDate,
+	onPageChange,
+	onLimitChange,
+	loading,
+}: Props) => {
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpenMenuId(null);
-      }
-    }
+	const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
+	const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
+	const [tempSearch, setTempSearch] = useState(search);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+	const [, setPage] = useState(pagination.page);
+    const [limit, setLimit] = useState(pagination.limit);
 
-  const toggleMenu = (id: any) => {
-    setOpenMenuId((prev) => (prev === id ? null : id));
-  };
+	const router = useRouter();
 
-  if (data.length < 1)
-    return (
-      <div className="flex flex-col items-center gap-5 justify-center py-8">
-        <ImFileEmpty />
-        <p>No Data</p>
-      </div>
-    );
+	// if (data.length < 1)
+	// 	return (
+	// 		<div className="flex flex-col items-center gap-5 justify-center py-8">
+	// 			<ImFileEmpty />
+	// 			<p>No Data</p>
+	// 		</div>
+	// 	);
 
-  return (
-    <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
-      <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-14">
-        <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Created At
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Survey Name
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Sector
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Survey Status
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Payment Status
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Start Date
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                End Date
-              </th>
-              <th className="px-3 lg:px-6 py-3 text-left text-sm font-semibold">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
-            {/* Example row */}
-            {data.map((survey) => (
-              <tr key={survey.id}>
-                <td className="px-3 lg:px-6 py-4">
-                  <div className="w-44">
-                    {formatDate(survey.createdAt ?? '')}
-                  </div>
-                </td>
-                <td className="px-3 lg:px-6 py-4 font-medium">
-                  <div className="w-48">
-                    {survey.surveyName}
-                  </div>
-                </td>
-                <td className="px-3 lg:px-6 py-4 font-medium">
-                  {survey.sector}
-                </td>
-                <td className="px-3 w-62 lg:px-6">
-                  {survey.isActive ? (
-                    <span className="inline-block px-4 py-1 text-xs font-medium  text-green-700 rounded-full border-1">
-                      Active
-                    </span>
-                  ) : (
-                    <span className="inline-block px-4 py-1 text-xs font-medium  text-red-700 rounded-full border-1">
-                      Active
-                    </span>
-                  )}
-                </td>
-                <td className="px-3 lg:px-6 text-center align-middle">
-                  {survey.paymentStatus !== "not-paid" ? (
-                    <div className="w-28 px-4 py-1 text-xs font-medium text-green-700 rounded-full border border-green-700">
-                      Paid
-                    </div>
-                  ) : (
-                    <div className="w-28 px-4 py-1 text-xs font-medium text-red-700 rounded-full border border-red-700">
-                      Not Paid
-                    </div>
-                  )}
-                </td>
-                <td className="px-3 lg:px-6 py-4">
-                  <div className="w-44">
-                    {formatDate(survey.startDate ?? '')}
-                  </div>
-                </td>
-                <td className="px-3 lg:px-6 py-4">
-                  <div className="w-44">
-                    {formatDate(survey.endDate ?? '')}
-                  </div>
-                </td>
-                <td className="px-3 lg:px-6 py-4 relative">
-                  <button
-                    onClick={() => toggleMenu(survey.id)}
-                    className="focus:outline-none cursor-pointer px-5"
-                  >
-                    <MoreVertical size={18} />
-                  </button>
+	return (
+		<div>
+			<FilterBar
+				tempSearch={tempSearch}
+				setTempSearch={setTempSearch}
+				tempStartDate={tempStartDate}
+				setTempStartDate={setTempStartDate}
+				tempEndDate={tempEndDate}
+				setTempEndDate={setTempEndDate}
+				onFilter={() => {
+					setSelectedStartDate(tempStartDate);
+					setSelectedEndDate(tempEndDate);
+					setSearch(tempSearch);
+					onPageChange(1);
+					onLimitChange(limit);
+				}}
+			/>
+			{loading ? (
+				<div className="mt-5"><Spinner /></div>
+			) : (
+				<div className="grid grid-cols-1 md:grid md:grid-cols-2  2xl:grid 2xl:grid-cols-3 w-full gap-5 mt-5">
+					{data.map((survey, index) => {
+						return (
+							<div
+								key={index}
+								onClick={() =>
+									router.push(`/pages/survey/${survey?.id}`)
+								}
+								className="flex flex-col group border-1 bg-white border-gray-200 rounded-lg px-6 py-6 cursor-pointer
+                                 hover:border-1 hover:border-blue-200 transition-all ease-in-out transform-fill hover:transform-fill "
+							>
+								<div className="flex flex-nowrap items-center justify-between">
+									<div className="inline-block items-center">
+										<Image
+											src={radialIcon}
+											width={15}
+											height={8}
+											alt={'Big cradle logo'}
+											className="inline text-inherit"
+										/>
+										<h2 className="inline ml-2 text-[18px] text-[#0C0C0C] ">
+											{survey.surveyName}
+										</h2>
+									</div>
+								</div>
 
-                  {openMenuId === survey.id && (
-                    <div
-                      ref={menuRef}
-                      className="absolute right-4 z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-gray-200"
-                    >
-                      <ul className="py-1 text-sm text-gray-700 cursor-pointer ">
-                        <Link href={`/pages/survey/${survey.id}`}>
-                          <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
-                            <Eye />
-                            <p>View</p>
-                          </li>
-                        </Link>
-                        {/* <Link href={`/pages/survey/edit/${survey.id}`}>
-                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex gap-4">
-                          <Edit />
-                          <p>Edit</p>
-                        </li>
-                      </Link> */}
-                      </ul>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+								<div className="flex text-[#494949] text-[14px] mt-5 ">
+									{survey.surveyDescription?.length > 200
+										? survey.surveyDescription.slice(0, 150) + "..."
+										: survey.surveyDescription}
+								</div>
+
+
+								<div className="flex justify-start mt-5 items-center mb-5">
+									<Calendar size={12} />
+									<h6 className="ml-1 text-[#494949] text-[12px] ">
+										{formatDate(survey?.createdAt ?? '')}
+									</h6>
+								</div>
+
+								<div
+									className="flex w-full justify-center border-t border-gray-100 mt-auto"
+									onClick={(e) => e.stopPropagation()}
+								>
+									<DataPointActions
+										survey={survey}
+									/>
+								</div>
+							</div>
+						);
+					})}
+				</div>
+			)}
+
+			{/*  pagination */}
+			{pagination && data.length > 0 && (
+				 <Pagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.pages}
+                    limit={pagination.limit}
+                    onPageChange={(newPage) => {
+                        setPage(newPage);
+                        onPageChange(newPage);
+                    }}
+                    onLimitChange={(newLimit) => {
+                        setLimit(newLimit);
+                        setPage(1);
+                        onLimitChange(newLimit);
+                    }}
+                />
+			)}
+		</div>
+	);
 };
 
 export default SurveyTable;

@@ -61,7 +61,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 					</thead>
 					<tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
 						{data.map((business, index) => (
-							<tr key={index}>
+							<tr key={index} className="hover:bg-gray-50">
 								<td className="px-6 py-4 font-medium">{index + 1}</td>
 								<td className="px-6 py-4 font-medium">{business.businessName}</td>
 								<td className="px-6 py-4 font-medium">{business.email}</td>
@@ -106,7 +106,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 
 											<li className="px-1">
 												<Link
-													href={`/pages/survey/list?status=active&page=1&business=${business.id}`}
+													href={`/pages/survey?status=all&page=1&business=${business.id}`}
 													className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
 												>
 													<div className="flex items-center gap-1">

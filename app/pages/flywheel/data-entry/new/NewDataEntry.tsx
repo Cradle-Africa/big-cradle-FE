@@ -358,8 +358,6 @@ const NewDataEntry: React.FC<PopUpProps> = ({
             data: cleanedData, 
         };
 
-        console.log('DATA: ', payload);
-
         submitEntry(payload, {
             onSuccess: () => {
                 setFormData({}); 

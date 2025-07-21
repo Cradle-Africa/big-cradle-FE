@@ -4,7 +4,6 @@ import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
 import { DataEntry } from "@/app/lib/type";
 import { DownloadTemplate } from "@/app/pages/flywheel/_components/DownloadTemplate";
-// import { ExportToExcel } from "@/app/pages/flywheel/_components/ExportToExcel";
 import { ImportExcel } from "@/app/pages/flywheel/_components/ImportExcel";
 import {
     useCreateBulkDataEntry,
@@ -186,7 +185,7 @@ const NewBulkDataEntry = () => {
             onSuccess: () => {
                 setEntries([getEmptyFormData()]);
                 toast.success("Entries submitted successfully!");
-                router.push(`/pages/flywheel/data-entry/${pipelineId}/${fieldId}?t=${Date.now()}`);
+                router.push(`/pages/flywheel/data-entry/${pipelineId}?t=${Date.now()}`);
             },
             onError: (err: any) => {
                 console.error(err);

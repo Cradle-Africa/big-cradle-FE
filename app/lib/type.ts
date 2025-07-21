@@ -303,6 +303,17 @@ export interface DataEntry {
   dataPointName?: string;
 }
 
+export interface SurveyEntry {
+  businessUserId: string | null;
+  employeeUserId: string | null;
+  fieldId: string;
+  dataPointId: string;
+  data: Record<string, any>;
+  createdAt?: string;
+  surveyName?: string;
+}
+
+
 export type DashboardMenu = {
   title: string;
   subTitle: string;

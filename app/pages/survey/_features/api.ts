@@ -1,4 +1,5 @@
 import { FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
+import { getToken } from "@/app/utils/user/userData";
 import { AxiosInstance } from "axios";
 
 export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
@@ -51,18 +52,22 @@ export const updateSurvey = async (axios: AxiosInstance, data: Survey) => {
 
 export const fetchSurveys = async (
   axios: AxiosInstance,
-  page: string,
+  page: number,
+  limit: number,
   businessUserId: string | null | undefined,
+  search: string,
+  startDate: string,
+  endDate: string,
 ) => {
   try {
     let res: any = {};
     if (businessUserId) {
       res = await axios.get(
-        `survey-mgt/survey?businessUserId=${businessUserId}&page=${page}&limit=10`
+        `survey-mgt/survey?businessUserId=${businessUserId}&search=${search}&startDate=${startDate}&endDate=${endDate}&page=${page}&limit=${limit}`
       );
     } else {
       res = await axios.get(
-        `survey-mgt/super-admin-all-survey?page=${page}&limit=10`
+        `survey-mgt/super-admin-all-survey?search=${search}&startDate=${startDate}&endDate=${endDate}&page=${page}&limit=${limit}`
       );
     }
     return res.data;
@@ -166,4 +171,63 @@ export const surveyPay = async (
     const customError = new Error(message);
     throw customError;
   }
+};
+
+
+
+export const fetchSurveyDataEntries = async (
+    axios: AxiosInstance,
+    queryParams?: {
+        page?: number;
+        limit?: number;
+        dataPoint?: string;
+    }
+) => {
+    try {
+        const params = {
+            page: queryParams?.page || 1,
+            limit: queryParams?.limit || 10,
+            dataPoint: queryParams?.dataPoint || "",
+        };
+
+        const res = await axios.get(`/data-point-mgt/pipeline-fields-entry-attached-to-data-point`, { params });
+
+        return res.data;
+    } catch (error: any) {
+        console.error("Error fetching entries:", error);
+        return { data: [], pagination: {} };
+    }
+};
+
+
+
+
+export const analyseData = async (
+    axios: AxiosInstance,
+    endpoint: string,
+    businessUserId: string,
+    dataPoint: string,
+    prompt: string,
+    limit: number = 10,
+    page: number = 1
+) => {
+    try {
+        const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
+
+        const res = await axios.post(
+            url,
+            { prompt }, // Only `prompt` is in the body
+            {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (error: any) {
+        const message =
+            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+
+        return Promise.reject({ message });
+    }
 };

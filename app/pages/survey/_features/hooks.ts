@@ -2,10 +2,12 @@ import {
   DashboardAnalyticsResponse,
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
+  PaginationMeta,
   PaymentVerificationResponse,
   SingleSurveyResponse,
   SuperAdminSurveyListResponse,
   Survey,
+  SurveyEntry,
   SurveyListResponse,
   SurveySchema,
 } from "@/app/lib/type";
@@ -15,8 +17,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { useForm } from "react-hook-form";
 import {
+  analyseData,
   createSurvey,
   fetchSurvey,
+  fetchSurveyDataEntries,
   fetchSurveys,
   fetchSurveysAnalytics,
   surveyPay,
@@ -48,7 +52,11 @@ export const useUpdateSurvey = ({ axios }: { axios: AxiosInstance }) => {
 
 type UseFetchSuperAdminSurvey = {
   axios: AxiosInstance;
-  page: string;
+  page: number;
+  limit: number;
+  search: string
+  startDate: string,
+  endDate: string,
   enabled : boolean;
   onSuccess?: (data: any) => void;
 };
@@ -56,11 +64,15 @@ type UseFetchSuperAdminSurvey = {
 export const useFetchSuperAdminSurvey = ({
   axios,
   page,
+  limit,
+  search,
+  startDate,
+  endDate,
   enabled,
 }: UseFetchSuperAdminSurvey) => {
   return useQuery<SuperAdminSurveyListResponse>({
-    queryKey: ["surveys", page],
-    queryFn: () => fetchSurveys(axios, page, null),
+    queryKey: ["surveys", page, limit],
+    queryFn: () => fetchSurveys(axios, page, limit, null, search, startDate, endDate),
     staleTime: 60 * 1000 * 60,
     retry: 3,
     enabled,
@@ -69,7 +81,11 @@ export const useFetchSuperAdminSurvey = ({
 
 type UseFetchSurvey = {
   axios: AxiosInstance;
-  page: string;
+  search: string,
+  startDate: string,
+  endDate: string,
+  page: number;
+  limit: number;
   businessUserId: string | null;
   enabled : boolean
   onSuccess?: (data: any) => void;
@@ -79,11 +95,15 @@ export const useFetchSurvey = ({
   axios,
   businessUserId,
   page,
+  limit,
+  search,
+  startDate,
+  endDate,
   enabled,
 }: UseFetchSurvey) => {
   return useQuery<SurveyListResponse>({
-    queryKey: ["surveys", businessUserId, page],
-    queryFn: () => fetchSurveys(axios, page, businessUserId),
+    queryKey: ["surveys", businessUserId, page, limit],
+    queryFn: () => fetchSurveys(axios, page, limit, businessUserId, search, startDate, endDate),
     staleTime: 60 * 1000 * 60,
     retry: 3,
     enabled,
@@ -144,5 +164,44 @@ export const useFetchSingleSurvey = ({
 export const useCreateSurveyForm = () => {
   return useForm<SurveySchema>({
     resolver: zodResolver(surveySchema),
+  });
+};
+
+
+export const useFetchSurveysDataEntries = ({
+  axios,
+  queryParams,
+}: {
+  axios: AxiosInstance;
+  queryParams: {
+    page?: number;
+    limit?: number;
+    dataPoint?: string;
+  };
+}) => {
+  return useQuery<{
+    data: SurveyEntry[];
+    pagination: PaginationMeta;
+  }>({
+    queryKey: ["data-points-data-entries", queryParams],
+    queryFn: () => fetchSurveyDataEntries(axios, queryParams),
+    staleTime: 5 * 60 * 1000,
+    enabled: !!queryParams.dataPoint,
+  });
+};
+
+interface AnalyseDataParams {
+	endpoint: string;
+	businessUserId: string;
+	dataPoint: string;
+	prompt: string;
+	limit?: number;
+	page?: number;
+}
+
+export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<any, Error, AnalyseDataParams>({
+    mutationFn: ({ endpoint, businessUserId, dataPoint, prompt, limit = 10, page = 1 }) =>
+      analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
   });
 };
