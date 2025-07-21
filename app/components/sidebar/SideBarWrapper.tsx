@@ -64,7 +64,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
             <FilePlus size={14} className="inline mr-1"  />
             Survey
           </h2>
-          <p className="mt-2">Get tje right linkto share to get easy feedback from users</p>
+          <p className="mt-2">View, manage, and track your survey tasks. Create new surveys to collect insights in real time</p>
           <Link
             href="/pages/survey/new?survey=survey-name-and-description"
             className="flex justify-center items-center bg-white text-[#2B99FA] rounded-md py-2 mt-2"
