@@ -10,6 +10,7 @@ import {
     useFetchSingleDataPoint,
     useFetchSinglePipeline
 } from "@/app/pages/flywheel/_features/hook";
+import { Spinner } from "@radix-ui/themes";
 import { Check } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
@@ -19,7 +20,7 @@ const NewBulkDataEntry = () => {
     const router = useRouter();
     const params = useParams();
 
-    const {pipelineId, fieldId}  = params as {pipelineId: string, fieldId: string};
+    const { pipelineId, fieldId } = params as { pipelineId: string, fieldId: string };
 
     const { data: datapoints, isLoading } = useFetchSingleDataPoint({
         axios,
@@ -197,18 +198,18 @@ const NewBulkDataEntry = () => {
     if (!pipelineId || !fieldId) {
         return <p className="text-red-500">Invalid pipeline or field ID</p>;
     }
-    
+
     return (
         <DashboardLayout>
             <div className="relative w-full bg-white px-5">
                 {isLoading ? (
-                    <p className="text-gray-800 text-sm">Loading...</p>
+                    <p className="text-gray-800 text-sm"><Spinner/> </p>
                 ) : (
                     <>
-                        <h2 className="text-xl">Bulk data entries</h2>
+                        <h2 className="text-xl font-semibold">Bulk data entries</h2>
                         <div className="flex items-center justify-between mt-2 gap-2 flex-wrap">
                             <h2 className="text-lg text-blue-600">
-                                {'Pipeline name: ' + singlePipeline?.dataPointName}
+                                {singlePipeline?.dataPointName}
                             </h2>
 
                             <div className="flex gap-2 flex-wrap">
@@ -260,9 +261,14 @@ const NewBulkDataEntry = () => {
                                     <button
                                         type="submit"
                                         disabled={isPending}
-                                        className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
+                                        className="flex justify-between items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
                                     >
-                                        <Check size={13} className="inline mr-1" />
+                                        {isPending ? (
+                                            <Spinner className='inline mr-1' />
+                                        ) : (
+                                            <Check size={14} className="inline mr-1" />
+                                        )
+                                        }
                                         {isPending ? "Submitting..." : "Submit"}
                                     </button>
                                 </div>

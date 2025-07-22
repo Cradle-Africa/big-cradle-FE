@@ -25,6 +25,7 @@ import Spinner from "@/app/components/Spinner";
 import FieldFooter from "../../../components/form/FieldFooter";
 import AddFieldButton from "@/app/components/form/AddFieldButton";
 import { JSX } from "react";
+import { fetchSuggestedQuestions } from "./SuggestionQuestion";
 
 type Props = {
   surveyTab: JSX.Element;
@@ -166,6 +167,34 @@ const NewSurveyQuestionsForm = ({
     setNewOptions((prev) => [...prev, ""]);
   };
 
+  const suggestionQuestion = async (
+    surveyName: string,
+    surveyDescription: string,
+    sector: string,
+    surveyGoal: string,
+    startDate: string,
+    endDate: string,
+    locationAndDemographic: string[],
+    gender: string[],
+    countriesAndCities: CountryAndCity[],
+    setForm: React.Dispatch<React.SetStateAction<DataPointForm>>,
+  ) => {
+    await fetchSuggestedQuestions(
+      surveyName,
+      surveyDescription,
+      sector,
+      surveyGoal,
+      startDate,
+      endDate,
+      locationAndDemographic,
+      gender,
+      countriesAndCities,
+      setForm
+    );
+  }
+
+
+
   // const handleSubmit = (e: React.FormEvent) => {
   //   e.preventDefault();
   //   // console.log(JSON.stringify({ name, description }));
@@ -185,14 +214,36 @@ const NewSurveyQuestionsForm = ({
       className="max-w-full mx-auto p-5 bg-gray-50 rounded-md space-y-4 "
     >
       <div className="gap-4 max-w-xl 2xl:max-w-3xl mx-auto">
-        <button
-          type="button"
-          className="bg-gray-100 w-10 h-10 flex justify-start items-center rounded-full p-2 
-				    	hover:cursor-pointer hover:bg-blue-600 hover:text-white transition duration-500 "
-          onClick={() => router.back()}
-        >
-          <ChevronLeft size={30} />
-        </button>
+        <div className="flex justify-between items-center gap-3">
+          <button
+            type="button"
+            className="bg-gray-100 w-10 h-10 flex justify-center items-center rounded-full p-2 
+            hover:cursor-pointer hover:bg-blue-600 hover:text-white transition duration-500"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={30} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => suggestionQuestion(
+              surveyName,
+              surveyDescription,
+              sector,
+              surveyGoal,
+              startDate,
+              endDate,
+              locationAndDemographic,
+              gender,
+              countriesAndCities,
+              setForm
+            )}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 hover:cursor-pointer transition"
+          >
+            Get Suggested Questions
+          </button>
+        </div>
+
         <p className="mt-5 mb-8"> Please enter the questions you want to include in your survey. You can add multiple questions and specify the type of each question.</p>
 
         <div

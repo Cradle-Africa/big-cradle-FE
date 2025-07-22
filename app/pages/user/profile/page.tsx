@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import DashboardLayout from '../../../DashboardLayout';
-import ActionDropdownMenu from '../../../components/drop-down/ActionDropdownMenu';
+// import ActionDropdownMenu from '../../../components/drop-down/ActionDropdownMenu';
 import { IdCard } from 'lucide-react';
 import { apiGetService } from '../../../services/apiService'
 import toast from 'react-hot-toast';
@@ -143,13 +143,13 @@ const ProfilePage = () => {
                         <Link href='/user/user-management'>User & Access /</Link>
                         <Link href='/user/user-management/user-directory'>User directory /</Link>
                     </span>
-                    <span className='text-gray-700 ml-1'>User Detail</span>
+                    <span className='text-gray-400 ml-1'>User Detail</span>
                 </div>
 
                 <div className="w-93 md:w-full mt-5 rounded-md border border-gray-100 px-5 py-5 bg-white">
                     <div className='flex justify-between items-center mb-2'>
-                        <h2 className="text-sm md:text-md text-gray-700 font-semibold mb-4">User Detail Page</h2>
-                        <ActionDropdownMenu
+                        <h2 className="text-xl  font-semibold mb-4">User Detail Page</h2>
+                        {/* <ActionDropdownMenu
                             Id="123"
                             onViewProfile={() => { }}
                             suspendAction={{
@@ -162,7 +162,7 @@ const ProfilePage = () => {
                                 method: 'DELETE',
                                 payload: {}
                             }}
-                        />
+                        /> */}
                     </div>
                     <div className='flex items-center gap-1 mb-2'>
                         <IdCard size={15} className='text-blue-600' />

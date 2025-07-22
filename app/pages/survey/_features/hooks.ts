@@ -174,19 +174,21 @@ export const useFetchSurveysDataEntries = ({
 }: {
   axios: AxiosInstance;
   queryParams: {
+    businessUserId?: string;
     page?: number;
+    surveyId?: string;
     limit?: number;
-    dataPoint?: string;
+    startDate?: string;
+    endDate?: string;
   };
 }) => {
   return useQuery<{
     data: SurveyEntry[];
     pagination: PaginationMeta;
   }>({
-    queryKey: ["data-points-data-entries", queryParams],
+    queryKey: ["survey-data-entries", queryParams],
     queryFn: () => fetchSurveyDataEntries(axios, queryParams),
-    staleTime: 5 * 60 * 1000,
-    enabled: !!queryParams.dataPoint,
+    staleTime: 5 * 60 * 1000
   });
 };
 

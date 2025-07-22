@@ -10,6 +10,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import AnalyseSurvey from "../_components/AnalyseSurvey";
 import { useFetchSingleSurvey, useFetchSurveysDataEntries } from "../_features/hooks";
 import { Spinner } from "@radix-ui/themes";
+import { getBusinessId } from "@/app/utils/user/userData";
+import FilterBar from "../_components/filter/FilterBar";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -22,17 +24,27 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     surveyId,
 }) => {
 
+    const [selectedStartDate, setSelectedStartDate] = useState('');
+    const [selectedEndDate, setSelectedEndDate] = useState('');
+
+    const [tempStartDate, setTempStartDate] = useState('');
+    const [tempEndDate, setTempEndDate] = useState('');
+
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [analyseData, setAnalyseData] = useState(false);
     const router = useRouter();
+    const businessUserId = getBusinessId();
 
     const { data, isLoading, refetch } = useFetchSurveysDataEntries({
         axios,
         queryParams: {
-            dataPoint: surveyId,
+            businessUserId: businessUserId ?? '',
             page: page,
+            surveyId: surveyId,
             limit: limit,
+            startDate: selectedStartDate,
+            endDate: selectedEndDate,
         },
     });
 
@@ -92,10 +104,21 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     </div>
                 </div>
 
-                {isLoading || isLodingSingleSurvey && <p className=""><Spinner/></p>}
+                {isLoading || isLodingSingleSurvey && <p className=""><Spinner /></p>}
 
                 {!isLoading && entries && entries.length > 0 && (
                     <>
+                        <FilterBar
+                            tempStartDate={selectedStartDate}
+                            setTempStartDate={setTempStartDate}
+                            tempEndDate={tempEndDate}
+                            setTempEndDate={setTempEndDate}
+                            onFilter={() => {
+                                setSelectedStartDate(tempStartDate);
+                                setSelectedEndDate(tempEndDate);
+                                setPage(1)
+                            }}
+                        />
                         <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">
 
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
@@ -143,11 +166,10 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 {!isLoading && entries && entries.length === 0 && (
                     <div className="flex justify-between mt-5">
                         <p>
-                            No entries found in this pipeline
+                            No entries found
                         </p>
                     </div>
                 )}
-
             </>
 
 

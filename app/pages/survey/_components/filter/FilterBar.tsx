@@ -1,19 +1,15 @@
-// components/FilterBar.tsx
-
 "use client";
 
 import DateInput from "@/app/components/filter/DateInput";
 import SearchInput from "@/app/components/filter/SearchInput";
 
-
 type Props = {
-  tempSearch: string;
-  setTempSearch: (val: string) => void;
+  tempSearch?: string | null;
+  setTempSearch?: ((val: string) => void) | null;
   tempStartDate: string;
   setTempStartDate: (val: string) => void;
   tempEndDate: string;
   setTempEndDate: (val: string) => void;
-
   onFilter: () => void;
 };
 
@@ -29,11 +25,13 @@ export default function FilterBar({
   return (
     <div className="flex justify-between w-full gap-3 flex-wrap">
       <div className="flex justify-start gap-3 flex-wrap">
-        <SearchInput
-          value={tempSearch}
-          onChange={setTempSearch}
-          onSubmit={onFilter}
-        />
+        {tempSearch !== undefined && setTempSearch && (
+          <SearchInput
+            value={tempSearch ?? ""}
+            onChange={setTempSearch}
+            onSubmit={onFilter}
+          />
+        )}
       </div>
 
       <div className="flex justify-end gap-2 flex-wrap">

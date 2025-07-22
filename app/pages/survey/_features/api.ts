@@ -176,58 +176,64 @@ export const surveyPay = async (
 
 
 export const fetchSurveyDataEntries = async (
-    axios: AxiosInstance,
-    queryParams?: {
-        page?: number;
-        limit?: number;
-        dataPoint?: string;
-    }
+  axios: AxiosInstance,
+  queryParams?: {
+    businessUserId?: string;
+    page?: number;
+    surveyId?: string;
+    limit?: number;
+    startDate?: string;
+    endDate?: string;
+  }
 ) => {
-    try {
-        const params = {
-            page: queryParams?.page || 1,
-            limit: queryParams?.limit || 10,
-            dataPoint: queryParams?.dataPoint || "",
-        };
+  try {
+    const params = {
+      businessUserId: queryParams?.businessUserId,
+      page: queryParams?.page || 1,
+      surveyId: queryParams?.surveyId,
+      limit: queryParams?.limit || 10,
+      startDate: queryParams?.startDate,
+      endDate: queryParams?.endDate
+    };
 
-        const res = await axios.get(`/data-point-mgt/pipeline-fields-entry-attached-to-data-point`, { params });
+    const res = await axios.get(`/survey-mgt/survey-entries`, { params });
 
-        return res.data;
-    } catch (error: any) {
-        console.error("Error fetching entries:", error);
-        return { data: [], pagination: {} };
-    }
+    return res.data;
+  } catch (error: any) {
+    console.error("Error fetching survey entries:", error);
+    return { data: [], pagination: {} };
+  }
 };
 
 
 
 
 export const analyseData = async (
-    axios: AxiosInstance,
-    endpoint: string,
-    businessUserId: string,
-    dataPoint: string,
-    prompt: string,
-    limit: number = 10,
-    page: number = 1
+  axios: AxiosInstance,
+  endpoint: string,
+  businessUserId: string,
+  dataPoint: string,
+  prompt: string,
+  limit: number = 10,
+  page: number = 1
 ) => {
-    try {
-        const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
+  try {
+    const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
 
-        const res = await axios.post(
-            url,
-            { prompt }, // Only `prompt` is in the body
-            {
-                headers: {
-                    Authorization: `Bearer ${getToken()}`,
-                },
-            }
-        );
-        return res.data;
-    } catch (error: any) {
-        const message =
-            error?.response?.data?.message || error?.message || "An unexpected error occurred";
+    const res = await axios.post(
+      url,
+      { prompt }, // Only `prompt` is in the body
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
+    return res.data;
+  } catch (error: any) {
+    const message =
+      error?.response?.data?.message || error?.message || "An unexpected error occurred";
 
-        return Promise.reject({ message });
-    }
+    return Promise.reject({ message });
+  }
 };

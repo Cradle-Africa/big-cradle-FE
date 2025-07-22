@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import DashboardLayout from "@/app/DashboardLayout";
-import ViewDataEntries from "../../ViewDataEntries";
+import ViewDataEntries from "../ViewDataEntries";
 
 const DataEntryPage = () => {
     const params = useParams();

@@ -46,7 +46,8 @@ apiClient_.interceptors.response.use(
       try {
         const { accessToken } = await refreshTokenService();
         if (!accessToken) throw new Error("No access token returned from refresh");
-
+        console.log("new access token -", accessToken);
+        
         addToken(accessToken);
 
         // Use .set if headers is AxiosHeaders instance

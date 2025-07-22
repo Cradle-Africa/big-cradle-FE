@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { ExportToExcel } from "../_components/ExportToExcel";
 import Link from "next/link";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
+import { Spinner } from "@radix-ui/themes";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -165,7 +166,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     </div>
                 </div>
 
-                {isLoading && <p className="">Loading...</p>}
+                {isLoading && <p className=""><Spinner/></p>}
 
                 {!isLoading && entries && entries.length > 0 && (
                     <>

@@ -3,8 +3,9 @@
 import axios from "@/app/lib/axios";
 import { DataEntry } from "@/app/lib/type";
 import { useCreateDataEntry, useFetchSingleDataPoint, useFetchSinglePipeline } from "@/app/pages/flywheel/_features/hook";
+import { Spinner } from "@radix-ui/themes";
 import { useQueryClient } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineCloudUpload } from "react-icons/ai";
@@ -28,7 +29,7 @@ const NewDataEntry: React.FC<PopUpProps> = ({
         enabled: openNewDataEntry,
     });
 
-    
+
     const { data: singlePipeline } = useFetchSinglePipeline({
         axios,
         id: datapoints?.dataPointId || '',
@@ -355,12 +356,12 @@ const NewDataEntry: React.FC<PopUpProps> = ({
             employeeUserId: datapoints.employeeUserId ?? null,
             dataPointId: datapoints.dataPointId,
             fieldId: uniqueId,
-            data: cleanedData, 
+            data: cleanedData,
         };
 
         submitEntry(payload, {
             onSuccess: () => {
-                setFormData({}); 
+                setFormData({});
                 queryClient.invalidateQueries({ queryKey: ['data-entries'] });
                 toast.success("Entry submitted successfully!");
                 onClose(); // close the modal
@@ -410,8 +411,14 @@ const NewDataEntry: React.FC<PopUpProps> = ({
                                         <button
                                             type="submit"
                                             disabled={isPending}
-                                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
+                                            className="flex items-center justify-between bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
                                         >
+                                            {isPending ? (
+                                                <Spinner className='inline mr-1' />
+                                            ) : (
+                                                <Check size={14} className="inline mr-1" />
+                                            )
+                                            }
                                             {isPending ? "Submitting..." : "Submit"}
                                         </button>
                                     </div>

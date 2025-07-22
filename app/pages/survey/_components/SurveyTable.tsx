@@ -109,11 +109,15 @@ const SurveyTable = ({
 								</div>
 
 
-								<div className="flex justify-start mt-5 items-center mb-5">
-									<Calendar size={12} />
-									<h6 className="ml-1 text-[#494949] text-[12px] ">
+								<div className="flex justify-between mt-5 items-center mb-5">
+									<h6 className="flex justify-between items-center text-[#494949] text-[12px] ">
+										<Calendar size={12} />
 										{formatDate(survey?.createdAt ?? '')}
 									</h6>
+									<p className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' : 
+										'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
+										{ survey?.isActive ? 'Activé' : 'Inactive'}
+									</p>
 								</div>
 
 								<div

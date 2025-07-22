@@ -9,6 +9,8 @@ import { Suspense, useEffect, useState } from "react";
 import { DataEntry } from "@/app/lib/type";
 import toast from "react-hot-toast";
 import LogoWithText from '@/public/images/white-logo-with-text.png'
+import { Spinner } from "@radix-ui/themes";
+import { Check } from "lucide-react";
 
 const DataEntryPage = () => {
     const searchParams = useSearchParams();
@@ -222,7 +224,7 @@ const DataEntryPage = () => {
                         />
                     </div>
                     <div className="flex text-blue-600 text-xl mx-5 px-3 py-2">
-                        { singlePipeline?.dataPointName }
+                        {singlePipeline?.dataPointName}
                     </div>
 
 
@@ -233,7 +235,7 @@ const DataEntryPage = () => {
                     )}
 
                     {isLoading ? (
-                        <p className="text-gray-800 flex justify-center py-10">Loading...</p>
+                        <p className="text-gray-800 flex justify-center py-10"> <Spinner/> </p>
                     ) : (
                         <>
                             {
@@ -256,14 +258,20 @@ const DataEntryPage = () => {
                                                 <button
                                                     type="submit"
                                                     disabled={isPending}
-                                                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
+                                                    className="flex justify-between items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
                                                 >
+                                                    {isPending ? (
+                                                        <Spinner className='inline mr-1' />
+                                                    ) : (
+                                                        <Check size={14} className="inline mr-1" />
+                                                    )
+                                                    }
                                                     {isPending ? "Submitting..." : "Submit"}
                                                 </button>
                                             </div>
                                         </form>
                                     </div>
-                            )} 
+                                )}
                         </>
                     )}
                 </div>
@@ -275,7 +283,7 @@ const DataEntryPage = () => {
 const SharedDataEntryForm = () => {
     return (
         <Suspense>
-            <DataEntryPage/>
+            <DataEntryPage />
         </Suspense>
     )
 }
