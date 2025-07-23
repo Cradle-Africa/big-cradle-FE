@@ -9,7 +9,7 @@ import AnalyseData from "../_components/AnalyseData";
 import { useEffect, useState } from "react";
 import Pagination from "../_components/Pagination";
 import NewDataEntry from "./new/NewDataEntry";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ExportToExcel } from "../_components/ExportToExcel";
 import Link from "next/link";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
@@ -36,6 +36,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const [limit, setLimit] = useState(10);
     const [analyseData, setAnalyseData] = useState(false);
     const backParams: string = 'pipelines';
+    const router = useRouter();
 
     const { data, isLoading, refetch } = useFetchDataPointOfDataEntries({
         axios,
@@ -47,12 +48,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     });
 
     const { data: singlePipeline, refetch: refreshSinglePipeline } = useFetchSinglePipeline({
-            axios,
-            id: pipelineId || '',
-            enabled: true,
-        });
+        axios,
+        id: pipelineId || '',
+        enabled: true,
+    });
     const dataPointId = singlePipeline?.fieldId
-        // console.log('data pipeline: ', singlePipeline );
+    // console.log('data pipeline: ', singlePipeline );
 
 
     const entries = data?.entries
@@ -89,11 +90,28 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
     if (!viewDataEntries) return null;
 
-    const renderValue = (value: unknown) => {
-        if (value === null || value === undefined) return 'N/A';
-        if (typeof value === 'object') return JSON.stringify(value);
+    function renderValue(value: any) {
+        // Check if it's a file object
+        if (value && typeof value === 'object' && value.url && value.filename) {
+            return (
+                <a
+                    href={value.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                >
+                    {value.filename}
+                </a>
+            );
+        }
+        // If it's an array, join with comma and space
+        if (Array.isArray(value)) {
+            return value.join(", ");
+        }
+        // Default: display as string
         return String(value);
-    };
+    }
+
     const headers = entries && entries.length > 0 ? Object.keys(entries[0].data) : [];
 
     return (
@@ -137,7 +155,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             className="flex items-center cursor-pointer px-3 py-1 border border-blue-600 text-blue-600 rounded-md"
                         > <Share2 size={13} className="inline mr-1" /> Share
                         </button>
-                        
+
                         {!singlePipeline?.fieldId ? (
                             <Link
                                 className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
@@ -155,7 +173,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                 New Entry
                             </button>
                         )}
-                        
+
                         <Link
                             className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600'
                             href={`/pages/flywheel?tab=${backParams}`}
@@ -166,24 +184,10 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     </div>
                 </div>
 
-                {isLoading && <p className=""><Spinner/></p>}
+                {isLoading && <p className=""><Spinner /></p>}
 
                 {!isLoading && entries && entries.length > 0 && (
                     <>
-                        {/* <div className="flex items-center justify-between mt-5 gap-2 flex-wrap">
-                            <div className="">
-                                {datapoints && entries.length > 0 && (
-                                    <div className="flex gap-2 flex-wrap">
-                                        <ExportToExcel
-                                            data={entries.map(e => e.data)}
-                                            datapoints={datapoints}
-                                            dataPointName={entries[0]?.dataPointName || "Export"}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        </div> */}
-
                         <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">
 
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
@@ -262,7 +266,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
             {openOptionsEntry && (
                 <>
                     <div className="fixed inset-0 bg-black/40 z-10" />
-                    <div className="w-3/4 md:w-2/4 text-center bg-white px-5 py-5 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="w-3/4 md:w-2/4 text-center bg-white p-7 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         <div className="flex justify-end gap-2">
                             <button onClick={() => setOpenOptionsEntry(false)}>
                                 <X size={20} className="text-red-500 cursor-pointer" />
@@ -270,28 +274,33 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         </div>
 
                         <div className="md:flex justify-between gap-5 mt-5">
-                            <div className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-5 hover:border hover:border-blue-300 h-28">
+                            <div
+                                onClick={() => handleNewDataEntry(dataPointId ?? '')}
+                                className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
                                 <Plus
                                     size={25}
                                     color="white"
                                     className="mr-1 inline bg-blue-600 rounded-full p-1"
                                 />
                                 <button
-                                    className="mt-3 py-1 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
-                                    onClick={() => handleNewDataEntry(dataPointId ?? '')}
+                                    className="mt-3 py-5 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
                                 >
                                     New Data Entry
                                 </button>
                             </div>
 
-                            <div className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-5 hover:border hover:border-blue-300 h-28">
+                            <div
+                                onClick={ () => 
+                                    router.push(`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`)
+                                }
+                                className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
                                 <FileStackIcon
                                     size={25}
                                     color="white"
                                     className="mr-1 inline bg-blue-600 rounded-full p-1"
                                 />
                                 <Link
-                                    className="mt-3 py-1 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
+                                    className="mt-3 py-5 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
                                     href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`}
                                 >
                                     Bulk Data Entry

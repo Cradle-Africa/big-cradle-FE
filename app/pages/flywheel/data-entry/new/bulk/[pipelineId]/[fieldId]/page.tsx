@@ -11,10 +11,11 @@ import {
     useFetchSinglePipeline
 } from "@/app/pages/flywheel/_features/hook";
 import { Spinner } from "@radix-ui/themes";
-import { Check } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 const NewBulkDataEntry = () => {
     const router = useRouter();
@@ -150,6 +151,52 @@ const NewBulkDataEntry = () => {
                         ))}
                     </div>
                 );
+
+            case "file":
+                return (
+                    <div className="relative bg-gray-50 border border-dashed rounded-xl border-gray-300 px-6 py-6">
+                        <label className="flex flex-col items-center gap-2 text-sm cursor-pointer">
+                            <input
+                                key={`${field.key}-${index}`}
+                                type="file"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) onChange(file);
+                                }}
+                                className="hidden"
+                                required={field.required}
+                            />
+                            <AiOutlineCloudUpload size={32} />
+                            <p className="bg-blue-600 rounded-md px-2 py-1 text-white">Upload file</p>
+                            {formData[field.key] && (
+                                <p className="text-xs mt-1 text-gray-600 truncate max-w-[200px]">
+                                    {formData[field.key]?.name || formData[field.key]?.filename}
+                                </p>
+                            )}
+                        </label>
+                    </div>
+                );
+
+            case "rating":
+                return (
+                    <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                                key={star}
+                                type="button"
+                                onClick={() => onChange(star)}
+                                className={`text-2xl ${star <= (formData[field.key] || 0)
+                                    ? "text-yellow-400"
+                                    : "text-gray-300"
+                                    }`}
+                            >
+                                ★
+                            </button>
+                        ))}
+                    </div>
+                );
+
+
             default:
                 return (
                     <input
@@ -164,36 +211,72 @@ const NewBulkDataEntry = () => {
 
     const { mutate: submitBulkEntry, isPending } = useCreateBulkDataEntry({ axios });
 
-    const handleSubmit = (e: React.FormEvent) => {
+
+    const fileToBase64 = (file: File): Promise<{ base64: string, filename: string, mimetype: string }> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                resolve({
+                    base64: reader.result as string,
+                    filename: file.name,
+                    mimetype: file.type,
+                });
+            };
+
+            reader.onerror = (error) => reject(error);
+
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!datapoints) return;
 
-        const payload: DataEntry[] = entries.map((entry) => {
-            const cleanedData: Record<string, any> = {};
-            Object.entries(entry).forEach(([key, value]) => {
-                cleanedData[key] = Array.isArray(value) ? value.join(", ") : value;
-            });
-            return {
-                businessUserId: datapoints.businessUserId ?? null,
-                employeeUserId: datapoints.employeeUserId ?? null,
-                dataPointId: datapoints.dataPointId,
-                fieldId: fieldId,
-                data: cleanedData,
-            };
-        });
+        try {
+            const transformedEntries: DataEntry[] = await Promise.all(
+                entries.map(async (entry) => {
+                    const cleanedData: Record<string, any> = {};
 
-        submitBulkEntry(payload, {
-            onSuccess: () => {
-                setEntries([getEmptyFormData()]);
-                toast.success("Entries submitted successfully!");
-                router.push(`/pages/flywheel/data-entry/${pipelineId}?t=${Date.now()}`);
-            },
-            onError: (err: any) => {
-                console.error(err);
-                toast.error(`Error: ${err?.message}`);
-            },
-        });
+                    for (const [key, value] of Object.entries(entry)) {
+                        if (value instanceof File) {
+                            cleanedData[key] = await fileToBase64(value);
+                        } else if (Array.isArray(value)) {
+                            cleanedData[key] = value.join(", ");
+                        } else {
+                            cleanedData[key] = value;
+                        }
+                    }
+
+                    return {
+                        businessUserId: datapoints.businessUserId ?? null,
+                        employeeUserId: datapoints.employeeUserId ?? null,
+                        dataPointId: datapoints.dataPointId,
+                        fieldId,
+                        data: cleanedData,
+                    };
+                })
+            );
+
+            submitBulkEntry(transformedEntries, {
+                onSuccess: () => {
+                    setEntries([getEmptyFormData()]);
+                    toast.success("Entries submitted successfully!");
+                    router.push(`/pages/flywheel/data-entry/${pipelineId}?t=${Date.now()}`);
+                },
+                onError: (err: any) => {
+                    console.error(err);
+                    toast.error(`Error: ${err?.message}`);
+                },
+            });
+
+        } catch (err: any) {
+            console.error("File encoding failed:", err);
+            toast.error("File encoding failed");
+        }
     };
+
 
     if (!pipelineId || !fieldId) {
         return <p className="text-red-500">Invalid pipeline or field ID</p>;
@@ -201,11 +284,11 @@ const NewBulkDataEntry = () => {
 
     return (
         <DashboardLayout>
-            <div className="relative w-full bg-white px-5">
+            <div className="relative bg-gray-50 rounded-md py-5 px-5">
                 {isLoading ? (
-                    <p className="text-gray-800 text-sm"><Spinner/> </p>
+                    <p className="text-gray-800 text-sm"><Spinner /> </p>
                 ) : (
-                    <>
+                    <div className="w-3/4 mx-auto">
                         <h2 className="text-xl font-semibold">Bulk data entries</h2>
                         <div className="flex items-center justify-between mt-2 gap-2 flex-wrap">
                             <h2 className="text-lg text-blue-600">
@@ -215,7 +298,14 @@ const NewBulkDataEntry = () => {
                             <div className="flex gap-2 flex-wrap">
                                 <ImportExcel data={datapoints} setEntries={setEntries} />
                                 <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Template"} />
+
                                 {/* <ExportToExcel data={entries} datapoints={datapoints} dataPointName={singlePipeline?.dataPointName || "Export"} /> */}
+                                <button
+                                    onClick={() => router.back()}
+                                    className="flex items-center justify-between bg-blue-600 rounded-md text-white px-3 py-2 cursor-pointer">
+                                    <ArrowLeft size={15} className="inline mr-1" />
+                                    Back
+                                </button>
                             </div>
                         </div>
 
@@ -249,11 +339,11 @@ const NewBulkDataEntry = () => {
                                     </div>
                                 ))}
 
-                                <div className="flex justify-between items-center mt-4">
+                                <div className="flex gap-2 justify-between items-center mt-4">
                                     <button
                                         type="button"
                                         onClick={addEntry}
-                                        className="border border-blue-600 text-blue-600 px-4 py-2 rounded-md"
+                                        className="w-1/2 border border-blue-600 text-blue-600 px-4 py-2 rounded-md cursor-pointer"
                                     >
                                         + Add Entry
                                     </button>
@@ -261,7 +351,7 @@ const NewBulkDataEntry = () => {
                                     <button
                                         type="submit"
                                         disabled={isPending}
-                                        className="flex justify-between items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
+                                        className="w-1/2 flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
                                     >
                                         {isPending ? (
                                             <Spinner className='inline mr-1' />
@@ -274,7 +364,7 @@ const NewBulkDataEntry = () => {
                                 </div>
                             </form>
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </DashboardLayout>

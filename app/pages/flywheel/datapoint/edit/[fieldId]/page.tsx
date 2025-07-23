@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toCamelCase } from "@/app/utils/caseFormat";
 import { ArrowLeft, Check } from "lucide-react";
-import { Field, DataPointForm, FieldType, DataPoint } from "@/app/lib/type";
+import { Field, DataPointForm, DataPoint } from "@/app/lib/type";
 import { getBusinessId, getEmployeeUserId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ import DashboardLayout from "@/app/DashboardLayout";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Spinner } from "@radix-ui/themes";
+import FormFieldEditor from "../../../_components/FormFieldEditor";
 
 const EditDataPoint = () => {
 
@@ -33,7 +34,6 @@ const EditDataPoint = () => {
     const { data, isLoading } = useFetchSingleDataPoint({ axios, id: fieldId });
     const { mutate, isPending } = useEditPipeline({ axios });
 
-    console.log('DATA', data)
     useEffect(() => {
         if (data) {
             setForm({
@@ -93,7 +93,7 @@ const EditDataPoint = () => {
             field: form.field,
         };
 
-        mutate({id: fieldId, payload}, {
+        mutate({ id: fieldId, payload }, {
             onSuccess: () => {
                 // queryClient.invalidateQueries({ queryKey: ["data-points"] });
                 router.push(`/pages/flywheel?tab=pipelines`);
@@ -108,7 +108,7 @@ const EditDataPoint = () => {
     };
 
     if (isLoading) {
-        return <DashboardLayout><p className="px-5 py-5 text-sm"><Spinner/></p>
+        return <DashboardLayout><p className="px-5 py-5 text-sm"><Spinner /></p>
         </DashboardLayout>
     }
 
@@ -152,42 +152,12 @@ const EditDataPoint = () => {
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
                             focus-within:border-blue-600 focus-within:border-l-6
                     `}>
-                                <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="Question"
-                                        value={field.label}
-                                        onChange={(e) =>
-                                            handleFieldChange(index, "label", e.target.value)
-                                        }
-                                        className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
-                                    />
-
-                                    <select
-                                        value={field.type}
-                                        onChange={(e) =>
-                                            handleFieldChange(index, "type", e.target.value as FieldType)
-                                        }
-                                        className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
-                                    >
-                                        <option value="">Select the type of the answer</option>
-                                        <option value="text">Short text</option>
-                                        <option value="number">Number</option>
-                                        <option value="email">Email Address</option>
-                                        <option value="tel">Phone Number</option>
-                                        <option value="select">Select</option>
-                                        <option value="checkbox">Multiple Choices</option>
-                                        <option value="radio">Single Choice</option>
-                                        <option value="date">Date</option>
-                                        <option value="time">Time</option>
-                                        {/* <option value="file">File Upload</option> */}
-                                        <option value="rating">Rating</option>
-                                        <option value="textarea">Paragraph</option>
-                                    </select>
-
-                                </div>
-
+                                <FormFieldEditor
+                                    key={index}
+                                    index={index}
+                                    field={field}
+                                    handleFieldChange={handleFieldChange}
+                                />
 
                                 <FieldPreview field={field} />
 

@@ -101,7 +101,14 @@ export const surveySchema = z
   });
 
 export const surveyPaymentSchema = z.object({
-  amount: z.string(),
+  amount: z
+    .string()
+    .refine((val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 2000;
+    }, {
+      message: "The amount must be greater or equal to 2000",
+    }),
   title: z.string().optional(),
   email: z.string().optional(),
   description: z.string().optional(),

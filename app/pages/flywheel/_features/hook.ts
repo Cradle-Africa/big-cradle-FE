@@ -139,7 +139,6 @@ export const useFetchPipelinesByDepartment = ({
 	});
 };
 
-
 export const useCreateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, DataPoint>({
 		mutationFn: (data: DataPoint) => createDataPoint(axios, data),
@@ -157,7 +156,6 @@ export const useCreateBulkDataEntry = ({ axios }: { axios: AxiosInstance }) => {
 		mutationFn: (entries: DataEntry[]) => createBulkDataEntry(axios, entries),
 	});
 };
-
 
 type UseFetchDataEntries = {
 	axios: AxiosInstance;
@@ -213,14 +211,12 @@ interface AnalyseDataParams {
 	page?: number;
 }
 
-
 export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<any, Error, AnalyseDataParams>({
 		mutationFn: ({ endpoint, businessUserId, dataPoint, prompt, limit = 10, page = 1 }) =>
 			analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
 	});
 };
-
 
 export const useFetchDataOverview = (
 	axios: AxiosInstance
@@ -232,21 +228,17 @@ export const useFetchDataOverview = (
 	});
 };
 
-
 export const useUpdatePipeline = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, { id: string; data: Pipeline }>({
 		mutationFn: ({ id, data }) => updatePipeline(axios, id, data),
 	});
 };
 
-
 export const useDeleteDataPoint = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, { id: string }>({
 		mutationFn: ({ id }) => deleteDataPoint(axios, id),
 	});
 };
-
-
 
 export const useDeletePipeline = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<void, Error, { id: string }>({

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import LogoWithText from '@/public/images/white-logo-with-text.png'
 import { Spinner } from "@radix-ui/themes";
 import { Check } from "lucide-react";
+import { RenderDynamicField } from "../pages/flywheel/_components/RenderDynamicField";
 
 const DataEntryPage = () => {
     const searchParams = useSearchParams();
@@ -53,128 +54,43 @@ const DataEntryPage = () => {
         }));
     };
 
-    const renderField = (field: any, index: number) => {
-        const baseStyle =
-            "w-full px-3 py-2 bg-white border border-gray-300 rounded-md";
-
-        switch (field.type) {
-            case "text":
-            case "email":
-            case "number":
-            case "date":
-                return (
-                    <input
-                        key={index}
-                        type={field.type}
-                        value={formData[field.key] || ""}
-                        onChange={(e) => handleChange(field.key, e.target.value)}
-                        className={baseStyle}
-                        required={field.required}
-                    />
-                );
-
-            case "textarea":
-                return (
-                    <textarea
-                        value={formData[field.key] || ""}
-                        onChange={(e) => handleChange(field.key, e.target.value)}
-                        className={`${baseStyle} resize-none h-24`}
-                        required={field.required}
-                    />
-                );
-
-            case "select":
-                return (
-                    <select
-                        className={baseStyle}
-                        value={formData[field.key] || ""}
-                        onChange={(e) => handleChange(field.key, e.target.value)}
-                        required={field.required}
-                    >
-                        <option value="" disabled>Select one</option>
-                        {field.options?.map((opt: string, i: number) => (
-                            <option key={i} value={opt}>
-                                {opt}
-                            </option>
-                        ))}
-                    </select>
-                );
-
-            case "radio":
-                return (
-                    <div className="flex items-center gap-3">
-                        {field.options?.map((opt: string, i: number) => (
-                            <label key={i} className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="radio"
-                                    name={`radio-${index}`}
-                                    value={opt}
-                                    checked={formData[field.key] === opt}
-                                    onChange={(e) => handleChange(field.key, e.target.value)}
-                                />
-                                {opt}
-                            </label>
-                        ))}
-                    </div>
-                );
-
-            case "checkbox":
-                return (
-                    <div className="flex flex-col gap-2">
-                        {field.options?.map((opt: string, i: number) => (
-                            <label key={i} className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="checkbox"
-                                    checked={Array.isArray(formData[field.key]) && formData[field.key].includes(opt)}
-                                    onChange={(e) => {
-                                        const checked = e.target.checked;
-                                        setFormData((prev) => {
-                                            const currentValues = Array.isArray(prev[field.key]) ? prev[field.key] : [];
-                                            const updatedValues = checked
-                                                ? [...currentValues, opt]
-                                                : currentValues.filter((val: any) => val !== opt);
-                                            return {
-                                                ...prev,
-                                                [field.key]: updatedValues,
-                                            };
-                                        });
-                                    }}
-                                />
-
-                                {opt}
-                            </label>
-                        ))}
-                    </div>
-                );
-
-            default:
-                return (
-                    <input
-                        type="text"
-                        value={formData[field.key] || ""}
-                        onChange={(e) => handleChange(field.key, e.target.value)}
-                        className={baseStyle}
-                    />
-                );
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!datapoints) return;
 
         const cleanedData: Record<string, any> = {};
-        Object.entries(formData).forEach(([key, value]) => {
-            cleanedData[key] = Array.isArray(value) ? value.join(", ") : value;
-        });
+
+        const processFile = (file: File): Promise<any> => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve({
+                        base64: reader.result,
+                        filename: file.name,
+                        mimetype: file.type,
+                    });
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        };
+
+
+        for (const [key, value] of Object.entries(formData)) {
+            if (value instanceof File) {
+                cleanedData[key] = await processFile(value);
+            } else {
+                cleanedData[key] = Array.isArray(value) ? value.join(", ") : value;
+            }
+        }
 
         const payload: DataEntry = {
             businessUserId: datapoints.businessUserId ?? null,
             employeeUserId: datapoints.employeeUserId ?? null,
             dataPointId: datapoints.dataPointId,
             fieldId: decodedId,
-            data: cleanedData, // data fields objects
+            data: cleanedData,
         };
 
         submitEntry(payload, {
@@ -188,7 +104,6 @@ const DataEntryPage = () => {
             },
         });
     };
-
 
     const dataBackground = '/images/data-background.jpg';
 
@@ -235,7 +150,7 @@ const DataEntryPage = () => {
                     )}
 
                     {isLoading ? (
-                        <p className="text-gray-800 flex justify-center py-10"> <Spinner/> </p>
+                        <p className="text-gray-800 flex justify-center py-10"> <Spinner /> </p>
                     ) : (
                         <>
                             {
@@ -250,7 +165,13 @@ const DataEntryPage = () => {
                                                             <span className="text-red-500 ml-1">*</span>
                                                         )}
                                                     </label>
-                                                    {renderField(field, index)}
+                                                    {/* render the field dynamically */}
+                                                    <RenderDynamicField
+                                                        field={field}
+                                                        index={index}
+                                                        formData={formData}
+                                                        handleChange={handleChange}
+                                                    />
                                                 </div>
                                             ))}
 

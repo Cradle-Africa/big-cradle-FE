@@ -280,8 +280,6 @@ export const fetchPipelinesByDepartment = async (
 };
 
 
-
-
 export const createDataPoint = async (
     axios: AxiosInstance,
     data: DataPoint

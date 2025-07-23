@@ -12,7 +12,7 @@ const AddFieldButton: React.FC<AddFieldButtonProps> = ({ onAdd }) => {
     <button
       type="button"
       onClick={onAdd}
-      className="flex w-full justify-center items-center text-blue-600 border border-blue-600 p-1 cursor-pointer rounded-md hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in-out"
+      className="flex w-1/2 justify-center items-center text-blue-600 border border-blue-600 p-1 cursor-pointer rounded-md hover:bg-blue-600 hover:text-white transition-all duration-300 ease-in-out"
     >
       <Plus size={16} className="inline" /> Add field
     </button>

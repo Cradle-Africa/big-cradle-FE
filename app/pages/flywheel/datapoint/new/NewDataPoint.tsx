@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toCamelCase } from '@/app/utils/caseFormat';
 import { ArrowLeft, Check, List } from "lucide-react";
-import { FieldType, Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
+import { Field, DataPointForm, DataPoint, Pipeline } from "@/app/lib/type";
 import { getBusinessId, getEmployeeUserId, getUser } from '@/app/utils/user/userData';
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ import { useCreateDataPoint } from "../../_features/hook";
 import FieldFooter from "@/app/components/form/FieldFooter";
 import AddFieldButton from "@/app/components/form/AddFieldButton";
 import { Spinner } from "@radix-ui/themes";
+import FormFieldEditor from "../../_components/FormFieldEditor";
 
 interface DataPointProps {
     pipelines?: Pipeline[]
@@ -194,41 +195,12 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
                             focus-within:border-blue-600 focus-within:border-l-6
                     `}>
-                            <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="Question"
-                                    value={field.label}
-                                    onChange={(e) =>
-                                        handleFieldChange(index, "label", e.target.value)
-                                    }
-                                    className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
-                                />
-
-                                <select
-                                    value={field.type}
-                                    onChange={(e) =>
-                                        handleFieldChange(index, "type", e.target.value as FieldType)
-                                    }
-                                    className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
-                                >
-                                    <option value="">Select the type of the answer</option>
-                                    <option value="text">Short text</option>
-                                    <option value="number">Number</option>
-                                    <option value="email">Email Address</option>
-                                    <option value="tel">Phone Number</option>
-                                    <option value="select">Select</option>
-                                    <option value="checkbox">Multiple Choices</option>
-                                    <option value="radio">Single Choice</option>
-                                    <option value="date">Date</option>
-                                    <option value="time">Time</option>
-                                    {/* <option value="file">File Upload</option> */}
-                                    <option value="rating">Rating</option>
-                                    <option value="textarea">Paragraph</option>
-                                </select>
-
-                            </div>
+                            <FormFieldEditor
+                                key={index}
+                                index={index}
+                                field={field}
+                                handleFieldChange={handleFieldChange}
+                            />
 
                             {/* Field Preview */}
                             <FieldPreview field={field} />
@@ -251,7 +223,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                         </div>
                     ))}
 
-                    <div className="flex gap-3 mt-5">
+                    <div className="flex justify-between gap-3 mt-5">
                         <AddFieldButton
                             totalFields={form.field.length}
                             onAdd={addField}

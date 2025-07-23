@@ -4,7 +4,6 @@ import {
   CountryAndCity,
   DataPointForm,
   Field,
-  FieldType,
   Survey,
 } from "@/app/lib/type";
 import axios from "@/app/lib/axios";
@@ -26,6 +25,7 @@ import FieldFooter from "../../../components/form/FieldFooter";
 import AddFieldButton from "@/app/components/form/AddFieldButton";
 import { JSX } from "react";
 import { fetchSuggestedQuestions } from "./SuggestionQuestion";
+import FormFieldEditor from "../../flywheel/_components/FormFieldEditor";
 
 type Props = {
   surveyTab: JSX.Element;
@@ -262,40 +262,12 @@ const NewSurveyQuestionsForm = ({
                             transition-all duration-300 ease-in-out shadow-sm hover:shadow-md
                             focus-within:border-blue-600 focus-within:border-l-4 mb-5
                     `}>
-            <div className="w-full grid grid-cols-2 gap-2 mb-5">
-              <input
-                type="text"
-                required
-                placeholder="Type your question"
-                value={field.label}
-                onChange={(e) =>
-                  handleFieldChange(index, "label", e.target.value)
-                }
-                className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
-              />
-              <select
-                value={field.type}
-                onChange={(e) =>
-                  handleFieldChange(index, "type", e.target.value as FieldType)
-                }
-                className="w-full bg-white border-b border-gray-300 px-3 py-2 mt-1 outline-none"
-              >
-                <option value="">Select the type of the answer</option>
-                <option value="text">Short text</option>
-                <option value="number">Number</option>
-                <option value="email">Email Address</option>
-                <option value="tel">Phone Number</option>
-                <option value="select">Select</option>
-                <option value="checkbox">Multiple Choices</option>
-                <option value="radio">Single Choice</option>
-                <option value="date">Date</option>
-                <option value="time">Time</option>
-                {/* <option value="file">File Upload</option> */}
-                <option value="rating">Rating</option>
-                <option value="textarea">Paragraph</option>
-              </select>
-
-            </div>
+            <FormFieldEditor
+              key={index}
+              index={index}
+              field={field}
+              handleFieldChange={handleFieldChange}
+            />
 
             {/* Field Preview */}
             < FieldPreview field={field} />
@@ -327,12 +299,10 @@ const NewSurveyQuestionsForm = ({
         </div>
 
         <div className="flex w-full gap-3 mt-5">
-          <div className="w-1/2 flex justify-center">
-            <AddFieldButton
-              totalFields={form.field.length}
-              onAdd={addField}
-            />
-          </div>
+          <AddFieldButton
+            totalFields={form.field.length}
+            onAdd={addField}
+          />
 
           {user?.role === "super admin" ? (
             <button
