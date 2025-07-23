@@ -1,7 +1,6 @@
 import { PaginationMeta, SurveyListItem } from "@/app/lib/type";
 import { formatDate } from "@/app/utils/formatDate";
 import { Calendar } from "lucide-react";
-// import { ImFileEmpty } from "react-icons/im";
 import Image from "next/image";
 import radialIcon from '@/public/radial.png'
 import { useRouter } from "next/navigation";
@@ -10,6 +9,8 @@ import { useState } from "react";
 import FilterBar from "./filter/FilterBar";
 import { Spinner } from "@radix-ui/themes";
 import Pagination from "./Pagination";
+import SurveyActions from "./SurveyActions";
+import SurveyStatus from "../status/SurveyStatus";
 
 type Props = {
 	data: SurveyListItem[];
@@ -39,12 +40,18 @@ const SurveyTable = ({
 	loading,
 }: Props) => {
 
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
+	const [uniqueId, setUniqueId] = useState<string>('');
+	const [selectedSurvey, setSelectedSurvey] = useState<SurveyListItem | null>(null);
+	const [activateOpen, setActivateOpen] = useState(false);
+	const [suspendOpen, setSuspendOpen] = useState(false);
+
 	const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
 	const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
 	const [tempSearch, setTempSearch] = useState(search);
 
 	const [, setPage] = useState(pagination.page);
-    const [limit, setLimit] = useState(pagination.limit);
+	const [limit, setLimit] = useState(pagination.limit);
 
 	const router = useRouter();
 
@@ -100,6 +107,24 @@ const SurveyTable = ({
 											{survey.surveyName}
 										</h2>
 									</div>
+
+									<SurveyActions
+										index={index}
+										openIndex={openIndex}
+										status={survey.isActive}
+										setOpenIndex={setOpenIndex}
+										onActivate={() => {
+											setUniqueId(survey?.id ?? "");
+											setSelectedSurvey(survey);
+											setActivateOpen(true);
+										}}
+										onSuspend={() => {
+											setUniqueId(survey?.id ?? "");
+											setSelectedSurvey(survey);
+											setSuspendOpen(true);
+										}}
+									/>
+
 								</div>
 
 								<div className="flex text-[#494949] text-[14px] mt-5 ">
@@ -114,9 +139,9 @@ const SurveyTable = ({
 										<Calendar size={12} />
 										{formatDate(survey?.createdAt ?? '')}
 									</h6>
-									<p className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' : 
+									<p className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
 										'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
-										{ survey?.isActive ? 'Activé' : 'Inactive'}
+										{survey?.isActive ? 'Active' : 'Inactive'}
 									</p>
 								</div>
 
@@ -136,21 +161,34 @@ const SurveyTable = ({
 
 			{/*  pagination */}
 			{pagination && data.length > 0 && (
-				 <Pagination
-                    currentPage={pagination.page}
-                    totalPages={pagination.pages}
-                    limit={pagination.limit}
-                    onPageChange={(newPage) => {
-                        setPage(newPage);
-                        onPageChange(newPage);
-                    }}
-                    onLimitChange={(newLimit) => {
-                        setLimit(newLimit);
-                        setPage(1);
-                        onLimitChange(newLimit);
-                    }}
-                />
+				<Pagination
+					currentPage={pagination.page}
+					totalPages={pagination.pages}
+					limit={pagination.limit}
+					onPageChange={(newPage) => {
+						setPage(newPage);
+						onPageChange(newPage);
+					}}
+					onLimitChange={(newLimit) => {
+						setLimit(newLimit);
+						setPage(1);
+						onLimitChange(newLimit);
+					}}
+				/>
 			)}
+
+			{
+				activateOpen && selectedSurvey && (
+					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey} setOpen={setActivateOpen} activate={true} suspend={false} />
+				)
+			}
+
+			{
+				suspendOpen && selectedSurvey && (
+					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey} setOpen={setSuspendOpen} activate={false} suspend={true} />
+				)
+			}
+
 		</div>
 	);
 };

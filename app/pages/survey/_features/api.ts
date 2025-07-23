@@ -173,8 +173,6 @@ export const surveyPay = async (
   }
 };
 
-
-
 export const fetchSurveyDataEntries = async (
   axios: AxiosInstance,
   queryParams?: {
@@ -206,6 +204,58 @@ export const fetchSurveyDataEntries = async (
 };
 
 
+export const activateSurvey = async (axios: AxiosInstance, id: string) => {
+    try {
+        const response = await axios.put(`/survey-mgt/survey/${id}/activate`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
+
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Survey not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
+    }
+};
+
+
+export const suspendSurvey = async (axios: AxiosInstance, id: string) => {
+    try {
+        const response = await axios.put(`/survey-mgt/survey/${id}/suspend`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
+
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Survey not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
+    }
+};
 
 
 export const analyseData = async (

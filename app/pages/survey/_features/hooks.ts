@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { useForm } from "react-hook-form";
 import {
+  activateSurvey,
   analyseData,
   createSurvey,
   fetchSurvey,
@@ -24,6 +25,7 @@ import {
   fetchSurveys,
   fetchSurveysAnalytics,
   surveyPay,
+  suspendSurvey,
   updateSurvey,
   verifySurvey,
 } from "./api";
@@ -192,6 +194,20 @@ export const useFetchSurveysDataEntries = ({
   });
 };
 
+
+export const useActivateSurvey = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: ({ id }) => activateSurvey(axios, id),
+  });
+};
+
+export const useSuspendSurvey = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<void, Error, { id: string }>({
+    mutationFn: ({ id }) => suspendSurvey(axios, id),
+  });
+};
+
+
 interface AnalyseDataParams {
 	endpoint: string;
 	businessUserId: string;
@@ -207,3 +223,4 @@ export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
       analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
   });
 };
+

@@ -13,7 +13,7 @@ interface Props {
     };
 }
 
-const EditPipeline: React.FC<Props> = ({ setOpen, uniqueId, pipeline }) => {
+const DeletePipeline: React.FC<Props> = ({ setOpen, uniqueId, pipeline }) => {
     const menuRef = useRef<HTMLDivElement>(null);
     const queryClient = useQueryClient();
 
@@ -89,4 +89,4 @@ const EditPipeline: React.FC<Props> = ({ setOpen, uniqueId, pipeline }) => {
     );
 };
 
-export default EditPipeline;
+export default DeletePipeline;

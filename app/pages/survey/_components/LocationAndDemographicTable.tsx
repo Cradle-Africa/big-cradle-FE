@@ -77,8 +77,8 @@ const LocationAndDemographicTable = ({
                 <Table.Cell>{data.country}</Table.Cell>
                 <Table.Cell>{data.state}</Table.Cell>
                 <Table.Cell>{data.city}</Table.Cell>
-                <Table.Cell>{data.age}</Table.Cell>
-                <Table.Cell>{data.gender}</Table.Cell>
+                <Table.Cell>{data.age.join(', ') }</Table.Cell>
+                <Table.Cell>{data.gender.join(' / ')}</Table.Cell>
                 <Table.Cell>
                   <IconButton
                     type="button"
