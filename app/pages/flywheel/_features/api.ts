@@ -577,3 +577,57 @@ export const deletePipeline = async (axios: AxiosInstance, id: string) => {
         throw new Error(message);
     }
 };
+
+
+export const activateDataPoint = async (axios: AxiosInstance, id: string) => {
+    try {
+        const response = await axios.put(`/data-point-mgt/pipeline-fields/${id}/activate`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
+
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Data point not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
+    }
+};
+
+
+export const suspendDataPoint = async (axios: AxiosInstance, id: string) => {
+    try {
+        const response = await axios.put(`/data-point-mgt/pipeline-fields/${id}/suspend`);
+        return response.data;
+    } catch (error: any) {
+        const statusCode = error?.response?.status;
+        let message = error?.response?.message;
+
+        switch (statusCode) {
+            case 400:
+                message = error?.response?.data?.message || 'Invalid request';
+                break;
+            case 401:
+                message = 'Unauthorized';
+                break;
+            case 404:
+                message = 'Data point not found';
+                break;
+            default:
+                message = 'An unexpected error occurred';
+        }
+
+        throw new Error(message);
+    }
+};

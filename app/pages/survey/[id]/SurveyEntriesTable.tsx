@@ -57,6 +57,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         surveyId: surveyId,
     });
 
+    console.log('DATA', entries);
+
     const searchParams = useSearchParams();
     useEffect(() => {
         refetch();

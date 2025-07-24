@@ -54,10 +54,10 @@ const Department = () => {
           <h2 className="font-bold text-black">Departments</h2>
         </div>
         <button
-          className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
+          className="bg-[#3352FF] rounded-md px-4 h-[36px] cursor-pointer"
           onClick={() => setOpen(true)}
         >
-          <div className="flex fgap2 items-center gap-2">
+          <div className="flex  items-center gap-2">
             <Plus size={18} color="white" />
             <span className="text-white">Create Department</span>
           </div>

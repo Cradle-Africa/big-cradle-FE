@@ -17,6 +17,7 @@ import DataPointActions from "../_components/DataPointActions";
 import PipelineActions from "../_components/PipelineActions";
 import { Calendar } from "lucide-react";
 import FilterBar from "../_components/filter/FilterBar";
+import DataPointStatus from "../status/DataPointStatus";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -63,6 +64,8 @@ const PipelinePage = ({
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [activateOpen, setActivateOpen] = useState(false);
+    const [suspendOpen, setSuspendOpen] = useState(false);
 
     const [selectedPipeline, setSelectedPipeline] = useState<Pipeline | null>(null);
     const [uniqueId, setUniqueId] = useState<string>('');
@@ -185,6 +188,16 @@ const PipelinePage = ({
                                                 setSelectedPipeline(pipeline);
                                                 setDeleteOpen(true);
                                             }}
+                                            onActivateDataPoint={() => {
+                                                setUniqueId(pipeline?.fieldId ?? "");
+                                                setSelectedPipeline(pipeline);
+                                                setActivateOpen(true);
+                                            }}
+                                            onSuspendDataPoint={() => {
+                                                setUniqueId(pipeline?.fieldId ?? "");
+                                                setSelectedPipeline(pipeline);
+                                                setSuspendOpen(true);
+                                            }}
                                         />
 
                                     </div>
@@ -258,6 +271,19 @@ const PipelinePage = ({
                     <DeletePipeline uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setDeleteOpen} />
                 )
             }
+
+            {
+				activateOpen && selectedPipeline && (
+					<DataPointStatus uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setActivateOpen} activate={true} suspend={false} />
+				)
+			}
+
+			{
+				suspendOpen && selectedPipeline && (
+					<DataPointStatus uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setSuspendOpen} activate={false} suspend={true} />
+				)
+			}
+
 
             {
                 deletingDataPoint && (

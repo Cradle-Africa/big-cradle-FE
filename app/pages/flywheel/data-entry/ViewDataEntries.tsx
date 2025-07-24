@@ -123,17 +123,13 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 </h2>
 
                 <div className={` ${entries && entries.length > 0 ? '' : 'justify-end'} flex justify-between gap-5 mt-3`}>
-                    {!isLoading && entries && entries.length > 0 && (
-                        <>
-                            <button
-                                className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                                onClick={() => setAnalyseData(true)}
-                            >
-                                <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
-                                Analyse data
-                            </button>
-                        </>
-                    )}
+
+                    <Link
+                        className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600'
+                        href={`/pages/flywheel?tab=${backParams}`}
+                    >
+                        <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
+                    </Link>
 
                     <div className="flex justify-between gap-2 ">
 
@@ -174,12 +170,17 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </button>
                         )}
 
-                        <Link
-                            className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600'
-                            href={`/pages/flywheel?tab=${backParams}`}
-                        >
-                            <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
-                        </Link>
+                        {!isLoading && entries && entries.length > 0 && (
+                            <>
+                                <button
+                                    className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                    onClick={() => setAnalyseData(true)}
+                                >
+                                    <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
+                                    Analyse data
+                                </button>
+                            </>
+                        )}
 
                     </div>
                 </div>
@@ -290,7 +291,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </div>
 
                             <div
-                                onClick={ () => 
+                                onClick={() =>
                                     router.push(`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`)
                                 }
                                 className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">

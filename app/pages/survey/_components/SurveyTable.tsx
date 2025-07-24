@@ -49,11 +49,13 @@ const SurveyTable = ({
 	const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
 	const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
 	const [tempSearch, setTempSearch] = useState(search);
+	const [completePayment, setCompletePayment] = useState(false)
 
 	const [, setPage] = useState(pagination.page);
 	const [limit, setLimit] = useState(pagination.limit);
 
 	const router = useRouter();
+
 
 	// if (data.length < 1)
 	// 	return (
@@ -123,6 +125,12 @@ const SurveyTable = ({
 											setSelectedSurvey(survey);
 											setSuspendOpen(true);
 										}}
+										paymentStatus={survey?.paymentStatus}
+										onCompletePayment={() => {
+											setUniqueId(survey?.id ?? "");
+											setSelectedSurvey(survey);
+											setCompletePayment(true)
+										}}
 									/>
 
 								</div>
@@ -134,15 +142,23 @@ const SurveyTable = ({
 								</div>
 
 
-								<div className="flex justify-between mt-5 items-center mb-5">
-									<h6 className="flex justify-between items-center text-[#494949] text-[12px] ">
+								<div className="mt-5 items-center mb-5">
+									<h6 className="flex justify-start gap-1 items-center text-[#494949] text-[12px] ">
 										<Calendar size={12} />
 										{formatDate(survey?.createdAt ?? '')}
 									</h6>
-									<p className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
-										'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
-										{survey?.isActive ? 'Active' : 'Inactive'}
-									</p>
+
+									<div className="flex justify-start space-x-2 mt-5">
+										<div className={`text-xs ${survey?.paymentStatus === 'paid' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+											'bg-red-50 border border-orange-600 text-orange-500 rounded-full px-3 py-[2px]'} `}>
+											{survey?.paymentStatus}
+										</div>
+										<div className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+											'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
+											{survey?.isActive ? 'Active' : 'Inactive'}
+										</div>
+									</div>
+
 								</div>
 
 								<div
@@ -188,6 +204,14 @@ const SurveyTable = ({
 					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey} setOpen={setSuspendOpen} activate={false} suspend={true} />
 				)
 			}
+
+			{
+				completePayment && selectedSurvey && (
+					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey}  setOpen={setCompletePayment} completePayment={true} activate={false} suspend={false} />
+				)
+			}
+
+			
 
 		</div>
 	);

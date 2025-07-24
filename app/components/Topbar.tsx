@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react'
-import { Search, Bell, ChevronRight, CircleUser, LogOut, X } from 'lucide-react';
+import { Search, Bell, ChevronRight, CircleUser, LogOut, X, Eye } from 'lucide-react';
 import { useUser } from '../hooks/useUser';
 import Image from 'next/image';
 import TopBarSkeleton from './skeleton/TopBarSkeleton';
@@ -42,12 +42,16 @@ const Topbar = () => {
                     </form>
 
                     <div className='flex justify-between gap-2 md:gap-3 items-center'>
-                        <Bell className="hidden md:block w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-gray-600" />
+                        <Bell className="hidden md:block w-8 h-8 p-2 rounded-full bg-[#F3F3F3] text-black" />
 
                         {user?.profilePicture ?
-                            <Image src={user?.profilePicture} width={8} height={8} alt='profile image' className='rounded-full w-8 h-8' />
+                            <Image src={user?.profilePicture} width={8} height={8} alt='profile image' className='rounded-full w-8 h-8 hover:cursor-pointer'
+                                onClick={() => setOpenProfile(!openProfile)}
+                            />
                             :
-                            <CircleUser className='rounded-full w-8 h-8' />
+                            <CircleUser className='rounded-full w-8 h-8 hover:cursor-pointer'
+                                onClick={() => setOpenProfile(!openProfile)}
+                            />
                         }
 
                         <div className='flex flex-col hover:cursor-pointer' onClick={() => setOpenProfile(!openProfile)}>
@@ -55,15 +59,16 @@ const Topbar = () => {
                                 {user?.fullName ?? user?.fullName}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
                                 {user?.firstName ?? user?.firstName}  {user?.lastName ?? user?.lastName}
-                                {user?.businessName ?? user?.businessName}
+
                             </span>
                             <span className='inline lg:hidden text-xs font-semibold'>
                                 {user?.fullName ?? user?.fullName?.slice(0, 12)}
                                 {user?.contactPersonFirstName ?? user?.contactPersonFirstName}
                                 {user?.firstName ?? user?.firstName}
-                                {user?.businessName ?? user?.businessName}
                             </span>
-                            <span className='text-xs text-gray-500'>{user?.role}</span>
+                            <span className='text-xs text-gray-500'>
+                                {user?.businessName ? user?.businessName.slice(0, 15) : user?.role}
+                            </span>
                         </div>
                         <ChevronRight
                             onClick={() => setOpenProfile(!openProfile)}
@@ -71,44 +76,51 @@ const Topbar = () => {
                     </div>
                 </div>
                 {openProfile && (
-                    <div className='absolute md:w-62 z-20 right-5 md:right-10 showdow-md bg-white px-3 py-2 md:px-5 md:py-5 rounded-md border border-gray-100' ref={menuRef}>
-                        <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer' color='red' />
-                        <div className='flex justify-center mt-5'>
+                    <div className='absolute md:w-72 z-20 right-0 shadow-xl bg-white px-3 py-2 md:px-5 md:py-5 rounded-xl' ref={menuRef}>
+                        <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer lg:hidden' color='red' />
+                        <p className='text-sm'>My Profiles</p>
+                        <div className='inline-flex w-full space-x-3 mt-5 bg-gray-50 rounded-lg px-3 py-3'>
                             {user?.profilePicture ?
-                                <Image src={user?.profilePicture} width={10} height={10} alt='profile image' className='rounded-full w-12 h-12' />
+                                <Image src={user?.profilePicture} width={5} height={5} alt='profile image' className='rounded-full w-8 h-8' />
                                 :
-                                <CircleUser className='rounded-full w-18 h-18' />
+                                <CircleUser className='rounded-full w-10 h-10' />
                             }
+
+                            <div className='flex flex-col text-black'>
+                                <span className='hidden lg:inline text-sm font-semibold '>
+                                    {user?.fullName ?? user?.fullName}
+                                    {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                    {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
+                                </span>
+                                <span className='inline lg:hidden text-sm font-semibold'>
+                                    {user?.fullName ?? user?.fullName}
+                                    {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
+                                    {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
+                                </span>
+                                <span className='text-xs'>
+                                    {user?.businessName ? user?.businessName.slice(0, 15) : user?.role}
+                                </span>
+                            </div>
                         </div>
-                        <div className='flex flex-col mt-5 md:mt-10 text-blue-600'>
-                            <span className='hidden lg:inline text-sm font-semibold '>
-                                {user?.fullName ?? user?.fullName}
-                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
-                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
-                                {user?.businessName ?? user?.businessName}
-                            </span>
-                            <span className='inline lg:hidden text-sm font-semibold'>
-                                {user?.fullName ?? user?.fullName}
-                                {user?.contactPersonFirstName ?? user?.contactPersonFirstName} {user?.contactPersonLastName ?? user?.contactPersonLastName}
-                                {user?.firstName ?? user?.firstName} {user?.lastName ?? user?.lastName}
-                                {user?.businessName ?? user?.businessName}
-                            </span>
-                            <span className='text-xs'>{user?.role}</span>
+
+                        <div className='border-t border-gray-100 mt-5 pt-5'>
+                            <p className='text-sm text-gray-700'>Other actions</p>
+                            <Link
+                                href='/pages/user/profile'
+                                className='w-full flex items-center justify-start px-2 rounded-md mt-2 text-md hover:cursor-pointer hover:bg-gray-100  py-2'
+                            >
+                                <Eye size={14} className='mr-1 inline' />
+                                View my profile
+                            </Link>
+                            <button
+                                className='w-full flex items-center justify-start px-2 mt-2 rounded-md  text-md hover:cursor-pointer hover:bg-gray-100  py-2'
+                                onClick={() => removeUser()}
+                            >
+                                <LogOut size={12} className='inline mr-1'/>
+                                Logout of my account
+                            </button>
                         </div>
-                        <Link
-                            href='/pages/user/profile'
-                            className='w-full flex justify-center px-2 py-2 bg-gray-100 rounded-md mt-5 text-sm hover:cursor-pointer hover:text-white hover:bg-blue-600 transition-shadow'
-                        >Profile</Link>
-                        <button
-                            className='w-full px-2 py-2 bg-gray-100 rounded-md mt-2 text-sm hover:cursor-pointer hover:text-white hover:bg-blue-600 transition-shadow'
-                            onClick={() => removeUser()}
-                        >
-                            <LogOut
-                                size={12}
-                                className='inline mr-1'
-                            />
-                            Logout
-                        </button>
+
                     </div>
                 )}
             </div>

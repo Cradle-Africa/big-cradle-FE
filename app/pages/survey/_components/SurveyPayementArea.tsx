@@ -2,7 +2,7 @@
 'use client';
 
 import ErrorMessage from "@/app/components/form/ErrorMessage";
-import axios from "@/app/lib/axios";
+import axios, { INTERNAL_URL } from "@/app/lib/axios";
 import {
 	CountryAndCity,
 	DataPointForm,
@@ -142,16 +142,15 @@ const SurveyPayementArea = ({
 					tx_ref: createdSurvey.data.tx_ref,
 					amount: parseInt(data.amount),
 					currency: "NGN",
-					// redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey?${createdSurvey.data.tx_ref}`,
-					redirect_url: `https://big-cradle-frontend-eight.vercel.app/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
+					redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
 					payment_options:
 						"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
 					customer: {
 						email: user?.email || "",
 					},
 					customizations: {
-						title: 'Survey Budget',  // data.title,
-						description: 'Budget allocation for the survey ' + surveyName,  // data.description,
+						title: 'Survey Budget', 
+						description: 'Budget allocated to the survey ' + surveyName, 
 					},
 				});
 			},

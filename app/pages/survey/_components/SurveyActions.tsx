@@ -10,15 +10,19 @@ type SurveyHeaderProps = {
     setOpenIndex: (value: number | null) => void;
     onActivate?: () => void;
     onSuspend?: () => void;
+    onCompletePayment?: () => void;
+    paymentStatus?: 'paid' | 'not-paid';
 };
 
-export default function SurveyHeader({
+export default function SurveyActions({
     index,
     status,
     openIndex,
     setOpenIndex,
     onSuspend,
     onActivate,
+    onCompletePayment,
+    paymentStatus
 }: SurveyHeaderProps) {
     const menuRefs = useRef<(HTMLUListElement | null)[]>([]);
 
@@ -60,7 +64,7 @@ export default function SurveyHeader({
                             </button>
                         </li>
 
-                        {/* Survey Action */}
+                        {/* Survey Suspend */}
                         <li className={` ${status === false ? 'hidden' : ''} px-2`}>
                             <button
                                 onClick={onSuspend}
@@ -69,6 +73,21 @@ export default function SurveyHeader({
                                 <div className="flex items-center gap-1">
                                     <X size={13} />
                                     Suspend Survey
+                                </div>
+                            </button>
+                        </li>
+
+                        {status}
+
+                        {/* Complete payment */}
+                        <li className={` ${paymentStatus === 'paid' ? 'hidden' : ''} px-2`}>
+                            <button
+                                onClick={onCompletePayment}
+                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-green-700 hover:bg-green-200 hover:cursor-pointer"
+                            >
+                                <div className="flex items-center gap-1">
+                                    <Check size={13} />
+                                    Complete payment
                                 </div>
                             </button>
                         </li>

@@ -9,6 +9,8 @@ type PipelineHeaderProps = {
     setOpenIndex: (value: number | null) => void;
     onEdit?: () => void;
     onDelete?: () => void;
+    onActivateDataPoint?: () => void;
+    onSuspendDataPoint?: () => void;
 };
 
 export default function PipelineHeader({
@@ -17,6 +19,8 @@ export default function PipelineHeader({
     setOpenIndex,
     onEdit,
     onDelete,
+    // onActivateDataPoint,
+    // onSuspendDataPoint,
 }: PipelineHeaderProps) {
     const menuRefs = useRef<(HTMLUListElement | null)[]>([]);
 
@@ -45,6 +49,20 @@ export default function PipelineHeader({
                         onMouseLeave={() => setOpenIndex(null)}
                         className="absolute z-60 right-10 py-1 w-auto bg-white rounded-md shadow-md border border-gray-100"
                     >
+
+                        {/* Activate Action */}
+                        {/* <li className="px-2 py-1">
+                            <button
+                                onClick={onActivateDataPoint}
+                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
+                            >
+                                <div className="flex items-center gap-1">
+                                    <Check size={13} />
+                                    Activate
+                                </div>
+                            </button>
+                        </li> */}
+
                         {/* Edit Action */}
                         <li className="px-2 py-1">
                             <button
@@ -57,6 +75,19 @@ export default function PipelineHeader({
                                 </div>
                             </button>
                         </li>
+
+                         {/* Suspend Action */}
+                        {/* <li className="px-2 py-1">
+                            <button
+                                onClick={onSuspendDataPoint}
+                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-200 hover:cursor-pointer"
+                            >
+                                <div className="flex items-center gap-1">
+                                    <X size={13} />
+                                    Suspend 
+                                </div>
+                            </button>
+                        </li> */}
 
                         {/* Delete Action */}
                         <li className="px-2">
