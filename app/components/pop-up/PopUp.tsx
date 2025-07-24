@@ -41,7 +41,17 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-        const endPoint_ = endPoint + '/' + Id;
+        // let endpoint_ = '';
+        if (endPoint === '/manage-employee/' && method === 'PUT' ){
+            endPoint = `/manage-employee/${Id}/suspendEmployeeAccount`
+        }
+        if (endPoint === 'manage-employee' && method === 'PUT' ){
+            endPoint = `/manage-employee/${Id}/activateEmployeeAccount`
+        }
+        if (method === 'DELETE'){
+            endPoint = endPoint + '/' + Id;
+        }
+        const endPoint_ = endPoint ?? ''
         try {
             toast.loading('Loading...');
             await apiPostService(endPoint_, method, payload || {});
@@ -72,8 +82,8 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
                         />
                     </div>
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-gray-700 mb-4">{title}</h2>
-                        <p className="text-sm text-gray-500">{subTitle}</p>
+                        <h2 className="text-md font-semibold text-black mb-4">{title}</h2>
+                        <p className="text-sm text-gray-700">{subTitle}</p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4 mt-5 lg:mt-12">
@@ -89,7 +99,7 @@ const PopUp: React.FC<PopUpProps> = ({ setOpen, title, Icon, label, subTitle, me
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className={'w-1/2 flex justify-center px-4 items-center py-2 rounded-md bg-blue-600 hover:text-white cursor-pointer'}
+                                className={'w-1/2 flex justify-center px-4 items-center py-2 rounded-md bg-blue-600 text-white cursor-pointer'}
                             >
                                 {isSubmitting ? (
                                     <Spinner className='inline mr-1' />

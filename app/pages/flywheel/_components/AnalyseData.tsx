@@ -247,7 +247,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                             >
                                 {mutation.isPending && (<Spinner />)}
                                 {!mutation.isPending && (<Check size={13} className="inline ml-2 mr-1" />)}
-                                {mutation.isPending ? " Analysing... " : "Submit"}
+                                {mutation.isPending ? " Analysing " : "Submit"}
                             </button>
                         </div>
                     </div>

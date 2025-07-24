@@ -2,7 +2,7 @@
 import React from 'react'
 import TableComponent from '@/app/components/table/TableComponent';
 import DashboardLayout from '@/app/DashboardLayout';
-const Admin = () => {
+const Employee = () => {
 
     const employeeFields = [
         { key: 'firstName', label: 'First Name', className: '' },
@@ -15,15 +15,15 @@ const Admin = () => {
 
     const actionConfig = {
         suspend: {
-            endPoint: '/api/user/suspend',
-            method: 'POST',
+            endPoint: '/manage-employee/',
+            method: 'PUT',
             payload: { reason: 'violation' }
         },
-        delete: {
-            endPoint: '/api/user/delete',
-            method: 'DELETE',
-            payload: {}
-        }
+        // delete: {
+        //     endPoint: '/manage-employee',
+        //     method: 'DELETE',
+        //     payload: {}
+        // }
     }
 
     const rightAction = {
@@ -55,4 +55,4 @@ const Admin = () => {
     )
 }
 
-export default Admin
+export default Employee

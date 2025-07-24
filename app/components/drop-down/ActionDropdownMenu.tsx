@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { UserRoundMinus, UserRoundX, Eye, Check, LockKeyhole, Trash2Icon, Pencil, PenLine } from 'lucide-react';
+import { UserRoundMinus, UserRoundX, Eye, Check, LockKeyhole, Trash2Icon, Pencil, PenLine, MoreVertical } from 'lucide-react';
 import PopUp from '../pop-up/PopUp';
 import Link from 'next/link'
 
@@ -85,9 +85,9 @@ const ActionDropdownMenu: React.FC< ActionDropdownMenuProps> =(
 		<div className="relative inline-block text-left" ref={menuRef}>
 			<button
 				onClick={() => setOpen(!open)}
-				className="text-gray-500 hover:text-black hover:cursor-pointer rounded px-2 py-1 bg-gray-100 focus:outline-none"
+				className="text-gray-500 hover:cursor-pointer rounded-lg px-2 py-2 bg-gray-100 hover:bg-blue-600 hover:text-white focus:outline-none"
 			>
-				&#8942;
+				<MoreVertical size={15} />
 			</button>
 
 			{openSuspend && suspendAction && (

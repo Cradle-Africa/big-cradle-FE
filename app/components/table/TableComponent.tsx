@@ -66,7 +66,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
 
             <div className="relative xs:w-90 sm:w-93 sm:min-w-full mt-5 rounded-md bg-white" key="table-container">
                 <div className='flex justify-between items-center mb-4' key="table-header">
-                    <h2 className="text-md md:text-lg text-gray-800 font-semibold" key="table-title">
+                    <h2 className="text-md md:text-lg text-black font-semibold" key="table-title">
                         {title}
                     </h2>
                 </div>
@@ -77,21 +77,21 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                             <tr className="bg-gray-100 border-b border-gray-200 rounded-lg " key="header-row">
                                 <th
                                     key="header-index"
-                                    className="px-6 py-3 text-left text-sm font-bold text-gray-500 rounded-tl-lg"
+                                    className="px-6 py-3 text-left text-sm font-bold text-black rounded-tl-lg"
                                 >
                                     #
                                 </th>
                                 {fields.map((field, index) => (
                                     <th
                                         key={`header-${field.key}-${index}`}
-                                        className={`px-6 py-3 text-left text-sm font-bold text-gray-800 ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
+                                        className={`px-6 py-3 text-left text-sm font-bold whitespace-nowrap text-black ${index === fields.length - 1 && !actionConfig ? 'rounded-tr-lg' : ''}`}>
                                         {field.label}
                                     </th>
                                 ))}
                                 {actionConfig && (
                                     <th
                                         key="actions-header"
-                                        className="rounded-tr-lg px-6 py-3 text-left text-sm font-bold text-gray-800"
+                                        className="rounded-tr-lg px-6 py-3 text-left text-sm font-bold text-black"
                                     >
                                         Actions
                                     </th>
@@ -120,7 +120,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ title, endpoint, data, 
                                         {fields.map((field, idx) => (
                                             <td
                                                 key={`cell-${item.id}-${field.key}-${idx}`}
-                                                className={`border-b border-gray-100 px-6 py-2 whitespace-nowrap text-sm capitalize ${field.className || ''}`}
+                                                className={`border-b border-gray-100 px-6 py-2 whitespace-nowrap text-sm ${field.className || ''}`}
                                             >
                                                 <span
                                                     className={` 
