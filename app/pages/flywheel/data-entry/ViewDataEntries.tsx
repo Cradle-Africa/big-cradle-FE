@@ -162,10 +162,10 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </Link>
                         ) : (
                             <button
-                                className="px-3 py-1 flex justify-center items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                className="px-3 py-1 flex justify-center items-center border border-blue-600 text-blue-600 rounded-md cursor-pointer"
                                 onClick={() => setOpenOptionsEntry(true)}
                             >
-                                <Plus size={15} color="white" className="mr-1 inline" />
+                                <Plus size={15} className="mr-1 inline" />
                                 New Entry
                             </button>
                         )}

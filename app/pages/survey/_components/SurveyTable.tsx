@@ -56,15 +56,6 @@ const SurveyTable = ({
 
 	const router = useRouter();
 
-
-	// if (data.length < 1)
-	// 	return (
-	// 		<div className="flex flex-col items-center gap-5 justify-center py-8">
-	// 			<ImFileEmpty />
-	// 			<p>No Data</p>
-	// 		</div>
-	// 	);
-
 	return (
 		<div>
 			<FilterBar
@@ -173,6 +164,10 @@ const SurveyTable = ({
 						);
 					})}
 				</div>
+			)}
+
+			{data.length === 0 && (
+				<p>No data</p>
 			)}
 
 			{/*  pagination */}
