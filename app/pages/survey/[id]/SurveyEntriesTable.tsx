@@ -110,7 +110,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
                 {isLoadingDataEntries || isLodingSingleSurvey && <p className=""><Spinner /></p>}
 
-                <div className={` ${entries && entries.length > 0 ? '' : 'justify-start'} flex justify-between gap-5 mt-3`}>
+                <div className={` ${entries && entries.length > 0 ? '' : 'justify-start'} flex justify-between gap-3 mt-2`}>
 
                     <div className="flex justify-between gap-2 ">
                         <button
