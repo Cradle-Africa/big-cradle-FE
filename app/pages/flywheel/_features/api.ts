@@ -579,9 +579,9 @@ export const deletePipeline = async (axios: AxiosInstance, id: string) => {
 };
 
 
-export const activateDataPoint = async (axios: AxiosInstance, id: string) => {
+export const activateDataPipeline = async (axios: AxiosInstance, id: string) => {
     try {
-        const response = await axios.put(`/data-point-mgt/pipeline-fields/${id}/activate`);
+        const response = await axios.put(`/data-point-mgt/data-point/${id}/activate`);
         return response.data;
     } catch (error: any) {
         const statusCode = error?.response?.status;
@@ -606,9 +606,9 @@ export const activateDataPoint = async (axios: AxiosInstance, id: string) => {
 };
 
 
-export const suspendDataPoint = async (axios: AxiosInstance, id: string) => {
+export const suspendDataPipeline = async (axios: AxiosInstance, id: string) => {
     try {
-        const response = await axios.put(`/data-point-mgt/pipeline-fields/${id}/suspend`);
+        const response = await axios.put(`/data-point-mgt/data-point/${id}/suspend`);
         return response.data;
     } catch (error: any) {
         const statusCode = error?.response?.status;

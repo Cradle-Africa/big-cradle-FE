@@ -4,7 +4,7 @@ import { Check, X } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { Spinner } from '@radix-ui/themes';
-import { useActivateDataPoint, useSuspendDataPoint } from '../_features/hook';
+import { useActivateDataPipeline, useSuspendDataPipeline } from '../_features/hook';
 
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
     };
 }
 
-const DataPointStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activate, suspend }) => {
+const DataPipelineStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activate, suspend }) => {
     const menuRef = useRef<HTMLDivElement>(null);
     const queryClient = useQueryClient();
 
@@ -25,7 +25,7 @@ const DataPointStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activat
         mutateAsync: activateDataPoint,
         isSuccess: isSucessActivate,
         isPending: isPendingActivate
-    } = useActivateDataPoint({ axios });
+    } = useActivateDataPipeline({ axios });
 
     const onSubmitActivate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -41,27 +41,27 @@ const DataPointStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activat
         mutateAsync: suspendDataPoint,
         isSuccess: isSucessSuspend,
         isPending: isPendingSuspend
-    } = useSuspendDataPoint({ axios });
+    } = useSuspendDataPipeline({ axios });
 
     const onSubmitSuspend = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             await suspendDataPoint({ id: uniqueId });
         } catch (error: any) {
-            toast.error(error?.message || 'Failed to suspend a data point');
+            toast.error(error?.message || 'Failed to suspend a data pipeline');
         }
     };
 
     useEffect(() => {
         if (isSucessActivate) {
             queryClient.invalidateQueries({ queryKey: ['pipelines'] });
-            toast.success(`Data point Activated successfully`);
+            toast.success(`Data pipeline Activated successfully`);
             setOpen(false);
         }
 
         if (isSucessSuspend) {
             queryClient.invalidateQueries({ queryKey: ['pipelines'] });
-            toast.success(`Data point Suspended successfully`);
+            toast.success(`Data pipeline Suspended successfully`);
             setOpen(false);
         }
 
@@ -99,15 +99,15 @@ const DataPointStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activat
                 </div>
                 {activate && (
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-gray-700 mb-4">Activate {pipeline.dataPointName}</h2>
-                        <p className="text-sm text-gray-600">Are you sure you want to activate this data point?</p>
+                        <h2 className="text-md font-semibold text-gray-700 mb-4">Activate: {pipeline.dataPointName}</h2>
+                        <p className="text-sm text-gray-600">Are you sure you want to activate this data pipeline?</p>
                     </div>
                 )}
 
                 {suspend && (
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-gray-700 mb-4">Suspend {pipeline.dataPointName}</h2>
-                        <p className="text-sm text-gray-600">Are you sure you want to suspend this data point?</p>
+                        <h2 className="text-md font-semibold text-gray-700 mb-4">Suspend: {pipeline.dataPointName}</h2>
+                        <p className="text-sm text-gray-600">Are you sure you want to suspend this data pipeline?</p>
                     </div>
                 )}
 
@@ -159,4 +159,5 @@ const DataPointStatus: React.FC<Props> = ({ setOpen, uniqueId, pipeline, activat
     );
 };
 
-export default DataPointStatus;
+export default DataPipelineStatus;
+

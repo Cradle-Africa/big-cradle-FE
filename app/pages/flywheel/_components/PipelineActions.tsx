@@ -1,32 +1,34 @@
 "use client";
 
-import { MoreVertical, Pencil, Trash } from "lucide-react";
+import { Check, MoreVertical, Pencil, Trash, X } from "lucide-react";
 import { useRef } from "react";
 
 type PipelineHeaderProps = {
     index: number;
     openIndex: number | null;
     setOpenIndex: (value: number | null) => void;
+    status: boolean;
     onEdit?: () => void;
     onDelete?: () => void;
-    onActivateDataPoint?: () => void;
-    onSuspendDataPoint?: () => void;
+    onActivateDataPipeline?: () => void;
+    onSuspendDataPipeline?: () => void;
 };
 
 export default function PipelineHeader({
     index,
     openIndex,
     setOpenIndex,
+    status,
     onEdit,
     onDelete,
-    // onActivateDataPoint,
-    // onSuspendDataPoint,
+    onActivateDataPipeline,
+    onSuspendDataPipeline,
 }: PipelineHeaderProps) {
     const menuRefs = useRef<(HTMLUListElement | null)[]>([]);
 
     return (
         <div className="flex flex-nowrap items-center justify-between">
-            
+
             {/* Right side: Menu */}
             <div
                 className="whitespace-nowrap relative"
@@ -50,18 +52,7 @@ export default function PipelineHeader({
                         className="absolute z-60 right-10 py-1 w-auto bg-white rounded-md shadow-md border border-gray-100"
                     >
 
-                        {/* Activate Action */}
-                        {/* <li className="px-2 py-1">
-                            <button
-                                onClick={onActivateDataPoint}
-                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
-                            >
-                                <div className="flex items-center gap-1">
-                                    <Check size={13} />
-                                    Activate
-                                </div>
-                            </button>
-                        </li> */}
+
 
                         {/* Edit Action */}
                         <li className="px-2 py-1">
@@ -76,18 +67,36 @@ export default function PipelineHeader({
                             </button>
                         </li>
 
-                         {/* Suspend Action */}
-                        {/* <li className="px-2 py-1">
-                            <button
-                                onClick={onSuspendDataPoint}
-                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-200 hover:cursor-pointer"
-                            >
-                                <div className="flex items-center gap-1">
-                                    <X size={13} />
-                                    Suspend 
-                                </div>
-                            </button>
-                        </li> */}
+                        {/* Activate Action */}
+                        {status === false && (
+                            <li className="px-2 py-1">
+                                <button
+                                    onClick={onActivateDataPipeline}
+                                    className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-700 hover:bg-blue-200 hover:cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-1">
+                                        <Check size={13} />
+                                        Activate
+                                    </div>
+                                </button>
+                            </li>
+                        )}
+
+
+                        {/* Suspend Action */}
+                        {status === true && (
+                            <li className="px-2 py-1">
+                                <button
+                                    onClick={onSuspendDataPipeline}
+                                    className="flex w-full px-4 py-2 text-left text-sm rounded-md text-red-700 hover:bg-red-200 hover:cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-1">
+                                        <X size={13} />
+                                        Suspend
+                                    </div>
+                                </button>
+                            </li>
+                        )}
 
                         {/* Delete Action */}
                         <li className="px-2">

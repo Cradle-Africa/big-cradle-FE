@@ -2,7 +2,7 @@ import { DataEntry, DataFlyOverview, DataPoint, PaginationMeta, Pipeline } from 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { UseQueryResult } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import { activateDataPoint, analyseData, createBulkDataEntry, createDataEntry, createDataPoint, createPipeline, deleteDataPoint, deletePipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline, suspendDataPoint, updatePipeline } from "./api";
+import { activateDataPipeline, analyseData, createBulkDataEntry, createDataEntry, createDataPoint, createPipeline, deleteDataPoint, deletePipeline, fetchDataEntries, fetchDataEntriesOfDataPoints, fetchDataOverview, fetchDataPoints, fetchPipelines, fetchPipelinesByDepartment, fetchSingleDataPoint, fetchSinglePipeline, suspendDataPipeline, updatePipeline } from "./api";
 
 type UseFetchDataPoints = {
 	axios: AxiosInstance;
@@ -241,14 +241,14 @@ export const useDeletePipeline = ({ axios }: { axios: AxiosInstance }) => {
 };
 
 
-export const useActivateDataPoint = ({ axios }: { axios: AxiosInstance }) => {
+export const useActivateDataPipeline = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<void, Error, { id: string }>({
-	mutationFn: ({ id }) => activateDataPoint(axios, id),
+	mutationFn: ({ id }) => activateDataPipeline(axios, id),
   });
 };
 
-export const useSuspendDataPoint = ({ axios }: { axios: AxiosInstance }) => {
+export const useSuspendDataPipeline = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<void, Error, { id: string }>({
-	mutationFn: ({ id }) => suspendDataPoint(axios, id),
+	mutationFn: ({ id }) => suspendDataPipeline(axios, id),
   });
 };

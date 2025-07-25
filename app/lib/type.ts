@@ -271,6 +271,7 @@ export type Pipeline = {
   dataPointDescription: string;
   createdAt?: string | undefined;
   fieldId?: string;
+  isActive?: boolean;
 };
 
 export type PipeLineSchema = z.infer<typeof pipeLineSchema>;

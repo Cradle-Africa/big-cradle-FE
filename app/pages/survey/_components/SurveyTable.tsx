@@ -132,7 +132,6 @@ const SurveyTable = ({
 										: survey.surveyDescription}
 								</div>
 
-
 								<div className="mt-5 items-center mb-5">
 									<h6 className="flex justify-start gap-1 items-center text-[#494949] text-[12px] ">
 										<Calendar size={12} />
@@ -149,7 +148,6 @@ const SurveyTable = ({
 											{survey?.isActive ? 'Active' : 'Inactive'}
 										</div>
 									</div>
-
 								</div>
 
 								<div
