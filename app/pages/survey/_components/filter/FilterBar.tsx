@@ -50,7 +50,7 @@ export default function FilterBar({
         />
 
         <button
-          className="px-4 py-1 mt-5 bg-blue-600 text-white rounded hover:bg-blue-700 transition hover:cursor-pointer"
+          className="px-4 h-[34px] mt-5 bg-blue-600 text-white rounded hover:bg-blue-700 transition hover:cursor-pointer"
           onClick={onFilter}
         >
           Filter

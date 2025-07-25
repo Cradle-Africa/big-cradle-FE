@@ -107,12 +107,15 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     {singleSurvey?.data?.surveyName}
                 </h2>
 
-                <div className={` ${entries && entries.length > 0 ? '' : 'justify-end'} flex justify-between gap-5 mt-3`}>
+
+                {isLoadingDataEntries || isLodingSingleSurvey && <p className=""><Spinner /></p>}
+
+                <div className={` ${entries && entries.length > 0 ? '' : 'justify-start'} flex justify-between gap-5 mt-3`}>
 
                     <div className="flex justify-between gap-2 ">
                         <button
                             onClick={() => router.back()}
-                            className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600 cursor-pointer'
+                            className='flex px-3 mt-5 h-[36px] items-center rounded-md text-white bg-blue-600 cursor-pointer'
 
                         >
                             <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
@@ -122,7 +125,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     {!isLoadingDataEntries && !isLodingSingleSurvey && entries && entries.length > 0 && (
                         <>
                             <button
-                                className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                className="px-5 mt-5 h-[36px] w-52 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
                                 onClick={() => setAnalyseData(true)}
                             >
                                 <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
@@ -130,21 +133,20 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             </button>
                         </>
                     )}
+
+                    <FilterBar
+                        tempStartDate={tempStartDate}
+                        setTempStartDate={setTempStartDate}
+                        tempEndDate={tempEndDate}
+                        setTempEndDate={setTempEndDate}
+                        onFilter={() => {
+                            setSelectedStartDate(tempStartDate);
+                            setSelectedEndDate(tempEndDate);
+                            setPage(1)
+                        }}
+                    />
                 </div>
 
-                {isLoadingDataEntries || isLodingSingleSurvey && <p className=""><Spinner /></p>}
-
-                <FilterBar
-                    tempStartDate={tempStartDate}
-                    setTempStartDate={setTempStartDate}
-                    tempEndDate={tempEndDate}
-                    setTempEndDate={setTempEndDate}
-                    onFilter={() => {
-                        setSelectedStartDate(tempStartDate);
-                        setSelectedEndDate(tempEndDate);
-                        setPage(1)
-                    }}
-                />
                 {!isLoadingDataEntries && entries && entries.length > 0 && (
                     <>
                         <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">

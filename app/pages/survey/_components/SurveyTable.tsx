@@ -164,9 +164,6 @@ const SurveyTable = ({
 				</div>
 			)}
 
-			{data.length === 0 && (
-				<p>No data</p>
-			)}
 
 			{/*  pagination */}
 			{pagination && data.length > 0 && (
