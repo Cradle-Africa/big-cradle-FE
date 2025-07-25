@@ -18,7 +18,7 @@ import { AxiosInstance } from "axios";
 import { useForm } from "react-hook-form";
 import {
   activateSurvey,
-  analyseData,
+  analyseSurveyData,
   createSurvey,
   fetchSurvey,
   fetchSurveyDataEntries,
@@ -207,20 +207,10 @@ export const useSuspendSurvey = ({ axios }: { axios: AxiosInstance }) => {
   });
 };
 
-
-interface AnalyseDataParams {
-	endpoint: string;
-	businessUserId: string;
-	dataPoint: string;
-	prompt: string;
-	limit?: number;
-	page?: number;
-}
-
-export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<any, Error, AnalyseDataParams>({
-    mutationFn: ({ endpoint, businessUserId, dataPoint, prompt, limit = 10, page = 1 }) =>
-      analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
+export const useAnalyseSurveyData = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<any, Error, {surveyId: string}>({
+    mutationFn: ({ surveyId}) =>
+      analyseSurveyData(axios, surveyId),
   });
 };
 

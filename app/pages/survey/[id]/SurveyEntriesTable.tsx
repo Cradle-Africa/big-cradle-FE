@@ -35,7 +35,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const router = useRouter();
     const businessUserId = getBusinessId();
 
-    const { data, isLoading, refetch } = useFetchSurveysDataEntries({
+    const { data, isLoading: isLoadingDataEntries, refetch } = useFetchSurveysDataEntries({
         axios,
         queryParams: {
             businessUserId: businessUserId ?? '',
@@ -112,15 +112,14 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     <div className="flex justify-between gap-2 ">
                         <button
                             onClick={() => router.back()}
-                            className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600'
+                            className='flex px-3 py-1 items-center rounded-md text-white bg-blue-600 cursor-pointer'
 
                         >
                             <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
                         </button>
-
                     </div>
 
-                    {!isLoading && !isLodingSingleSurvey && entries && entries.length > 0 && (
+                    {!isLoadingDataEntries && !isLodingSingleSurvey && entries && entries.length > 0 && (
                         <>
                             <button
                                 className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
@@ -133,21 +132,21 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     )}
                 </div>
 
-                {isLoading || isLodingSingleSurvey && <p className=""><Spinner /></p>}
+                {isLoadingDataEntries || isLodingSingleSurvey && <p className=""><Spinner /></p>}
 
-                {!isLoading && entries && entries.length > 0 && (
+                <FilterBar
+                    tempStartDate={tempStartDate}
+                    setTempStartDate={setTempStartDate}
+                    tempEndDate={tempEndDate}
+                    setTempEndDate={setTempEndDate}
+                    onFilter={() => {
+                        setSelectedStartDate(tempStartDate);
+                        setSelectedEndDate(tempEndDate);
+                        setPage(1)
+                    }}
+                />
+                {!isLoadingDataEntries && entries && entries.length > 0 && (
                     <>
-                        <FilterBar
-                            tempStartDate={selectedStartDate}
-                            setTempStartDate={setTempStartDate}
-                            tempEndDate={tempEndDate}
-                            setTempEndDate={setTempEndDate}
-                            onFilter={() => {
-                                setSelectedStartDate(tempStartDate);
-                                setSelectedEndDate(tempEndDate);
-                                setPage(1)
-                            }}
-                        />
                         <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">
 
                             <div className="w-full overflow-x-auto">
@@ -199,7 +198,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         />
                     </>
                 )}
-                {!isLoading && entries && entries.length === 0 && (
+                {!isLoadingDataEntries && entries && entries.length === 0 && (
                     <div className="flex justify-between mt-5">
                         <p>
                             No entries found

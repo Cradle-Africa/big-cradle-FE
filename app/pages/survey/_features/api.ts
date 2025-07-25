@@ -1,5 +1,4 @@
 import { FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
-import { getToken } from "@/app/utils/user/userData";
 import { AxiosInstance } from "axios";
 
 export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
@@ -258,27 +257,14 @@ export const suspendSurvey = async (axios: AxiosInstance, id: string) => {
 };
 
 
-export const analyseData = async (
+export const analyseSurveyData = async (
   axios: AxiosInstance,
-  endpoint: string,
-  businessUserId: string,
-  dataPoint: string,
-  prompt: string,
-  limit: number = 10,
-  page: number = 1
+  surveyId: string,
 ) => {
   try {
-    const url = `/ai/analyze/${endpoint}?businessUserId=${businessUserId}&dataPoint=${dataPoint}&limit=${limit}&page=${page}`;
+    const url = `/survey-mgt/survey-entries-analytics?surveyId=${surveyId}`;
 
-    const res = await axios.post(
-      url,
-      { prompt }, // Only `prompt` is in the body
-      {
-        headers: {
-          Authorization: `Bearer ${getToken()}`,
-        },
-      }
-    );
+    const res = await axios.get(url);
     return res.data;
   } catch (error: any) {
     const message =
