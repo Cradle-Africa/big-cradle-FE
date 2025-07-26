@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, MoreVertical, Pencil, Trash, X } from "lucide-react";
+import { MoreVertical, Pencil, Trash } from "lucide-react";
 import { useRef } from "react";
 
 type PipelineHeaderProps = {
@@ -18,11 +18,11 @@ export default function PipelineHeader({
     index,
     openIndex,
     setOpenIndex,
-    status,
+    // status,
     onEdit,
     onDelete,
-    onActivateDataPipeline,
-    onSuspendDataPipeline,
+    // onActivateDataPipeline,
+    // onSuspendDataPipeline,
 }: PipelineHeaderProps) {
     const menuRefs = useRef<(HTMLUListElement | null)[]>([]);
 
@@ -68,7 +68,7 @@ export default function PipelineHeader({
                         </li>
 
                         {/* Activate Action */}
-                        {status === false && (
+                        {/* {status === false && (
                             <li className="px-2 py-1">
                                 <button
                                     onClick={onActivateDataPipeline}
@@ -80,11 +80,11 @@ export default function PipelineHeader({
                                     </div>
                                 </button>
                             </li>
-                        )}
+                        )} */}
 
 
                         {/* Suspend Action */}
-                        {status === true && (
+                        {/* {status === true && (
                             <li className="px-2 py-1">
                                 <button
                                     onClick={onSuspendDataPipeline}
@@ -96,7 +96,7 @@ export default function PipelineHeader({
                                     </div>
                                 </button>
                             </li>
-                        )}
+                        )} */}
 
                         {/* Delete Action */}
                         <li className="px-2">

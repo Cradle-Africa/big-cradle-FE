@@ -17,7 +17,7 @@ import DataPointActions from "../_components/DataPointActions";
 import PipelineActions from "../_components/PipelineActions";
 import { Calendar } from "lucide-react";
 import FilterBar from "../_components/filter/FilterBar";
-import DataPipelineStatus from "../status/DataPointStatus";
+// import DataPipelineStatus from "../status/DataPointStatus";
 
 type DataPipelineProps = {
     pipelineData: Pipeline[];
@@ -64,8 +64,8 @@ const PipelinePage = ({
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const [editOpen, setEditOpen] = useState(false);
     const [deleteOpen, setDeleteOpen] = useState(false);
-    const [activateOpen, setActivateOpen] = useState(false);
-    const [suspendOpen, setSuspendOpen] = useState(false);
+    // const [activateOpen, setActivateOpen] = useState(false);
+    // const [suspendOpen, setSuspendOpen] = useState(false);
 
     const [selectedPipeline, setSelectedPipeline] = useState<Pipeline | null>(null);
     const [uniqueId, setUniqueId] = useState<string>('');
@@ -189,16 +189,16 @@ const PipelinePage = ({
                                                 setSelectedPipeline(pipeline);
                                                 setDeleteOpen(true);
                                             }}
-                                            onActivateDataPipeline={() => {
-                                                setUniqueId(pipeline?.id ?? "");
-                                                setSelectedPipeline(pipeline);
-                                                setActivateOpen(true);
-                                            }}
-                                            onSuspendDataPipeline={() => {
-                                                setUniqueId(pipeline?.id ?? "");
-                                                setSelectedPipeline(pipeline);
-                                                setSuspendOpen(true);
-                                            }}
+                                            // onActivateDataPipeline={() => {
+                                            //     setUniqueId(pipeline?.id ?? "");
+                                            //     setSelectedPipeline(pipeline);
+                                            //     setActivateOpen(true);
+                                            // }}
+                                            // onSuspendDataPipeline={() => {
+                                            //     setUniqueId(pipeline?.id ?? "");
+                                            //     setSelectedPipeline(pipeline);
+                                            //     setSuspendOpen(true);
+                                            // }}
                                         />
 
                                     </div>
@@ -218,10 +218,10 @@ const PipelinePage = ({
                                         </div>
 
 
-                                        <div className={`text-xs ${pipeline?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+                                        {/* <div className={`text-xs ${pipeline?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
                                             'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
                                             {pipeline?.isActive ? 'Active' : 'Inactive'}
-                                        </div>
+                                        </div> */}
 
 
                                     </div>
@@ -283,7 +283,7 @@ const PipelinePage = ({
                 )
             }
 
-            {
+            {/* {
                 activateOpen && selectedPipeline && (
                     <DataPipelineStatus uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setActivateOpen} activate={true} suspend={false} />
                 )
@@ -293,7 +293,7 @@ const PipelinePage = ({
                 suspendOpen && selectedPipeline && (
                     <DataPipelineStatus uniqueId={uniqueId} pipeline={selectedPipeline} setOpen={setSuspendOpen} activate={false} suspend={true} />
                 )
-            }
+            } */}
 
 
             {
