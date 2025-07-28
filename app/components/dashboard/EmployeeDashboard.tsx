@@ -6,7 +6,10 @@ import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import { Spinner } from "@radix-ui/themes";
+import { Flex, Grid, Spinner } from "@radix-ui/themes";
+import SentimentAnalysis from "../charts/SentimentAnalysis";
+import RespondersGrowth from "../charts/RespondersGrowth";
+import TopOrganization from "../charts/TopOrganization";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -20,7 +23,9 @@ const EmployeeDashboard = () => {
     <div>
       {isLoading ? (
         <div>
-          <p><Spinner/> </p>
+          <p>
+            <Spinner />{" "}
+          </p>
         </div>
       ) : (
         <KycVerification
@@ -35,8 +40,12 @@ const EmployeeDashboard = () => {
       <div className="w-full mt-2">
         <p className="font-semibold text-md space-y-1">
           Hi{" "}
-          {user?.data?.contactPersonFirstName ?? user?.data?.firstName ?? user?.data?.fullName ?? user?.data?.businessFirstName ?? ""},{" "}
-          here’s your platform overview for today
+          {user?.data?.contactPersonFirstName ??
+            user?.data?.firstName ??
+            user?.data?.fullName ??
+            user?.data?.businessFirstName ??
+            ""}
+          , here’s your platform overview for today
         </p>
 
         <p className="text-sm">
@@ -56,6 +65,18 @@ const EmployeeDashboard = () => {
         ))}
       </div>
       <DashboardCharts />
+      <Grid gap="4" columns="4" my="4">
+        <div className="col-span-2">
+          <SentimentAnalysis />
+        </div>
+
+        <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div>
+      </Grid>
     </div>
   );
 };
