@@ -45,7 +45,7 @@ const EmployeeDashboard = () => {
       <DashboardCharts />
       <Grid gap="4" columns="4" my="4">
         <div className="col-span-2">
-          <SentimentAnalysis />
+          <SentimentAnalysis module={module}/>
         </div>
 
         <div>

@@ -12,50 +12,58 @@ import Summary from "../charts/Summary";
 import { getUser } from "@/app/utils/user/userData";
 
 const BusinessDashboard = () => {
-	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false);
-	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false);
-	const [module, setModule] = useState<string>('Survey');
+  const [openBusinessKycVerification, setOpenBusinessKycVerification] =
+    useState(false);
+  const [openAdminKycVerification, setOpenAdminKycVerification] =
+    useState(false);
+  const [module, setModule] = useState<string>("Survey");
 
-	const { data: Authuser, isLoading } = useFetchMe({ axios });
-	const user = getUser();
+  const { data: Authuser, isLoading } = useFetchMe({ axios });
+  const user = getUser();
 
-	return (
-		<div>
-			{isLoading ? (
-				<div>
-					<p><Spinner /> </p>
-				</div>
-			) : (
-				<KycVerification
-					openBusinessKycVerification={openBusinessKycVerification}
-					setOpenBusinessKycVerification={setOpenBusinessKycVerification}
-					openAdminKycVerification={openAdminKycVerification}
-					setOpenAdminKycVerification={setOpenAdminKycVerification}
-					user={Authuser?.data!}
-				/>
-			)}
+  return (
+    <div>
+      {isLoading ? (
+        <div>
+          <p>
+            <Spinner />{" "}
+          </p>
+        </div>
+      ) : (
+        <KycVerification
+          openBusinessKycVerification={openBusinessKycVerification}
+          setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+          openAdminKycVerification={openAdminKycVerification}
+          setOpenAdminKycVerification={setOpenAdminKycVerification}
+          user={Authuser?.data!}
+        />
+      )}
 
-			{/* Header with module select */}
-			<PlatformOverviewHeader user={user} module={module} setModule={setModule} />
+      {/* Header with module select */}
+      <PlatformOverviewHeader
+        user={user}
+        module={module}
+        setModule={setModule}
+      />
 
-			<Summary module={module}/>
+      <Summary module={module} />
 
-			<DashboardCharts />
+      <DashboardCharts />
 
-			<Grid gap="4" columns="4" my="4">
-				<div className="col-span-2">
-					<SentimentAnalysis />
-				</div>
+      <Grid gap="4" columns="4" my="4">
+        <div className="col-span-2">
+          <SentimentAnalysis module={module} />
+        </div>
 
-				<div>
-					<RespondersGrowth />
-				</div>
-				<div>
-					<TopOrganization />
-				</div>
-			</Grid>
-		</div>
-	);
+        <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div>
+      </Grid>
+    </div>
+  );
 };
 
 export default BusinessDashboard;
