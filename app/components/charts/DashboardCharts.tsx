@@ -1,14 +1,14 @@
 'use client';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-const pieData = [
+export const pieData = [
     { name: 'Org Campaigns', value: 40, color: '#1D4ED8' },   // blue
     { name: 'Partner Ecosystem', value: 30, color: '#D946EF' }, // pink
     { name: 'Offline Feedback Loop', value: 20, color: '#F59E0B' }, // yellow
     { name: 'Data API Subscriptions', value: 10, color: '#10B981' }, // green
 ];
 
-const barData = [
+export const barData = [
     { day: 'Sun', users: 950 },
     { day: 'Mon', users: 600 },
     { day: 'Tue', users: 700 },
