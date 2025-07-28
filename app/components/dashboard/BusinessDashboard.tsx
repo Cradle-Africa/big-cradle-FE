@@ -2,11 +2,15 @@ import axios from "@/app/lib/axios";
 // import { DashboardMenu } from "@/app/lib/type";
 import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
 import { useFetchMe } from "@/app/shared/_features/hooks";
-import { Album, ArrowDownUp, Database } from "lucide-react";
+import { Banknote, Users2, Wallet } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import { Spinner } from "@radix-ui/themes";
+import { Grid, Spinner } from "@radix-ui/themes";
+import { MdChecklist } from "react-icons/md";
+import SentimentAnalysis from "../charts/SentimentAnalysis";
+import RespondersGrowth from "../charts/RespondersGrowth";
+import TopOrganization from "../charts/TopOrganization";
 // import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
 // import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
 // import { getBusinessId } from "@/app/utils/user/userData";
@@ -51,7 +55,7 @@ const BusinessDashboard = () => {
     <div>
       {isLoading ? (
         <div>
-          <p><Spinner/> </p>
+          <p><Spinner /> </p>
         </div>
       ) : (
         <KycVerification
@@ -74,39 +78,56 @@ const BusinessDashboard = () => {
           All systems operational. Last sync: 10 mins ago
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
         {/* {dataOverviewSuccess && ( */}
-          <>
-            <BusinessCard
-              title={'Pipelines'}
-              subTitle={'Total Pipelines'}
-              value={'0'} //{dataOverview.totalDataPoints}
-              icon={<ArrowDownUp size={14} color="blue" />}
-              isHighLighted={true}
-            />
-
-            <BusinessCard
-              title={'Data Points'}
-              subTitle={'Total Data Points'}
-              value={'0'} //{dataOverview.totalFields}
-              icon={<Database size={14} color="blue" />}
-              isHighLighted={false}
-            />
-          </>
-        {/* )} */}
-
-        { /* } {analyticsSuccess && ( */}
+        <>
           <BusinessCard
-            title={'Surveys'}
-            subTitle={'Total Surveys'}
-            value={'0'} //{surveysAnalyticsResponse.data.totalSurveys.toString() ?? 0}
-            icon={<Album size={14} color="blue" />}
+            title={'Active users'}
+            value={'500'}
+            icon={<Users2 size={14} color="blue" />}
+            iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
             isHighLighted={false}
           />
-        { /*)} */ }
+
+          <BusinessCard
+            title={'Survey created'}
+            value={'2345'}
+            icon={<Banknote size={14} color="green" />}
+            iconClass="rounded-full bg-green-100 p-1 lg:p-2"
+            isHighLighted={false}
+          />
+        </>
+        <BusinessCard
+          title={'Data uploads'}
+          value={'2000'} 
+          icon={<MdChecklist size={14} color="red" />}
+          iconClass="rounded-full bg-red-100 p-1 lg:p-2"
+          isHighLighted={false}
+        />
+
+        <BusinessCard
+          title={'Wallets payouts'}
+          value={'135000'}
+          icon={<Wallet size={14} color="blue" />}
+          iconClass="rounded-full bg-gray-100 p-1 lg:p-2"
+          isHighLighted={true}
+        />
 
       </div>
       <DashboardCharts />
+
+      <Grid gap="4" columns="4" my="4">
+        <div className="col-span-2">
+          <SentimentAnalysis />
+        </div>
+
+        <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div>
+      </Grid>
     </div>
   );
 };

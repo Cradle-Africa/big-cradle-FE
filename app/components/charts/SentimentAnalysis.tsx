@@ -2,7 +2,7 @@ import { Flex } from "@radix-ui/themes";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { pieData } from "./DashboardCharts";
+import { pieData } from "./FeedbackChart";
 
 const SentimentAnalysis = () => {
   return (
