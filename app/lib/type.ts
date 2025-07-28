@@ -90,10 +90,10 @@ export type ReviewAdminKyc = {
   adminUserId: string;
 };
 
-export type CountryAndCity = { 
-  country: string; 
-  state: string; 
-  city: string, 
+export type CountryAndCity = {
+  country: string;
+  state: string;
+  city: string,
 };
 
 export type Business = {
@@ -233,7 +233,7 @@ export interface DemographicFormValues {
   state: string;
   city: string;
   ageDemographics: string[];
-  gender: string[];          
+  gender: string[];
 }
 
 
@@ -256,7 +256,7 @@ export interface Survey {
     city: string;
   }[];
   ageDemographics: string[];
-  gender:string[];
+  gender: string[];
   amount: number;
   field: Field[];
 }
@@ -474,3 +474,9 @@ export type FlutterWavePaymentSubmit = {
     description?: string;
   };
 };
+
+export type SurveySummary = {
+  totalSurveys: string;
+  completedSurveys: string;
+  ongoingSurveys: string;
+}

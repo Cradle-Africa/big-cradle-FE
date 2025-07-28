@@ -28,7 +28,7 @@ export default function DateInput({
           }
           placeholderText={label}
           dateFormat="yyyy-MM-dd"
-          className={style}
+          className={` ${style} bg-white`}
         />
         <Calendar
           size={14}

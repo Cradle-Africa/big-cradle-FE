@@ -200,8 +200,8 @@ const Flywheel = () => {
 				}}
 			/>
 
-			<div className="flex flex-col bg-[#fcfcfc] py-4">
-				<div className="flex gap-4 bg-[#fcfcfc]">
+			<div className="flex flex-col h-screen py-4">
+				<div className="flex gap-4">
 					{tabs.map((tab) => (
 						<FlywheelTabs
 							key={tab}

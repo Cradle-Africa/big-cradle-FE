@@ -1,11 +1,11 @@
 import { useUser } from "@/app/hooks/useUser";
 import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
-import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
+import { Banknote, Users2, Wallet } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import FormPopup from "../pop-up/PopUpForm";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
-import { DashboardMenu } from "@/app/lib/type";
+import { MdChecklist } from "react-icons/md";
 
 const SuperAdminDashboard = () => {
   const [openKycVerification, setOpenKycVerification] = useState(false);
@@ -35,7 +35,7 @@ const SuperAdminDashboard = () => {
           defaultValues={{ email: user?.email }}
         />
       )}
-     <div className="w-full mt-2">
+      <div className="w-full mt-2">
         <p className="font-semibold text-md space-y-1">
           Hi{" "}
           {user?.contactPersonFirstName ?? user?.firstName ?? user?.fullName ?? ""},{" "}
@@ -46,42 +46,45 @@ const SuperAdminDashboard = () => {
           All systems operational. Last sync: 10 mins ago
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
-        {data.map((menu, index) => (
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
+        <>
           <BusinessCard
-            key={index}
-            title={menu.title}
-            subTitle={menu.subTitle }
-            value={menu.value}
-            icon={<UsersRound />}
-            isHighLighted={index === 0}
+            title={'Active users'}
+            value={'500'}
+            icon={<Users2 size={14} color="blue" />}
+            iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+            isHighLighted={false}
           />
-        ))}
+
+          <BusinessCard
+            title={'Survey created'}
+            value={'2345'}
+            icon={<Banknote size={14} color="green" />}
+            iconClass="rounded-full bg-green-100 p-1 lg:p-2"
+            isHighLighted={false}
+          />
+        </>
+        <BusinessCard
+          title={'Data uploads'}
+          value={'2000'}
+          icon={<MdChecklist size={14} color="red" />}
+          iconClass="rounded-full bg-red-100 p-1 lg:p-2"
+          isHighLighted={false}
+        />
+
+        <BusinessCard
+          title={'Wallets payouts'}
+          value={'135000'}
+          icon={<Wallet size={14} color="blue" />}
+          iconClass="rounded-full bg-gray-100 p-1 lg:p-2"
+          isHighLighted={true}
+        />
+
       </div>
       <DashboardCharts />
     </div>
   );
 };
 
-const data: DashboardMenu[]=[ 
-  {
-    title: 'Pipelines',
-    subTitle: 'Total pipelines',
-    value: '0',
-    icon: <ArrowDownUp />,    
-  },
-  {
-    title: 'Data points',
-    subTitle: 'Total data points',
-    value: '0',
-    icon: <Database/>,    
-  },
-  {
-    title: 'Surveys',
-    subTitle: 'Total survey',
-    value: '0',
-    icon: <Scan/>,    
-  }
-]
 
 export default SuperAdminDashboard;
