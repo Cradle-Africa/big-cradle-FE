@@ -23,7 +23,7 @@ const
 		return (
 			<>
 				<div className="overflow-x-auto pb-10 rounded-[8px] border border-gray-200">
-					<table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
+					<table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px] bg-white">
 						<thead className="bg-gray-50">
 							<tr>
 								<th className="px-6 py-3 text-left text-sm font-semibold">
@@ -33,7 +33,7 @@ const
 									Department name
 								</th>
 								<th className="px-6 py-3 text-left text-sm font-semibold">
-									Department description
+									Department Description
 								</th>
 								<th className="px-6 py-3 text-left text-sm font-semibold">
 									Actions

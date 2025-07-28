@@ -43,13 +43,13 @@ const AdminKycTable = ({ data }: { data: AdminKyc[] }) => {
               <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Type</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">First Name</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">Last Name</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap ">First Name</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Last Name</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Country</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">City</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">State</th>
-              <th className="px-6 py-3 text-left text-sm font-semibold">KYC Status</th>
+              <th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">KYC Status</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
             </tr>
           </thead>

@@ -65,7 +65,7 @@ const Department = () => {
       </div>
 
       {/* department table  */}
-      <div className="flex flex-col bg-white mt-5">
+      <div className="flex flex-col mt-5">
 
 
         {open && <NewDepartment setOpen={setOpen} />}

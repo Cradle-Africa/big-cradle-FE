@@ -235,7 +235,7 @@ const SurveyPage = () => {
 				))}
 			</div>
 			{/* Survey table  */}
-			<div className="flex flex-col bg-white lg:p-4 mt-8">
+			<div className="flex flex-col rounded-md bg-white lg:p-4 mt-8">
 				<p className="font-bold text-black">Surveys</p>
 				<div className="flex gap-4 my-4">
 					{statuses.map((status) => (

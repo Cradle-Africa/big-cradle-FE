@@ -189,7 +189,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
                 {!isLoading && entries && entries.length > 0 && (
                     <>
-                        <div className="overflow-x-auto h-125 2xl:h-160 rounded-[8px] border border-gray-200 mt-5">
+                        <div className="overflow-x-auto h-full rounded-[8px] border border-gray-200 mt-5">
 
                             <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px]">
                                 <thead className="bg-gray-50">
