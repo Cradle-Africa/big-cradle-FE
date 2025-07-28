@@ -6,7 +6,7 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-const pieData = [
+export const pieData = [
     { name: 'Positive', value: 70, color: '#10B981' },
     { name: 'Neutral', value: 20, color: '#F59E0B' },
     { name: 'Negative', value: 10, color: '#CB2A31' },

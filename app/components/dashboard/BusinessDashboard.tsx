@@ -6,8 +6,11 @@ import { Banknote, Users2, Wallet } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import { Spinner } from "@radix-ui/themes";
+import { Grid, Spinner } from "@radix-ui/themes";
 import { MdChecklist } from "react-icons/md";
+import SentimentAnalysis from "../charts/SentimentAnalysis";
+import RespondersGrowth from "../charts/RespondersGrowth";
+import TopOrganization from "../charts/TopOrganization";
 // import { useFetchDataOverview } from "@/app/pages/flywheel/_features/hook";
 // import { useFetchSurveyAnalyctics } from "@/app/pages/survey/_features/hooks";
 // import { getBusinessId } from "@/app/utils/user/userData";
@@ -112,6 +115,19 @@ const BusinessDashboard = () => {
 
       </div>
       <DashboardCharts />
+
+      <Grid gap="4" columns="4" my="4">
+        <div className="col-span-2">
+          <SentimentAnalysis />
+        </div>
+
+        <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div>
+      </Grid>
     </div>
   );
 };

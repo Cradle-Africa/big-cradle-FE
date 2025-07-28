@@ -6,7 +6,7 @@ import { ArrowDownUp, Database, Scan, UsersRound } from "lucide-react";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
 import KycVerification from "../KycVerification";
-import { Flex, Grid, Spinner } from "@radix-ui/themes";
+import { Grid, Spinner } from "@radix-ui/themes";
 import SentimentAnalysis from "../charts/SentimentAnalysis";
 import RespondersGrowth from "../charts/RespondersGrowth";
 import TopOrganization from "../charts/TopOrganization";
@@ -52,14 +52,14 @@ const EmployeeDashboard = () => {
           All systems operational. Last sync: 10 mins ago
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
         {data.map((menu, index) => (
           <BusinessCard
             key={index}
             title={menu.title}
-            subTitle={menu.subTitle}
             value={menu.value}
             icon={<UsersRound />}
+            iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
             isHighLighted={index === 0}
           />
         ))}
