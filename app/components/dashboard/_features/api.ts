@@ -1,5 +1,4 @@
 import axios from "@/app/lib/axios";
-import { XAxis } from "recharts";
 
 export const fetchSurveySummary = async (
   businessUserId: string,
