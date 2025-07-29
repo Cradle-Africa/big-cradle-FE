@@ -9,3 +9,15 @@ export type SentimentResponse = {
 };
 
 export type PiItem = { name: string; value: number; color: string };
+
+export type EntryStat = {
+  _id: string | null;
+  responseCount: number;
+  fieldId: string | null;
+}
+
+export type   TopSurveysResponse = {
+  success: boolean;
+  message: string;
+  data: EntryStat[];
+}

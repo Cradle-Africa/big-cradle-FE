@@ -1,7 +1,7 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchSentimentBreackDown, fetchSurveySummary } from "./api";
-import { SentimentResponse } from "./types";
+import { fetchSentimentBreackDown, fetchSurveySummary, fetchTopSurveys } from "./api";
+import { SentimentResponse, TopSurveysResponse } from "./types";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
   return useQuery({
@@ -27,5 +27,25 @@ export const useFetchSentiments = ({
     queryKey: ["sentiment-data", businessUserId, role, startDate, endDate],
     queryFn: () =>
       fetchSentimentBreackDown(businessUserId, role, startDate, endDate),
+  });
+};
+
+type FetchTopSurveys = {
+  businessUserId: string;
+  role: string;
+  startDate: string;
+  endDate: string;
+};
+
+export const useFetchTopSurveys = ({
+  businessUserId,
+  role,
+  startDate,
+  endDate,
+}: FetchTopSurveys) => {
+  return useQuery<TopSurveysResponse>({
+    queryKey: ["top-surveys-data", businessUserId, role, startDate, endDate],
+    queryFn: () =>
+      fetchTopSurveys(businessUserId, role, startDate, endDate),
   });
 };

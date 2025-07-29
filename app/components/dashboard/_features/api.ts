@@ -1,5 +1,4 @@
 import axios from "@/app/lib/axios";
-import { XAxis } from "recharts";
 
 export const fetchSurveySummary = async (
   businessUserId: string,
@@ -22,6 +21,18 @@ export const fetchSentimentBreackDown = async (
 ) => {
   const response = await axios.get(
     `/survey-dashboard/sentiment-breakdown?businessUserId=${businessUserId}&role=${role}&startDate=${startDate}&endDate=${endDate}`
+  );
+  return response.data;
+};
+
+export const fetchTopSurveys = async (
+  businessUserId: string,
+  role: string,
+  startDate: string,
+  endDate: string
+) => {
+  const response = await axios.get(
+    `/survey-dashboard/top-surveys?businessUserId=${businessUserId}&role=${role}&startDate=${startDate}&endDate=${endDate}`
   );
   return response.data;
 };

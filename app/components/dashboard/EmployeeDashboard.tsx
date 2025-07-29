@@ -1,21 +1,21 @@
 import axios from "@/app/lib/axios";
 import { useFetchMe } from "@/app/shared/_features/hooks";
+import { Grid, Spinner } from "@radix-ui/themes";
 import { useState } from "react";
 import DashboardCharts from "../charts/DashboardCharts";
-import KycVerification from "../KycVerification";
-import { Grid, Spinner } from "@radix-ui/themes";
-import SentimentAnalysis from "../charts/SentimentAnalysis";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import TopOrganization from "../charts/TopOrganization";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
+import RespondersGrowth from "../charts/RespondersGrowth";
 import Summary from "../charts/Summary";
+import TopOrganization from "../charts/TopOrganization";
+import TopSurveys from "../charts/TopSurveys";
+import KycVerification from "../KycVerification";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
     useState(false);
   const [openAdminKycVerification, setOpenAdminKycVerification] =
     useState(false);
-	const [module, setModule] = useState<string>('Survey');
+  const [module, setModule] = useState<string>("Survey");
 
   const { data: user, isLoading } = useFetchMe({ axios });
 
@@ -38,14 +38,18 @@ const EmployeeDashboard = () => {
       )}
 
       {/* Header with module select */}
-			<PlatformOverviewHeader user={user} module={module} setModule={setModule} />
+      <PlatformOverviewHeader
+        user={user}
+        module={module}
+        setModule={setModule}
+      />
 
-			<Summary module={module}/>
+      <Summary module={module} />
 
       <DashboardCharts />
       <Grid gap="4" columns="4" my="4">
         <div className="col-span-2">
-          <SentimentAnalysis module={module}/>
+          <TopSurveys module={module} />
         </div>
 
         <div>
