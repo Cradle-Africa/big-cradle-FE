@@ -143,6 +143,17 @@ const NewSurveyQuestionsForm = ({
     setForm((prev) => ({ ...prev, field: updatedFields }));
   };
 
+  const handleFieldLabelBlur = (index: number) => {
+    const updatedFields = [...form.field];
+    console.log(index);
+    const labels = updatedFields.map((f) => f.label.trim().toLowerCase());
+    const labelSet = new Set(labels);
+
+    if (labelSet.size !== labels.length) {
+      toast.error("Each field label must be unique.");
+    }
+  };
+
   const removeField = (index: number) => {
     const updatedFields = form.field.filter((_, i) => i !== index);
     const updatedOptions = newOptions.filter((_, i) => i !== index);
@@ -267,6 +278,7 @@ const NewSurveyQuestionsForm = ({
               index={index}
               field={field}
               handleFieldChange={handleFieldChange}
+              handleFieldLabelBlur={handleFieldLabelBlur}
             />
 
             {/* Field Preview */}
