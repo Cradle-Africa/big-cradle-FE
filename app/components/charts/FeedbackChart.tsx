@@ -15,8 +15,7 @@ export const pieData = [
 export default function FeedbackChart() {
     return (
         <div className="w-2/5 bg-white rounded-xl px-2 py-4 border border-gray-100">
-            <h2 className="text-md text-black font-semibold ml-2 mb-2">Feedback Quality Insights</h2>
-            <h2 className="text-md text-black font-semibold ml-2 mb-4">453 insights</h2>
+            <h2 className="text-md text-black font-semibold ml-2 mb-2">Sentiments</h2>
             <div className="flex items-center justify-between mb-4">
                 <ResponsiveContainer width="100%" height={250}>
                     <PieChart>

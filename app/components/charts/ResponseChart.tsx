@@ -62,7 +62,7 @@ export default function ResponseChart() {
     return (
         <div className="w-3/5 bg-white rounded-xl px-4 py-4 border border-gray-100">
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-md text-black font-semibold">Response Summary</h2>
+                <h2 className="text-md text-black font-semibold">Engagements</h2>
                 <select
                     className="border border-gray-300 rounded px-2 py-1 text-sm"
                     value={filter}

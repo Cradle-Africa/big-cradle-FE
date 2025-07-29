@@ -12,12 +12,16 @@ interface FormFieldEditorProps {
         key: keyof { label: string; type: FieldType },
         value: string
     ) => void;
+    handleFieldLabelBlur: (
+        index: number
+    ) => void;
 }
 
 const FormFieldEditor: React.FC<FormFieldEditorProps> = ({
     index,
     field,
     handleFieldChange,
+    handleFieldLabelBlur,
 }) => {
     return (
         <div className="w-full grid grid-cols-2 gap-2 md:gap-5 mb-5">
@@ -29,6 +33,7 @@ const FormFieldEditor: React.FC<FormFieldEditorProps> = ({
                 onChange={(e) =>
                     handleFieldChange(index, "label", e.target.value)
                 }
+                onBlur={() => handleFieldLabelBlur(index)}
                 className="w-full bg-gray-50 border-b border-gray-200 px-2 py-2 mt-1 outline-none"
             />
 

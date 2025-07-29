@@ -71,6 +71,17 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
         setForm((prev) => ({ ...prev, field: updatedFields }));
     };
 
+    const handleFieldLabelBlur = (index: number) => {
+        const updatedFields = [...form.field];
+        console.log(index);
+        const labels = updatedFields.map((f) => f.label.trim().toLowerCase());
+        const labelSet = new Set(labels);
+
+        if (labelSet.size !== labels.length) {
+            toast.error("Each field label must be unique.");
+        }
+    };
+
     const removeField = (index: number) => {
         const updatedFields = form.field.filter((_, i) => i !== index);
         const updatedOptions = newOptions.filter((_, i) => i !== index);
@@ -95,8 +106,6 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
         setNewOptions((prev) => [...prev, ""]);
     };
 
-    // const queryClient = useQueryClient();
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -110,11 +119,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
 
         mutate(payload, {
             onSuccess: () => {
-                // if (form.dataPointId) {
-                //     queryClient.invalidateQueries({ queryKey: ["data-points"] });
-                // } else {
                 route.push(`/pages/flywheel?tab=${backParams}`);
-                // }
                 setForm({ dataPointId: "", field: [], }); // clear the form
                 setNewOptions([]);
                 toast.success("Data point created successfully");
@@ -200,6 +205,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                                 index={index}
                                 field={field}
                                 handleFieldChange={handleFieldChange}
+                                handleFieldLabelBlur={handleFieldLabelBlur}
                             />
 
                             {/* Field Preview */}
