@@ -96,7 +96,7 @@ const DataEntryPage = () => {
         submitEntry(payload, {
             onSuccess: () => {
                 setFormData({})
-                toast.success("Entry submitted successfully!");
+                toast.success("We appreciate your contribution to the survey. Every response counts!");
             },
             onError: (err: any) => {
                 console.log(err);

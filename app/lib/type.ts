@@ -390,6 +390,7 @@ export type SingleSurveyResponse = {
 export type SurveyListItem = {
   id: string;
   businessUserId: string;
+  employeeUserId: string;
   surveyName: string;
   sector: string;
   surveyGoal: string;
@@ -475,8 +476,22 @@ export type FlutterWavePaymentSubmit = {
   };
 };
 
-export type SurveySummary = {
-  totalSurveys: string;
-  completedSurveys: string;
-  ongoingSurveys: string;
+// In your type definitions file
+export type Location = {
+    type: "Point";
+    coordinates: [number, number]; // [longitude, latitude]
+} | null;
+
+export interface SurveyEntryData {
+  businessUserId: string;
+  fieldId: string;
+  employeeUserId: string;
+  location: Location;
+  data: Record<string, any>;
+}
+
+export interface SurveyEntryResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }

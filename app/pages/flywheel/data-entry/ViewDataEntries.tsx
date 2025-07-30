@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "@/app/lib/axios";
-import { useFetchDataPointOfDataEntries, useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
+import { useAnalyseData, useFetchDataPointOfDataEntries, useFetchSingleDataPoint, useFetchSinglePipeline } from "../_features/hook";
 import { formatDate } from "@/app/utils/formatDate";
 import { toSentenceCase } from "@/app/utils/caseFormat";
 import { ArrowLeft, FileStackIcon, Plus, Share2, Sparkles, X } from "lucide-react";
@@ -14,6 +14,8 @@ import { ExportToExcel } from "../_components/ExportToExcel";
 import Link from "next/link";
 import ShareDataPoint from "../datapoint/ShareDataPoint";
 import { Spinner } from "@radix-ui/themes";
+import { getBusinessId } from "@/app/utils/user/userData";
+import toast from "react-hot-toast";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -37,6 +39,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const [analyseData, setAnalyseData] = useState(false);
     const backParams: string = 'pipelines';
     const router = useRouter();
+    const [structuredData, setStructuredData] = useState<any>(null);
 
     const { data, isLoading, refetch } = useFetchDataPointOfDataEntries({
         axios,
@@ -81,6 +84,35 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         setOpenIndex(null);
         setUniqueDataPoint(id)
     }
+
+    const mutation = useAnalyseData({ axios });
+    const businessUserId = getBusinessId() || "";
+    const endpoint = "pipeline-fields-entry-attached-to-data-point";
+
+    const handleAnalyseData = (id: string) => {
+        setUniqueDataPoint(id);
+        setAnalyseData(true);
+        handleSubmit();
+    };
+
+    const handleSubmit = () => {
+        mutation.mutate(
+            {
+                endpoint,
+                businessUserId,
+                dataPoint: uniqueDataPoint,
+            },
+            {
+                onSuccess: () => {
+                    toast.success("Data analysis completed successfully");
+                    setStructuredData(data); //Save response for modal
+                },
+                onError: (error: any) => {
+                    toast.error(error?.message || "Data analysis failed");
+                },
+            }
+        );
+    };
 
     const searchParams = useSearchParams();
     useEffect(() => {
@@ -174,11 +206,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                             <>
                                 <button
                                     className="px-5 py-1 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                                    onClick={() => setAnalyseData(true)}
+                                    onClick={() => handleAnalyseData(singlePipeline?.fieldId ?? '')}
                                 >
                                     <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
                                     Analyse data
                                 </button>
+
                             </>
                         )}
 
@@ -246,8 +279,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
             <AnalyseData
                 analyseData={analyseData}
-                uniqueId={pipelineId}
                 onClose={() => setAnalyseData(false)}
+                structuredData={structuredData}
             />
 
             <NewDataEntry
@@ -261,56 +294,59 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 shareDataPoint={shareDataPoint}
                 onClose={() => setShareDataPoint(false)}
                 uniqueId={uniqueDataPoint}
+                dataPointName={singlePipeline?.dataPointName ?? ''}
             />
 
 
-            {openOptionsEntry && (
-                <>
-                    <div className="fixed inset-0 bg-black/40 z-10" />
-                    <div className="w-3/4 md:w-2/4 text-center bg-white p-7 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <div className="flex justify-end gap-2">
-                            <button onClick={() => setOpenOptionsEntry(false)}>
-                                <X size={20} className="text-red-500 cursor-pointer" />
-                            </button>
-                        </div>
-
-                        <div className="md:flex justify-between gap-5 mt-5">
-                            <div
-                                onClick={() => handleNewDataEntry(dataPointId ?? '')}
-                                className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
-                                <Plus
-                                    size={25}
-                                    color="white"
-                                    className="mr-1 inline bg-blue-600 rounded-full p-1"
-                                />
-                                <button
-                                    className="mt-3 py-5 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
-                                >
-                                    New Data Entry
+            {
+                openOptionsEntry && (
+                    <>
+                        <div className="fixed inset-0 bg-black/40 z-10" />
+                        <div className="w-3/4 md:w-2/4 text-center bg-white p-7 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="flex justify-end gap-2">
+                                <button onClick={() => setOpenOptionsEntry(false)}>
+                                    <X size={20} className="text-red-500 cursor-pointer" />
                                 </button>
                             </div>
 
-                            <div
-                                onClick={() =>
-                                    router.push(`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`)
-                                }
-                                className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
-                                <FileStackIcon
-                                    size={25}
-                                    color="white"
-                                    className="mr-1 inline bg-blue-600 rounded-full p-1"
-                                />
-                                <Link
-                                    className="mt-3 py-5 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
-                                    href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`}
-                                >
-                                    Bulk Data Entry
-                                </Link>
+                            <div className="md:flex justify-between gap-5 mt-5">
+                                <div
+                                    onClick={() => handleNewDataEntry(dataPointId ?? '')}
+                                    className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
+                                    <Plus
+                                        size={25}
+                                        color="white"
+                                        className="mr-1 inline bg-blue-600 rounded-full p-1"
+                                    />
+                                    <button
+                                        className="mt-3 py-5 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
+                                    >
+                                        New Data Entry
+                                    </button>
+                                </div>
+
+                                <div
+                                    onClick={() =>
+                                        router.push(`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`)
+                                    }
+                                    className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
+                                    <FileStackIcon
+                                        size={25}
+                                        color="white"
+                                        className="mr-1 inline bg-blue-600 rounded-full p-1"
+                                    />
+                                    <Link
+                                        className="mt-3 py-5 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
+                                        href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`}
+                                    >
+                                        Bulk Data Entry
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </>
-            )}
+                    </>
+                )
+            }
 
         </div >
     );

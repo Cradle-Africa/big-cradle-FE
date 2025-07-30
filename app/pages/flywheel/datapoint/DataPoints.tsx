@@ -99,6 +99,7 @@ const DataPoints = ({
                 shareDataPoint={shareDataPoint}
                 onClose={() => setShareDataPoint(false)}
                 uniqueId={uniqueDataPoint}
+                dataPointName={dataPointName}
             />
 
           

@@ -2,15 +2,17 @@
 
 import axios from "@/app/lib/axios";
 import { formatDate } from "@/app/utils/formatDate";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Share2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import Pagination from "../_components/Pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import AnalyseSurvey from "../_components/AnalyseSurvey";
-import { useFetchSingleSurvey, useFetchSurveysDataEntries } from "../_features/hooks";
+import { useAnalyseSurveyData, useFetchSingleSurvey, useFetchSurveysDataEntries } from "../_features/hooks";
 import { Spinner } from "@radix-ui/themes";
 import { getBusinessId } from "@/app/utils/user/userData";
 import FilterBar from "../_components/filter/FilterBar";
+import toast from "react-hot-toast";
+import ShareSurvey from "../_components/ShareSurvey";
 
 interface ViewDataEntriesProps {
     viewDataEntries: boolean;
@@ -32,9 +34,13 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [analyseData, setAnalyseData] = useState(false);
+    const [shareSurvey, setShareSurvey] = useState(false);
     const router = useRouter();
     const businessUserId = getBusinessId();
+    const [structuredData, setStructuredData] = useState<any>(null);
+    const [, setOpenIndex] = useState<number | null>(null);
 
+    //fetch survey's entries
     const { data, isLoading: isLoadingDataEntries, refetch } = useFetchSurveysDataEntries({
         axios,
         queryParams: {
@@ -56,7 +62,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         surveyId: surveyId,
     });
 
-    console.log('DATA', entries);
+    // analyse survey data
+    const mutation = useAnalyseSurveyData({ axios });
 
     const searchParams = useSearchParams();
     useEffect(() => {
@@ -99,41 +106,78 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         // Otherwise, return as plain string
         return String(value);
     };
+
+
+    const handleAnalyseData = () => {
+        setAnalyseData(true);
+        handleSubmit();
+    };
+    // SUbmit analyse data
+    const handleSubmit = () => {
+        mutation.mutate(
+            { surveyId: surveyId },
+            {
+                onSuccess: (res) => {
+                    toast.success("Data analysis completed successfully");
+                    try {
+                        const data = res?.insights ?? res?.data?.insights;
+                        setStructuredData(data);
+                    } catch (err) {
+                        console.error(err);
+                        toast.error("Failed to parse response");
+                        setStructuredData(null);
+                    }
+                },
+                onError: (error: any) => {
+                    toast.error(error?.message || "Data analysis failed");
+                },
+            }
+        );
+    };
+
+    const handleShareSurvey = () => {
+        setShareSurvey(true)
+        setOpenIndex(null);
+    }
     return (
         <div className="w-full pb-5">
             {/* <h2 className="text-xl mb-4">Data entries</h2> */}
             <>
-                <h2 className="text-lg font-semibold text-blue-600">
-                    {singleSurvey?.data?.surveyName}
-                </h2>
-
+                <div className="flex justify-between gap-2 ">
+                    <h2 className="text-lg font-semibold text-blue-600">
+                        {singleSurvey?.data?.surveyName}
+                    </h2>
+                    <>
+                        <div className="flex justify-end gap-2 ">
+                            <button
+                                onClick={() => handleShareSurvey()}
+                                className="flex items-center cursor-pointer px-3 py-1 border border-blue-600 text-blue-600 rounded-md"
+                            > <Share2 size={13} className="inline mr-1" /> Share
+                            </button>
+                            {!isLoadingDataEntries && !isLodingSingleSurvey && entries && entries.length > 0 && (
+                                <button
+                                    className="px-5 h-[36px] flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
+                                    onClick={() => handleAnalyseData()}
+                                >
+                                    <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
+                                    Analyse data
+                                </button>
+                            )}
+                        </div>
+                    </>
+                </div>
 
                 {isLoadingDataEntries || isLodingSingleSurvey && <p className=""><Spinner /></p>}
 
-                <div className={` ${entries && entries.length > 0 ? '' : 'justify-start'} flex justify-between gap-3 mt-2`}>
+                <div className={` ${entries && entries.length > 0 ? '' : 'justify-start'} flex justify-between items-center gap-3`}>
 
-                    <div className="flex justify-between gap-2 ">
-                        <button
-                            onClick={() => router.back()}
-                            className='flex px-3 mt-5 h-[36px] items-center rounded-md text-white bg-blue-600 cursor-pointer'
+                    <button
+                        onClick={() => router.back()}
+                        className='flex px-3 h-[36px] items-center rounded-md text-white bg-blue-600 cursor-pointer'
 
-                        >
-                            <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
-                        </button>
-                    </div>
-
-                    {!isLoadingDataEntries && !isLodingSingleSurvey && entries && entries.length > 0 && (
-                        <>
-                            <button
-                                className="px-5 mt-5 h-[36px] w-52 flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
-                                onClick={() => setAnalyseData(true)}
-                            >
-                                <Sparkles size={15} color="white" className="mr-1 inline animate-pulse " />
-                                Analyse data
-                            </button>
-                        </>
-                    )}
-
+                    >
+                        <ArrowLeft size={14} className='mr-1 inline' /> <span className="hidden md:inline">Back</span>
+                    </button>
                     <FilterBar
                         tempStartDate={tempStartDate}
                         setTempStartDate={setTempStartDate}
@@ -212,9 +256,17 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
             <AnalyseSurvey
                 analyseData={analyseData}
-                uniqueId={surveyId}
                 onClose={() => setAnalyseData(false)}
+                structuredData={structuredData}
+                mutation={mutation}
             />
+
+            <ShareSurvey
+                shareSurvey={shareSurvey}
+                onClose={() => setShareSurvey(false)}
+                uniqueId={surveyId}
+            />
+
 
         </div >
     );

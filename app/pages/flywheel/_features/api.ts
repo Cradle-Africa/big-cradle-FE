@@ -434,7 +434,6 @@ export const analyseData = async (
     endpoint: string,
     businessUserId: string,
     dataPoint: string,
-    prompt: string,
     limit: number = 10,
     page: number = 1
 ) => {
@@ -443,7 +442,7 @@ export const analyseData = async (
 
         const res = await axios.post(
             url,
-            { prompt }, // Only `prompt` is in the body
+            {  }, // empty body
             {
                 headers: {
                     Authorization: `Bearer ${getToken()}`,

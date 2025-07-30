@@ -1,10 +1,32 @@
+import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { Flex } from "@radix-ui/themes";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import React from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { pieData } from "./FeedbackChart";
+import { Pie, PieChart, ResponsiveContainer } from "recharts";
+import Spinner from "../Spinner";
+import { useFetchSentiments } from "../dashboard/_features/hook";
 
 const SentimentAnalysis = () => {
+  const user = getUser();
+  let businessUserId = "";
+  const role = user?.role ?? "";
+  if (role === "business") {
+    businessUserId = getBusinessId() ?? "";
+  }
+  if (role === "employee") {
+    businessUserId = user?.businessUserId ?? "";
+  }
+
+  const { data, isLoading, error } = useFetchSentiments({
+    businessUserId,
+    role,
+    startDate: "2025-01-01",
+    endDate: "2025-12-01",
+  });
+
+  if (isLoading) return <Spinner />;
+
+  if (error) return <p>Error fetching the survey summary</p>;
+
   return (
     <div className="bg-white p-4 border border-gray-100 rounded-md">
       <p className="font-medium mb-4">Sentiment analysis</p>
@@ -12,7 +34,23 @@ const SentimentAnalysis = () => {
         <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
-              data={pieData}
+              data={[
+                {
+                  name: "Positive",
+                  value: data?.data?.positive,
+                  color: "#10B981",
+                },
+                {
+                  name: "Neutral",
+                  value: data?.data?.neutral,
+                  color: "#F59E0B",
+                },
+                {
+                  name: "Negative",
+                  value: data?.data?.negative,
+                  color: "#CB2A31",
+                },
+              ]}
               dataKey="value"
               nameKey="name"
               cx="50%"
@@ -23,14 +61,14 @@ const SentimentAnalysis = () => {
               innerRadius={130} // maintain same thickness
               paddingAngle={1}
             >
-              {pieData.map((entry, index) => (
+              {/* {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
+              ))} */}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
         <div className="flex flex-col absolute  mt-4 items-center">
-          <p className="font-bold text-3xl">256</p>
+          <p className="font-bold text-3xl">{data?.data?.neutral}</p>
           <p>Responses</p>
         </div>
       </div>
@@ -48,7 +86,7 @@ const SentimentAnalysis = () => {
               <p>30%</p>
             </div>
           </Flex>
-          <p className="text-2xl font-bold">12</p>
+          <p className="text-2xl font-bold">{data?.data?.negative}</p>
         </Flex>
 
         <Flex
@@ -64,7 +102,7 @@ const SentimentAnalysis = () => {
               <p>30%</p>
             </div>
           </Flex>
-          <p className="text-2xl font-bold">768</p>
+          <p className="text-2xl font-bold">{data?.data?.positive}</p>
         </Flex>
       </Flex>
     </div>

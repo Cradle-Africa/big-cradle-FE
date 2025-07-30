@@ -2,32 +2,36 @@
 
 import axios, { INTERNAL_URL } from "@/app/lib/axios";
 import { Copy, Share2, X } from "lucide-react";
-import { useFetchSingleDataPoint } from "../_features/hook";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { shortenWithTinyURL } from "@/app/utils/shortenLink";
+import { useFetchSingleSurvey } from "../_features/hooks";
 import { Spinner } from "@radix-ui/themes";
+import { getUser } from "@/app/utils/user/userData";
 
 interface PopUpProps {
-    shareDataPoint: boolean;
+    shareSurvey: boolean;
     onClose: () => void;
     uniqueId: string;
-    dataPointName: string;
 }
 
-const ShareDataPoint: React.FC<PopUpProps> = ({
-    shareDataPoint,
+const ShareSurvey: React.FC<PopUpProps> = ({
+    shareSurvey,
     onClose,
     uniqueId,
-    dataPointName,
 }) => {
-    const { isLoading } = useFetchSingleDataPoint({
+
+    const user = getUser()
+    let businessName = '';
+    if(user?.role ===  'business'){
+        businessName = user?.businessName;
+    };
+
+    const { data, isLoading } = useFetchSingleSurvey({
         axios,
-        id: uniqueId,
-        enabled: shareDataPoint,
+        surveyId: uniqueId,
     });
 
-    console.log(dataPointName);
     const [copied, setCopied] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -35,17 +39,18 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     const encodedId = typeof window !== "undefined" ? btoa(uniqueId) : "";
     const [shareUrl, setShareUrl] = useState("");
 
+
     useEffect(() => {
         const generateLink = async () => {
             if (encodedId && typeof window !== "undefined") {
-                const fullUrl = `${INTERNAL_URL}/shared-data-point?data-point=${encodedId}`;
+                const fullUrl = `${INTERNAL_URL}/shared-survey/${businessName}?survey=${encodedId}`;
                 const shortUrl = await shortenWithTinyURL(fullUrl);
                 setShareUrl(shortUrl ?? fullUrl);
             }
         };
 
         generateLink();
-    }, [encodedId]);
+    }, [encodedId, businessName]);
 
 
     // Copy link handler
@@ -67,21 +72,21 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
             }
         };
 
-        if (shareDataPoint) {
+        if (shareSurvey) {
             document.addEventListener("mousedown", handleClickOutside);
         }
 
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [shareDataPoint, onClose]);
+    }, [shareSurvey, onClose]);
 
     // Reset "copied" state when modal opens or ID changes
     useEffect(() => {
         setCopied(false);
-    }, [uniqueId, shareDataPoint]);
+    }, [uniqueId, shareSurvey]);
 
-    if (!shareDataPoint) return null;
+    if (!shareSurvey) return null;
 
     return (
         <>
@@ -100,12 +105,11 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
                     </button>
 
                     <h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-                        <Share2 size={18} />  { 'Share Data Point'}: { dataPointName }
-
+                        <Share2 size={18} /> {'Share Survey'}: {data?.data.surveyName}
                     </h2>
 
                     {isLoading ? (
-                        <p className="text-gray-500"> <Spinner/></p>
+                        <p className="text-gray-500"> <Spinner /></p>
                     ) : (
                         <>
                             <div className="w-full">
@@ -132,4 +136,4 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     );
 };
 
-export default ShareDataPoint;
+export default ShareSurvey;

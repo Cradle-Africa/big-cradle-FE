@@ -1,89 +1,57 @@
 import { useUser } from "@/app/hooks/useUser";
-import BusinessCard from "@/app/pages/user/business/_components/BusinessCard";
-import { Banknote, Users2, Wallet } from "lucide-react";
 import { useState } from "react";
-import DashboardCharts from "../charts/DashboardCharts";
 import FormPopup from "../pop-up/PopUpForm";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
-import { MdChecklist } from "react-icons/md";
+import EngagementChart from "../charts/EngagementChart";
+import SentimentChart from "../charts/SentimentCharts";
+import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
+import Summary from "../charts/Summary";
 
 const SuperAdminDashboard = () => {
-  const [openKycVerification, setOpenKycVerification] = useState(false);
-  const user = useUser();
+	const [openKycVerification, setOpenKycVerification] = useState(false);
+	const user = useUser();
+	const [module, setModule] = useState<string>("Survey");
 
-  if (!user) {
-    return <DashboardSkeleton />;
-  }
+	if (!user) {
+		return <DashboardSkeleton />;
+	}
 
-  return (
-    <div>
-      {openKycVerification && (
-        <FormPopup
-          setOpen={setOpenKycVerification}
-          title="KYC Verification"
-          method={"POST"}
-          endPoint="business-auth/upload-certificate-of-incorporation"
-          fields={[
-            { name: "email", label: "", type: "hidden", required: true },
-            {
-              name: "certificateOfIncorporation",
-              label: "Certificate of Incorporation",
-              type: "file",
-              required: true,
-            },
-          ]}
-          defaultValues={{ email: user?.email }}
-        />
-      )}
-      <div className="w-full mt-2">
-        <p className="font-semibold text-md space-y-1">
-          Hi{" "}
-          {user?.contactPersonFirstName ?? user?.firstName ?? user?.fullName ?? ""},{" "}
-          here’s your platform overview for today
-        </p>
+	return (
+		<div>
+			{openKycVerification && (
+				<FormPopup
+					setOpen={setOpenKycVerification}
+					title="KYC Verification"
+					method={"POST"}
+					endPoint="business-auth/upload-certificate-of-incorporation"
+					fields={[
+						{ name: "email", label: "", type: "hidden", required: true },
+						{
+							name: "certificateOfIncorporation",
+							label: "Certificate of Incorporation",
+							type: "file",
+							required: true,
+						},
+					]}
+					defaultValues={{ email: user?.email }}
+				/>
+			)}
+			{/* Header with module select */}
+			<PlatformOverviewHeader
+				user={user}
+				module={module}
+				setModule={setModule}
+			/>
+			{/* Summary cards */}
+			<Summary module={module} />
 
-        <p className="text-sm">
-          All systems operational. Last sync: 10 mins ago
-        </p>
-      </div>
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-4 mt-5">
-        <>
-          <BusinessCard
-            title={'Active users'}
-            value={'500'}
-            icon={<Users2 size={14} color="blue" />}
-            iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
-            isHighLighted={false}
-          />
-
-          <BusinessCard
-            title={'Survey created'}
-            value={'2345'}
-            icon={<Banknote size={14} color="green" />}
-            iconClass="rounded-full bg-green-100 p-1 lg:p-2"
-            isHighLighted={false}
-          />
-        </>
-        <BusinessCard
-          title={'Data uploads'}
-          value={'2000'}
-          icon={<MdChecklist size={14} color="red" />}
-          iconClass="rounded-full bg-red-100 p-1 lg:p-2"
-          isHighLighted={false}
-        />
-
-        <BusinessCard
-          title={'Wallets payouts'}
-          value={'135000'}
-          icon={<Wallet size={14} color="blue" />}
-          iconClass="rounded-full bg-gray-100 p-1 lg:p-2"
-          isHighLighted={true}
-        />
-
-      </div>
-      <DashboardCharts />
-    </div>
-  );
+			{/* Engagement and sentiment charts*/}
+			<div className="flex justify-between gap-5 mt-5">
+				<EngagementChart />
+				<SentimentChart module={module} />
+			</div>
+		</div>
+	);
 };
 
 

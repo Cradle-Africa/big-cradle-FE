@@ -73,9 +73,10 @@ const PipelinePage = ({
     const [dataPointName, setDataPointName] = useState<string>('');
 
 
-    const handleShareDataPipeline = (dataPointId: string) => {
+    const handleShareDataPipeline = (dataPointId: string, dataPointName: string) => {
         setShareDataPipelie(true)
         setUniqueDataPoint(dataPointId)
+        setDataPointName(dataPointName);
     }
 
     const handleDeleteDataPoint = async (id: any, dataPointName: any) => {
@@ -233,7 +234,7 @@ const PipelinePage = ({
                                         <DataPointActions
                                             pipeline={pipeline}
                                             onDelete={handleDeleteDataPoint}
-                                            onShare={handleShareDataPipeline}
+                                            onShare={() => handleShareDataPipeline(pipeline.fieldId ?? '', pipeline.dataPointName)}
                                         />
                                     </div>
                                 </div>
@@ -268,6 +269,7 @@ const PipelinePage = ({
                 shareDataPoint={shareDataPipeline}
                 onClose={() => setShareDataPipelie(false)}
                 uniqueId={uniqueDataPoint}
+                dataPointName={ dataPointName }
             />
 
 
@@ -302,7 +304,7 @@ const PipelinePage = ({
                         deletingDataPoint={deletingDataPoint}
                         uniqueId={uniqueDataPoint}
                         setDeletingDataPoint={setDeletingDataPoint}
-                        dataPointName={dataPointName}
+                        dataPointName={ dataPointName }
                     />
                 )
             }

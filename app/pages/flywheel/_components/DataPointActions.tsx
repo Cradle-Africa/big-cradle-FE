@@ -8,7 +8,7 @@ type Props = {
     pipeline?: Pipeline;
     survey?: SurveyListItem;
     onDelete?: (fieldId?: string, name?: string) => void;
-    onShare?: (fieldId: string) => void;
+    onShare?: (fieldId: string, dataPointName: string) => void;
 };
 
 export default function DataPointActions({ pipeline, survey, onDelete, onShare }: Props) {
@@ -32,7 +32,7 @@ export default function DataPointActions({ pipeline, survey, onDelete, onShare }
                                 </Link>
                             </div>
                             <div className="w-1/3 flex">
-                                <div onClick={() => onShare?.(pipeline.fieldId ?? '')} className="px-1">
+                                <div onClick={() => onShare?.(pipeline?.fieldId ?? '', pipeline?.dataPointName)} className="px-1">
                                     <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
                                         <Share2 size={15} />
                                     </div>
@@ -70,7 +70,7 @@ export default function DataPointActions({ pipeline, survey, onDelete, onShare }
                 <div className="flex w-full items-start justify-center gap-2 mt-5">
                     {survey && (
                         <div className="flex w-full justify-start gap-2">
-                            <div className="w-3/3">
+                            <div className="w-full">
                                 <Link
                                     href={`/pages/survey/${survey.id}`}
                                     className="flex w-full justify-center items-center text-sm cursor-pointer rounded-md px-3 py-2 bg-[#F0F8FF] text-[#0D89FF] hover:bg-blue-100 border border-[#0D89FF]"
@@ -78,6 +78,13 @@ export default function DataPointActions({ pipeline, survey, onDelete, onShare }
                                     View Entries
                                     <ArrowRight size={15} className="ml-1 inline" />
                                 </Link>
+                            </div>
+                            <div className="w-1/7 flex">
+                                <div onClick={() => onShare?.(survey?.id ?? '', survey?.surveyName)} className="px-1">
+                                    <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
+                                        <Share2 size={15}/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

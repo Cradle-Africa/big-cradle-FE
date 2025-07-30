@@ -11,6 +11,7 @@ import { Spinner } from "@radix-ui/themes";
 import Pagination from "./Pagination";
 import SurveyActions from "./SurveyActions";
 import SurveyStatus from "../status/SurveyStatus";
+import ShareSurvey from "./ShareSurvey";
 
 type Props = {
 	data: SurveyListItem[];
@@ -45,6 +46,8 @@ const SurveyTable = ({
 	const [selectedSurvey, setSelectedSurvey] = useState<SurveyListItem | null>(null);
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [suspendOpen, setSuspendOpen] = useState(false);
+    const [shareSurvey, setShareSurvey] = useState(false);
+    const [, setSurveyName] = useState<string>('');
 
 	const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
 	const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
@@ -56,6 +59,11 @@ const SurveyTable = ({
 
 	const router = useRouter();
 
+	const handleShareSurvey = (surveyId: string, surveyName: string) => {
+        setShareSurvey(true)
+        setUniqueId(surveyId)
+        setSurveyName(surveyName);
+    }
 	return (
 		<div>
 			<FilterBar
@@ -156,6 +164,7 @@ const SurveyTable = ({
 								>
 									<DataPointActions
 										survey={survey}
+										onShare={() => handleShareSurvey(survey?.id ?? '', survey.surveyName)}
 									/>
 								</div>
 							</div>
@@ -183,6 +192,12 @@ const SurveyTable = ({
 				/>
 			)}
 
+			<ShareSurvey
+                shareSurvey={shareSurvey}
+                onClose={() => setShareSurvey(false)}
+                uniqueId={uniqueId}
+            />
+
 			{
 				activateOpen && selectedSurvey && (
 					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey} setOpen={setActivateOpen} activate={true} suspend={false} />
@@ -197,11 +212,11 @@ const SurveyTable = ({
 
 			{
 				completePayment && selectedSurvey && (
-					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey}  setOpen={setCompletePayment} completePayment={true} activate={false} suspend={false} />
+					<SurveyStatus uniqueId={uniqueId} survey={selectedSurvey} setOpen={setCompletePayment} completePayment={true} activate={false} suspend={false} />
 				)
 			}
 
-			
+
 
 		</div>
 	);

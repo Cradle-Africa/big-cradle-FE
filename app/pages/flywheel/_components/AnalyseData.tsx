@@ -2,55 +2,25 @@
 
 import { useRef, useState } from "react";
 import { useAnalyseData } from "../_features/hook";
-import { getBusinessId } from "@/app/utils/user/userData";
 import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
-import { Check, Copy, Download, X } from "lucide-react";
+import { Copy, Download, X } from "lucide-react";
 import Spinner from "@/app/components/Spinner";
 import { marked } from "marked";
 import AnalyseDataChart from "@/app/components/charts/AnalyseDataChart";
 
 interface AnalyseDataProps {
     analyseData: boolean;
-    uniqueId: string;
     onClose: () => void;
+    structuredData: any; // 💡 add this
 }
 
-const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueId }) => {
-    const [prompt, setPrompt] = useState("");
-    const [structuredData, setStructuredData] = useState<any>(null);
+const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structuredData }) => {
+    // const [prompt, setPrompt] = useState("");
+
     const [isDownloading, setIsDownloading] = useState(false);
 
-    const businessUserId = getBusinessId() || "";
-    const endpoint = "pipeline-fields-entry-attached-to-data-point";
-
     const mutation = useAnalyseData({ axios });
-
-    const handleSubmit = () => {
-        mutation.mutate(
-            {
-                endpoint,
-                businessUserId,
-                dataPoint: uniqueId,
-                prompt,
-            },
-            {
-                onSuccess: (data) => {
-                    toast.success("Data analysis completed successfully");
-                    try {
-                        setStructuredData(data);
-                    } catch (err) {
-                        console.log(err);
-                        toast.error("Failed to parse response");
-                        setStructuredData(null);
-                    }
-                },
-                onError: (error: any) => {
-                    toast.error(error?.message || "Data analysis failed");
-                },
-            }
-        );
-    };
 
     const chartData = structuredData?.visualization?.data?.labels?.map(
         (label: string, index: number) => ({
@@ -117,7 +87,6 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
             setIsDownloading(false);
         }
     };
-
 
 
     const handleCopy = async () => {
@@ -222,14 +191,6 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                     )}
 
                     <div className="absolute w-[87.7%] bottom-3">
-                        <textarea
-                            className="w-full h-24 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg p-3 text-md outline-none resize-none"
-                            rows={6}
-                            placeholder="Enter your prompt here ..."
-                            value={prompt}
-                            onChange={(e) => setPrompt(e.target.value)}
-                        />
-
                         <div className="flex justify-end space-x-3 mt-3">
                             <button
                                 onClick={onClose}
@@ -237,18 +198,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, uniqueI
                             >
                                 <X size={13} className='inline mr-1' /> Close
                             </button>
-                            <button
-                                onClick={handleSubmit}
-                                disabled={mutation.isPending || !prompt.trim()}
-                                className={`flex gap-2 items-center px-4 py-1 text-md font-medium cursor-pointer text-white rounded-md ${mutation.isPending || !prompt.trim()
-                                    ? "bg-blue-400 cursor-not-allowed"
-                                    : "bg-blue-600 hover:bg-blue-700"
-                                    }`}
-                            >
-                                {mutation.isPending && (<Spinner />)}
-                                {!mutation.isPending && (<Check size={13} className="inline ml-2 mr-1" />)}
-                                {mutation.isPending ? " Analysing " : "Submit"}
-                            </button>
+
                         </div>
                     </div>
                 </div>

@@ -200,15 +200,14 @@ interface AnalyseDataParams {
 	endpoint: string;
 	businessUserId: string;
 	dataPoint: string;
-	prompt: string;
 	limit?: number;
 	page?: number;
 }
 
 export const useAnalyseData = ({ axios }: { axios: AxiosInstance }) => {
 	return useMutation<any, Error, AnalyseDataParams>({
-		mutationFn: ({ endpoint, businessUserId, dataPoint, prompt, limit = 10, page = 1 }) =>
-			analyseData(axios, endpoint, businessUserId, dataPoint, prompt, limit, page),
+		mutationFn: ({ endpoint, businessUserId, dataPoint, limit = 10, page = 1 }) =>
+			analyseData(axios, endpoint, businessUserId, dataPoint, limit, page),
 	});
 };
 
