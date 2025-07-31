@@ -3,17 +3,15 @@ import axios from "@/app/lib/axios";
 import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
 
-import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import { Grid, Spinner } from "@radix-ui/themes";
 import { useState } from "react";
+import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import RespondersGrowth from "../charts/RespondersGrowth";
 import Summary from "../charts/Summary";
-import TopOrganization from "../charts/TopOrganization";
+import TopPipelines from "../charts/TopPipelines";
 import TopSurveys from "../charts/TopSurveys";
 import KycVerification from "../KycVerification";
-import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
-import TopPipelines from "../charts/TopPipelines";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
