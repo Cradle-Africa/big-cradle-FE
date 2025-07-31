@@ -3,16 +3,14 @@ import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import { useState } from "react";
 import KycVerification from "../KycVerification";
 import { Grid, Spinner } from "@radix-ui/themes";
-// import SentimentAnalysis from "../charts/SentimentAnalysis";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import TopOrganization from "../charts/TopOrganization";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import { getUser } from "@/app/utils/user/userData";
 import EngagementChart from "../charts/EngagementChart";
-// import SentimentChart from "../charts/SentimentCharts";
 import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
+import TopSurveys from "../charts/TopSurveys";
+import TopPipelines from "../charts/TopPipelines";
 
 const BusinessDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -73,20 +71,24 @@ const BusinessDashboard = () => {
 
 			{/* <SentimentChart module={module} /> */}
 
-			<Grid gap="4" columns="4" my="4">
-				<div className="col-span-2">
-					{/* <SentimentAnalysis module={module} /> */}
-				</div>
+      <Grid columns="2" gap="2" my="4">
+        <div>
+          {module === "Survey" && <TopSurveys />}
+        </div>
 
-				<div>
-					<RespondersGrowth />
-				</div>
-				<div>
-					<TopOrganization />
-				</div>
-			</Grid>
-		</div>
-	);
+        <div>
+          <TopPipelines />
+        </div>
+
+        {/* <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div> */}
+      </Grid>
+    </div >
+  );
 };
 
 export default BusinessDashboard;

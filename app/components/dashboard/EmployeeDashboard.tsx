@@ -1,17 +1,19 @@
 import axios from "@/app/lib/axios";
-import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
-import { useState } from "react";
-import KycVerification from "../KycVerification";
-import { Grid, Spinner } from "@radix-ui/themes";
 // import SentimentAnalysis from "../charts/SentimentAnalysis";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import TopOrganization from "../charts/TopOrganization";
-import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
-import Summary from "../charts/Summary";
+
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
+import { useState } from "react";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
+import KycVerification from "../KycVerification";
+import TopPipelines from "../charts/TopPipelines";
+import RespondersGrowth from "../charts/RespondersGrowth";
+import TopOrganization from "../charts/TopOrganization";
+import { Grid, Spinner } from "@radix-ui/themes";
+import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
+import Summary from "../charts/Summary";
 
 const EmployeeDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -67,7 +69,9 @@ const EmployeeDashboard = () => {
 				<div className="col-span-2">
 					{/* <SentimentAnalysis module={module} /> */}
 				</div>
-
+				<div>
+					<TopPipelines />
+				</div>
 				<div>
 					<RespondersGrowth />
 				</div>
