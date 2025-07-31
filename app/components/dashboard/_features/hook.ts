@@ -1,7 +1,7 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary } from "./api";
-import { FlywheelSummaryResponse, SentimentResponse } from "./types";
+import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary, getEntryVolumeData } from "./api";
+import { EntryVolumeItem, FlywheelSummaryResponse, SentimentResponse } from "./types";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
 	return useQuery({
@@ -61,3 +61,16 @@ export const useFlywheelAverageEntries = (
 };
 
 
+interface UseEntryVolumeParams {
+	businessUserId: string;
+	role: string;
+	startDate?: string;
+	endDate?: string;
+}
+
+export const useEntryVolume = (params: UseEntryVolumeParams) => {
+	return useQuery<EntryVolumeItem[]>({
+		queryKey: ["entry-volume", params],
+		queryFn: () => getEntryVolumeData(params)
+	});
+};

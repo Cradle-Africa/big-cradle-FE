@@ -12,13 +12,14 @@ import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
 import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
+import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
 
 const BusinessDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] =
 		useState(false);
 	const [openAdminKycVerification, setOpenAdminKycVerification] =
 		useState(false);
-	const [module, setModule] = useState<string>("Survey");
+	const [module, setModule] = useState<string>("Data Flywheel");
 
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
 	const user = getUser();
@@ -51,17 +52,26 @@ const BusinessDashboard = () => {
 			<Summary module={module} />
 
 			{/* Engagement and sentiment charts*/}
-			<div className="flex justify-between gap-5 mt-5">
-				{ module === 'Survey' && (
-					<EngagementChart />
-				)}
-				{ module === 'Data Flywheel' && (
-					<FlywheelAverageEntriesChart />
-				)}
+			{module === 'Survey' && (
+				<>
+					<div className="flex justify-between gap-5 mt-5">
+						<EngagementChart />
+					</div>
+				</>
+			)}
+			{module === 'Data Flywheel' && (
+				<div className="flex justify-between h-[410px] gap-5 mt-5">
+					<div className="w-3/5">
+						<FlywheelAverageEntriesChart />
+					</div>
+					<div className="w-2/4">
+						<FlywheelEntryVolumeChart />
+					</div>
+				</div>
+			)}
 
-				
-				{/* <SentimentChart module={module} /> */}
-			</div>
+
+			{/* <SentimentChart module={module} /> */}
 
 			<Grid gap="4" columns="4" my="4">
 				<div className="col-span-2">

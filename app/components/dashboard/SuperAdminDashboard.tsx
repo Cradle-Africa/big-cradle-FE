@@ -10,7 +10,7 @@ import Summary from "../charts/Summary";
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
 	const user = useUser();
-	const [module, setModule] = useState<string>("Survey");
+	const [module, setModule] = useState<string>("Data Flywheel");
 
 	if (!user) {
 		return <DashboardSkeleton />;
