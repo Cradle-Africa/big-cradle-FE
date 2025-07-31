@@ -13,14 +13,14 @@ import TopOrganization from "../charts/TopOrganization";
 import TopSurveys from "../charts/TopSurveys";
 import KycVerification from "../KycVerification";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
+import TopPipelines from "../charts/TopPipelines";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
     useState(false);
   const [openAdminKycVerification, setOpenAdminKycVerification] =
     useState(false);
-  const [module, setModule] = useState<string>('Survey');
-
+  const [module, setModule] = useState<string>("Survey");
 
   const { data: user, isLoading } = useFetchMe({ axios });
 
@@ -53,24 +53,23 @@ const EmployeeDashboard = () => {
 
       {/* Engagement and sentiment charts*/}
       <div className="flex justify-between gap-5 mt-5">
-        {module === 'Survey' && (
-          <EngagementChart />
-        )}
-        {module === 'Data Flywheel' && (
-          <FlywheelAverageEntriesChart />
-        )}
+        {module === "Survey" && <EngagementChart />}
+        {module === "Data Flywheel" && <FlywheelAverageEntriesChart />}
         {/* <SentimentChart module={module} /> */}
       </div>
-      <Grid gap="4" columns="4" my="4">
-        <div className="col-span-2">
-          <TopSurveys module={module} />
-        </div>
+      <Grid columns="2" gap="2" my="4">
+        <div>{module === "Survey" && <TopSurveys />}</div>
+
         <div>
+          <TopPipelines />
+        </div>
+
+        {/* <div>
           <RespondersGrowth />
         </div>
         <div>
           <TopOrganization />
-        </div>
+        </div> */}
       </Grid>
     </div>
   );

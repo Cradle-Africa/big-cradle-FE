@@ -21,3 +21,16 @@ export type TopSurveyType = {
   surveyId: string;
   surveyName: string;
 };
+
+type DataPipelineEntry = {
+  count: number;
+  dataPointId: string;
+  dataPointName: string;
+};
+
+export type TopPipelineDataResponse = {
+  success: boolean;
+  message: string;
+  data: DataPipelineEntry[];
+};
+
