@@ -38,14 +38,14 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
     try {
       await inviteBusiness({ ...data, adminBusinessUserId });
     } catch (error: any) {
-      toast.error(error?.message || "Failed to invite a new business");
+      toast.error(error?.message || "Failed to invite an organization");
     }
   };
 
   useEffect(() => {
     if (isCreateSuccess) {
       queryClient.invalidateQueries({ queryKey: ["businesses"] });
-      toast.success(`Business invited successfully`);
+      toast.success(`Organization invited successfully`);
       setOpen(false);
     }
 
@@ -73,7 +73,7 @@ const InviteBusiness: React.FC<Props> = ({ setOpen }) => {
           </div>
         </div>
         <div className="items-center text-center mt-5">
-          <h2 className="text-md font-semibold text-gray-700 mb-4">Invite a new business</h2>
+          <h2 className="text-md font-semibold text-gray-700 mb-4">Invite a new organization</h2>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5 lg:mt-12">

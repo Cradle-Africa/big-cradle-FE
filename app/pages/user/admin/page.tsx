@@ -33,7 +33,7 @@ const Admin = () => {
     return (
         <>
             <TableComponent
-                title="Investors / Admins"
+                title="Ecosystem enablers"
                 endpoint="all-admins"
                 fields={fields}
                 breadcrumbs={{

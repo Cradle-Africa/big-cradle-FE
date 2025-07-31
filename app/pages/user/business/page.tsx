@@ -48,7 +48,7 @@ const Business = () => {
         <DashboardLayout>
             <div className="flex justify-between">
                 <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-black">Businesses</h2>
+                    <h2 className="font-bold text-black">Organizations</h2>
                 </div>
                 <button
                     className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
@@ -56,7 +56,7 @@ const Business = () => {
                 >
                     <div className="flex fgap2 items-center gap-1">
                         <Mail size={14} color="white" />
-                        <span className="text-white">Invite a new Business</span>
+                        <span className="text-white">Invite a new organization</span>
                     </div>
                 </button>
             </div>

@@ -70,6 +70,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         refetch();
     }, [refetch, searchParams])
 
+    useEffect(() => {
+        if (mutation.isPending) {
+            toast.loading('Analyzing data ...')
+        };
+    })
     if (!viewDataEntries) return null;
 
     // Build headers using keys/labels
@@ -114,10 +119,12 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     };
     // SUbmit analyse data
     const handleSubmit = () => {
+        if (mutation.isPending) return;// prevent duplicate submission
         mutation.mutate(
             { surveyId: surveyId },
             {
                 onSuccess: (res) => {
+                    toast.dismiss()
                     toast.success("Data analysis completed successfully");
                     try {
                         const data = res?.insights ?? res?.data?.insights;
@@ -129,6 +136,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     }
                 },
                 onError: (error: any) => {
+                    toast.dismiss()
                     toast.error(error?.message || "Data analysis failed");
                 },
             }
@@ -139,6 +147,13 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         setShareSurvey(true)
         setOpenIndex(null);
     }
+
+    if (mutation.isPending) {
+        return(
+        <div className="flex justify-center mt-[20%]"> <Spinner/></div>    
+        )
+    };
+
     return (
         <div className="w-full pb-5">
             {/* <h2 className="text-xl mb-4">Data entries</h2> */}

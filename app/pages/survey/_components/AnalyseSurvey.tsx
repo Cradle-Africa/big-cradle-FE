@@ -83,6 +83,7 @@ const AnalyseSurveyData: React.FC<AnalyseSurveyDataProps> = ({
 
 	if (!analyseData) return null;
 
+	
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/10">
 			<div className="relative z-50 bg-gray-50 max-h-[98%] px-5 py-5 w-full h-screen max-w-full mx-4 md:mx-auto rounded-xl shadow-xl space-y-4">
@@ -102,7 +103,7 @@ const AnalyseSurveyData: React.FC<AnalyseSurveyDataProps> = ({
 						<>
 							<div className="bg-gray-100 rounded-lg p-8 text-left text-md mt-3">
 								<strong>Response:</strong>
-								<div className="mt-5 whitespace-pre-wrap max-h-[60vh] overflow-y-auto">
+								<div className="mt-5 whitespace-pre-wrap max-h-[70vh] overflow-y-auto">
 									<div ref={analysisRef} className="space-y-10 text-md" id="analysis-content">
 										{/* 📌 Insights */}
 										<section>
@@ -151,7 +152,7 @@ const AnalyseSurveyData: React.FC<AnalyseSurveyDataProps> = ({
 								</div>
 							</div>
 
-							<div className="flex gap-3 mt-3">
+							<div className="flex justify-end gap-3 mt-3">
 								<button
 									type="button"
 									onClick={handleCopy}
@@ -179,17 +180,6 @@ const AnalyseSurveyData: React.FC<AnalyseSurveyDataProps> = ({
 							</div>
 						</>
 					)}
-
-					<div className="absolute bottom-3 left-0 w-full px-6">
-						<div className="flex justify-end space-x-3">
-							<button
-								onClick={onClose}
-								className="flex items-center px-4 py-1 text-md font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100"
-							>
-								<X size={13} className="inline mr-1" /> Close
-							</button>
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>

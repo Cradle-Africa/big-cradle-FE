@@ -72,21 +72,21 @@ export default function SuperAdminSidebar() {
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                Businesses
+                Organizations
               </Link>
               <Link
                 href="/pages/user/business/business-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                Businesses KYC
+                Organizations KYC
               </Link>
               <Link
                 href="/pages/user/admin/admin-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                Investors KYC
+                 Ecosystem enablers KYC
               </Link>
               {/* <Link
                 href="/pages/user/employee/"

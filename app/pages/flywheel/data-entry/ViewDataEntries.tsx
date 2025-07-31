@@ -120,6 +120,13 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         refreshSinglePipeline();
     }, [refetch, refreshSinglePipeline, searchParams])
 
+
+    useEffect(() => {
+        if (mutation.isPending) {
+            toast.loading('Analyzing data ...')
+        };
+    })
+
     if (!viewDataEntries) return null;
 
     function renderValue(value: any) {
@@ -146,6 +153,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
     const headers = entries && entries.length > 0 ? Object.keys(entries[0].data) : [];
 
+    if (mutation.isPending) {
+        return(
+        <div className="flex justify-center mt-[20%]"> <Spinner/></div>    
+        )
+    };
     return (
         <div className="w-full pb-5">
             {/* <h2 className="text-xl mb-4">Data entries</h2> */}

@@ -29,7 +29,7 @@ const AdminKyc = () => {
     <DashboardLayout>
       <div className="flex justify-between">
         <div className="flex flex-col gap-2">
-          <h2 className="font-bold text-black">Investors / Admins Kyc</h2>
+          <h2 className="font-bold text-black">Ecosystem enablers Kyc</h2>
         </div>
       </div>
 

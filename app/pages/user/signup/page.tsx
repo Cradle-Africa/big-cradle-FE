@@ -88,7 +88,7 @@ function BuildSignUpPage() {
 					)} */}
 					{/* {adminSignUp && (
 						<h3 className="text-lg font-semibold text-gray-700">
-							Sign up as an Investor
+							Sign up as an ecosystem enabler
 						</h3>
 					)}
 					{businessSignUp && (
@@ -150,7 +150,7 @@ function BuildSignUpPage() {
 							}}
 							className={'font-bold hover:cursor-pointer flex w-full justify-center px-5 py-2 border border-gray-200 rounded-lg'}
 						>
-							Continue as an investor
+							Continue as an ecosystem enabler
 						</button>
 						<div className="flex w-full items-center gap-2 text-sm text-slate-600">
 								<div className="h-px w-full bg-slate-200"></div>

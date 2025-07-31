@@ -12,13 +12,14 @@ import AnalyseDataChart from "@/app/components/charts/AnalyseDataChart";
 interface AnalyseDataProps {
     analyseData: boolean;
     onClose: () => void;
-    structuredData: any; // 💡 add this
+    structuredData: any; 
 }
 
 const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structuredData }) => {
     // const [prompt, setPrompt] = useState("");
 
     const [isDownloading, setIsDownloading] = useState(false);
+    const analysisRef = useRef<HTMLDivElement>(null);
 
     const mutation = useAnalyseData({ axios });
 
@@ -29,8 +30,6 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
         })
     ) || [];
 
-
-    const analysisRef = useRef<HTMLDivElement>(null);
     const handleDownload = async () => {
         if (!analysisRef.current) {
             toast.error("No content available for download");
@@ -95,7 +94,6 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
         toast.success("Response copied to clipboard");
     };
 
-
     if (!analyseData) return null;
 
     return (
@@ -119,7 +117,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                         <>
                             <div className="bg-gray-100 rounded-lg p-8 text-left text-md mt-3">
                                 <strong>Response:</strong>
-                                <div className="mt-5 whitespace-pre-wrap max-h-80 overflow-auto">
+                                <div className="mt-5 whitespace-pre-wrap max-h-70 overflow-auto">
                                     <div ref={analysisRef} className="space-y-6 text-md" id="analysis-content">
                                         {/* Insights */}
                                         {/* <div className="avoid-break"> */}
@@ -161,7 +159,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex space-x-3 mt-3">
+                            <div className="flex justify-end space-x-3 mt-3">
                                 <button
                                     type="button"
                                     onClick={handleCopy}
@@ -189,18 +187,6 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                             </div>
                         </>
                     )}
-
-                    <div className="absolute w-[87.7%] bottom-3">
-                        <div className="flex justify-end space-x-3 mt-3">
-                            <button
-                                onClick={onClose}
-                                className="flex items-center px-4 py-1 text-md font-medium text-gray-700 cursor-pointer border border-gray-300 rounded-md hover:bg-gray-100"
-                            >
-                                <X size={13} className='inline mr-1' /> Close
-                            </button>
-
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

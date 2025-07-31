@@ -28,7 +28,7 @@ const BusinessKyc = () => {
         <DashboardLayout>
             <div className="flex justify-between">
                 <div className="flex flex-col gap-2">
-                    <h2 className="font-bold text-black">Businesses Kyc</h2>
+                    <h2 className="font-bold text-black">Organization Kyc</h2>
                 </div>
             </div>
 

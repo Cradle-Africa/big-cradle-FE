@@ -160,7 +160,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 							</div>
 						</div>
 						<div className="items-center text-center mt-5">
-							<h2 className="text-md font-semibold text-gray-700 mb-4">Delete business</h2>
+							<h2 className="text-md font-semibold text-black mb-4">Delete organization</h2>
 						</div>
 
 						<div className="flex justify-between mt-8 gap-5">
@@ -181,7 +181,7 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 							>
 								<div className="flex items-center gap-1">
 									<Trash size={13} />
-									{deletePending ? 'Deleting...' : 'Delete this business'}
+									{deletePending ? 'Deleting...' : 'Delete'}
 								</div>
 							</button>
 						</div>

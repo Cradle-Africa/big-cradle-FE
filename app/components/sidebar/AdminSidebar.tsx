@@ -67,14 +67,14 @@ export default function AdminSidebar() {
                 className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                Businesses
+                Organizations
               </Link>
               {/* <Link
                 href="/pages/user/business/business-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                Businesses KYC
+                Organization KYC
               </Link> */}
             </div>
           )}
