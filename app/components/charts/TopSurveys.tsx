@@ -31,7 +31,7 @@ const TopSurveys = () => {
     <div className="bg-white p-4 border border-gray-100 rounded-md h-full">
       <>
         {(surveys ?? []).length < 1 ? (
-          <Text>No data</Text>
+          <Text></Text>
         ) : (
           <div>
             <p className="font-medium mb-4">Top surveys</p>

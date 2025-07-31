@@ -9,11 +9,11 @@ import { useState } from "react";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import KycVerification from "../KycVerification";
 import TopPipelines from "../charts/TopPipelines";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import TopOrganization from "../charts/TopOrganization";
-import { Grid, Spinner } from "@radix-ui/themes";
+import { Flex, Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import Summary from "../charts/Summary";
+import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
+import TopSurveys from "../charts/TopSurveys";
 
 const EmployeeDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -51,7 +51,12 @@ const EmployeeDashboard = () => {
 			{module === 'Survey' && (
 				<>
 					<div className="flex justify-between gap-5 mt-5">
-						<EngagementChart />
+						<div className="w-3/5">
+							<EngagementChart />
+						</div>
+						<div className="w-2/4">
+							<SurveyPaymentStatsChart />
+						</div>
 					</div>
 				</>
 			)}
@@ -65,20 +70,26 @@ const EmployeeDashboard = () => {
 					</div>
 				</div>
 			)}
-			<Grid gap="4" columns="4" my="4">
-				<div className="col-span-2">
-					{/* <SentimentAnalysis module={module} /> */}
-				</div>
-				<div>
-					<TopPipelines />
-				</div>
-				<div>
-					<RespondersGrowth />
-				</div>
-				<div>
-					<TopOrganization />
-				</div>
-			</Grid>
+			<Flex className="mt-5">
+				{module === "Survey" && (
+					<div className="w-full">
+						<TopSurveys />
+					</div>
+				)}
+
+				{module === "Data Flywheel" && (
+					<div className="w-full">
+						<TopPipelines />
+					</div>
+				)}
+
+				{/* <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div> */}
+			</Flex>
 		</div>
 	);
 };

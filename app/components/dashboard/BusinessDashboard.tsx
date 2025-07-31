@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import { useState } from "react";
 import KycVerification from "../KycVerification";
-import { Grid, Spinner } from "@radix-ui/themes";
+import { Flex, Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import { getUser } from "@/app/utils/user/userData";
 import EngagementChart from "../charts/EngagementChart";
@@ -11,6 +11,7 @@ import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
 import TopSurveys from "../charts/TopSurveys";
 import TopPipelines from "../charts/TopPipelines";
+import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 
 const BusinessDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -53,7 +54,12 @@ const BusinessDashboard = () => {
 			{module === 'Survey' && (
 				<>
 					<div className="flex justify-between gap-5 mt-5">
-						<EngagementChart />
+						<div className="w-3/5">
+							<EngagementChart />
+						</div>
+						<div className="w-2/4">
+							<SurveyPaymentStatsChart />
+						</div>
 					</div>
 				</>
 			)}
@@ -67,28 +73,30 @@ const BusinessDashboard = () => {
 					</div>
 				</div>
 			)}
-
-
 			{/* <SentimentChart module={module} /> */}
 
-      <Grid columns="2" gap="2" my="4">
-        <div>
-          {module === "Survey" && <TopSurveys />}
-        </div>
+			<Flex className="mt-5">
+				{module === "Survey" && (
+					<div className="w-full">
+						<TopSurveys />
+					</div>
+				)}
 
-        <div>
-          <TopPipelines />
-        </div>
+				{module === "Data Flywheel" && (
+					<div className="w-full">
+						<TopPipelines />
+					</div>
+				)}
 
-        {/* <div>
+				{/* <div>
           <RespondersGrowth />
         </div>
         <div>
           <TopOrganization />
         </div> */}
-      </Grid>
-    </div >
-  );
+			</Flex>
+		</div >
+	);
 };
 
 export default BusinessDashboard;

@@ -62,7 +62,7 @@ export default function EngagementChart() {
     if (isLoading) return <Spinner />;
 
     return (
-        <div className="w-3/5 bg-white rounded-xl px-4 py-4 border border-gray-100">
+        <div className="w-full bg-white rounded-xl px-4 py-4 border border-gray-100">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-md text-black font-semibold">Engagements</h2>
                 <select

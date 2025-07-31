@@ -3,13 +3,16 @@ import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import KycVerification from "../KycVerification";
 import { useState } from "react";
-import { Spinner } from "@radix-ui/themes";
+import { Flex, Spinner } from "@radix-ui/themes";
 import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
+import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
+import TopSurveys from "../charts/TopSurveys";
+import TopPipelines from "../charts/TopPipelines";
 
 const BusinessDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false);
@@ -50,7 +53,12 @@ const BusinessDashboard = () => {
 			{module === 'Survey' && (
 				<>
 					<div className="flex justify-between gap-5 mt-5">
-						<EngagementChart />
+						<div className="w-3/5">
+							<EngagementChart />
+						</div>
+						<div className="w-2/4">
+							<SurveyPaymentStatsChart />
+						</div>
 					</div>
 				</>
 			)}
@@ -64,6 +72,27 @@ const BusinessDashboard = () => {
 					</div>
 				</div>
 			)}
+
+			<Flex className="mt-5">
+				{module === "Survey" && (
+					<div className="w-full">
+						<TopSurveys />
+					</div>
+				)}
+
+				{module === "Data Flywheel" && (
+					<div className="w-full">
+						<TopPipelines />
+					</div>
+				)}
+
+				{/* <div>
+          <RespondersGrowth />
+        </div>
+        <div>
+          <TopOrganization />
+        </div> */}
+			</Flex>
 		</div>
 	);
 };
