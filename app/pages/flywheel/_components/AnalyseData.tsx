@@ -1,8 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useAnalyseData } from "../_features/hook";
-import axios from "@/app/lib/axios";
 import toast from "react-hot-toast";
 import { Copy, Download, X } from "lucide-react";
 import Spinner from "@/app/components/Spinner";
@@ -12,23 +10,30 @@ import AnalyseDataChart from "@/app/components/charts/AnalyseDataChart";
 interface AnalyseDataProps {
     analyseData: boolean;
     onClose: () => void;
-    structuredData: any; 
+	structuredData: any;
+	mutation: any;
 }
 
-const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structuredData }) => {
-    // const [prompt, setPrompt] = useState("");
-
+const AnalyseData: React.FC<AnalyseDataProps> = ({
+    analyseData,
+    onClose,
+	structuredData,
+	mutation,
+}) => {
     const [isDownloading, setIsDownloading] = useState(false);
     const analysisRef = useRef<HTMLDivElement>(null);
 
-    const mutation = useAnalyseData({ axios });
-
-    const chartData = structuredData?.visualization?.data?.labels?.map(
-        (label: string, index: number) => ({
+    const chartData =
+        mutation.data?.visualization?.data?.labels?.map((label: string, index: number) => ({
             name: label,
-            value: structuredData.visualization.data.datasets[0].data[index],
-        })
-    ) || [];
+            value: mutation.data.visualization.data.datasets[0].data[index],
+        })) || [];
+
+    // useEffect(() => {
+    //     if (analyseData && dataPointId && businessUserId && endpoint) {
+    //         mutation.mutate({ endpoint, businessUserId, dataPoint: dataPointId });
+    //     }
+    // }, [analyseData, dataPointId, businessUserId, endpoint]);
 
     const handleDownload = async () => {
         if (!analysisRef.current) {
@@ -61,14 +66,13 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                                 if (style.fill?.includes("oklch")) el.style.fill = "#578CFF";
                                 if (style.stroke?.includes("oklch")) el.style.stroke = "#578CFF";
 
-                                // 💡 Prevent content from being cut mid-element
                                 el.style.breakInside = "avoid";
                                 el.style.pageBreakInside = "avoid";
                                 el.style.overflowWrap = "break-word";
                             });
                         },
                     },
-                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }, // Ensure page breaks are handled correctly
+                    pagebreak: { mode: ["avoid-all", "css", "legacy"] },
                     jsPDF: {
                         unit: "in",
                         format: "a4",
@@ -87,70 +91,83 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
         }
     };
 
-
     const handleCopy = async () => {
-        const content = document.getElementById('analysis-content')?.innerText || '';
+        const content = document.getElementById("analysis-content")?.innerText || "";
         await navigator.clipboard.writeText(content);
         toast.success("Response copied to clipboard");
     };
 
     if (!analyseData) return null;
 
+    if (mutation.isError) {
+        return (
+            <p className="text-sm text-red-600">{mutation.error?.message}</p>
+        )
+    }
+
+    if (mutation.isPending) {
+        return (
+            <div className=""><Spinner/></div>
+        )
+    }
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-                className="relative z-50 bg-gray-50 max-h-[98%] px-5 lg:px-20 py-5 w-full h-screen ma-w-[500px] m:max-w-[700px] x:max-w-[1000px] mx-4 md:mx-auto rounded-xl shadow-xl p-6 space-y-4"
-            >
+            <div className="relative z-50 bg-gray-50 max-h-[98%] px-5 py-5 w-full h-screen max-w-full mx-4 md:mx-auto rounded-xl shadow-xl space-y-4">
                 <div>
                     <div className="flex justify-between">
                         <h2 className="text-xl font-semibold text-blue-600">Analyse Data</h2>
-                        <button onClick={() => onClose()} >
+                        <button onClick={onClose}>
                             <X size={20} className="text-red-500 mr-1 hover:cursor-pointer" />
                         </button>
                     </div>
 
-                    {mutation.isError && (
-                        <p className="text-sm text-red-600">{mutation.error?.message}</p>
+                    {mutation.isPending && (
+                        <div className="flex justify-center mt-[20%]">
+                            <Spinner />
+                        </div>
                     )}
 
                     {mutation.isSuccess && (
                         <>
                             <div className="bg-gray-100 rounded-lg p-8 text-left text-md mt-3">
                                 <strong>Response:</strong>
-                                <div className="mt-5 whitespace-pre-wrap max-h-70 overflow-auto">
+                                <div className="mt-5 whitespace-pre-wrap max-h-[70vh] overflow-y-auto">
                                     <div ref={analysisRef} className="space-y-6 text-md" id="analysis-content">
                                         {/* Insights */}
-                                        {/* <div className="avoid-break"> */}
                                         <div>
-
                                             <h3 className="text-base font-semibold mb-5">📌 Insights</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
                                                 {structuredData?.insights?.map((insight: string, index: number) => (
                                                     <p
                                                         key={index}
                                                         className="text-gray-800"
-                                                        dangerouslySetInnerHTML={{ __html: marked.parse(insight, { async: false }) as string }}
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: marked.parse(insight, { async: false }) as string,
+                                                        }}
                                                     />
                                                 ))}
                                             </ul>
                                         </div>
 
                                         {/* Recommendations */}
-                                        <div style={{ pageBreakBefore: 'always' }}>
+                                        <div style={{ pageBreakBefore: "always" }}>
                                             <h3 className="text-base font-semibold mb-1">✅ Recommendations</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
                                                 {structuredData?.recommendations?.map((rec: string, index: number) => (
                                                     <p
                                                         key={index}
                                                         className="text-gray-800"
-                                                        dangerouslySetInnerHTML={{ __html: marked.parse(rec, { async: false }) as string }}
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: marked.parse(rec, { async: false }) as string,
+                                                        }}
                                                     />
                                                 ))}
                                             </ul>
                                         </div>
 
                                         {/* Visualization */}
-                                        <div className="page-break" style={{ pageBreakBefore: 'always' }}>
+                                        <div className="page-break" style={{ pageBreakBefore: "always" }}>
                                             <h3 className="text-base font-semibold mb-5">📊 Visualization</h3>
                                             <div className="w-full h-80">
                                                 <AnalyseDataChart data={chartData} />
@@ -159,6 +176,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                                     </div>
                                 </div>
                             </div>
+
                             <div className="flex justify-end space-x-3 mt-3">
                                 <button
                                     type="button"
@@ -175,8 +193,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({ analyseData, onClose, structu
                                 >
                                     {isDownloading ? (
                                         <>
-                                            <Spinner />
-                                            Downloading...
+                                            <Spinner /> Downloading...
                                         </>
                                     ) : (
                                         <>

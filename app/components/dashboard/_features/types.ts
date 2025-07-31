@@ -34,3 +34,14 @@ export type TopPipelineDataResponse = {
   data: DataPipelineEntry[];
 };
 
+export interface EntryVolumeItem {
+	count: number;
+	dayOfWeek: number; // 0 (Sunday) to 6 (Saturday)
+	hourOfDay: number; // 0–23
+}
+
+export interface EntryVolumeResponse {
+	success: boolean;
+	message: string;
+	data: EntryVolumeItem[];
+}

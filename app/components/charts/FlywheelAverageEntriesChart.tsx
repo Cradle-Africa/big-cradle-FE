@@ -60,7 +60,7 @@ export default function FlywheelAverageEntriesChart() {
     if (isLoading) return <Spinner />;
 
     return (
-        <div className="w-3/5 bg-white rounded-xl px-4 py-4 border border-gray-100">
+        <div className="h-full w-full bg-white rounded-xl px-4 py-4 border border-gray-200">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-md text-black font-semibold">Data flyweel Average Entries</h2>
                 <select

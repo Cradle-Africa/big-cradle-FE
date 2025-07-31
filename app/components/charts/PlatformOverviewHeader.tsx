@@ -26,8 +26,8 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({ user, m
                     value={module}
                     onChange={(e) => setModule(e.target.value)}
                 >
-                    <option value="Survey">Survey</option>
                     <option value="Data Flywheel">Data Flywheel</option>
+                    <option value="Survey">Survey</option>
                 </select>
             </div>
 
