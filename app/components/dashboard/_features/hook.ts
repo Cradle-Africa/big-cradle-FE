@@ -1,7 +1,13 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary } from "./api";
-import { FlywheelSummaryResponse, SentimentResponse } from "./types";
+import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSurveyEngagement } from "./api";
+import { FlywheelSummaryResponse } from "./types";
+import {
+  fetchSentimentBreackDown,
+  fetchSurveySummary,
+  fetchTopSurveys,
+} from "./api";
+import { SentimentResponse, TopSurveyType } from "./types";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
 	return useQuery({
@@ -61,3 +67,31 @@ export const useFlywheelAverageEntries = (
 };
 
 
+type FetchTopSurveys = {
+  businessUserId: string;
+  role: string;
+  // startDate: string;
+  // endDate: string;
+};
+
+export const useFetchTopSurveys = ({
+  businessUserId,
+  role,
+  // startDate,
+  // endDate,
+}: FetchTopSurveys) => {
+  return useQuery<TopSurveyType[]>({
+    queryKey: [
+      "top-survey-type",
+      businessUserId,
+      role,
+      // startDate, endDate
+    ],
+    queryFn: () =>
+      fetchTopSurveys(
+        businessUserId,
+        role
+        // startDate, endDate
+      ),
+  });
+};

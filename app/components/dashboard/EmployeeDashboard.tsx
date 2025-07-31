@@ -1,16 +1,18 @@
 import axios from "@/app/lib/axios";
-import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
-import { useState } from "react";
-import KycVerification from "../KycVerification";
-import { Grid, Spinner } from "@radix-ui/themes";
 // import SentimentAnalysis from "../charts/SentimentAnalysis";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import TopOrganization from "../charts/TopOrganization";
-import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
-import Summary from "../charts/Summary";
+
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
+import { Grid, Spinner } from "@radix-ui/themes";
+import { useState } from "react";
+import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
+import RespondersGrowth from "../charts/RespondersGrowth";
+import Summary from "../charts/Summary";
+import TopOrganization from "../charts/TopOrganization";
+import TopSurveys from "../charts/TopSurveys";
+import KycVerification from "../KycVerification";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 
 const EmployeeDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -18,6 +20,7 @@ const EmployeeDashboard = () => {
   const [openAdminKycVerification, setOpenAdminKycVerification] =
     useState(false);
   const [module, setModule] = useState<string>('Survey');
+
 
   const { data: user, isLoading } = useFetchMe({ axios });
 
@@ -40,7 +43,11 @@ const EmployeeDashboard = () => {
       )}
 
       {/* Header with module select */}
-      <PlatformOverviewHeader user={user} module={module} setModule={setModule} />
+      <PlatformOverviewHeader
+        user={user}
+        module={module}
+        setModule={setModule}
+      />
 
       <Summary module={module} />
 
@@ -56,9 +63,8 @@ const EmployeeDashboard = () => {
       </div>
       <Grid gap="4" columns="4" my="4">
         <div className="col-span-2">
-          {/* <SentimentAnalysis module={module} /> */}
+          <TopSurveys module={module} />
         </div>
-
         <div>
           <RespondersGrowth />
         </div>

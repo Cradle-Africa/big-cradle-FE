@@ -63,3 +63,15 @@ export const fetchFlywheelAverageEntries = async (
 
 
 
+export const fetchTopSurveys = async (
+  businessUserId: string,
+  role: string
+  // startDate: string,
+  // endDate: string
+) => {
+  const response = await axios.get(
+    `/survey-dashboard/top-surveys?businessUserId=${businessUserId}&role=${role}`
+    // `/survey-dashboard/top-surveys?businessUserId=${businessUserId}&role=${role}&startDate=${startDate}&endDate=${endDate}`
+  );
+  return response.data;
+};

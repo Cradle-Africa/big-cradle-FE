@@ -5,7 +5,7 @@ import AfricaPicture from "@/public/images/africa-picture.png";
 
 const TopOrganization = () => {
   return (
-    <div className="flex flex-col gap-4 h-full ">
+    <div className="flex flex-col gap-4 h-full bg-white">
       <div className="border border-gray-200 rounded-md p-4 h-full flex flex-col justify-between">
         <p className="font-medium mb-4">Top organizations</p>
         <div className="flex gap-2 items-center">
