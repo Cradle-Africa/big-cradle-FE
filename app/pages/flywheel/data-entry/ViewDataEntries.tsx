@@ -33,13 +33,13 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const [openOptionsEntry, setOpenOptionsEntry] = useState(false);
     const [shareDataPoint, setShareDataPoint] = useState(false);
     const [, setOpenIndex] = useState<number | null>(null);
+    const [structuredData, setStructuredData] = useState<any>(null);
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [analyseData, setAnalyseData] = useState(false);
     const backParams: string = 'pipelines';
     const router = useRouter();
-    const [structuredData, setStructuredData] = useState<any>(null);
 
     const { data, isLoading, refetch } = useFetchDataPointOfDataEntries({
         axios,
@@ -58,7 +58,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const dataPointId = singlePipeline?.fieldId
     // console.log('data pipeline: ', singlePipeline );
 
-
     const entries = data?.entries
     const pagination = data?.pagination ?? { page: 1, limit: 10, pages: 1, total: 0 };
 
@@ -68,6 +67,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         enabled: !singlePipeline?.fieldId, // only run when fieldId is present
     });
 
+    const mutation = useAnalyseData({ axios });
 
     const handleNewDataEntry = (dataPointId: string) => {
         setOpenOptionsEntry(false); // close EntryOptionsModal
@@ -85,7 +85,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
         setUniqueDataPoint(id)
     }
 
-    const mutation = useAnalyseData({ axios });
     const businessUserId = getBusinessId() || "";
     const endpoint = "pipeline-fields-entry-attached-to-data-point";
 
@@ -96,6 +95,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     };
 
     const handleSubmit = () => {
+        if (mutation.isPending) return;// prevent duplicate submission
         mutation.mutate(
             {
                 endpoint,
@@ -103,11 +103,20 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 dataPoint: uniqueDataPoint,
             },
             {
-                onSuccess: () => {
+                onSuccess: (res) => {
+                    toast.dismiss()
                     toast.success("Data analysis completed successfully");
-                    setStructuredData(data); //Save response for modal
+                    try {
+                        console.log('DATA--', JSON.stringify(res));
+                        setStructuredData(res);
+                    } catch (err) {
+                        console.error(err);
+                        toast.error("Failed to parse response");
+                        setStructuredData(null);
+                    }
                 },
                 onError: (error: any) => {
+                    toast.dismiss()
                     toast.error(error?.message || "Data analysis failed");
                 },
             }
@@ -154,8 +163,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const headers = entries && entries.length > 0 ? Object.keys(entries[0].data) : [];
 
     if (mutation.isPending) {
-        return(
-        <div className="flex justify-center mt-[20%]"> <Spinner/></div>    
+        return (
+            <div className="flex justify-center mt-[20%]"> <Spinner /></div>
         )
     };
     return (
@@ -263,8 +272,6 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                                     ))}
                                 </tbody>
                             </table>
-
-
                         </div>
                         <Pagination
                             currentPage={page}
@@ -288,11 +295,11 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
             </>
 
-
             <AnalyseData
                 analyseData={analyseData}
                 onClose={() => setAnalyseData(false)}
                 structuredData={structuredData}
+            	mutation={mutation}
             />
 
             <NewDataEntry

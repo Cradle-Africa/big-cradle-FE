@@ -1,0 +1,108 @@
+"use client";
+
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
+import { useEntryVolume } from "../dashboard/_features/hook";
+import { getBusinessId, getUser } from "@/app/utils/user/userData";
+import { Spinner } from "@radix-ui/themes";
+
+const COLORS = [
+    "#004484", "#2B99FA", "#155DFC", "#004484", "#FFFF00", "#008000", "#FFA500"
+];
+
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+interface Props {
+    startDate?: string;
+    endDate?: string;
+}
+
+export default function FlywheelEntryVolumeChart({
+    startDate,
+    endDate,
+}: Props) {
+
+    let businessUserId = '';
+    const user = getUser();
+    const role = user?.role ?? '';
+    if (role === 'business') {
+        businessUserId = getBusinessId() ?? '';
+    }
+    if (role === 'employee') {
+        businessUserId = user?.businessUserId ?? ''
+    }
+
+    const { data, isPending, isError } = useEntryVolume({
+        businessUserId,
+        role,
+        startDate,
+        endDate,
+    });
+
+    if (isPending) return <div><Spinner /> </div>;
+    if (isError || !data) return <p>Failed to load entry volume data.</p>;
+
+    const groupedByDay = Array(7).fill(0); // Initialize all days with 0
+
+    data.forEach(item => {
+        groupedByDay[item.dayOfWeek] += item.count;
+    });
+
+    const chartData = groupedByDay.map((count, index) => ({
+        name: DAYS[index],
+        value: count,
+    }));
+
+
+    return (
+        <div className="h-full bg-white p-4 border border-gray-200 rounded-md">
+            <p className="font-medium mb-4">Data flywheel volume entries</p>
+            <div className="w-full mb-4 rounded-md flex items-center justify-center relative">
+                <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                        <Pie
+                            data={chartData}
+                            cx="50%"
+                            cy="50%"
+                            label
+                            outerRadius={100}
+                            innerRadius={75}
+                            paddingAngle={1}
+                            fill="#8884d8"
+                            dataKey="value"
+                        >
+                            {chartData.map((_, index) => (
+                                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+
+                        <Tooltip />
+                        <Legend
+                            layout="vertical"
+                            verticalAlign="middle"
+                            align="right"
+                            content={({ payload }) => (
+                                <ul className="list-none m-0 p-0">
+                                    {payload?.map((entry: any, index: any) => (
+                                        <li key={`item-${index}`} className="mb-1 flex items-center">
+                                            <div
+                                                style={{
+                                                    width: 12,
+                                                    height: 12,
+                                                    backgroundColor: entry.color,
+                                                    marginRight: 8,
+                                                    borderRadius: 2,
+                                                }}
+                                            />
+                                            <span className="text-sm">{entry.value} - {entry.payload.value}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        />
+
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
+}

@@ -1,4 +1,5 @@
 import axios from "@/app/lib/axios";
+import { EntryVolumeItem, EntryVolumeResponse } from "./types";
 
 export const fetchSurveySummary = async (
   businessUserId: string,
@@ -80,4 +81,19 @@ export const fetchTopDataPoints = async (
     `/data-flywheel-dashboard/top-data-points?businessUserId=${businessUserId}&role=${role}`
   );
   return response.data;
+};
+
+interface EntryVolumeParams {
+	businessUserId: string;
+	role: string;
+	startDate?: string;
+	endDate?: string;
+}
+export const getEntryVolumeData = async (
+	params: EntryVolumeParams
+): Promise<EntryVolumeItem[]> => {
+	const response = await axios.get<EntryVolumeResponse>("/data-flywheel-dashboard/entry-volume-heatmap",
+		{ params }
+	);
+	return response.data.data;
 };
