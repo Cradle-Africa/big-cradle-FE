@@ -11,6 +11,8 @@ import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 import { Flex } from "@radix-ui/themes";
 import TopSurveys from "../charts/TopSurveys";
 import TopPipelines from "../charts/TopPipelines";
+import TopOrganization from "../charts/TopOrganization";
+import RespondersGrowth from "../charts/RespondersGrowth";
 
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
@@ -87,12 +89,12 @@ const SuperAdminDashboard = () => {
 					</div>
 				)}
 
-				{/* <div>
-          <RespondersGrowth />
-        </div>
-        <div>
-          <TopOrganization />
-        </div> */}
+				<div>
+					<RespondersGrowth />
+				</div>
+				<div>
+					<TopOrganization />
+				</div>
 			</Flex>
 		</div>
 	);
