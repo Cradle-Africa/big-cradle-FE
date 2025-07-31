@@ -16,8 +16,8 @@ export type EntryStat = {
   fieldId: string | null;
 }
 
-export type   TopSurveysResponse = {
-  success: boolean;
-  message: string;
-  data: EntryStat[];
-}
+export type  TopSurveyType = {
+  responseCount: number;
+  surveyId: string;
+  surveyName: string;
+};

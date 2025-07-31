@@ -51,7 +51,6 @@ const EmployeeDashboard = () => {
         <div className="col-span-2">
           <TopSurveys module={module} />
         </div>
-
         <div>
           <RespondersGrowth />
         </div>

@@ -10,6 +10,7 @@ import TopOrganization from "../charts/TopOrganization";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import Summary from "../charts/Summary";
 import { getUser } from "@/app/utils/user/userData";
+import TopSurveys from "../charts/TopSurveys";
 
 const BusinessDashboard = () => {
   const [openBusinessKycVerification, setOpenBusinessKycVerification] =
@@ -52,7 +53,7 @@ const BusinessDashboard = () => {
 
       <Grid gap="4" columns="4" my="4">
         <div className="col-span-2">
-          <SentimentAnalysis module={module} />
+          <TopSurveys module={module} />
         </div>
 
         <div>
