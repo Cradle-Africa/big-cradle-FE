@@ -6,10 +6,10 @@ import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { Spinner } from '@radix-ui/themes';
 import { useDatFlywheelSummary, useSurveySummary } from '../dashboard/_features/hook';
 
-const Summary = ({ module }: { module: string}) => {
+const Summary = ({ module, business }: { module: string, business?: string}) => {
     const user = getUser();
 
-    // Memoize role and businessUserId
+    // Memorize role and businessUserId
     const { role, businessUserId } = useMemo(() => {
         const role = user?.role ?? '';
         let businessUserId = '';
@@ -18,10 +18,12 @@ const Summary = ({ module }: { module: string}) => {
             businessUserId = getBusinessId() ?? '';
         } else if (role === 'employee') {
             businessUserId = user?.businessUserId ?? '';
+        } else if (role === 'admin') {
+            businessUserId = business ?? ''
         }
 
         return { role, businessUserId };
-    }, [user]);
+    }, [user, business]);
 
     // Call only the relevant hook based on the module
     const {

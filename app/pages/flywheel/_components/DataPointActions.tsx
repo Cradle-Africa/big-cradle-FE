@@ -79,13 +79,15 @@ export default function DataPointActions({ pipeline, survey, onDelete, onShare }
                                     <ArrowRight size={15} className="ml-1 inline" />
                                 </Link>
                             </div>
-                            <div className="w-1/7 flex">
-                                <div onClick={() => onShare?.(survey?.id ?? '', survey?.surveyName)} className="px-1">
-                                    <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
-                                        <Share2 size={15}/>
+                            {survey.surveyType === 'external' && (
+                                <div className="w-1/7 flex">
+                                    <div onClick={() => onShare?.(survey?.id ?? '', survey?.surveyName)} className="px-1">
+                                        <div className="flex justify-center cursor-pointer items-center text-center w-10 h-10 rounded-full bg-gray-100 text-black hover:bg-blue-600 hover:text-white">
+                                            <Share2 size={15} />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>

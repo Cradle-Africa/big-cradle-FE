@@ -35,6 +35,7 @@ type Props = {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  surveyType: string;
   startDate: string,
   endDate: string,
   locationAndDemographic: string[];
@@ -50,6 +51,7 @@ const NewSurveyQuestionsForm = ({
   surveyDescription,
   sector,
   surveyGoal,
+  surveyType,
   startDate,
   endDate,
   locationAndDemographic,
@@ -95,6 +97,7 @@ const NewSurveyQuestionsForm = ({
         surveyName: surveyName,
         sector: sector,
         surveyGoal: surveyGoal,
+        surveyType: surveyType,
         startDate: startDate,
         endDate: endDate,
         surveyDescription: surveyDescription,
@@ -107,7 +110,8 @@ const NewSurveyQuestionsForm = ({
 
       await createSurvey(payload, {
         onSuccess: () => {
-          toast.success("Survey ");
+          toast.success("Survey created successfully");
+					router.push(`/pages/survey?status=all`);
         },
         onError: (error: any) => {
           const message =
@@ -316,20 +320,22 @@ const NewSurveyQuestionsForm = ({
             onAdd={addField}
           />
 
-          {user?.role === "super admin" ? (
+          {user?.role === "super admin" || (user?.role !== "super admin" && surveyType === 'external') ? (
             <button
               onClick={submitSurvey}
               type="button"
-              className="flex w-1/2 items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
+              className="flex w-1/2 justify-center items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer disabled:opacity-50"
             >
-              <Check size={16} className="mr-1" />
-              {isCreatingSurvey || isCreatingSurvey ? (
-                <>
-                  <span className="mr-2">Submitting...</span>
+              {isCreatingSurvey ? (
+                <div className="flex justify-center gap-1 items-center">
                   <Spinner />
-                </>
+                  <span className="mr-2">Submitting...</span>
+                </div>
               ) : (
-                "Submit"
+                <div className="flex justify-center gap-1 items-center">
+                  <Check size={16} className="mr-1" />
+                  Submit
+                </div>
               )}
             </button>
           ) : (

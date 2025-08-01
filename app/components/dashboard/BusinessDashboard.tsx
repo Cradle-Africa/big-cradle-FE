@@ -88,12 +88,6 @@ const BusinessDashboard = () => {
 					</div>
 				)}
 
-				{/* <div>
-          <RespondersGrowth />
-        </div>
-        <div>
-          <TopOrganization />
-        </div> */}
 			</Flex>
 		</div >
 	);

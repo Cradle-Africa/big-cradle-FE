@@ -12,7 +12,6 @@ import {
 } from "@/app/lib/type";
 import { surveyPaymentSchema } from "@/app/lib/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { Banknote, Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -34,6 +33,7 @@ type Props = {
 	surveyDescription: string;
 	sector: string;
 	surveyGoal: string;
+	surveyType: string;
 	startDate: string;
 	endDate: string;
 	locationAndDemographic: string[];
@@ -51,12 +51,12 @@ const SurveyPayementArea = ({
 	startDate,
 	endDate,
 	surveyGoal,
+	surveyType,
 	locationAndDemographic,
 	countriesAndCities,
 	gender,
 }: Props) => {
 	const router = useRouter();
-	const queryClient = useQueryClient();
 	const { mutateAsync: createSurvey, isPending: isCreatingSurvey } =
 		useCreateSurvey({ axios });
 
@@ -124,6 +124,7 @@ const SurveyPayementArea = ({
 			surveyDescription: surveyDescription,
 			sector: sector,
 			surveyGoal: surveyGoal,
+			surveyType: surveyType,
 			startDate: startDate,
 			endDate: endDate,
 			amount: parseInt(`${data.amount}`),
@@ -135,24 +136,29 @@ const SurveyPayementArea = ({
 
 		await createSurvey(payload, {
 			onSuccess: (createdSurvey) => {
-				queryClient.invalidateQueries({ queryKey: ["pipelines"] });
 				setForm({ dataPointId: "", field: [] }); // clear the form
 
-				submitSurveyPayment({
-					tx_ref: createdSurvey.data.tx_ref,
-					amount: parseInt(data.amount),
-					currency: "NGN",
-					redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
-					payment_options:
-						"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
-					customer: {
-						email: user?.email || "",
-					},
-					customizations: {
-						title: 'Survey Budget', 
-						description: 'Budget allocated to the survey ' + surveyName, 
-					},
-				});
+				if (surveyType === 'internal') {
+					submitSurveyPayment({
+						tx_ref: createdSurvey.data.tx_ref,
+						amount: parseInt(data.amount),
+						currency: "NGN",
+						redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
+						payment_options:
+							"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
+						customer: {
+							email: user?.email || "",
+						},
+						customizations: {
+							title: 'Survey Budget',
+							description: 'Budget allocated to the survey ' + surveyName,
+						},
+					});
+				}
+				if (surveyType === 'external') {
+					toast.success('Survey has been created successfully');
+					router.push(`/pages/survey?status=all`);
+				}
 			},
 			onError: (error: any) => {
 				console.error("Create survey error:", error);

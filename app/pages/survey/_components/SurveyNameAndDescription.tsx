@@ -75,6 +75,17 @@ const SurveyNameAndDescription = ({
 				/>
 				<ErrorMessage>{errors.surveyGoal?.message}</ErrorMessage>
 			</div>
+			<div>
+				<select
+					{...register("surveyType")}
+					className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
+				>
+					<option>Select the survey type</option>
+					<option value="internal">Internal</option>
+					<option value="external">External</option>
+				</select>
+				<ErrorMessage>{errors.surveyType?.message}</ErrorMessage>
+			</div>
 			<div className="flex gap-3">
 				<div className="w-1/2">
 					<input

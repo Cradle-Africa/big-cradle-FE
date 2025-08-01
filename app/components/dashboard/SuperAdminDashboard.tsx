@@ -8,7 +8,7 @@ import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
 import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
 import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
-import { Flex } from "@radix-ui/themes";
+// import { Flex, Grid } from "@radix-ui/themes";
 import TopSurveys from "../charts/TopSurveys";
 import TopPipelines from "../charts/TopPipelines";
 import TopOrganization from "../charts/TopOrganization";
@@ -76,26 +76,24 @@ const SuperAdminDashboard = () => {
 				</div>
 			)}
 
-			<Flex className="mt-5">
+			<div className="flex w-full justify-between gap-5 mt-5" >
 				{module === "Survey" && (
-					<div className="w-full">
+					<div className="w-2/5">
 						<TopSurveys />
 					</div>
 				)}
 
 				{module === "Data Flywheel" && (
-					<div className="w-full">
+					<div className="w-2/5">
 						<TopPipelines />
 					</div>
 				)}
 
-				<div>
+				<div className="flex w-3/5 gap-5">
 					<RespondersGrowth />
-				</div>
-				<div>
 					<TopOrganization />
 				</div>
-			</Flex>
+			</div>
 		</div>
 	);
 };

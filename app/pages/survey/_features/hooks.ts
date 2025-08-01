@@ -156,7 +156,7 @@ export const useFetchSingleSurvey = ({
   surveyId,
 }: UseFetchSingleSurvey) => {
   return useQuery<SingleSurveyResponse>({
-    queryKey: ["surveys", surveyId],
+    queryKey: ["survey", surveyId],
     queryFn: () => fetchSurvey(axios, surveyId),
     staleTime: 60 * 1000 * 60,
     retry: 3,

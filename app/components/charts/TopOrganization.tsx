@@ -5,7 +5,7 @@ import AfricaPicture from "@/public/images/africa-picture.png";
 
 const TopOrganization = () => {
   return (
-    <div className="flex flex-col gap-4 h-full bg-white">
+    <div className="flex w-full flex-col gap-4 h-full bg-white">
       <div className="border border-gray-200 rounded-md p-4 h-full flex flex-col justify-between">
         <p className="font-medium mb-4">Top organizations</p>
         <div className="flex gap-2 items-center">
@@ -23,7 +23,7 @@ const TopOrganization = () => {
           <div className="absolute left-[160px] h-[60px] w-[60px] bg-gray-100 rounded-full border border-gray-300" />
         </div>
       </div>
-      <div className="border border-gray-200 rounded-md p-4 h-full flex gap-2">
+      <div className="border border-gray-200 rounded-md p-4 h-full flex gap-4">
         <div className="flex flex-col">
           <p className="text-3xl font-bold">24</p>
           <p className="text-2xl font-bold">Countries</p>
@@ -32,7 +32,7 @@ const TopOrganization = () => {
             <p>20%</p>
           </div>
         </div>
-        <Image src={AfricaPicture} alt="africa-picture" />
+        <Image src={AfricaPicture} width={120} alt="africa-picture" />
       </div>
     </div>
   );

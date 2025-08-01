@@ -248,6 +248,7 @@ export interface Survey {
   surveyDescription: string;
   sector: string;
   surveyGoal: string;
+  surveyType: string;
   startDate: string;
   endDate: string;
   surveyLocations: {
@@ -394,6 +395,7 @@ export type SurveyListItem = {
   surveyName: string;
   sector: string;
   surveyGoal: string;
+  surveyType: string;
   startDate: string;
   endDate: string;
   amount: number;

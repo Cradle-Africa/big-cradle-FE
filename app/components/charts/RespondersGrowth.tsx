@@ -3,7 +3,7 @@ import React from "react";
 
 const RespondersGrowth = () => {
   return (
-    <div className="bg-white p-4 border border-gray-100 rounded-md flex flex-col h-full">
+    <div className="w-full bg-white p-4 border border-gray-100 rounded-md flex flex-col h-full">
       <p className="font-medium mb-4">Responders growth</p>
       <div className="relative w-[120px] h-[200px] mx-auto">
         <div className="bg-[#414EF4] rounded-full h-[80px] w-[80px] flex justify-center items-center absolute right-0 top-1/2 -translate-y-1/2 border border-blue-300">

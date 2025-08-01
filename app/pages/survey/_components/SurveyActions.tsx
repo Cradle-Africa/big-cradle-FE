@@ -12,6 +12,7 @@ type SurveyHeaderProps = {
     onSuspend?: () => void;
     onCompletePayment?: () => void;
     paymentStatus?: 'paid' | 'not-paid';
+    surveyType?: string;
 };
 
 export default function SurveyActions({
@@ -22,7 +23,8 @@ export default function SurveyActions({
     onSuspend,
     onActivate,
     onCompletePayment,
-    paymentStatus
+    paymentStatus,
+    surveyType
 }: SurveyHeaderProps) {
     const menuRefs = useRef<(HTMLUListElement | null)[]>([]);
 
@@ -81,15 +83,18 @@ export default function SurveyActions({
 
                         {/* Complete payment */}
                         <li className={` ${paymentStatus === 'paid' ? 'hidden' : ''} px-2`}>
-                            <button
-                                onClick={onCompletePayment}
-                                className="flex w-full px-4 py-2 text-left text-sm rounded-md text-green-700 hover:bg-green-200 hover:cursor-pointer"
-                            >
-                                <div className="flex items-center gap-1">
-                                    <Check size={13} />
-                                    Complete payment
-                                </div>
-                            </button>
+                            {surveyType === 'internal' && (
+
+                                <button
+                                    onClick={onCompletePayment}
+                                    className="flex w-full px-4 py-2 text-left text-sm rounded-md text-green-700 hover:bg-green-200 hover:cursor-pointer"
+                                >
+                                    <div className="flex items-center gap-1">
+                                        <Check size={13} />
+                                        Complete payment
+                                    </div>
+                                </button>
+                            )}
                         </li>
                     </ul>
                 )}

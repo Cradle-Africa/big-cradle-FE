@@ -3,7 +3,7 @@ import { EntryVolumeItem, EntryVolumeResponse } from "./types";
 
 export const fetchSurveySummary = async (
 	businessUserId: string,
-	role: string
+	role: string,
 ) => {
 	const response = await axios.get(`/survey-dashboard/summary`, {
 		params: {
@@ -98,7 +98,6 @@ export const getEntryVolumeData = async (
 	return response.data.data;
 };
 
-
 export const getSurveyPaymentStats = async ({
 	businessUserId,
 	role,
@@ -120,4 +119,28 @@ export const getSurveyPaymentStats = async ({
 	});
 
 	return response.data.data;
+};
+
+
+export const getAllAdminUserBusinesses = async ({
+	adminUserId,
+	page,
+	limit,
+}: {
+	adminUserId: string;
+	page: number;
+	limit: number;
+}) => {
+	try {
+		const response = await axios.get("/manage-business/all-admin-user-businesses", {
+			params: {
+				adminUserId,
+				page,
+				limit,
+			},
+		});
+		return response.data.businessUser;
+	} catch (err) {
+		console.log(err)
+	}
 };

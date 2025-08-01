@@ -1,5 +1,5 @@
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Spinner, Table, Text } from "@radix-ui/themes";
+import { Spinner, Table } from "@radix-ui/themes";
 import {
   useFetchTopPipelines
 } from "../dashboard/_features/hook";
@@ -27,14 +27,24 @@ const TopPipelines = () => {
   if (isLoading) return <Spinner />;
 
   if (error) return <p>Error fetching the survey summary</p>;
-
+  if ((pipelines?.data ?? []).length < 1) {
+    return (
+      ''
+    )
+  }
   return (
     <div className="bg-white p-4 border border-gray-100 rounded-md h-full">
       <>
         {(pipelines?.data ?? []).length < 1 ? (
-          <Text>No data</Text>
+          <table>
+            {topPipelinesColumns.map((column) => (
+              <th key={column.label}>
+                {column.label}
+              </th>
+            ))}
+          </table>
         ) : (
-          <div>
+          <div className="">
             <p className="font-medium mb-4">Top pipelines</p>
             <Table.Root>
               <Table.Header>

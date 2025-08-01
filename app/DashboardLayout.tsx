@@ -14,7 +14,7 @@ export default function SuperAdminSidebar({
   useAuthGuard();
 
   return (
-    <div className="flex w-full lg:px-5 min-h-180 bg-gray-50 ">
+    <div className="flex w-full lg:px-5 lg:min-h-180 xl:min-h-200 2xl:min-h-250 bg-gray-50 ">
       <div className="absolute lg:fixed z-10 top-0 lg:h-screen py-5 lg:max-w-[300px]">
         <SideBar />
       </div>

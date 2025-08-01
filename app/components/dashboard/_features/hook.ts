@@ -1,14 +1,17 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary, fetchTopDataPoints, fetchTopSurveys, getEntryVolumeData, getSurveyPaymentStats } from "./api";
+import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary, fetchTopDataPoints, fetchTopSurveys, getAllAdminUserBusinesses, getEntryVolumeData, getSurveyPaymentStats } from "./api";
 import { EntryVolumeItem, FlywheelSummaryResponse, SentimentResponse, TopPipelineDataResponse, TopSurveyType } from "./types";
+import { Business } from "@/app/lib/type";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
 	return useQuery({
 		queryKey: ["surveySummary", businessUserId, role],
 		queryFn: () => fetchSurveySummary(businessUserId, role),
+		enabled: !!businessUserId && role === 'admin',
 	});
 };
+
 
 export const useDatFlywheelSummary = (businessUserId: string, role: string) => {
 	return useQuery<FlywheelSummaryResponse>({
@@ -121,15 +124,34 @@ export const useSurveyPaymentStats = ({
 	role,
 	startDate,
 	endDate,
+	enabled
 }: {
 	businessUserId: string;
 	role: string;
 	startDate?: string;
 	endDate?: string;
+	enabled?: boolean;
 }) => {
 	return useQuery({
 		queryKey: ["payment-stats", businessUserId, role, startDate, endDate],
 		queryFn: () =>
 			getSurveyPaymentStats({ businessUserId, role, startDate, endDate }),
+		enabled: enabled && role === 'admin',
+	});
+};
+
+export const useAdminUserBusinesses = ({
+	adminUserId,
+	page,
+	limit,
+}: {
+	adminUserId: string;
+	page: number;
+	limit: number;
+}) => {
+	return useQuery<Business[]>({
+		queryKey: ["admin-user-businesses", adminUserId, page, limit],
+		queryFn: () => getAllAdminUserBusinesses({ adminUserId, page, limit }),
+		enabled: !!adminUserId
 	});
 };

@@ -12,14 +12,15 @@ import { Spinner } from "@radix-ui/themes";
 import { getUser, getBusinessId } from "@/app/utils/user/userData";
 import { useSurveyPaymentStats } from "../dashboard/_features/hook";
 
-const COLORS = ["#004484", "#FF0000"]; 
+const COLORS = ["#004484", "#FF0000"];
 
 interface Props {
     startDate?: string;
     endDate?: string;
+    business?: string;
 }
 
-export default function SurveyPaymentStatsChart({ startDate, endDate }: Props) {
+export default function SurveyPaymentStatsChart({ startDate, endDate, business }: Props) {
     let businessUserId = "";
     const user = getUser();
     const role = user?.role ?? "";
@@ -27,6 +28,8 @@ export default function SurveyPaymentStatsChart({ startDate, endDate }: Props) {
         businessUserId = getBusinessId() ?? "";
     } else if (role === "employee") {
         businessUserId = user?.businessUserId ?? "";
+    } else if (role === 'admin') {
+        businessUserId = business ?? ''
     }
 
     const { data, isPending, isError } = useSurveyPaymentStats({
@@ -34,6 +37,7 @@ export default function SurveyPaymentStatsChart({ startDate, endDate }: Props) {
         role,
         startDate,
         endDate,
+        // enabled: !!businessUserId
     });
 
     if (isPending) return <Spinner />;

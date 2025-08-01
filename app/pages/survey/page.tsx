@@ -55,22 +55,28 @@ const SurveyPage = () => {
 	const [surveyPage, setSurveyPage] = useState(1);
 	const [surveyLimit, setSurveyLimit] = useState(10);
 
+	const isBusiness = user?.role === "business";
+	const isSuperAdmin = user?.role === "super admin";
 
-	const { data: surveysListResponse, isLoading: isLoadingSurveyList, refetch: refetchSurveyList } = useFetchSurvey({
+	const {
+		data: surveysListResponse,
+		isLoading: isLoadingSurveyList,
+		refetch: refetchSurveyList,
+	} = useFetchSurvey({
 		axios,
 		page: surveyPage,
 		limit: surveyLimit,
 		startDate: selectedStartDate,
 		endDate: selectedEndDate,
 		search: search,
-		businessUserId: user?.role === "business" ? user?.id : null,
-		enabled: user?.role === "business",
+		businessUserId: isBusiness ? user?.id : null,
+		enabled: isBusiness,
 	});
 
 	const {
 		data: superAdminSurveysListResponse,
 		isLoading: isLoadingSuperAdminSurveys,
-		refetch: refetchSuperAdminSurvey
+		refetch: refetchSuperAdminSurvey,
 	} = useFetchSuperAdminSurvey({
 		axios,
 		page: surveyPage,
@@ -78,14 +84,26 @@ const SurveyPage = () => {
 		startDate: selectedStartDate,
 		endDate: selectedEndDate,
 		search: search,
-		enabled: user?.role === "super admin",
+		enabled: isSuperAdmin,
 	});
 
-	const pagination = {
+	// Pagination for business
+	const survey_pagination = {
 		page: surveysListResponse?.pagination?.page || 1,
 		limit: surveysListResponse?.pagination?.limit || 10,
 		total: surveysListResponse?.pagination?.total || 0,
 		pages: Math.ceil((surveysListResponse?.pagination?.total || 0) / (surveysListResponse?.pagination?.limit || 10)),
+	};
+
+	// Pagination for super admin
+	const super_admin_survey_pagination = {
+		page: Number(superAdminSurveysListResponse?.pagination?.page || 1),
+		limit: Number(superAdminSurveysListResponse?.pagination?.limit || 10),
+		total: Number(superAdminSurveysListResponse?.pagination?.total || 0),
+		pages: Math.ceil(
+			Number(superAdminSurveysListResponse?.pagination?.total || 0) /
+			Number(superAdminSurveysListResponse?.pagination?.limit || 10)
+		),
 	};
 
 	const {
@@ -184,13 +202,13 @@ const SurveyPage = () => {
 		if (user?.role === 'business') {
 			refetchSurveyList();
 		}
-	}, [user?.role, refetchSurveyList, selectedStartDate, selectedEndDate, search, surveyLimit]);
+	}, [user?.role, refetchSurveyList, selectedStartDate, selectedEndDate, search, surveyLimit, surveyPage]);
 
 	useEffect(() => {
 		if (user?.role === 'super admin') {
 			refetchSuperAdminSurvey();
 		}
-	}, [user?.role, refetchSuperAdminSurvey, selectedStartDate, selectedEndDate, search, surveyLimit]);
+	}, [user?.role, refetchSuperAdminSurvey, selectedStartDate, selectedEndDate, search, surveyLimit, surveyPage]);
 
 
 	if (analyticsLoading || isVerifing)
@@ -251,9 +269,10 @@ const SurveyPage = () => {
 				{isLoadingSurveyList && isLoadingSuperAdminSurveys && (
 					<div> <Spinner /> </div>
 				)}
+
 				<SurveyTable
 					data={filteredSurveys || []}
-					pagination={pagination}
+					pagination={user?.role === "super admin" ? super_admin_survey_pagination : survey_pagination}
 					onPageChange={setSurveyPage}
 					onLimitChange={(newLimit) => {
 						setSurveyLimit(newLimit);

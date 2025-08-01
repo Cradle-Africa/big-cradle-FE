@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
     BarChart,
     Bar,
@@ -46,15 +46,27 @@ const transformEngagementData = (data: any[], period: Period) => {
     });
 };
 
-export default function EngagementChart() {
+export default function EngagementChart({module, business }: {module?: string, business?: string }) {
+    let businessUserId = "";
     const user = getUser();
-    const businessUserId = getBusinessId() ?? '';
-    const role = user?.role ?? '';
+    const role = user?.role ?? "";
+    if (role === "business") {
+        businessUserId = getBusinessId() ?? "";
+    } else if (role === "employee") {
+        businessUserId = user?.businessUserId ?? "";
+    } else if (role === 'admin') {
+        businessUserId = business ?? ''
+    }
     const [period, setPeriod] = useState<Period>("monthly");
 
-    const { data: rawData, isLoading } = useSurveyEngagement(businessUserId, role, period);
+    const { data: rawData, isLoading, refetch: refetchSurvey } = useSurveyEngagement(businessUserId, role, period);
 
-    console.log('data', rawData);
+    useEffect(() => {
+        if (module === 'Survey') {
+            refetchSurvey();
+        }
+    }, [module, refetchSurvey]);
+
     const chartData = useMemo(() => {
         return transformEngagementData(rawData?.[period] ?? [], period);
     }, [rawData, period]);

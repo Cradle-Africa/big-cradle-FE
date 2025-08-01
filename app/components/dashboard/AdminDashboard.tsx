@@ -5,7 +5,6 @@ import KycVerification from "../KycVerification";
 import { useState } from "react";
 import { Flex, Spinner } from "@radix-ui/themes";
 import EngagementChart from "../charts/EngagementChart";
-// import SentimentChart from "../charts/SentimentCharts";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
@@ -19,6 +18,7 @@ const BusinessDashboard = () => {
 	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false);
 	const { data: user, isLoading } = useFetchMe({ axios });
 	const [module, setModule] = useState<string>("Data Flywheel");
+	const [business, setBusiness] = useState<string>("");
 
 	if (isLoading) {
 		return <DashboardSkeleton />;
@@ -45,19 +45,20 @@ const BusinessDashboard = () => {
 				user={user}
 				module={module}
 				setModule={setModule}
+				setBusiness={setBusiness}
 			/>
 			{/* Summary cards */}
-			<Summary module={module} />
+			<Summary module={module} business={business} />
 
 			{/* Engagement and sentiment charts*/}
 			{module === 'Survey' && (
 				<>
 					<div className="flex justify-between gap-5 mt-5">
 						<div className="w-3/5">
-							<EngagementChart />
+							<EngagementChart module={module} business={business}/>
 						</div>
 						<div className="w-2/4">
-							<SurveyPaymentStatsChart />
+							<SurveyPaymentStatsChart business={business} />
 						</div>
 					</div>
 				</>
@@ -76,7 +77,7 @@ const BusinessDashboard = () => {
 			<Flex className="mt-5">
 				{module === "Survey" && (
 					<div className="w-full">
-						<TopSurveys />
+						<TopSurveys  module={module} business={business} />
 					</div>
 				)}
 
@@ -85,13 +86,6 @@ const BusinessDashboard = () => {
 						<TopPipelines />
 					</div>
 				)}
-
-				{/* <div>
-          <RespondersGrowth />
-        </div>
-        <div>
-          <TopOrganization />
-        </div> */}
 			</Flex>
 		</div>
 	);

@@ -79,6 +79,7 @@ export const surveySchema = z
   .object({
     surveyName: z.string().min(1, "Enter the survey name"),
     surveyGoal: z.string().min(1, "Enter the survey goal"),
+    surveyType: z.string().min(1, "Select the survey type"),
     startDate: z.string().min(1, "Enter the survey start date"),
     endDate: z.string().min(1, "Enter the survey end date"),
     surveyDescription: z.string().min(1, "Enter the description"),

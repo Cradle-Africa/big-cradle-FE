@@ -46,24 +46,23 @@ const SurveyTable = ({
 	const [selectedSurvey, setSelectedSurvey] = useState<SurveyListItem | null>(null);
 	const [activateOpen, setActivateOpen] = useState(false);
 	const [suspendOpen, setSuspendOpen] = useState(false);
-    const [shareSurvey, setShareSurvey] = useState(false);
-    const [, setSurveyName] = useState<string>('');
+	const [shareSurvey, setShareSurvey] = useState(false);
+	const [, setSurveyName] = useState<string>('');
 
 	const [tempStartDate, setTempStartDate] = useState(selectedStartDate);
 	const [tempEndDate, setTempEndDate] = useState(selectedEndDate);
 	const [tempSearch, setTempSearch] = useState(search);
 	const [completePayment, setCompletePayment] = useState(false)
 
-	const [, setPage] = useState(pagination.page);
 	const [limit, setLimit] = useState(pagination.limit);
 
 	const router = useRouter();
 
 	const handleShareSurvey = (surveyId: string, surveyName: string) => {
-        setShareSurvey(true)
-        setUniqueId(surveyId)
-        setSurveyName(surveyName);
-    }
+		setShareSurvey(true)
+		setUniqueId(surveyId)
+		setSurveyName(surveyName);
+	}
 	return (
 		<div>
 			<FilterBar
@@ -125,6 +124,7 @@ const SurveyTable = ({
 											setSuspendOpen(true);
 										}}
 										paymentStatus={survey?.paymentStatus}
+										surveyType={survey?.surveyType}
 										onCompletePayment={() => {
 											setUniqueId(survey?.id ?? "");
 											setSelectedSurvey(survey);
@@ -147,11 +147,17 @@ const SurveyTable = ({
 									</h6>
 
 									<div className="flex justify-start space-x-2 mt-5">
-										<div className={`text-xs ${survey?.paymentStatus === 'paid' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+										<div className={`text-xs capitalize ${survey?.paymentStatus === 'paid' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
 											'bg-red-50 border border-orange-600 text-orange-500 rounded-full px-3 py-[2px]'} `}>
 											{survey?.paymentStatus}
 										</div>
-										<div className={`text-xs ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+										{survey?.surveyType && (
+											<div className={`text-xs capitalize ${survey?.surveyType === 'internal' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+												'bg-red-50 border border-green-600 text-green-500 rounded-full px-3 py-[2px]'} `}>
+												{survey?.surveyType}
+											</div>
+										)}
+										<div className={`text-xs capitalize ${survey?.isActive ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
 											'bg-red-50 border border-red-600 text-red-500 rounded-full px-3 py-[2px]'} `}>
 											{survey?.isActive ? 'Active' : 'Inactive'}
 										</div>
@@ -173,7 +179,6 @@ const SurveyTable = ({
 				</div>
 			)}
 
-
 			{/*  pagination */}
 			{pagination && data.length > 0 && (
 				<Pagination
@@ -181,22 +186,21 @@ const SurveyTable = ({
 					totalPages={pagination.pages}
 					limit={pagination.limit}
 					onPageChange={(newPage) => {
-						setPage(newPage);
-						onPageChange(newPage);
+						onPageChange(newPage); 
 					}}
 					onLimitChange={(newLimit) => {
-						setLimit(newLimit);
-						setPage(1);
-						onLimitChange(newLimit);
+						setLimit(newLimit); 
+						onLimitChange(newLimit); 
 					}}
 				/>
+
 			)}
 
 			<ShareSurvey
-                shareSurvey={shareSurvey}
-                onClose={() => setShareSurvey(false)}
-                uniqueId={uniqueId}
-            />
+				shareSurvey={shareSurvey}
+				onClose={() => setShareSurvey(false)}
+				uniqueId={uniqueId}
+			/>
 
 			{
 				activateOpen && selectedSurvey && (
