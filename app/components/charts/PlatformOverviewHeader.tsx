@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAdminUserBusinesses } from '../dashboard/_features/hook';
 import { Spinner } from '@radix-ui/themes';
-import { Business } from '@/app/lib/type';
+import { Business, Me } from '@/app/lib/type';
 
 interface PlatformOverviewHeaderProps {
-    user: any;
+    user: Me;
     module: string;
     setModule: (value: string) => void;
     setBusiness?: (value: string) => void;
@@ -19,15 +19,15 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
     setBusiness,
 }) => {
     const name =
-        user?.data?.contactPersonFirstName ??
-        user?.data?.firstName ??
-        user?.data?.fullName ??
-        user?.data?.businessFirstName ??
+        user?.contactPersonFirstName ??
+        user?.firstName ??
+        user?.fullName ??
+        user?.businessFirstName ??
         '';
 
     const [page] = useState(1);
     const limit = 10;
-    const adminUserId = user?.data.id;
+    const adminUserId = user?.id;
     // }
     const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
 
@@ -39,20 +39,20 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
 
     // Select first business by default when data is available
     useEffect(() => {
-            if (
-                user?.data?.role === 'admin' &&
-                module === 'Survey' &&
-                adminUserBusiness?.length &&
-                !selectedBusinessId
-            ) {
-                const firstBusinessId = adminUserBusiness[0].id;
-                setSelectedBusinessId(firstBusinessId);
-                setBusiness?.(firstBusinessId);
-            }
+        if (
+            user?.role === 'admin' &&
+            module === 'Survey' &&
+            adminUserBusiness?.length &&
+            !selectedBusinessId
+        ) {
+            const firstBusinessId = adminUserBusiness[0].id;
+            setSelectedBusinessId(firstBusinessId);
+            setBusiness?.(firstBusinessId);
+        }
 
-    }, [user?.data?.role, module, adminUserBusiness, selectedBusinessId, setBusiness]);
+    }, [user?.role, module, adminUserBusiness, selectedBusinessId, setBusiness]);
 
-    if (user?.data?.role === 'admin' && module === 'Survey') {
+    if (user?.role === 'admin' && module === 'Survey') {
         if (isLoadingUseAdminBusiness) return <p><Spinner /></p>;
         if (error) return <p>Error loading businesses</p>;
         if (!adminUserBusiness || adminUserBusiness.length < 1) return <p>No business attached</p>;
@@ -75,7 +75,7 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
                         <option value="Survey">Survey</option>
                     </select>
 
-                    {user?.data?.role === 'admin' && module === 'Survey' && (
+                    {user?.role === 'admin' && module === 'Survey' && (
                         <select
                             className="border border-gray-300 rounded px-2 py-1 text-sm"
                             value={selectedBusinessId ?? ''}
@@ -86,11 +86,13 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
                             }}
                         >
                             <option value={''}>Select the business</option>
-                            {adminUserBusiness?.map((business: Business, index: number) => (
-                                <option key={index} value={business.id}>
-                                    {business.businessName}
-                                </option>
-                            ))}
+                            {adminUserBusiness
+                                ?.filter((business: Business) => business.kycStatus === 'approved')
+                                .map((business: Business, index: number) => (
+                                    <option key={index} value={business.id}>
+                                        {business.businessName}
+                                    </option>
+                                ))}
                         </select>
                     )}
                 </div>

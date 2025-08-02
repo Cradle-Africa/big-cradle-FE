@@ -42,7 +42,7 @@ const BusinessDashboard = () => {
 
 			{/* Header with module select */}
 			<PlatformOverviewHeader
-				user={user}
+				user={user?.data!}
 				module={module}
 				setModule={setModule}
 				setBusiness={setBusiness}
