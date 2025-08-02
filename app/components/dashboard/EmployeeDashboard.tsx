@@ -43,7 +43,7 @@ const EmployeeDashboard = () => {
 			)}
 
 			{/* Header with module select */}
-			<PlatformOverviewHeader user={user} module={module} setModule={setModule} />
+			<PlatformOverviewHeader user={user?.data!} module={module} setModule={setModule} />
 
 			<Summary module={module} />
 

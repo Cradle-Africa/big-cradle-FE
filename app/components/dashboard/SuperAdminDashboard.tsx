@@ -1,4 +1,3 @@
-import { useUser } from "@/app/hooks/useUser";
 import { useState } from "react";
 import FormPopup from "../pop-up/PopUpForm";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
@@ -13,13 +12,16 @@ import TopSurveys from "../charts/TopSurveys";
 import TopPipelines from "../charts/TopPipelines";
 import TopOrganization from "../charts/TopOrganization";
 import RespondersGrowth from "../charts/RespondersGrowth";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
+import axios from "@/app/lib/axios";
 
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
-	const user = useUser();
+	const { data: Authuser, isLoading } = useFetchMe({ axios });
+	
 	const [module, setModule] = useState<string>("Data Flywheel");
 
-	if (!user) {
+	if (isLoading) {
 		return <DashboardSkeleton />;
 	}
 
@@ -40,12 +42,12 @@ const SuperAdminDashboard = () => {
 							required: true,
 						},
 					]}
-					defaultValues={{ email: user?.email }}
+					defaultValues={{ email: Authuser?.data?.email }}
 				/>
 			)}
 			{/* Header with module select */}
 			<PlatformOverviewHeader
-				user={user}
+				user={Authuser?.data!}
 				module={module}
 				setModule={setModule}
 			/>

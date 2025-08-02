@@ -4,7 +4,6 @@ import { useState } from "react";
 import KycVerification from "../KycVerification";
 import { Flex, Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import { getUser } from "@/app/utils/user/userData";
 import EngagementChart from "../charts/EngagementChart";
 import Summary from "../charts/Summary";
 import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
@@ -21,7 +20,6 @@ const BusinessDashboard = () => {
 	const [module, setModule] = useState<string>("Data Flywheel");
 
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
-	const user = getUser();
 
 	return (
 		<div>
@@ -43,7 +41,7 @@ const BusinessDashboard = () => {
 
 			{/* Header with module select */}
 			<PlatformOverviewHeader
-				user={user}
+				user={Authuser?.data!}
 				module={module}
 				setModule={setModule}
 			/>
