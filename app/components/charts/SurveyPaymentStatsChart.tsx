@@ -30,6 +30,8 @@ export default function SurveyPaymentStatsChart({ startDate, endDate, business }
         businessUserId = user?.businessUserId ?? "";
     } else if (role === 'admin') {
         businessUserId = business ?? ''
+    } else if (role === 'super admin') {
+        businessUserId = business ?? ''
     }
 
     const { data, isPending, isError } = useSurveyPaymentStats({

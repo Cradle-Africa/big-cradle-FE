@@ -55,7 +55,7 @@ const BusinessDashboard = () => {
 				<>
 					<div className="flex justify-between gap-5 mt-5">
 						<div className="w-3/5">
-							<EngagementChart module={module} business={business}/>
+							<EngagementChart module={module} business={business} />
 						</div>
 						<div className="w-2/4">
 							<SurveyPaymentStatsChart business={business} />
@@ -77,13 +77,13 @@ const BusinessDashboard = () => {
 			<Flex className="mt-5">
 				{module === "Survey" && (
 					<div className="w-full">
-						<TopSurveys  module={module} business={business} />
+						<TopSurveys module={module} business={business} />
 					</div>
 				)}
 
 				{module === "Data Flywheel" && (
 					<div className="w-full">
-						<TopPipelines />
+						{business && <TopPipelines business={business} />}
 					</div>
 				)}
 			</Flex>

@@ -18,8 +18,9 @@ import axios from "@/app/lib/axios";
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
-	
+
 	const [module, setModule] = useState<string>("Data Flywheel");
+	const [business, setBusiness] = useState<string>("");
 
 	if (isLoading) {
 		return <DashboardSkeleton />;
@@ -50,19 +51,20 @@ const SuperAdminDashboard = () => {
 				user={Authuser?.data!}
 				module={module}
 				setModule={setModule}
+				setBusiness={setBusiness}
 			/>
 			{/* Summary cards */}
-			<Summary module={module} />
+			<Summary module={module} business={business} />
 
 			{/* Engagement and sentiment charts*/}
 			{module === 'Survey' && (
 				<>
 					<div className="flex justify-between gap-5 mt-5">
 						<div className="w-3/5">
-							<EngagementChart />
+							<EngagementChart module={module} business={business} />
 						</div>
 						<div className="w-2/4">
-							<SurveyPaymentStatsChart />
+							<SurveyPaymentStatsChart business={business} />
 						</div>
 					</div>
 				</>
@@ -78,6 +80,7 @@ const SuperAdminDashboard = () => {
 				</div>
 			)}
 
+
 			<div className="flex w-full justify-between gap-5 mt-5" >
 				{module === "Survey" && (
 					<div className="w-2/5">
@@ -87,7 +90,7 @@ const SuperAdminDashboard = () => {
 
 				{module === "Data Flywheel" && (
 					<div className="w-2/5">
-						<TopPipelines />
+						{business && <TopPipelines business={business} />}
 					</div>
 				)}
 

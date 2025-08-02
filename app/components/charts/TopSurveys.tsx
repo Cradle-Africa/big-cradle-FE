@@ -1,5 +1,5 @@
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Spinner, Table, Text } from "@radix-ui/themes";
+import { Spinner, Table } from "@radix-ui/themes";
 import React, { useEffect } from "react";
 import { useFetchTopSurveys } from "../dashboard/_features/hook";
 
@@ -47,7 +47,7 @@ const TopSurveys = ({ business, module }: Props) => {
 		<div className="bg-white p-4 border border-gray-100 rounded-md h-full">
 			<>
 				{(surveys ?? []).length < 1 ? (
-					<Text></Text>
+					''
 				) : (
 					<div>
 						<p className="font-medium mb-4">Top surveys</p>

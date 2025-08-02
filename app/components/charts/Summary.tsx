@@ -20,6 +20,8 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
             businessUserId = user?.businessUserId ?? '';
         } else if (role === 'admin') {
             businessUserId = business ?? ''
+        } else if (role === 'super admin') {
+            businessUserId = business ?? ''
         }
 
         return { role, businessUserId };
@@ -41,12 +43,12 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
     } = useDatFlywheelSummary(businessUserId, role);
 
     useEffect(() => {
-        if (module === 'Survey') {
+        if (business && module === 'Survey') {
             refetchSurvey();
         } else if (module === 'Data Flywheel') {
             refetchFlywheel();
         }
-    }, [module, refetchSurvey, refetchFlywheel]);
+    }, [module, business, refetchSurvey, refetchFlywheel]);
 
     const isLoading = module === 'Survey' ? loadingSurvey : loadingFlywheel;
     const isError = module === 'Survey' ? errorSurvey : errorFlywheel;

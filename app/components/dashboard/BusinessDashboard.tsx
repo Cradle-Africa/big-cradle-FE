@@ -18,6 +18,7 @@ const BusinessDashboard = () => {
 	const [openAdminKycVerification, setOpenAdminKycVerification] =
 		useState(false);
 	const [module, setModule] = useState<string>("Data Flywheel");
+	const [business, setBusiness] = useState<string>("");
 
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
 
@@ -44,9 +45,10 @@ const BusinessDashboard = () => {
 				user={Authuser?.data!}
 				module={module}
 				setModule={setModule}
+				setBusiness={setBusiness}
 			/>
 			{/* Summary cards */}
-			<Summary module={module} />
+			<Summary module={module} business={business} />
 
 			{/* Engagement and sentiment charts*/}
 			{module === 'Survey' && (
@@ -76,13 +78,13 @@ const BusinessDashboard = () => {
 			<Flex className="mt-5">
 				{module === "Survey" && (
 					<div className="w-full">
-						<TopSurveys />
+						<TopSurveys  module={module} business={business}/>
 					</div>
 				)}
 
 				{module === "Data Flywheel" && (
 					<div className="w-full">
-						<TopPipelines />
+						<TopPipelines business={business} />
 					</div>
 				)}
 

@@ -56,6 +56,8 @@ export default function EngagementChart({module, business }: {module?: string, b
         businessUserId = user?.businessUserId ?? "";
     } else if (role === 'admin') {
         businessUserId = business ?? ''
+    } else if (role === 'super admin') {
+        businessUserId = business ?? ''
     }
     const [period, setPeriod] = useState<Period>("monthly");
 

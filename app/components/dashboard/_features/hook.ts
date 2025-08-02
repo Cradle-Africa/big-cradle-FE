@@ -8,7 +8,7 @@ export const useSurveySummary = (businessUserId: string, role: string) => {
 	return useQuery({
 		queryKey: ["surveySummary", businessUserId, role],
 		queryFn: () => fetchSurveySummary(businessUserId, role),
-		enabled: !!businessUserId && role === 'admin',
+		enabled: !!businessUserId && (role === 'admin' || role === 'employee' || role === 'business' ),
 	});
 };
 
@@ -144,14 +144,17 @@ export const useAdminUserBusinesses = ({
 	adminUserId,
 	page,
 	limit,
+	enabled = true,
 }: {
 	adminUserId: string;
 	page: number;
 	limit: number;
+	enabled: boolean,
+
 }) => {
 	return useQuery<Business[]>({
 		queryKey: ["admin-user-businesses", adminUserId, page, limit],
 		queryFn: () => getAllAdminUserBusinesses({ adminUserId, page, limit }),
-		enabled: !!adminUserId
+		enabled: enabled && !!adminUserId,
 	});
 };

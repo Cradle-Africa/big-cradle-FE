@@ -4,7 +4,7 @@ import {
   useFetchTopPipelines
 } from "../dashboard/_features/hook";
 
-const TopPipelines = () => {
+const TopPipelines = ({business}: ({business: string})) => {
   const user = getUser();
   let businessUserId = "";
   const role = user?.role ?? "";
@@ -13,6 +13,12 @@ const TopPipelines = () => {
   }
   if (role === "employee") {
     businessUserId = user?.businessUserId ?? "";
+  }
+  if (role === "admin") {
+    businessUserId = business;
+  }
+  if (role === "super admin") {
+    businessUserId = business;
   }
 
   const {
@@ -36,13 +42,7 @@ const TopPipelines = () => {
     <div className="bg-white p-4 border border-gray-100 rounded-md h-full">
       <>
         {(pipelines?.data ?? []).length < 1 ? (
-          <table>
-            {topPipelinesColumns.map((column) => (
-              <th key={column.label}>
-                {column.label}
-              </th>
-            ))}
-          </table>
+          ''
         ) : (
           <div className="">
             <p className="font-medium mb-4">Top pipelines</p>

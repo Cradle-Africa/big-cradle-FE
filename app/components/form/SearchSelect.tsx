@@ -56,8 +56,8 @@ const SearchSelect = ({
                 onBlur={() => setTimeout(() => setIsFocused(false), 200)} // delay to allow click on list
                 autoComplete="off"
             />
-            {isFocused && search && (
-                <ul className="absolute z-10 bg-white border border-gray-300 w-full mt-1 max-h-60 overflow-auto rounded shadow">
+            {isFocused && (
+                <ul className="absolute z-10 bg-white border border-gray-300 w-full mt-1 max-h-40 overflow-auto rounded shadow">
                     {filteredData.length > 0 ? (
                         filteredData.map(city => (
                             <li

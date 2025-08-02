@@ -13,7 +13,7 @@ import {
 import dayjs from "dayjs";
 import { useFlywheelAverageEntries } from "../dashboard/_features/hook";
 import { Spinner } from "@radix-ui/themes";
-import { getBusinessId } from "@/app/utils/user/userData";
+import { getBusinessId, getUser } from "@/app/utils/user/userData";
 
 const PERIODS = ["daily", "weekly", "monthly", "yearly"] as const;
 type Period = typeof PERIODS[number];
@@ -47,12 +47,18 @@ const transformEngagementData = (data: any[], period: Period) => {
 };
 
 export default function FlywheelAverageEntriesChart() {
-    const businessUserId = getBusinessId() ?? '';
+    const user = getUser()
+    let businessUserId = '';
+    if( user?.role === 'business'){
+        businessUserId = getBusinessId() ?? '';
+    } 
+    if( user?.role === 'employee'){
+        businessUserId = user?.businessUserId ;
+    }
     const [period, setPeriod] = useState<Period>("monthly");
 
     const { data: rawData, isLoading } = useFlywheelAverageEntries(businessUserId, period);
 
-    console.log('data', rawData);
     const chartData = useMemo(() => {
         return transformEngagementData(rawData?.[period] ?? [], period);
     }, [rawData, period]);
