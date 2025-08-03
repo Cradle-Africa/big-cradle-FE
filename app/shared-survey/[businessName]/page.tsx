@@ -12,7 +12,7 @@ import { Check } from "lucide-react";
 import { useFetchSingleSurvey } from "@/app/pages/survey/_features/hooks";
 import { RenderDynamicField } from "@/app/pages/flywheel/_components/RenderDynamicField";
 import { useCreateSurveyDataEntry } from "../_features/hooks";
-import { useCurrentLocation } from "@/app/utils/useCurrentLocation";
+// import { useCurrentLocation } from "@/app/utils/useCurrentLocation";
 
 const DataEntryPage = () => {
     const searchParams = useSearchParams();
@@ -42,13 +42,13 @@ const DataEntryPage = () => {
         }
     }, [surveyFields]);
 
-    const { coordinates, error: locationError } = useCurrentLocation();
+    // const { coordinates, error: locationError } = useCurrentLocation();
 
-    useEffect(() => {
-        if (locationError) {
-            toast.error(`Location error: ${locationError}`);
-        }
-    }, [locationError]);
+    // useEffect(() => {
+    //     if (locationError) {
+    //         toast.error(`Location error: ${locationError}`);
+    //     }
+    // }, [locationError]);
 
     const handleChange = (key: string, value: any) => {
         setFormData((prev) => ({
@@ -60,10 +60,10 @@ const DataEntryPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!coordinates) {
-            toast.error("Waiting for location access. Please allow location sharing and try again.");
-            return;
-        }
+        // if (!coordinates) {
+        //     toast.error("Waiting for location access. Please allow location sharing and try again.");
+        //     return;
+        // }
 
         const cleanedData: Record<string, any> = {};
         const processFile = (file: File): Promise<any> => {
@@ -95,10 +95,11 @@ const DataEntryPage = () => {
             employeeUserId: survey?.data?.employeeUserId ?? '',
             location: {
                 type: "Point",
-                coordinates: [coordinates.longitude, coordinates.latitude], 
+                coordinates: survey?.data?.surveyLocations?.[0]?.location?.coordinates ?? [0, 0],
             },
             data: cleanedData,
         };
+
 
         submitEntry(payload, {
             onSuccess: () => {

@@ -400,6 +400,12 @@ export type SurveyListItem = {
   endDate: string;
   amount: number;
   surveyDescription: string;
+  surveyLocations: {
+    country: string;
+    state: string;
+    city: string;
+    location: Location;
+  }[];
   field: Field[];
   isActive: boolean;
   paymentStatus: "not-paid" | "paid"; // adjust based on actual possible values
