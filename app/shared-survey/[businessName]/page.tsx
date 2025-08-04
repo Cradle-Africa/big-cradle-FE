@@ -42,14 +42,6 @@ const DataEntryPage = () => {
         }
     }, [surveyFields]);
 
-    // const { coordinates, error: locationError } = useCurrentLocation();
-
-    // useEffect(() => {
-    //     if (locationError) {
-    //         toast.error(`Location error: ${locationError}`);
-    //     }
-    // }, [locationError]);
-
     const handleChange = (key: string, value: any) => {
         setFormData((prev) => ({
             ...prev,
@@ -60,12 +52,6 @@ const DataEntryPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // if (!coordinates) {
-        //     toast.error("Waiting for location access. Please allow location sharing and try again.");
-        //     return;
-        // }
-
-        const cleanedData: Record<string, any> = {};
         const processFile = (file: File): Promise<any> => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -81,30 +67,39 @@ const DataEntryPage = () => {
             });
         };
 
-        for (const [key, value] of Object.entries(formData)) {
-            if (value instanceof File) {
-                cleanedData[key] = await processFile(value);
-            } else {
-                cleanedData[key] = Array.isArray(value) ? value.join(", ") : value;
-            }
-        }
+        const answers = await Promise.all(
+            Object.entries(formData).map(async ([fieldKey, value]) => {
+                const field = surveyFields.find((f: any) => f.key === fieldKey);
+                let answerValue = value;
+
+                if (value instanceof File) {
+                    answerValue = await processFile(value);
+                } else if (Array.isArray(value)) {
+                    answerValue = value.join(', ');
+                }
+
+                return {
+                    fieldId: field?.id ?? '',
+                    answer: answerValue,
+                };
+            })
+        );
 
         const payload: SurveyEntryData = {
             businessUserId: survey?.data?.businessUserId ?? '',
-            fieldId: survey?.data?.id ?? '',
-            employeeUserId: survey?.data?.employeeUserId ?? '',
+            surveyId: survey?.data?.id ?? '',
+            researcherId: survey?.data?.employeeUserId ?? '', // optional? depends on your system
             location: {
                 type: "Point",
                 coordinates: survey?.data?.surveyLocations?.[0]?.location?.coordinates ?? [0, 0],
             },
-            data: cleanedData,
+            answers,
         };
-
 
         submitEntry(payload, {
             onSuccess: () => {
                 setFormData({});
-                toast.success("We appreciate your contribution to the survey. Every response counts!");
+                toast.success("Response submitted");
             },
             onError: (err: any) => {
                 console.error(err);
@@ -112,6 +107,7 @@ const DataEntryPage = () => {
             },
         });
     };
+
 
     const dataBackground = '/images/data-background.jpg';
     if (!encoded) {

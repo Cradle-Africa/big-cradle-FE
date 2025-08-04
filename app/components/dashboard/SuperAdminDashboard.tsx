@@ -19,7 +19,7 @@ const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
 
-	const [module, setModule] = useState<string>("Data Flywheel");
+	const [module, setModule] = useState<string>("Survey");
 	const [business, setBusiness] = useState<string>("");
 
 	if (isLoading) {
@@ -72,10 +72,10 @@ const SuperAdminDashboard = () => {
 			{module === 'Data Flywheel' && (
 				<div className="flex justify-between h-[410px] gap-5 mt-5">
 					<div className="w-3/5">
-						<FlywheelAverageEntriesChart />
+						<FlywheelAverageEntriesChart business={business} />
 					</div>
 					<div className="w-2/4">
-						<FlywheelEntryVolumeChart />
+						<FlywheelEntryVolumeChart business={business} />
 					</div>
 				</div>
 			)}
@@ -90,7 +90,7 @@ const SuperAdminDashboard = () => {
 
 				{module === "Data Flywheel" && (
 					<div className="w-2/5">
-						{business && <TopPipelines business={business} />}
+						<TopPipelines business={business} />
 					</div>
 				)}
 

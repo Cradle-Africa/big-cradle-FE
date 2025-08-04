@@ -34,15 +34,7 @@ const NewSurveyPage = () => {
 
 	const [form, setForm] = useState<DataPointForm>({
 		dataPointId: "",
-		field: [
-			{
-				label: "",
-				key: "",
-				type: "text",
-				required: false,
-				options: [],
-			}
-		],
+		field: [],
 	});
 
 	const {

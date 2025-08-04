@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { shortenWithTinyURL } from "@/app/utils/shortenLink";
 import { Spinner } from "@radix-ui/themes";
+import { getUser } from "@/app/utils/user/userData";
 
 interface PopUpProps {
     shareDataPoint: boolean;
@@ -27,7 +28,12 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
         enabled: shareDataPoint,
     });
 
-    console.log(dataPointName);
+    const user = getUser()
+    let businessName = '';
+    if (user?.role === 'business') {
+        businessName = user?.businessName;
+    };
+
     const [copied, setCopied] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -38,14 +44,14 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     useEffect(() => {
         const generateLink = async () => {
             if (encodedId && typeof window !== "undefined") {
-                const fullUrl = `${INTERNAL_URL}/shared-data-point?data-point=${encodedId}`;
+                const fullUrl = `${INTERNAL_URL}/shared-data-point/${businessName}?data-point=${encodedId}`;
                 const shortUrl = await shortenWithTinyURL(fullUrl);
                 setShareUrl(shortUrl ?? fullUrl);
             }
         };
 
         generateLink();
-    }, [encodedId]);
+    }, [encodedId, businessName]);
 
 
     // Copy link handler
@@ -100,12 +106,12 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
                     </button>
 
                     <h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-                        <Share2 size={18} />  { 'Share Data Point'}: { dataPointName }
+                        <Share2 size={18} />  {'Share Data Point'}: {dataPointName}
 
                     </h2>
 
                     {isLoading ? (
-                        <p className="text-gray-500"> <Spinner/></p>
+                        <p className="text-gray-500"> <Spinner /></p>
                     ) : (
                         <>
                             <div className="w-full">

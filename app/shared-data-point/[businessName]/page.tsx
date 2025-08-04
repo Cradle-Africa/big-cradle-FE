@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import LogoWithText from '@/public/images/white-logo-with-text.png'
 import { Spinner } from "@radix-ui/themes";
 import { Check } from "lucide-react";
-import { RenderDynamicField } from "../pages/flywheel/_components/RenderDynamicField";
+import { RenderDynamicField } from "@/app/pages/flywheel/_components/RenderDynamicField";
 
 const DataEntryPage = () => {
     const searchParams = useSearchParams();
@@ -96,7 +96,7 @@ const DataEntryPage = () => {
         submitEntry(payload, {
             onSuccess: () => {
                 setFormData({})
-                toast.success("We appreciate your contribution to the survey. Every response counts!");
+                toast.success("Answer submitted successfully!");
             },
             onError: (err: any) => {
                 console.log(err);
@@ -138,14 +138,18 @@ const DataEntryPage = () => {
                             className="w-1/3 h-10"
                         />
                     </div>
-                    <div className="flex text-blue-600 text-xl mx-5 px-3 py-2">
+                    <div className="flex text-blue-600 font-semibold text-xl mx-5 px-3 py-2">
                         {singlePipeline?.dataPointName}
                     </div>
 
-
                     {isSuccess && (
-                        <div className="flex text-blue-600 text-xl mx-5 px-3 py-8">
-                            {isSuccess && ('Submitted successfully')}
+                        <div className="flex text-black text-xl mx-5 px-3 py-8">
+                            {isSuccess && (
+                            <div>
+                                <h2 className="mb-10">Answer submitted</h2>
+                                Thank you for your contribution. Every response counts!
+                            </div>
+                            )}
                         </div>
                     )}
 

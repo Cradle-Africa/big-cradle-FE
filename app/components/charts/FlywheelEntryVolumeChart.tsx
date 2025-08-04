@@ -14,11 +14,13 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 interface Props {
     startDate?: string;
     endDate?: string;
+    business?: string;
 }
 
 export default function FlywheelEntryVolumeChart({
     startDate,
     endDate,
+    business
 }: Props) {
 
     let businessUserId = '';
@@ -29,6 +31,9 @@ export default function FlywheelEntryVolumeChart({
     }
     if (role === 'employee') {
         businessUserId = user?.businessUserId ?? ''
+    }
+    if (role === 'super admin') {
+        businessUserId = business ?? '';
     }
 
     const { data, isPending, isError } = useEntryVolume({

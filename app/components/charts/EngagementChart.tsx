@@ -11,9 +11,12 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
 import { useSurveyEngagement } from "../dashboard/_features/hook";
 import { Spinner } from "@radix-ui/themes";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
+
+dayjs.extend(isoWeek);
 
 const PERIODS = ["daily", "weekly", "monthly", "yearly"] as const;
 type Period = typeof PERIODS[number];
@@ -29,7 +32,10 @@ const transformEngagementData = (data: any[], period: Period) => {
                 formattedDate = dayjs(item.date).format("MMM D");
                 break;
             case "weekly":
-                formattedDate = `Week of ${dayjs(item.date).format("MMM D")}`;
+                // For format like "2025-W30", parse year and week number
+                const [year, weekStr] = item.date.split("-W");
+                const week = parseInt(weekStr);
+                formattedDate = `Week ${week} (${dayjs().year(parseInt(year)).isoWeek(week).startOf('isoWeek').format("MMM D")})`;
                 break;
             case "monthly":
                 formattedDate = dayjs(item.date).format("MMM YYYY");
@@ -46,25 +52,35 @@ const transformEngagementData = (data: any[], period: Period) => {
     });
 };
 
-export default function EngagementChart({module, business }: {module?: string, business?: string }) {
+export default function EngagementChart({
+    module,
+    business,
+}: {
+    module?: string;
+    business?: string;
+}) {
     let businessUserId = "";
     const user = getUser();
     const role = user?.role ?? "";
+
     if (role === "business") {
         businessUserId = getBusinessId() ?? "";
     } else if (role === "employee") {
         businessUserId = user?.businessUserId ?? "";
-    } else if (role === 'admin') {
-        businessUserId = business ?? ''
-    } else if (role === 'super admin') {
-        businessUserId = business ?? ''
+    } else if (role === "admin" || role === "super admin") {
+        businessUserId = business ?? "";
     }
+
     const [period, setPeriod] = useState<Period>("monthly");
 
-    const { data: rawData, isLoading, refetch: refetchSurvey } = useSurveyEngagement(businessUserId, role, period);
+    const {
+        data: rawData,
+        isLoading,
+        refetch: refetchSurvey,
+    } = useSurveyEngagement(businessUserId, role, period);
 
     useEffect(() => {
-        if (module === 'Survey') {
+        if (module === "Survey") {
             refetchSurvey();
         }
     }, [module, refetchSurvey]);

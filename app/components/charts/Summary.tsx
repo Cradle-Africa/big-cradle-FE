@@ -89,24 +89,24 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
             {module === 'Data Flywheel' && flyWheelData && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
                     <BusinessCard
-                        title={'Total data points'}
-                        value={flyWheelData?.totalDataPoint}
+                        title={'Total data Pipelines'}
+                        value={flyWheelData?.totalDataPoints}
                         icon={<Users2 size={14} color="blue" />}
                         iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
                         isHighLighted={false}
                     />
 
                     <BusinessCard
-                        title={'Completed Data points'}
-                        value={flyWheelData?.completedDataPoint}
+                        title={'Total Data Points'}
+                        value={flyWheelData?.totalFields}
                         icon={<MdChecklist size={14} color="blue" />}
                         iconClass="rounded-full bg-white p-1 lg:p-2"
                         isHighLighted={true}
                     />
 
                     <BusinessCard
-                        title={'Ongoing Data points'}
-                        value={flyWheelData?.ongoingDataPoint}
+                        title={'Total Data Entries'}
+                        value={flyWheelData?.totalEntries}
                         icon={<Banknote size={14} color="green" />}
                         iconClass="rounded-full bg-green-100 p-1 lg:p-2"
                         isHighLighted={false}

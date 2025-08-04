@@ -11,9 +11,9 @@ export type SentimentResponse = {
 export type PiItem = { name: string; value: number; color: string };
 
 export type FlywheelSummaryResponse = {
-  totalDataPoint: string;
-  completedDataPoint: string;
-  ongoingDataPoint: string;
+  totalDataPoints: string;
+  totalFields: string;
+  totalEntries: string;
 };
 
 export type TopSurveyType = {

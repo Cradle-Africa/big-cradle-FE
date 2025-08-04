@@ -79,6 +79,13 @@ const NewSurveyQuestionsForm = ({
     useCreateSurvey({ axios });
 
   const submitSurvey = async () => {
+    // Check if any field label is empty or only whitespace
+    const hasInvalidLabel = form.field.some((f) => !f.label || f.label.trim() === "");
+    if (hasInvalidLabel) {
+      toast.error("All fields must have a label");
+      return;
+    }
+
     if (form.field.length < 1) {
       toast.error("Please add some questions before you can pass");
     } else {
@@ -111,7 +118,7 @@ const NewSurveyQuestionsForm = ({
       await createSurvey(payload, {
         onSuccess: () => {
           toast.success("Survey created successfully");
-					router.push(`/pages/survey?status=all`);
+          router.push(`/pages/survey?status=all`);
         },
         onError: (error: any) => {
           const message =

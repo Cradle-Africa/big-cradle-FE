@@ -187,6 +187,7 @@ export type FieldType =
 
 
 export type Field = {
+  id?: string;
   label: string;
   key: string;
   type: FieldType;
@@ -484,18 +485,23 @@ export type FlutterWavePaymentSubmit = {
   };
 };
 
-// In your type definitions file
+
 export type Location = {
-    type: "Point";
-    coordinates: [number, number]; // [longitude, latitude]
-} | null;
+  type: "Point";
+  coordinates: [number, number]; // [longitude, latitude]
+};
+
+export interface SurveyAnswer {
+  fieldId: string;
+  answer: any;
+}
 
 export interface SurveyEntryData {
   businessUserId: string;
-  fieldId: string;
-  employeeUserId: string;
+  surveyId: string;
+  researcherId: string;
   location: Location;
-  data: Record<string, any>;
+  answers: SurveyAnswer[];
 }
 
 export interface SurveyEntryResponse {

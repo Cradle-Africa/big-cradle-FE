@@ -7,7 +7,7 @@ import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import { FolderOpenDot, Plus, ShieldBan, ShieldCheck } from "lucide-react";
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
@@ -22,12 +22,15 @@ import {
 } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 import { Spinner } from "@radix-ui/themes";
+import PopUp from "./_components/Popup";
 
 const SurveyPage = () => {
 	const searchParam = useSearchParams();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [surveyDashBoardItems, setSurveyDashBoardItems] = useState<DashboardMenu[]>();
+	const [popupOpen, setPopupOpen] = useState(false);
+	const [, setCreatingSurvey] = useState(false);
 
 	const surveyStatus = searchParam.get("status");
 	const user = getUser();
@@ -220,6 +223,14 @@ const SurveyPage = () => {
 	return (
 		<DashboardLayout>
 
+			<PopUp
+				openPopup={popupOpen}
+				onClose={() => setPopupOpen(false)}
+				onBuildPipeline={() => {
+					setCreatingSurvey(true);
+					// setCreatingDataPoint(false);
+				}}
+			/>
 			<div className="w-full">
 				<div className="flex justify-between">
 					<p className="font-semibold text-lg text-black">Surveys</p>
@@ -228,12 +239,13 @@ const SurveyPage = () => {
 							className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer"
 						//   onClick={() => setOpen(true)}
 						>
-							<Link href="/pages/survey/new?survey=survey-name-and-description">
-								<div className="flex items-center gap-2">
+							<button 
+								onClick={() => setPopupOpen(true)}
+								// href="/pages/survey/new?survey=survey-name-and-description">
+								className="flex items-center gap-2 hover:cursor-pointer">
 									<Plus size={18} color="white" />
 									<span className="text-white">Create new survey</span>
-								</div>
-							</Link>
+							</button>
 						</button>
 					)}
 				</div>

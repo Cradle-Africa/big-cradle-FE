@@ -3,9 +3,8 @@
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import { SurveySchema } from "@/app/lib/type";
 import { ChevronLeft, ChevronRight, FilePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { JSX } from "react";
-// import { Button } from "@radix-ui/themes";
+import { useRouter, useSearchParams } from "next/navigation";
+import { JSX, useEffect } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
 
 import {
@@ -29,8 +28,17 @@ const SurveyNameAndDescription = ({
 	onSubmit,
 	register
 }: Props) => {
+	const searchParams = useSearchParams();
+	const surveyType = searchParams.get("survey-type");
 	const router = useRouter();
 
+	useEffect(() => {
+		if (surveyType) {
+			// Set default value for surveyType in form
+			register("surveyType", { value: surveyType });
+		}
+	}, [surveyType, register]);
+	
 	return (
 		<form
 			onSubmit={handleSubmit(onSubmit)}
@@ -75,17 +83,7 @@ const SurveyNameAndDescription = ({
 				/>
 				<ErrorMessage>{errors.surveyGoal?.message}</ErrorMessage>
 			</div>
-			<div>
-				<select
-					{...register("surveyType")}
-					className="w-full mb-1 border border-gray-300 rounded-md px-3 py-2 outline-none bg-white"
-				>
-					<option>Select the survey type</option>
-					<option value="internal">Internal</option>
-					<option value="external">External</option>
-				</select>
-				<ErrorMessage>{errors.surveyType?.message}</ErrorMessage>
-			</div>
+			
 			<div className="flex gap-3">
 				<div className="w-1/2">
 					<input

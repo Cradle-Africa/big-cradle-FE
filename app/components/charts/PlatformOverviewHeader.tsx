@@ -123,7 +123,7 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
                         <option value="Survey">Survey</option>
                     </select>
 
-                    {(isAdmin || isSuperAdmin) && module === 'Survey' && (
+                    {(isAdmin || isSuperAdmin)  && (
                         <Select
                             className="w-[200px] text-sm"
                             styles={ customStyles }
