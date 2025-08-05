@@ -11,6 +11,7 @@ import {
   // ChartNoAxesCombined,
   Users,
   UsersRound,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -100,6 +101,11 @@ const sideBarLinks: {
     label: "Data Flywheel",
     href: "/pages/flywheel",
     icon: <Database size={15} />,
+  },
+  {
+    label: "Wallet",
+    href: "/pages/wallet",
+    icon: <Wallet size={15} />,
   },
   // {
   //   label: "Social Media",
