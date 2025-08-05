@@ -9,6 +9,8 @@ import {
 	reviewAdminKycSchema,
 	demographicSchema,
 	analyseSocialMediaSchema,
+	transactionSchema,
+	inviteEmployeeSchema,
 } from "./validationSchemas";
 import { ReactNode } from "react";
 
@@ -159,6 +161,8 @@ export type AdminKyc = {
 
 export type DepartmentSchema = z.infer<typeof departmentSchema>;
 
+export type InviteEmployeeSchema = z.infer<typeof inviteEmployeeSchema>;
+
 export type InviteBusinessSchema = z.infer<typeof inviteBusinessSchema>;
 
 export type ReviewBusinessKycSchema = z.infer<typeof reviewBusinessKycSchema>;
@@ -170,6 +174,8 @@ export type SurveySchema = z.infer<typeof surveySchema>;
 export type DemographicSchema = z.infer<typeof demographicSchema>;
 
 export type SurveyPaymentSchema = z.infer<typeof surveyPaymentSchema>;
+
+export type TransactionSchema = z.infer<typeof transactionSchema>;
 
 export type FieldType =
 	| "text"
@@ -459,6 +465,25 @@ export type PaymentVerificationResponse = {
 	};
 };
 
+
+export type TransactionVerificationResponse = {
+	success: boolean;
+	message: string;
+	data: {
+		_id: string;
+		walletId: string;
+		type: 'credit' | 'debit';
+		amount: number;
+		paymentStatus: string;
+		tx_ref: string;
+		description: string;
+		createdAt: string;
+		updatedAt: string;
+		__v: number;
+	};
+};
+
+
 // export type SurveyListField = {
 //   label: string;
 //   key: string;
@@ -527,4 +552,67 @@ export type WalletInfo = {
 	lockedBalance: number;
 	createdAt: string;
 	updatedAt: string;
+}
+
+
+export type WalletTransactionList = {
+	id: string;
+	walletId: string;
+	type: 'credit' | 'debit';
+	amount: number;
+	paymentStatus: string;
+	tx_ref: string;
+	description: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export type CreateTransactionPayload = {
+	walletId: string;
+	type: "credit";
+	amount: number;
+	description: string;
+};
+
+
+export type CreateTransactionResponse = {
+	walletId: string;
+	type: "credit" | "debit";
+	amount: number;
+	paymentStatus: "not-paid" | "paid";
+	tx_ref: string;
+	description: string;
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
+};
+
+
+export type Employee = {
+	id: string;
+	businessUserId: string;
+	departmentId: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	role: string;
+	invitationToken: string;
+	invitationStatus: string;
+	hashedRt: string | null;
+	refreshToken: string | null;
+	failedLoginAttempts: number;
+	lockUntil: string | null;
+	isVerified: boolean;
+	isActive: boolean;
+	createdAt: string;
+	updatedAt: string;
+	__v: number;
+};
+
+
+export type InviteEmployee = {
+	businessUserId: string,
+	departmentId: string,
+	email: string,
 }

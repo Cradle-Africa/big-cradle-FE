@@ -1,0 +1,197 @@
+import ErrorMessage from '@/app/components/form/ErrorMessage';
+import axios, { INTERNAL_URL } from '@/app/lib/axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
+import { Check, Wallet, X } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
+import { Spinner } from '@radix-ui/themes';
+import { useCreateTransaction, useInitiateTransaction } from '../_features/hook';
+import { CreateTransactionPayload, FlutterWavePaymentSubmit, TransactionSchema, WalletInfo } from '@/app/lib/type';
+import { transactionSchema } from '@/app/lib/validationSchemas';
+import { getUser } from '@/app/utils/user/userData';
+
+interface Props {
+	setOpenTransaction: React.Dispatch<React.SetStateAction<boolean>>;
+	wallet?: WalletInfo;
+}
+
+const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
+	const menuRef = useRef<HTMLDivElement>(null);
+	const queryClient = useQueryClient();
+	const user = getUser();
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm<TransactionSchema>({
+		resolver: zodResolver(transactionSchema),
+	});
+
+	const {
+		mutateAsync: createTransaction,
+		isSuccess: isCreateSuccess,
+	} = useCreateTransaction({ axios });
+
+	const { mutateAsync: initiateTransaction } = useInitiateTransaction(
+		{ axios }
+	);
+
+	const submitInitiateTransaction = async (data: FlutterWavePaymentSubmit) => {
+		try {
+			toast.loading('Initializing payment ...');
+
+			const result = await initiateTransaction({
+				tx_ref: data.tx_ref,
+				amount: data.amount,
+				currency: data.currency,
+				redirect_url: data.redirect_url,
+				payment_options: data.payment_options,
+				customer: data.customer,
+				customizations: data.customizations,
+			});
+
+			toast.dismiss();
+			toast.success("Survey payment initialized");
+
+			if (result?.link) {
+				window.location.href = result.link;
+			} else {
+				toast.error("Redirect link not found.");
+			}
+
+		} finally {
+			toast.dismiss();
+		}
+	};
+
+
+	const onSubmit = async (data: TransactionSchema) => {
+		try {
+			const payload: CreateTransactionPayload = {
+				walletId: wallet?.id ?? '',
+				type: 'credit',
+				amount: Number(data.amount),
+				description: data.description,
+			};
+
+			const response = await createTransaction(payload);
+
+			const { tx_ref, amount } = response.data;
+
+			await submitInitiateTransaction({
+				tx_ref,
+				amount,
+				currency: "NGN",
+				redirect_url: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${tx_ref}`,
+				payment_options:
+					"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
+				customer: {
+					email: user?.email || "",
+				},
+				customizations: {
+					title: 'Survey Budget',
+					description: `Initialize a credit of ${amount}`,
+				},
+			});
+		} catch (error: any) {
+			toast.error(error?.message || 'Failed to create transaction');
+		}
+	};
+
+
+	useEffect(() => {
+		if (isCreateSuccess) {
+			queryClient.invalidateQueries({ queryKey: ["wallet-transactions"] });
+			toast.success(`Transaction created successfully`);
+			setOpenTransaction(false);
+		}
+
+		const handler = (e: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+				setOpenTransaction(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handler);
+		return () => document.removeEventListener('mousedown', handler);
+	}, [isCreateSuccess, queryClient, setOpenTransaction]);
+
+	return (
+		<div>
+			<div className="fixed inset-0 bg-[#0000004D] bg-opacity-30 z-40"></div>
+
+			<div
+				ref={menuRef}
+				className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-2xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+			>
+				<button
+					onClick={() => setOpenTransaction(false)}
+					className='flex w-full justify-end hover:cursor-pointer'
+				>
+					<X size={22} className='text-red-500' />
+				</button>
+
+				<div className="flex justify-center mt-5">
+					<div className='bg-blue-100 rounded-full px-3 py-3'>
+						<Wallet size={18} className="text-blue-600" />
+					</div>
+				</div>
+				<div className="items-center text-center mt-5">
+					<h2 className="text-md font-semibold text-black mb-4">Add to wallet</h2>
+					<p>Fill in the details below to add to your wallet</p>
+				</div>
+
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="space-y-4 mt-5 lg:mt-12">
+					<div>
+						<input
+							{...register("amount")}
+							type="text"
+							placeholder="Amount"
+							className="w-full border border-gray-300 rounded px-3 py-2 outline-none"
+						/>
+						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
+					</div>
+
+					<div>
+						<textarea
+							{...register("description")}
+							placeholder="Description"
+							className="w-full border border-gray-300 rounded px-3 py-2 outline-none"
+						/>
+						<ErrorMessage>{errors.description?.message}</ErrorMessage>
+					</div>
+
+					<div className="flex justify-between mt-8 gap-5">
+						<button
+							type="button"
+							onClick={() => setOpenTransaction(false)}
+							className="w-full hover:cursor-pointer py-2 rounded-md bg-gray-100 hover:text-white hover:bg-blue-600"
+						>
+							Cancel
+						</button>
+
+						<button
+							type="submit"
+							disabled={isSubmitting}
+							className="w-full flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
+						>
+							{isSubmitting ? (
+								<Spinner className='inline mr-1' />
+							) : (
+								<Check size={14} className='mr-1 inline' />
+							)}
+							{isSubmitting ? "Adding..." : "Submit"}
+						</button>
+					</div>
+				</form>
+			</div>
+		</div >
+	);
+};
+
+export default NewTransaction;

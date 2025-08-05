@@ -74,6 +74,6 @@ const TopPipelines = ({business}: ({business: string})) => {
 
 export const topPipelinesColumns: {
   label: string;
-}[] = [{ label: "Survey name" }, { label: "Responses" }];
+}[] = [{ label: "Pipeline name" }, { label: "Responses" }];
 
 export default TopPipelines;

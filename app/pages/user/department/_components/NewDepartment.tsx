@@ -90,7 +90,7 @@ const NewDepartment: React.FC<Props> = ({ setOpen }) => {
               {...register("departmentName")}
               type="text"
               placeholder="Department name"
-              className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
+              className="w-full border border-gray-300 rounded px-3 py-2 outline-none"
             />
             <ErrorMessage>{errors.departmentName?.message}</ErrorMessage>
           </div>
@@ -99,7 +99,7 @@ const NewDepartment: React.FC<Props> = ({ setOpen }) => {
             <textarea
               {...register("departmentDescription")}
               placeholder="Department description"
-              className="w-full border border-gray-200 rounded px-3 py-2 outline-none"
+              className="w-full border border-gray-300 rounded px-3 py-2 outline-none"
             />
             <ErrorMessage>{errors.departmentDescription?.message}</ErrorMessage>
           </div>

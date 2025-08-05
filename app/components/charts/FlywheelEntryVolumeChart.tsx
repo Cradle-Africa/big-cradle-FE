@@ -9,7 +9,8 @@ const COLORS = [
     "#004484", "#2B99FA", "#155DFC", "#004484", "#FFFF00", "#008000", "#FFA500"
 ];
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+// const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS = ["Invalid", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 interface Props {
     startDate?: string;
@@ -46,14 +47,14 @@ export default function FlywheelEntryVolumeChart({
     if (isPending) return <div><Spinner /> </div>;
     if (isError || !data) return <p>Failed to load entry volume data.</p>;
 
-    const groupedByDay = Array(7).fill(0); // Initialize all days with 0
+    const groupedByDay = Array(8).fill(0); // 0 index unused
 
     data.forEach(item => {
         groupedByDay[item.dayOfWeek] += item.count;
     });
 
-    const chartData = groupedByDay.map((count, index) => ({
-        name: DAYS[index],
+    const chartData = groupedByDay.slice(1).map((count, index) => ({
+        name: DAYS[index + 1],
         value: count,
     }));
 

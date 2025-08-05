@@ -1,25 +1,38 @@
 'use client';
 
 import DashboardLayout from '@/app/DashboardLayout';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { GoChecklist } from 'react-icons/go';
 import TransactionsTable from './components/TransactionsTable';
 import { Check, Wallet } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useCreateWallet, useFetchWallet } from './_features/hook';
+import { useCreateWallet, useFetchWallet, useFetchWalletTransactions } from './_features/hook';
 import axios from '@/app/lib/axios';
 import { getUser } from '@/app/utils/user/userData';
 import { Spinner } from '@radix-ui/themes';
+import NewTransaction from './components/NewTransaction';
 
 const Page = () => {
 	const [user, setUser] = useState<any>(null);
 	const [userType] = useState<string>('business');
+	const [openTransaction, setOpenTransaction] = useState(false);
+	const menuRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		// Ensure this only runs on the client
 		const userData = getUser();
 		setUser(userData);
 	}, []);
+
+	useEffect(() => {
+		const handler = (e: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+				setOpenTransaction(false);
+			}
+		};
+		document.addEventListener("mousedown", handler);
+		return () => document.removeEventListener("mousedown", handler);
+	}, [setOpenTransaction]);
 
 	const {
 		data: wallet,
@@ -32,6 +45,27 @@ const Page = () => {
 	});
 
 	const mutation = useCreateWallet({ axios });
+
+	const userId = user?.id;
+
+	const { data: transactionsData, isLoading, isError } = useFetchWalletTransactions({
+		axios,
+		queryParams: { userId },
+		enabled: !!userId, // fetch only when userId is available
+	});
+
+
+	if (isLoading) return <div>
+		<DashboardLayout>
+			<Spinner />
+		</DashboardLayout>
+	</div>;
+	if (isError) return <div>
+		<DashboardLayout>
+			Failed to fetch transactions.
+		</DashboardLayout>
+	</div>;
+
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -66,7 +100,7 @@ const Page = () => {
 				</div>
 			)}
 
-			{ !wallet && (
+			{(!user && !isLoadingWallet  && !wallet) && (
 				<div className="flex flex-col h-150 w-full m-auto justify-center text-center items-center">
 					<Wallet size={65} className="text-[#2694F6]" />
 					<p className="text-gray-700 mt-2">No wallet</p>
@@ -107,16 +141,29 @@ const Page = () => {
 								<GoChecklist />
 								Total Wallet
 							</h3>
-							<p className="font-bold text-2xl mt-5">{wallet?.balance}</p>
+							<div className="flex justify-between items-center mt-5">
+								<p className="font-bold text-2xl">{wallet?.balance}</p>
+								<button
+									className="bg-white text-[#2694F6] px-4 py-2 rounded-md font-medium hover:bg-gray-100 hover:cursor-pointer"
+									onClick={() => setOpenTransaction(true)}
+								>
+									+ Add to Wallet
+								</button>
+							</div>
 						</div>
 
 						<div className="mt-10">
-							Transactions history
-							<TransactionsTable />
+							<h3 className='font-semibold'>Transactions history</h3>
+							<TransactionsTable
+								transactionsData={transactionsData?.data}
+							/>
 						</div>
 					</div>
 				)
 			}
+
+			{openTransaction && <NewTransaction wallet={wallet} setOpenTransaction={setOpenTransaction} />}
+
 		</DashboardLayout >
 	);
 };
