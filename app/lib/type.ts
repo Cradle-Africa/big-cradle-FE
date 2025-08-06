@@ -11,6 +11,7 @@ import {
 	analyseSocialMediaSchema,
 	transactionSchema,
 	inviteEmployeeSchema,
+	reviewResearcherKycSchema,
 } from "./validationSchemas";
 import { ReactNode } from "react";
 
@@ -85,6 +86,13 @@ export type ReviewBusinessKyc = {
 	adminUserId: string;
 };
 
+export type ReviewResearcherKyc = {
+  businessUserId: string,
+  adminUserId: string,
+  researcherUserId: string,
+  action: string,
+  reason: string
+}
 
 export type ReviewAdminKyc = {
 	action: string;
@@ -143,6 +151,27 @@ export type BusinessKyc = {
 	certificateOfIncorporation: string;
 };
 
+export type ResearcherKyc = {
+	kycReviewReason: string | null;
+	id: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	countryCode: string;
+	phoneNumber: string;
+	address: string;
+	city: string;
+	state: string;
+	country: string;
+	isMobileUser: boolean;
+	role: string; 
+	image: string;
+	individualValidMeansOfId: string;
+	kycStatus: string;
+	isVerified: boolean;
+};
+
+
 export type AdminKyc = {
 	id: string;
 	userType: string;
@@ -167,6 +196,8 @@ export type InviteEmployeeSchema = z.infer<typeof inviteEmployeeSchema>;
 export type InviteBusinessSchema = z.infer<typeof inviteBusinessSchema>;
 
 export type ReviewBusinessKycSchema = z.infer<typeof reviewBusinessKycSchema>;
+
+export type ReviewResearcherKycSchema = z.infer<typeof reviewResearcherKycSchema>;
 
 export type ReviewAdminKycSchema = z.infer<typeof reviewAdminKycSchema>;
 

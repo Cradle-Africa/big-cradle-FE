@@ -113,7 +113,7 @@ const Page = () => {
 			<DashboardLayout>
 				<div className="flex flex-col h-150 w-full m-auto justify-center text-center items-center">
 					<Wallet size={65} className="text-[#2694F6]" />
-					<p className="text-gray-700 mt-2">No wallet found</p>
+					{/* <p className="text-gray-700 mt-2">No wallet found</p> */}
 					<p className="text-gray-700 mb-4">{errorMessage}</p>
 					<form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
 						<button

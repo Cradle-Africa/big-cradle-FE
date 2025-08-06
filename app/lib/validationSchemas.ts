@@ -62,6 +62,11 @@ export const reviewBusinessKycSchema = z.object({
 	action: z.string().min(1, "Enter the action"),
 });
 
+export const reviewResearcherKycSchema = z.object({
+	reason: z.string().min(1, "Enter the reason"),
+	action: z.string().min(1, "Enter the action"),
+});
+
 export const reviewAdminKycSchema = z.object({
 	reason: z.string().min(1, "Enter the reason"),
 	action: z.string().min(1, "Enter the action"),
