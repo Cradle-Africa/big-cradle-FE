@@ -22,23 +22,34 @@ const BusinessDashboard = () => {
 
 	const { data: Authuser, isLoading } = useFetchMe({ axios });
 
+	if (Authuser?.data.kycStatus === 'not-submitted' || Authuser?.data.kycStatus === 'pending' || Authuser?.data.kycStatus === 'rejected') {
+		return (
+			<KycVerification
+				openBusinessKycVerification={openBusinessKycVerification}
+				setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+				openAdminKycVerification={openAdminKycVerification}
+				setOpenAdminKycVerification={setOpenAdminKycVerification}
+				user={Authuser?.data!}
+			/>
+		)
+	}
 	return (
 		<div>
-			{isLoading ? (
+			{isLoading && (
 				<div>
 					<p>
 						<Spinner />{" "}
 					</p>
 				</div>
-			) : (
-				<KycVerification
-					openBusinessKycVerification={openBusinessKycVerification}
-					setOpenBusinessKycVerification={setOpenBusinessKycVerification}
-					openAdminKycVerification={openAdminKycVerification}
-					setOpenAdminKycVerification={setOpenAdminKycVerification}
-					user={Authuser?.data!}
-				/>
 			)}
+
+			<KycVerification
+				openBusinessKycVerification={openBusinessKycVerification}
+				setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+				openAdminKycVerification={openAdminKycVerification}
+				setOpenAdminKycVerification={setOpenAdminKycVerification}
+				user={Authuser?.data!}
+			/>
 
 			{/* Header with module select */}
 			<PlatformOverviewHeader
@@ -78,7 +89,7 @@ const BusinessDashboard = () => {
 			<Flex className="mt-5">
 				{module === "Survey" && (
 					<div className="w-full">
-						<TopSurveys  module={module} business={business}/>
+						<TopSurveys module={module} business={business} />
 					</div>
 				)}
 

@@ -1,14 +1,14 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSurveyEngagement, fetchSurveySummary, fetchTopDataPoints, fetchTopSurveys, getAllAdminUserBusinesses, getEntryVolumeData, getSurveyPaymentStats } from "./api";
-import { EntryVolumeItem, FlywheelSummaryResponse, SentimentResponse, TopPipelineDataResponse, TopSurveyType } from "./types";
+import { fetchCreatedDataPipelines, fetchCreatedSurveys, fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSuperAdminSummary, fetchSurveyEngagement, fetchSurveySummary, fetchTopDataPoints, fetchTopResearchers, fetchTopSurveys, getAllAdminUserBusinesses, getEntryVolumeData, getSurveyPaymentStats } from "./api";
+import { CreatedDataPipelines, CreatedSurveys, EntryVolumeItem, FlywheelSummaryResponse, PeriodType, SentimentResponse, SuperAdminSummaryResponse, SurveySummaryResponse, TopPipelineDataResponse, TopResearcherType, TopSurveyType } from "./types";
 import { Business } from "@/app/lib/type";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
-	return useQuery({
+	return useQuery<SurveySummaryResponse>({
 		queryKey: ["surveySummary", businessUserId, role],
 		queryFn: () => fetchSurveySummary(businessUserId, role),
-		enabled: !!businessUserId && (role === 'admin' || role === 'employee' || role === 'business' ),
+		enabled: (role === 'admin' || role === 'employee' || role === 'business'),
 	});
 };
 
@@ -156,5 +156,52 @@ export const useAdminUserBusinesses = ({
 		queryKey: ["admin-user-businesses", adminUserId, page, limit],
 		queryFn: () => getAllAdminUserBusinesses({ adminUserId, page, limit }),
 		enabled: enabled && !!adminUserId,
+	});
+};
+
+export const useSuperAdminSummary = () => {
+	return useQuery<SuperAdminSummaryResponse>({
+		queryKey: ["surveySummary"],
+		queryFn: () => fetchSuperAdminSummary(),
+	});
+};
+
+
+//SUPER ADMIN
+export const useCreatedDataPointStats = ({ 
+	period, 
+	startDate, 
+	endDate 
+}:{
+	period: PeriodType;
+	startDate?: string;
+	endDate?: string;
+} ) => {
+	return useQuery<CreatedDataPipelines[]>({
+		queryKey: ["created-data-point-stats", period, startDate, endDate],
+		queryFn: () => fetchCreatedDataPipelines({ period, startDate, endDate }),
+	});
+};
+
+export const useCreatedSurveyStats = ({ 
+	period, 
+	startDate, 
+	endDate 
+}:{
+	period: PeriodType;
+	startDate?: string;
+	endDate?: string;
+} ) => {
+	return useQuery<CreatedSurveys[]>({
+		queryKey: ["created-surveys-stats", period, startDate, endDate],
+		queryFn: () => fetchCreatedSurveys({ period, startDate, endDate }),
+	});
+};
+
+
+export const useFetchTopResearchers = () => {
+	return useQuery<TopResearcherType[]>({
+		queryKey: ["top-survey-type"],
+		queryFn: () =>fetchTopResearchers()
 	});
 };

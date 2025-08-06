@@ -115,17 +115,17 @@ const FormPopup: React.FC<FormPopupProps> = ({
     return (
         <>
             <div className="fixed inset-0 bg-black/40 z-40" />
-            <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-md z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
+            <div className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" ref={menuRef}>
                 <h2 className="text-center text-md font-semibold text-black mb-2">{title}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4 mt-5">
                     {fields.map(field => (
                         <div key={field.name}>
                             <label className="block text-md text-black mb-1">{field.label}</label>
                             {field.type === 'file' ? (
-                                <div className='relative bg-blue-100 rounded'>
+                                <div className=''>
                                     <ImageUpload
                                         onChange={handleInputChange}
-                                        text="Upload Certificate of incorporation"
+                                        text="Upload Certificate of corporation"
                                         id="image"
                                         name={field.name}
                                     />
@@ -171,7 +171,7 @@ const FormPopup: React.FC<FormPopupProps> = ({
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-1/2 flex justify-center items-center py-2 rounded-md text-white bg-blue-600 cursor-pointer"`} 
+                            className={`w-1/2 flex justify-center items-center py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer`} 
                             >
                             {isSubmitting ? (
                                 <Spinner className='inline mr-1' />

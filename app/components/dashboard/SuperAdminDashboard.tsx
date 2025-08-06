@@ -1,19 +1,14 @@
 import { useState } from "react";
-import FormPopup from "../pop-up/PopUpForm";
-import DashboardSkeleton from "../skeleton/Dashboardskeleton";
-import EngagementChart from "../charts/EngagementChart";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import Summary from "../charts/Summary";
-import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
-import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
-import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
+import FormPopup from "../pop-up/PopUpForm";
+import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 // import { Flex, Grid } from "@radix-ui/themes";
-import TopSurveys from "../charts/TopSurveys";
-import TopPipelines from "../charts/TopPipelines";
-import TopOrganization from "../charts/TopOrganization";
-import RespondersGrowth from "../charts/RespondersGrowth";
-import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import axios from "@/app/lib/axios";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
+import CreatedDataPipeline from "../charts/CreatedDataPipelineCharts";
+import CreatedSurvey from "../charts/CreatedSurveyCharts";
+import TopResearchers from "../charts/TopResearchers";
 
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
@@ -38,7 +33,7 @@ const SuperAdminDashboard = () => {
 						{ name: "email", label: "", type: "hidden", required: true },
 						{
 							name: "certificateOfIncorporation",
-							label: "Certificate of Incorporation",
+							label: "Certificate of Corporation",
 							type: "file",
 							required: true,
 						},
@@ -56,47 +51,23 @@ const SuperAdminDashboard = () => {
 			{/* Summary cards */}
 			<Summary module={module} business={business} />
 
-			{/* Engagement and sentiment charts*/}
-			{module === 'Survey' && (
-				<>
-					<div className="flex justify-between gap-5 mt-5">
-						<div className="w-3/5">
-							<EngagementChart module={module} business={business} />
-						</div>
-						<div className="w-2/4">
-							<SurveyPaymentStatsChart business={business} />
-						</div>
-					</div>
-				</>
-			)}
-			{module === 'Data Flywheel' && (
-				<div className="flex justify-between h-[410px] gap-5 mt-5">
-					<div className="w-3/5">
-						<FlywheelAverageEntriesChart business={business} />
-					</div>
-					<div className="w-2/4">
-						<FlywheelEntryVolumeChart business={business} />
-					</div>
-				</div>
-			)}
 
+			<div className="flex justify-between gap-5 mt-5">
+				<div className="w-5/5">
+					<CreatedDataPipeline />
+				</div>
+			</div>
+
+
+			<div className="flex justify-between gap-5 mt-5">
+				<div className="w-5/5">
+					<CreatedSurvey />
+				</div>
+			</div>
 
 			<div className="flex w-full justify-between gap-5 mt-5" >
-				{module === "Survey" && (
-					<div className="w-2/5">
-						<TopSurveys />
-					</div>
-				)}
-
-				{module === "Data Flywheel" && (
-					<div className="w-2/5">
-						<TopPipelines business={business} />
-					</div>
-				)}
-
-				<div className="flex w-3/5 gap-5">
-					<RespondersGrowth />
-					<TopOrganization />
+				<div className="w-2/5">
+					<TopResearchers />
 				</div>
 			</div>
 		</div>

@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
-import { Banknote, Users2 } from "lucide-react";
+import { Banknote, Database, Users2, File, Wallet } from "lucide-react";
 import { MdChecklist } from "react-icons/md";
 import BusinessCard from '@/app/pages/user/business/_components/BusinessCard';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { Spinner } from '@radix-ui/themes';
-import { useDatFlywheelSummary, useSurveySummary } from '../dashboard/_features/hook';
+import { useDatFlywheelSummary, useSuperAdminSummary, useSurveySummary } from '../dashboard/_features/hook';
 
-const Summary = ({ module, business }: { module: string, business?: string}) => {
+const Summary = ({ module, business }: { module: string, business?: string }) => {
     const user = getUser();
 
     // Memorize role and businessUserId
@@ -19,8 +19,6 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
         } else if (role === 'employee') {
             businessUserId = user?.businessUserId ?? '';
         } else if (role === 'admin') {
-            businessUserId = business ?? ''
-        } else if (role === 'super admin') {
             businessUserId = business ?? ''
         }
 
@@ -42,19 +40,35 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
         refetch: refetchFlywheel,
     } = useDatFlywheelSummary(businessUserId, role);
 
+    const {
+        data: superAdminSuammaryData,
+        isLoading: loadingSuperAdmin,
+        error: errorSuperAdmin,
+        refetch: reftechSuperAdminSummary
+    } = useSuperAdminSummary();
+
     useEffect(() => {
-        if (business && module === 'Survey') {
-            refetchSurvey();
-        } else if (module === 'Data Flywheel') {
-            refetchFlywheel();
+        if (user?.role != 'super admin') {
+
+            if (business && module === 'Survey') {
+                refetchSurvey();
+            }
+            if (module === 'Data Flywheel') {
+                refetchFlywheel();
+            }
         }
-    }, [module, business, refetchSurvey, refetchFlywheel]);
+
+        if (user?.role === 'super admin') {
+            reftechSuperAdminSummary();
+        }
+    }, [module, business, refetchSurvey, reftechSuperAdminSummary, refetchFlywheel, user?.role]);
 
     const isLoading = module === 'Survey' ? loadingSurvey : loadingFlywheel;
     const isError = module === 'Survey' ? errorSurvey : errorFlywheel;
 
-    if (isLoading) return <Spinner />;
-    if (isError) return <p>Error fetching the {module} summary</p>;
+    if (isLoading || loadingSuperAdmin) return <Spinner />;
+
+    if (isError || errorSuperAdmin) return <p>Error fetching the summary</p>;
 
     return (
         <>
@@ -111,6 +125,59 @@ const Summary = ({ module, business }: { module: string, business?: string}) => 
                         iconClass="rounded-full bg-green-100 p-1 lg:p-2"
                         isHighLighted={false}
                     />
+                </div>
+            )}
+
+            {(role === 'super admin') && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                    <BusinessCard
+                        title={'Total Ecosystem enablers'}
+                        value={String(superAdminSuammaryData?.totalAdminUsers)}
+                        icon={<Users2 size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Business'}
+                        value={String(superAdminSuammaryData?.totalBusinessUsers)}
+                        icon={<Users2 size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Researchers'}
+                        value={String(superAdminSuammaryData?.totalResearchers)}
+                        icon={<Users2 size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Pielines'}
+                        value={String(superAdminSuammaryData?.totalDataPoints)}
+                        icon={<Database size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Surveys'}
+                        value={String(superAdminSuammaryData?.totalSurveys)}
+                        icon={<File size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Transactions'}
+                        value={String(superAdminSuammaryData?.totalTransactions)}
+                        icon={<Wallet size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
                 </div>
             )}
         </>

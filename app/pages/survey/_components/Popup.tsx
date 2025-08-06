@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpDown, Network } from "lucide-react";
+import { List, PlusCircle } from "lucide-react";
 import {useRouter} from "next/navigation";
 import { useRef } from "react";
 
@@ -24,10 +24,10 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                         ref={menuRef}
                     >
 
-                        <p className="mt-3 text-md text-gray-800">How would you like to collect your data?</p>
+                        <p className="mt-3 text-md font-bold text-gray-800">How would you like to collect your data?</p>
 
                         <div className="md:flex justify-between gap-3 md:gap-5 mt-5 ">
-                            <div className="md:w-full bg-[#FEFAFF]">
+                            <div className="md:w-full bg-[#F5FAFE]">
                                 <button
                                     onClick={() => {
                                         onBuildPipeline();
@@ -39,7 +39,7 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                 >
                                     <div className="flex justify-center">
                                         <div className="bg-white text-blue-600 rounded-full p-3">
-                                            <ArrowUpDown className="" />
+                                            <PlusCircle className="" />
                                         </div>
                                     </div>
                                     <p className="mt-3 text-md font-semibold">Internal Survey</p>
@@ -47,31 +47,22 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                         Collect responses from audiences using the Big Cradle app
                                     </p>
                                 </button>
-                                {/* <button
-                                    className="w-full mt-5 bg-blue-600 text-white px-5 py-2 rounded-md flex justify-center hover:cursor-pointer"
-                                    onClick={() => {
-                                        onBuildPipeline();
-                                        onClose();
-                                    }}
-                                >
-                                    Create an internal survey
-                                </button> */}
                             </div>
 
 
-                            <div className="md:w-full bg-[#FAFBFF]">
+                            <div className="md:w-full bg-[#FEF9F5]">
                                 <button
                                     onClick={() => {
                                         onBuildPipeline();
                                         router.push("/pages/survey/new?survey=survey-name-and-description&survey-type=external")
                                         onClose();
                                     }}
-                                    className="md:mt-0 w-full md:h-44 px-6 py-6 border-2 border-dashed border-blue-500 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer"
+                                    className="md:mt-0 w-full md:h-44 px-6 py-6 border-2 border-dashed border-[#E6BE9F] hover:border  hover:transition-all ease-in rounded-lg cursor-pointer"
 
                                 >
                                     <div className="flex justify-center">
-                                        <div className="bg-white text-blue-600 rounded-full p-3">
-                                            <Network className="" />
+                                        <div className="bg-white text-[#E6BE9F] rounded-full p-3">
+                                            <List className="" />
                                         </div>
                                     </div>
                                     <p className="mt-3 text-md font-semibold">External Survey</p>
@@ -79,15 +70,6 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                         Collect responses from external audiences using sharable links
                                     </p>
                                 </button>
-                                {/* <button
-                                    className="w-full mt-5 bg-blue-600 text-white px-5 py-2 rounded-md flex justify-center hover:cursor-pointer"
-                                    onClick={() => {
-                                        onBuildPipeline();
-                                        onClose();
-                                    }}
-                                >
-                                    Create an external survey
-                                </button> */}
                             </div>
 
                         </div>

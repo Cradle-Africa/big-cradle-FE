@@ -85,6 +85,7 @@ export type ReviewBusinessKyc = {
 	adminUserId: string;
 };
 
+
 export type ReviewAdminKyc = {
 	action: string;
 	reason: string;
@@ -544,15 +545,28 @@ export type CreateWalletPayload = {
 	lockedBalance: number;
 };
 
-export type WalletInfo = {
-	id: string;
-	userId: string;
-	userType: string;
-	balance: number;
-	lockedBalance: number;
-	createdAt: string;
-	updatedAt: string;
-}
+
+export type WalletSuccessResponse = {
+	success: true;
+	message: string;
+	data: {
+		id: string;
+		userId: string;
+		userType: string;
+		balance: number;
+		lockedBalance: number;
+		createdAt: string;
+		updatedAt: string;
+		__v?: number;
+		temporaryBalance?: number;
+	};
+};
+
+export type WalletErrorResponse = {
+	message: string;
+	error: string;
+	statusCode: 400;
+};
 
 
 export type WalletTransactionList = {
@@ -616,3 +630,5 @@ export type InviteEmployee = {
 	departmentId: string,
 	email: string,
 }
+
+

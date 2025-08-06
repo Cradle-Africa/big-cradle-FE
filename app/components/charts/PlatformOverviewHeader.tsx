@@ -105,7 +105,7 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
         }
     }
 
-   
+
     return (
         <div className="w-full mt-2">
             <div className="flex items-center justify-between mb-1">
@@ -114,19 +114,21 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
                 </p>
 
                 <div className="flex items-center justify-end gap-2 mb-1">
-                    <select
-                        className="border border-gray-300 rounded px-2 py-1 text-sm"
-                        value={module}
-                        onChange={(e) => setModule(e.target.value)}
-                    >
-                        <option value="Data Flywheel">Data Flywheel</option>
-                        <option value="Survey">Survey</option>
-                    </select>
+                    {(!isSuperAdmin) && (
+                        <select
+                            className="border border-gray-300 rounded px-2 py-1 text-sm"
+                            value={module}
+                            onChange={(e) => setModule(e.target.value)}
+                        >
+                            <option value="Data Flywheel">Data Flywheel</option>
+                            <option value="Survey">Survey</option>
+                        </select>
+                    )}
 
-                    {(isAdmin || isSuperAdmin)  && (
+                    {(isAdmin) && (
                         <Select
                             className="w-[200px] text-sm"
-                            styles={ customStyles }
+                            styles={customStyles}
                             options={businessOptions}
                             value={selectedOption}
                             onChange={(selected) => {
@@ -149,34 +151,34 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
     );
 };
 
- export const customStyles = {
-        control: (base: any) => ({
-            ...base,
-            minHeight: '28px',        // Reduce overall control height
-            height: '28px',
-            fontSize: '0.875rem',     // text-sm
-        }),
-        dropdownIndicator: (base: any) => ({
-            ...base,
-            padding: '4px',
-        }),
-        clearIndicator: (base: any) => ({
-            ...base,
-            padding: '4px',
-        }),
-        valueContainer: (base: any) => ({
-            ...base,
-            padding: '0px 6px',
-        }),
-        input: (base: any) => ({
-            ...base,
-            margin: 0,
-            padding: 0,
-        }),
-        indicatorsContainer: (base: any) => ({
-            ...base,
-            height: '28px',
-        }),
-    };
+export const customStyles = {
+    control: (base: any) => ({
+        ...base,
+        minHeight: '28px',        // Reduce overall control height
+        height: '28px',
+        fontSize: '0.875rem',     // text-sm
+    }),
+    dropdownIndicator: (base: any) => ({
+        ...base,
+        padding: '4px',
+    }),
+    clearIndicator: (base: any) => ({
+        ...base,
+        padding: '4px',
+    }),
+    valueContainer: (base: any) => ({
+        ...base,
+        padding: '0px 6px',
+    }),
+    input: (base: any) => ({
+        ...base,
+        margin: 0,
+        padding: 0,
+    }),
+    indicatorsContainer: (base: any) => ({
+        ...base,
+        height: '28px',
+    }),
+};
 
 export default PlatformOverviewHeader;

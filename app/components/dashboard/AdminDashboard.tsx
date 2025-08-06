@@ -24,6 +24,18 @@ const BusinessDashboard = () => {
 		return <DashboardSkeleton />;
 	}
 
+	if (user?.data.kycStatus === 'not-submitted' || user?.data.kycStatus === 'pending' || user?.data.kycStatus === 'rejected') {
+		return (
+			<KycVerification
+				openBusinessKycVerification={openBusinessKycVerification}
+				setOpenBusinessKycVerification={setOpenBusinessKycVerification}
+				openAdminKycVerification={openAdminKycVerification}
+				setOpenAdminKycVerification={setOpenAdminKycVerification}
+				user={user?.data!}
+			/>
+		)
+	}
+
 	return (
 		<div>
 			{isLoading ? (

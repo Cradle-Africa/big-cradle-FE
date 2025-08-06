@@ -45,3 +45,46 @@ export interface EntryVolumeResponse {
 	message: string;
 	data: EntryVolumeItem[];
 }
+
+export type SuperAdminSummaryResponse = {
+	totalBusinessUsers: number;
+	totalAdminUsers: number;
+	totalResearchers: number;
+	totalTransactions: number;
+	totalSurveys: number;
+	totalDataPoints: number;
+};
+
+export type SurveySummaryResponse = {
+  totalSurveys: string;
+  completedSurveys: string;
+  ongoingSurveys: string;
+}
+
+export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+export type CreatedDataPipelines = {
+  count: number;
+} & (
+  | { date: string }      // daily
+  | { weekly: string }    // weekly
+  | { monthly: string }   // monthly
+  | { yearly: string }    // yearly
+);
+
+export type CreatedSurveys = {
+  count: number;
+} & (
+  | { date: string }      // daily
+  | { weekly: string }    // weekly
+  | { monthly: string }   // monthly
+  | { yearly: string }    // yearly
+);
+
+
+export type TopResearcherType = {
+  entryCount: number;
+  researcherId: string;
+  researcherFirstName: string;
+  researcherLastName: string;
+};

@@ -8,13 +8,13 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Spinner } from '@radix-ui/themes';
 import { useCreateTransaction, useInitiateTransaction } from '../_features/hook';
-import { CreateTransactionPayload, FlutterWavePaymentSubmit, TransactionSchema, WalletInfo } from '@/app/lib/type';
+import { CreateTransactionPayload, FlutterWavePaymentSubmit, TransactionSchema, WalletSuccessResponse } from '@/app/lib/type';
 import { transactionSchema } from '@/app/lib/validationSchemas';
 import { getUser } from '@/app/utils/user/userData';
 
 interface Props {
 	setOpenTransaction: React.Dispatch<React.SetStateAction<boolean>>;
-	wallet?: WalletInfo;
+	wallet?: WalletSuccessResponse;
 }
 
 const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
@@ -71,7 +71,7 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 	const onSubmit = async (data: TransactionSchema) => {
 		try {
 			const payload: CreateTransactionPayload = {
-				walletId: wallet?.id ?? '',
+				walletId: wallet?.data.id ?? '',
 				type: 'credit',
 				amount: Number(data.amount),
 				description: data.description,

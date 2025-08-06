@@ -1,5 +1,5 @@
 import axios from "@/app/lib/axios";
-import { EntryVolumeItem, EntryVolumeResponse } from "./types";
+import { CreatedDataPipelines, EntryVolumeItem, EntryVolumeResponse, PeriodType } from "./types";
 
 export const fetchSurveySummary = async (
 	businessUserId: string,
@@ -68,7 +68,6 @@ export const fetchTopSurveys = async (
 ) => {
 	const response = await axios.get(
 		`/survey-dashboard/top-surveys?businessUserId=${businessUserId}&role=${role}`
-		// `/survey-dashboard/top-surveys?businessUserId=${businessUserId}&role=${role}&startDate=${startDate}&endDate=${endDate}`
 	);
 	return response.data;
 };
@@ -142,5 +141,73 @@ export const getAllAdminUserBusinesses = async ({
 		return response.data.businessUser;
 	} catch (err) {
 		console.log(err)
+	}
+};
+
+
+//SUPER ADMIN API
+
+export const fetchSuperAdminSummary = async () => {
+	const response = await axios.get(`/super-admin-dashboard/summary`);
+	return response.data.data;
+};
+
+export const fetchCreatedDataPipelines = async ({
+	period,
+	startDate,
+	endDate,
+}: {
+	period: PeriodType;
+	startDate?: string;
+	endDate?: string;
+}): Promise<CreatedDataPipelines[]> => {
+	try {
+		const res = await axios.get("/super-admin-dashboard/created-data-point-chat", {
+			params: {
+				period,
+				...(startDate && { startDate }),
+				...(endDate && { endDate }),
+			},
+		});
+
+		return res.data.data;
+	} catch (error: any) {
+		console.error("Error fetching created data:", error);
+		throw new Error("Failed to fetch created data stats.");
+	}
+};
+
+export const fetchCreatedSurveys = async ({
+	period,
+	startDate,
+	endDate,
+}: {
+	period: PeriodType;
+	startDate?: string;
+	endDate?: string;
+}): Promise<CreatedDataPipelines[]> => {
+	try {
+		const res = await axios.get("/super-admin-dashboard/created-survey-chat", {
+			params: {
+				period,
+				...(startDate && { startDate }),
+				...(endDate && { endDate }),
+			},
+		});
+
+		return res.data.data;
+	} catch (error: any) {
+		console.error("Error fetching created data:", error);
+		throw new Error("Failed to fetch created data stats.");
+	}
+};
+
+export const fetchTopResearchers = async () => {
+	try {
+		const response = await axios.get(`/super-admin-dashboard/top-researchers`);
+		return response.data.data;
+	} catch (error: any) {
+		console.error("Error fetching data:", error);
+		throw new Error("Failed to fetch data");
 	}
 };

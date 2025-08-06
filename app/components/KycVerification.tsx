@@ -44,7 +44,7 @@ const KycVerification: React.FC<KycVerificationProps> = ({
             { name: "email", label: "", type: "hidden", required: true },
             {
               name: "certificateOfIncorporation",
-              label: "Certificate of Incorporation",
+              label: "Certificate of Corporation",
               type: "file",
               required: true,
             },
@@ -63,7 +63,7 @@ const KycVerification: React.FC<KycVerificationProps> = ({
             { name: "email", label: "", type: "hidden", required: true },
             {
               name: "certificateOfIncorporation",
-              label: (user?.userType === "corporate") ? "Certificate of Incorporation" : '',
+              label: (user?.userType === "corporate") ? "Certificate of Corporation" : '',
               type: (user?.userType === "corporate") ? "file" : 'hidden',
               required: (user?.userType === "corporate") ? true : false,
             },

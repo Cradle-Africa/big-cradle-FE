@@ -36,11 +36,10 @@ export const fetchWallet = async (axios: AxiosInstance, userId: string) => {
                 Authorization: null,
             }
         });
-
-        return res.data.data;
+        return res.data; // Return the full response data
     } catch (error: any) {
-        console.error("Fetch wallet error:", error);
-        return []
+        // Throw the error properly so React Query can catch it
+        throw error.response?.data || new Error('Failed to fetch wallet');
     }
 };
 
