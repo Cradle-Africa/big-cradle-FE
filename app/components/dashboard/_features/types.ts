@@ -88,3 +88,10 @@ export type TopResearcherType = {
   researcherFirstName: string;
   researcherLastName: string;
 };
+
+export type TopBusinessType = {
+  entryCount: number;
+  researcherId: string;
+  businessFirstName: string;
+  businessLastName: string;
+}

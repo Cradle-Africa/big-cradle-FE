@@ -4,7 +4,6 @@ import {
   Building2,
   ChevronDown,
   ChevronUp,
-  File,
   House,
   UsersRound,
 } from "lucide-react";
@@ -86,7 +85,7 @@ export default function SuperAdminSidebar() {
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                 Researcher KYC
+                 Researchers KYC
               </Link>
              
             </div>
@@ -103,9 +102,9 @@ const sideBarLinks: {
   icon: JSX.Element;
 }[] = [
   { label: "Dashboard", href: "/", icon: <House size={15} /> },
-  {
-    label: "Research and Survey",
-    href: "/pages/survey?status=all&page=1",
-    icon: <File size={15} />,
-  },
+  // {
+  //   label: "Research and Survey",
+  //   href: "/pages/survey?status=all&page=1",
+  //   icon: <File size={15} />,
+  // },
 ];

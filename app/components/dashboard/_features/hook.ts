@@ -1,7 +1,7 @@
 // hooks/useSurveySummary.ts
 import { useQuery } from "@tanstack/react-query";
-import { fetchCreatedDataPipelines, fetchCreatedSurveys, fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSuperAdminSummary, fetchSurveyEngagement, fetchSurveySummary, fetchTopDataPoints, fetchTopResearchers, fetchTopSurveys, getAllAdminUserBusinesses, getEntryVolumeData, getSurveyPaymentStats } from "./api";
-import { CreatedDataPipelines, CreatedSurveys, EntryVolumeItem, FlywheelSummaryResponse, PeriodType, SentimentResponse, SuperAdminSummaryResponse, SurveySummaryResponse, TopPipelineDataResponse, TopResearcherType, TopSurveyType } from "./types";
+import { fetchCreatedDataPipelines, fetchCreatedSurveys, fetchDatFlywheelSummary, fetchFlywheelAverageEntries, fetchSentimentBreackDown, fetchSuperAdminSummary, fetchSurveyEngagement, fetchSurveySummary, fetchTopBusinesses, fetchTopDataPoints, fetchTopResearchers, fetchTopSurveys, getAllAdminUserBusinesses, getEntryVolumeData, getSurveyPaymentStats } from "./api";
+import { CreatedDataPipelines, CreatedSurveys, EntryVolumeItem, FlywheelSummaryResponse, PeriodType, SentimentResponse, SuperAdminSummaryResponse, SurveySummaryResponse, TopBusinessType, TopPipelineDataResponse, TopResearcherType, TopSurveyType } from "./types";
 import { Business } from "@/app/lib/type";
 
 export const useSurveySummary = (businessUserId: string, role: string) => {
@@ -203,5 +203,13 @@ export const useFetchTopResearchers = () => {
 	return useQuery<TopResearcherType[]>({
 		queryKey: ["top-survey-type"],
 		queryFn: () =>fetchTopResearchers()
+	});
+};
+
+
+export const useFetchTopBusinesses = () => {
+	return useQuery<TopBusinessType[]>({
+		queryKey: ["top-business-type"],
+		queryFn: () =>fetchTopBusinesses()
 	});
 };

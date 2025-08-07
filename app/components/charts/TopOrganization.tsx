@@ -7,7 +7,7 @@ const TopOrganization = () => {
   return (
     <div className="flex w-full flex-col gap-4 h-full bg-white">
       <div className="border border-gray-200 rounded-md p-4 h-full flex flex-col justify-between">
-        <p className="font-medium mb-4">Top organizations</p>
+        <p className="font-bold mb-4">Top organizations</p>
         <div className="flex gap-2 items-center">
           <p className="text-3xl font-bold">3,231</p>
           <div className="border-green-200 bg-green-100 border-1 rounded-full px-3 flex gap-2 items-center">

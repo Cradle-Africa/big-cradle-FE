@@ -9,6 +9,7 @@ import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import CreatedDataPipeline from "../charts/CreatedDataPipelineCharts";
 import CreatedSurvey from "../charts/CreatedSurveyCharts";
 import TopResearchers from "../charts/TopResearchers";
+import TopBusinesses from "../charts/TopBusiness";
 
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
@@ -58,7 +59,6 @@ const SuperAdminDashboard = () => {
 				</div>
 			</div>
 
-
 			<div className="flex justify-between gap-5 mt-5">
 				<div className="w-5/5">
 					<CreatedSurvey />
@@ -66,10 +66,14 @@ const SuperAdminDashboard = () => {
 			</div>
 
 			<div className="flex w-full justify-between gap-5 mt-5" >
-				<div className="w-2/5">
+				<div className="w-2/4">
 					<TopResearchers />
 				</div>
+				<div className="w-2/4">
+					<TopBusinesses />
+				</div>
 			</div>
+
 		</div>
 	);
 };

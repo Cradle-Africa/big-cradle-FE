@@ -20,11 +20,9 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Type and Description</th>
-						{/* <th className="px-6 py-3 text-left text-sm font-semibold">Description</th> */}
 						<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Org / Partner</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-						{/* <th className="px-6 py-3 text-left text-sm font-semibold">Method</th> */}
-						<th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+						{/* <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th> */}
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
@@ -53,9 +51,9 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 										{transaction.paymentStatus}
 									</div>
 								</td>
-								<td className="px-6 py-4 text-blue-600 underline">
+								{/* <td className="px-6 py-4 text-blue-600 underline">
 									<span className="hover:cursor-pointer">View</span>
-								</td>
+								</td> */}
 							</tr>
 						);
 					})}

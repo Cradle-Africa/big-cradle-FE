@@ -79,7 +79,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
                         value={surveyData.totalSurveys}
                         icon={<Users2 size={14} color="blue" />}
                         iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
-                        isHighLighted={false}
+                        isHighLighted={true}
                     />
 
                     <BusinessCard
@@ -87,7 +87,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
                         value={surveyData.completedSurveys}
                         icon={<Banknote size={14} color="green" />}
                         iconClass="rounded-full bg-green-100 p-1 lg:p-2"
-                        isHighLighted={false}
+                        isHighLighted={true}
                     />
 
                     <BusinessCard
@@ -107,7 +107,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
                         value={flyWheelData?.totalDataPoints}
                         icon={<Users2 size={14} color="blue" />}
                         iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
-                        isHighLighted={false}
+                        isHighLighted={true}
                     />
 
                     <BusinessCard
@@ -121,9 +121,9 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
                     <BusinessCard
                         title={'Total Data Entries'}
                         value={flyWheelData?.totalEntries}
-                        icon={<Banknote size={14} color="green" />}
-                        iconClass="rounded-full bg-green-100 p-1 lg:p-2"
-                        isHighLighted={false}
+                        icon={<Banknote size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
                     />
                 </div>
             )}

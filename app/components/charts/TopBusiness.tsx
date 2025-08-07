@@ -1,19 +1,19 @@
 import { Spinner, Table } from "@radix-ui/themes";
-import { useFetchTopResearchers } from "../dashboard/_features/hook";
+import { useFetchTopBusinesses } from "../dashboard/_features/hook";
 
-const TopResearchers = () => {
+const TopBusinesses = () => {
 
   const {
-    data: researchersData,
+    data: businessData,
     isLoading,
     error,
-  } = useFetchTopResearchers();
+  } = useFetchTopBusinesses();
 
-  console.log(researchersData);
+  console.log(businessData);
   if (isLoading) return <Spinner />;
 
   if (error) return <p>Error fetching data</p>;
-  if ((researchersData ?? []).length < 1) {
+  if ((businessData ?? []).length < 1) {
     return (
       ''
     )
@@ -21,11 +21,11 @@ const TopResearchers = () => {
   return (
     <div className="bg-white p-4 border border-gray-100 rounded-md h-full">
       <>
-        {(researchersData ?? []).length < 1 ? (
+        {(businessData ?? []).length < 1 ? (
           ''
         ) : (
           <div className="">
-            <p className="font-bold mb-4">Top researchers</p>
+            <p className="font-bold mb-4">Top  organizations</p>
             <Table.Root>
               <Table.Header>
                 <Table.Row>
@@ -37,11 +37,11 @@ const TopResearchers = () => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {researchersData?.map((researcher, index) => (
+                {businessData?.map((business, index) => (
                   <Table.Row key={index}>
-                    <Table.Cell>{researcher?.researcherFirstName}</Table.Cell>
-                    <Table.Cell>{researcher?.researcherLastName}</Table.Cell>
-                    <Table.Cell>{researcher?.entryCount}</Table.Cell>
+                    <Table.Cell>{business?.businessFirstName}</Table.Cell>
+                    <Table.Cell>{business?.businessLastName}</Table.Cell>
+                    <Table.Cell>{business?.entryCount}</Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -57,4 +57,4 @@ export const topReasearchersColumns: {
   label: string;
 }[] = [{ label: "First name" }, { label: "Last name" }, { label: "Entries" }];
 
-export default TopResearchers;
+export default TopBusinesses;
