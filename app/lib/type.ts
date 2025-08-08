@@ -614,7 +614,7 @@ export type WalletTransactionList = {
 
 export type CreateTransactionPayload = {
 	walletId: string;
-	type: "credit";
+	type: "credit" | "debit";
 	amount: number;
 	description: string;
 };

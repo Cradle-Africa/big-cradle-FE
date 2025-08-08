@@ -20,7 +20,7 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Type and Description</th>
-						<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Org / Partner</th>
+						{/* <th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Org / Partner</th> */}
 						<th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
 						{/* <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th> */}
 					</tr>
@@ -41,7 +41,7 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 											? transaction.description.slice(0, 55) + '...'
 											: transaction.description)}
 								</td>
-								<td className="px-6 py-4">—</td>
+								{/* <td className="px-6 py-4">—</td> */}
 								<td className="px-6 py-4 w-44">
 									<div className={`${transaction.paymentStatus === 'paid' ? 'border border-green-600 text-green-600' :
 										'border border-red-600 text-red-600'}

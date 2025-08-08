@@ -50,7 +50,7 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                             </div>
 
 
-                            <div className="md:w-full bg-[#FEF9F5]">
+                            <div className="mt-5 md:mt-0 md:w-full bg-[#FEF9F5]">
                                 <button
                                     onClick={() => {
                                         onBuildPipeline();

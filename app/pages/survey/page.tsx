@@ -1,13 +1,11 @@
 "use client";
 
-// import Pagination from "@/app/components/Pagination";
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
 import { DashboardMenu, SurveyListItem } from "@/app/lib/type";
 import SurveyStatus from "@/app/pages/survey/_components/SurveyStatus";
 import { getUser } from "@/app/utils/user/userData";
 import { FolderOpenDot, Plus, ShieldBan, ShieldCheck } from "lucide-react";
-// import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";

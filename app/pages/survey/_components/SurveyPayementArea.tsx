@@ -5,6 +5,7 @@ import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios, { INTERNAL_URL } from "@/app/lib/axios";
 import {
 	CountryAndCity,
+	CreateTransactionPayload,
 	DataPointForm,
 	FlutterWavePaymentSubmit,
 	Survey,
@@ -25,6 +26,7 @@ import {
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
 import Spinner from "@/app/components/Spinner";
+import { useCreateTransaction, useFetchWallet } from "../../wallet/_features/hook";
 
 type Props = {
 	form: DataPointForm;
@@ -57,6 +59,11 @@ const SurveyPayementArea = ({
 	gender,
 }: Props) => {
 	const router = useRouter();
+	const user = getUser();
+
+	let businessUserId: string | null = null;
+	const employeeUserId = getEmployeeUserId();
+
 	const { mutateAsync: createSurvey, isPending: isCreatingSurvey } =
 		useCreateSurvey({ axios });
 
@@ -72,11 +79,21 @@ const SurveyPayementArea = ({
 		resolver: zodResolver(surveyPaymentSchema),
 	});
 
-	console.log('errors', errors);
-	const user = getUser();
+	//Create transaction with a debit type
+	const {
+		mutateAsync: createTransaction,
+		// isSuccess: isCreateSuccess,
+	} = useCreateTransaction({ axios });
 
-	let businessUserId: string | null = null;
-	const employeeUserId = getEmployeeUserId();
+	//Get wallet by user id
+	const {
+		data: wallet,
+	} = useFetchWallet({
+		axios,
+		userId: user?.id || '',
+		enabled: !!user,
+	});
+
 
 	if (user?.role === "business") {
 		businessUserId = getBusinessId() || null;
@@ -138,7 +155,8 @@ const SurveyPayementArea = ({
 			onSuccess: (createdSurvey) => {
 				setForm({ dataPointId: "", field: [] }); // clear the form
 
-				if (surveyType === 'internal') {
+				// If the survey is internal and the user is not using the wallet pay with flutterwave
+				if (surveyType === 'internal' && (!data.useWallet)) {
 					submitSurveyPayment({
 						tx_ref: createdSurvey.data.tx_ref,
 						amount: parseInt(data.amount),
@@ -155,6 +173,27 @@ const SurveyPayementArea = ({
 						},
 					});
 				}
+
+				//pay with bigcradle wallet
+				if (surveyType === 'internal' && wallet?.data?.id && data.useWallet) {
+					const payload: CreateTransactionPayload = {
+						walletId: wallet?.data?.id ?? '',
+						type: 'debit',
+						amount: Number(data.amount),
+						description: 'Survey payed with big cradle wallet'
+					};
+					createTransaction(payload, {
+						onSuccess: () => {
+							toast.success('Survey has been created successfully and your wallet has been debited for the payment');
+							router.push(`/pages/survey?status=all`);
+						},
+					});
+				}
+
+				if (!wallet?.data?.id && data.useWallet) {
+					toast.error('You do not have a wallet. Please create a wallet to use this feature.');
+				}
+
 				if (surveyType === 'external') {
 					toast.success('Survey has been created successfully');
 					router.push(`/pages/survey?status=all`);
@@ -206,7 +245,7 @@ const SurveyPayementArea = ({
 				onSubmit={handleSubmit(submitSurvey)}
 				className="flex flex-col gap-2"
 			>
-				<div className="flex xl:flex-wrap gap-4">
+				<div className="flex flex-col xl:flex-wrap gap-4">
 					<div className="w-full">
 						<input
 							{...register("amount")}
@@ -215,6 +254,19 @@ const SurveyPayementArea = ({
 						/>
 						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
 					</div>
+
+					<div className="w-full">
+						<label className="flex items-center gap-2 cursor-pointer">
+							<input
+								type="checkbox"
+								{...register("useWallet")}
+								className="h-4 w-4 border-gray-300 rounded"
+							/>
+							<span>Would you like to use Big Cradle Wallet to pay for this survey?</span>
+						</label>
+						<ErrorMessage>{errors.useWallet?.message}</ErrorMessage>
+					</div>
+
 				</div>
 
 				<button

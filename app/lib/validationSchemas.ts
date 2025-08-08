@@ -121,6 +121,7 @@ export const surveyPaymentSchema = z.object({
 	title: z.string().optional(),
 	email: z.string().optional(),
 	description: z.string().optional(),
+	useWallet: z.boolean().optional(),
 });
 
 
