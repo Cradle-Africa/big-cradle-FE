@@ -81,6 +81,9 @@ export default function FlywheelAverageEntriesChart({business} : ({business?: st
   if (user?.role === "super admin") {
     businessUserId = business!;
   }
+  if (user?.role === "admin") {
+    businessUserId = business ?? '';
+  }
 
   const [period, setPeriod] = useState<Period>("monthly");
 

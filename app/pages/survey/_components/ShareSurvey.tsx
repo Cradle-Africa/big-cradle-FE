@@ -8,6 +8,7 @@ import { shortenWithTinyURL } from "@/app/utils/shortenLink";
 import { useFetchSingleSurvey } from "../_features/hooks";
 import { Spinner } from "@radix-ui/themes";
 import { getUser } from "@/app/utils/user/userData";
+import { useFetchSingleBusiness } from "../../user/business/_features/hook";
 
 interface PopUpProps {
     shareSurvey: boolean;
@@ -22,15 +23,32 @@ const ShareSurvey: React.FC<PopUpProps> = ({
 }) => {
 
     const user = getUser()
-    let businessName = '';
-    if(user?.role ===  'business'){
-        businessName = user?.businessName;
-    };
+
+    const {
+        data: singleBusiness,
+        refetch: refreshSingleBusiness
+    } = useFetchSingleBusiness({
+        axios,
+        businessUserId: user?.businessUserId ?? '',
+        enabled: user?.businessUserId !== undefined,
+    });
 
     const { data, isLoading } = useFetchSingleSurvey({
         axios,
         surveyId: uniqueId,
     });
+
+    let businessName = '';
+    if (user?.role === 'business') {
+        businessName = user?.businessName;
+    };
+
+    if (user?.role === 'employee') {
+        refreshSingleBusiness();
+        businessName = singleBusiness?.businessName ?? '';
+    };
+
+
 
     const [copied, setCopied] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);

@@ -5,9 +5,11 @@ import { FilePlus, Menu, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { PropsWithChildren, useState } from "react";
+import { getUser } from "@/app/utils/user/userData";
 
 const SideBarWrapper = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
+  const user = getUser();
 
   return (
     <div
@@ -59,20 +61,24 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
           <div className="h-[1px] w-full bg-[#004484] my-4" />
           {children}
         </div>
-        <div className="bg-[#2B99FA] mt-5 md:mt-auto rounded-lg mx-4 p-3 text-white">
-          <h2 className="flex items-center text-md font-semibold">
-            <FilePlus size={14} className="inline mr-1"  />
-            Survey
-          </h2>
-          <p className="mt-2">View, manage, and track your survey tasks. Create new surveys to collect insights in real time</p>
-          <Link
-            href="/pages/survey/new?survey=survey-name-and-description"
-            className="flex justify-center items-center bg-white text-[#2B99FA] rounded-md py-2 mt-2"
-          >
-            <Plus size={18} color={'#2B99FA'} />
-            <span className="">Create new survey</span>
-          </Link>
-        </div>
+        {
+          (user?.role === 'employee' || user?.role === 'business') && (
+            <div className="bg-[#2B99FA] mt-5 md:mt-auto rounded-lg mx-4 p-3 text-white">
+              <h2 className="flex items-center text-md font-semibold">
+                <FilePlus size={14} className="inline mr-1" />
+                Survey
+              </h2>
+              <p className="mt-2">View, manage, and track your survey tasks. Create new surveys to collect insights in real time</p>
+              <Link
+                href="/pages/survey/new?survey=survey-name-and-description"
+                className="flex justify-center items-center bg-white text-[#2B99FA] rounded-md py-2 mt-2"
+              >
+                <Plus size={18} color={'#2B99FA'} />
+                <span className="">Create new survey</span>
+              </Link>
+            </div>
+          
+          )}
       </div>
     </div>
   );

@@ -114,3 +114,20 @@ export const resetPasswordBusiness = async (
     throw error;
   }
 };
+
+
+export const fetchSingleBusiness = async (axios: AxiosInstance, businessUserId: string) => {
+    try {
+        const res = await axios.get(`/manage-business/${businessUserId}`, {
+            headers: {
+                Authorization: null,
+            }
+        });
+
+        return res.data.data;
+    } catch (error: any) {
+        console.error("Error fetching data:", error);
+        return []
+    }
+};
+

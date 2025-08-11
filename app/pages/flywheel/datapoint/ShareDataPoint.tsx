@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { shortenWithTinyURL } from "@/app/utils/shortenLink";
 import { Spinner } from "@radix-ui/themes";
 import { getUser } from "@/app/utils/user/userData";
+import { useFetchSingleBusiness } from "../../user/business/_features/hook";
 
 interface PopUpProps {
     shareDataPoint: boolean;
@@ -22,17 +23,35 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     uniqueId,
     dataPointName,
 }) => {
+
+    const user = getUser()
+
+    //get single data point to build the form
     const { isLoading } = useFetchSingleDataPoint({
         axios,
         id: uniqueId,
         enabled: shareDataPoint,
     });
 
-    const user = getUser()
+    //get single business data
+    const {
+        data: singleBusiness,
+        refetch: refreshSingleBusiness
+    } = useFetchSingleBusiness({
+        axios,
+        businessUserId: user?.businessUserId ?? '',
+        enabled: user?.businessUserId !== undefined,
+    });
+
     let businessName = '';
     if (user?.role === 'business') {
         businessName = user?.businessName;
     };
+    if (user?.role === 'employee') {
+        refreshSingleBusiness();
+        businessName = singleBusiness?.businessName ?? '';
+    };
+
 
     const [copied, setCopied] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);

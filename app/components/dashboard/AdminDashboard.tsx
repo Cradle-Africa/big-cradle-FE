@@ -17,7 +17,7 @@ const BusinessDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false);
 	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false);
 	const { data: user, isLoading } = useFetchMe({ axios });
-	const [module, setModule] = useState<string>("Data Flywheel");
+	const [module, setModule] = useState<string>("Survey");
 	const [business, setBusiness] = useState<string>("");
 
 	if (isLoading) {
@@ -78,10 +78,10 @@ const BusinessDashboard = () => {
 			{module === 'Data Flywheel' && (
 				<div className="flex justify-between h-[410px] gap-5 mt-5">
 					<div className="w-3/5">
-						<FlywheelAverageEntriesChart />
+						<FlywheelAverageEntriesChart business={business} />
 					</div>
 					<div className="w-2/4">
-						<FlywheelEntryVolumeChart />
+						<FlywheelEntryVolumeChart business={business} />
 					</div>
 				</div>
 			)}

@@ -36,6 +36,9 @@ export default function FlywheelEntryVolumeChart({
     if (role === 'super admin') {
         businessUserId = business ?? '';
     }
+    if (user?.role === "admin") {
+        businessUserId = business ?? '';
+    }
 
     const { data, isPending, isError } = useEntryVolume({
         businessUserId,

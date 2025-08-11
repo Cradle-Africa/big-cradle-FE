@@ -119,7 +119,7 @@ export default function EmployeeSignUp({ signUpToken, employeeEmail, businessUse
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`w-full py-2 rounded-md hover:cursor-pointer text-white bg-blue-700`}
+                            className={`w-full justify-center py-2 rounded-md hover:cursor-pointer text-white bg-blue-700`}
                         >
                             {isSubmitting ? (
                                 <Spinner className='inline mr-1' />
