@@ -54,23 +54,27 @@ const Business = () => {
                     className="bg-[#3352FF] rounded-[8px] px-4 h-[36px] cursor-pointer"
                     onClick={() => setOpen(true)}
                 >
-                    <div className="flex fgap2 items-center gap-1">
-                        <Mail size={14} color="white" />
+                    <div className="flex items-center gap-2">
+                        <Mail size={14} color="white" className='inline-block' />
                         <span className="text-white">Invite a new organization</span>
                     </div>
                 </button>
             </div>
 
             {/* department table  */}
-            <div className="flex flex-col bg-white mt-5">
+            <div className="flex flex-col mt-5">
 
-                <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md bg-white" key="table-container">
+                <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md" key="table-container">
                     {open && <InviteBusiness setOpen={setOpen} />}
                     {isLoading ? (
                         <BusinessLoading />
                     ) : (
                         <>
-                            <BusinessTable data={businessList ?? []} />
+                            <div className=' bg-white'>
+                                <BusinessTable data={businessList ?? []} />
+
+                            </div>
+
                             <Pagination
                                 currentPage={pagination.page}
                                 totalPages={pagination.pages}

@@ -10,6 +10,7 @@ import CreatedDataPipeline from "../charts/CreatedDataPipelineCharts";
 import CreatedSurvey from "../charts/CreatedSurveyCharts";
 import TopResearchers from "../charts/TopResearchers";
 import TopBusinesses from "../charts/TopBusiness";
+import TopLocations from "../charts/TopLocations";
 
 const SuperAdminDashboard = () => {
 	const [openKycVerification, setOpenKycVerification] = useState(false);
@@ -69,12 +70,15 @@ const SuperAdminDashboard = () => {
 				<div className="w-4/4">
 					<TopResearchers />
 				</div>
+				<div className="w-4/4">
+					<TopLocations />
+				</div>
 			</div>
 
 			<div className="flex w-full justify-between gap-5 mt-5" >
 				<div className="w-2/4">
 					<TopBusinesses />
-				</div> 
+				</div>
 			</div>
 
 		</div>

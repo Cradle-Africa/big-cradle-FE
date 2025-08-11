@@ -35,24 +35,26 @@ export type TopPipelineDataResponse = {
 };
 
 export interface EntryVolumeItem {
-	count: number;
-	dayOfWeek: number; // 0 (Sunday) to 6 (Saturday)
-	hourOfDay: number; // 0–23
+  count: number;
+  dayOfWeek: number; // 0 (Sunday) to 6 (Saturday)
+  hourOfDay: number; // 0–23
 }
 
 export interface EntryVolumeResponse {
-	success: boolean;
-	message: string;
-	data: EntryVolumeItem[];
+  success: boolean;
+  message: string;
+  data: EntryVolumeItem[];
 }
 
 export type SuperAdminSummaryResponse = {
-	totalBusinessUsers: number;
-	totalAdminUsers: number;
-	totalResearchers: number;
-	totalTransactions: number;
-	totalSurveys: number;
-	totalDataPoints: number;
+  totalBusinessUsers: number;
+  totalAdminUsers: number;
+  totalResearchers: number;
+  totalTransactions: number;
+  totalSurveys: number;
+  totalDataPoints: number;
+  totalCredit: number;
+  totalDebit: number;
 };
 
 export type SurveySummaryResponse = {
@@ -66,20 +68,20 @@ export type PeriodType = 'daily' | 'weekly' | 'monthly' | 'yearly';
 export type CreatedDataPipelines = {
   count: number;
 } & (
-  | { date: string }      // daily
-  | { weekly: string }    // weekly
-  | { monthly: string }   // monthly
-  | { yearly: string }    // yearly
-);
+    | { date: string }      // daily
+    | { weekly: string }    // weekly
+    | { monthly: string }   // monthly
+    | { yearly: string }    // yearly
+  );
 
 export type CreatedSurveys = {
   count: number;
 } & (
-  | { date: string }      // daily
-  | { weekly: string }    // weekly
-  | { monthly: string }   // monthly
-  | { yearly: string }    // yearly
-);
+    | { date: string }      // daily
+    | { weekly: string }    // weekly
+    | { monthly: string }   // monthly
+    | { yearly: string }    // yearly
+  );
 
 
 export type TopResearcherType = {
@@ -87,6 +89,15 @@ export type TopResearcherType = {
   researcherId: string;
   researcherFirstName: string;
   researcherLastName: string;
+};
+  
+export type topLocationType = {
+  entryCount: number,
+  longitude: number,
+  latitude: number,
+  country: string,
+  state: string,
+  city: string
 };
 
 export type TopBusinessType = {

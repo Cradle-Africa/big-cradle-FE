@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
-import { Banknote, Database, Users2, File, Wallet } from "lucide-react";
-import { MdChecklist } from "react-icons/md";
 import BusinessCard from '@/app/pages/user/business/_components/BusinessCard';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { Spinner } from '@radix-ui/themes';
+import { ArrowDownCircle, ArrowUpCircle, Banknote, Database, File, Users2, Wallet } from "lucide-react";
+import { useEffect, useMemo } from 'react';
+import { MdChecklist } from "react-icons/md";
 import { useDatFlywheelSummary, useSuperAdminSummary, useSurveySummary } from '../dashboard/_features/hook';
 
 const Summary = ({ module, business }: { module: string, business?: string }) => {
@@ -129,7 +129,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
             )}
 
             {(role === 'super admin') && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
                     <BusinessCard
                         title={'Total Ecosystem enablers'}
                         value={String(superAdminSuammaryData?.totalAdminUsers)}
@@ -174,6 +174,22 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
                         title={'Total Transactions'}
                         value={String(superAdminSuammaryData?.totalTransactions)}
                         icon={<Wallet size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Credit'}
+                        value={String(superAdminSuammaryData?.totalCredit)}
+                        icon={<ArrowUpCircle size={14} color="blue" />}
+                        iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
+                        isHighLighted={true}
+                    />
+
+                    <BusinessCard
+                        title={'Total Debit'}
+                        value={String(superAdminSuammaryData?.totalDebit)}
+                        icon={<ArrowDownCircle size={14} color="blue" />}
                         iconClass="rounded-full bg-blue-100 p-1 lg:p-2"
                         isHighLighted={true}
                     />
