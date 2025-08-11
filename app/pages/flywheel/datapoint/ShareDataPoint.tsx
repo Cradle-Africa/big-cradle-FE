@@ -23,58 +23,68 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
     uniqueId,
     dataPointName,
 }) => {
+    const user = getUser();
+    const [isGeneratingLink, setIsGeneratingLink] = useState(false);
 
-    const user = getUser()
-
-    //get single data point to build the form
-    const { isLoading } = useFetchSingleDataPoint({
+    // Get single data point
+    const { isLoading: isDataPointLoading } = useFetchSingleDataPoint({
         axios,
         id: uniqueId,
         enabled: shareDataPoint,
     });
 
-    //get single business data
+    // Get single business for employees
     const {
         data: singleBusiness,
-        refetch: refreshSingleBusiness
+        isLoading: isBusinessLoading,
+        isSuccess: isBusinessSuccess,
     } = useFetchSingleBusiness({
         axios,
-        businessUserId: user?.businessUserId ?? '',
-        enabled: user?.businessUserId !== undefined,
+        businessUserId: user?.businessUserId ?? "",
+        enabled: shareDataPoint && user?.role === "employee" && !!user?.businessUserId,
     });
 
-    let businessName = '';
-    if (user?.role === 'business') {
-        businessName = user?.businessName;
-    };
-    if (user?.role === 'employee') {
-        refreshSingleBusiness();
-        businessName = singleBusiness?.businessName ?? '';
+    const getBusinessName = () => {
+        if (user?.role === "business") return user?.businessName ?? "";
+        if (user?.role === "employee") return singleBusiness?.businessName ?? "";
+        return "";
     };
 
-
+    const businessName = getBusinessName();
     const [copied, setCopied] = useState(false);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    //Encode uniqueId using Base64 for public sharing
     const encodedId = typeof window !== "undefined" ? btoa(uniqueId) : "";
     const [shareUrl, setShareUrl] = useState("");
 
     useEffect(() => {
         const generateLink = async () => {
-            if (encodedId && typeof window !== "undefined") {
-                const fullUrl = `${INTERNAL_URL}/shared-data-point/${businessName}?data-point=${encodedId}`;
+            if (!encodedId || !businessName || typeof window === "undefined") return;
+            
+            setIsGeneratingLink(true);
+            try {
+                const fullUrl = `${INTERNAL_URL}/shared-data-point/${encodeURIComponent(businessName)}?data-point=${encodedId}`;
                 const shortUrl = await shortenWithTinyURL(fullUrl);
                 setShareUrl(shortUrl ?? fullUrl);
+            } catch (error) {
+                console.error("Error generating share link:", error);
+                setShareUrl("");
+            } finally {
+                setIsGeneratingLink(false);
             }
         };
 
-        generateLink();
-    }, [encodedId, businessName]);
+        // Only generate link when we have all required data
+        const hasBusinessName = user?.role === "business" || 
+                              (user?.role === "employee" && isBusinessSuccess);
+        
+        if (encodedId && hasBusinessName) {
+            generateLink();
+        }
+    }, [encodedId, businessName, user?.role, isBusinessSuccess]);
 
-
-    // Copy link handler
     const handleCopy = async () => {
+        if (!shareUrl) return;
         try {
             await navigator.clipboard.writeText(shareUrl);
             setCopied(true);
@@ -84,34 +94,34 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
         }
     };
 
-    //Close on outside click
+    // Close modal on outside click
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 onClose();
             }
         };
-
         if (shareDataPoint) {
             document.addEventListener("mousedown", handleClickOutside);
         }
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [shareDataPoint, onClose]);
 
-    // Reset "copied" state when modal opens or ID changes
     useEffect(() => {
         setCopied(false);
     }, [uniqueId, shareDataPoint]);
 
     if (!shareDataPoint) return null;
 
+    const isLoading = isDataPointLoading || 
+                    (user?.role === "employee" && isBusinessLoading) ||
+                    isGeneratingLink;
+
     return (
         <>
             <div className="fixed inset-0 bg-black/20 z-40" />
-
             <div className="fixed z-50 inset-0 flex items-center justify-center px-4">
                 <div
                     ref={modalRef}
@@ -125,25 +135,26 @@ const ShareDataPoint: React.FC<PopUpProps> = ({
                     </button>
 
                     <h2 className="text-blue-600 text-xl font-semibold mb-6 flex items-center gap-2">
-                        <Share2 size={18} />  {'Share Data Point'}: {dataPointName}
-
+                        <Share2 size={18} /> Share Data Point: {dataPointName}
                     </h2>
 
                     {isLoading ? (
-                        <p className="text-gray-500"> <Spinner /></p>
+                        <div className="flex justify-center py-6">
+                            <Spinner size="3" />
+                        </div>
                     ) : (
                         <>
                             <div className="w-full">
                                 <div className="break-all px-4 py-4 bg-blue-600 text-white rounded-xl">
-                                    {shareUrl}
+                                    {shareUrl || "Generating share link..."}
                                 </div>
                             </div>
-
                             <div className="pt-2 flex justify-center mt-6">
                                 <button
                                     type="button"
-                                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium cursor-pointer"
+                                    className={`flex items-center gap-2 ${shareUrl ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'} text-white px-4 py-2 rounded-lg font-medium`}
                                     onClick={handleCopy}
+                                    disabled={!shareUrl}
                                 >
                                     <Copy size={16} />
                                     {copied ? "Copied!" : "Copy link"}
