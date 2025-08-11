@@ -108,12 +108,12 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
 
     return (
         <div className="w-full mt-2">
-            <div className="flex items-center justify-between mb-1">
+            <div className="md:flex items-center justify-between mb-1">
                 <p className="font-semibold text-md">
                     Hi {name}, here’s your platform overview for today
                 </p>
 
-                <div className="flex items-center justify-end gap-2 mb-1">
+                <div className="flex items-center md:justify-end gap-2  mt-5 md:mt-0 mb-5 md:mb-1">
                     {(!isSuperAdmin) && (
                         <select
                             className="border border-gray-300 rounded px-2 py-1 text-sm"

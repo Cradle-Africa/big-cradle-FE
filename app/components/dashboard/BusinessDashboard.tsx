@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import { useState } from "react";
 import KycVerification from "../KycVerification";
-import { Flex, Spinner } from "@radix-ui/themes";
+import { Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import EngagementChart from "../charts/EngagementChart";
 import Summary from "../charts/Summary";
@@ -64,42 +64,44 @@ const BusinessDashboard = () => {
 			{/* Engagement and sentiment charts*/}
 			{module === 'Survey' && (
 				<>
-					<div className="flex justify-between gap-5 mt-5">
-						<div className="w-3/5">
-							<EngagementChart />
+					<div className="mt-5">
+						<div className="relative md:flex justify-between gap-5">
+							<div className="md:w-3/5">
+								<EngagementChart />
+							</div>
+							<div className="md:w-2/4 mt-5 md:mt-0">
+								<SurveyPaymentStatsChart />
+							</div>
 						</div>
-						<div className="w-2/4">
-							<SurveyPaymentStatsChart />
-						</div>
+						{module === "Survey" && (
+							<div className="w-full mt-5">
+								<TopSurveys module={module} business={business} />
+							</div>
+						)}
 					</div>
 				</>
 			)}
 			{module === 'Data Flywheel' && (
-				<div className="flex justify-between h-[410px] gap-5 mt-5">
-					<div className="w-3/5">
-						<FlywheelAverageEntriesChart />
+				<>
+					<div className=" h-[410px] gap-5 mt-5">
+						<div className="relative md:flex justify-between gap-5">
+							<div className="md:w-3/5">
+								<FlywheelAverageEntriesChart />
+							</div>
+							<div className="relative md:w-2/4 mt-5 md:mt-0">
+								<FlywheelEntryVolumeChart />
+							</div>
+						</div>
+						<div className="w-full mt-5">
+							<TopPipelines business={business} />
+						</div>
 					</div>
-					<div className="w-2/4">
-						<FlywheelEntryVolumeChart />
-					</div>
-				</div>
+				</>
+
 			)}
 			{/* <SentimentChart module={module} /> */}
 
-			<Flex className="mt-5">
-				{module === "Survey" && (
-					<div className="w-full">
-						<TopSurveys module={module} business={business} />
-					</div>
-				)}
 
-				{module === "Data Flywheel" && (
-					<div className="w-full">
-						<TopPipelines business={business} />
-					</div>
-				)}
-
-			</Flex>
 		</div >
 	);
 };

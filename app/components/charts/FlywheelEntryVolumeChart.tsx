@@ -63,14 +63,14 @@ export default function FlywheelEntryVolumeChart({
 
 
     return (
-        <div className="h-full bg-white p-4 border border-gray-200 rounded-md">
+        <div className="relative h-full w-full bg-white rounded-xl px-4 py-4 border border-gray-200">
             <p className="font-medium mb-4">Data flywheel volume entries</p>
             <div className="w-full mb-4 rounded-md flex items-center justify-center relative">
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                         <Pie
                             data={chartData}
-                            cx="50%"
+                            cx="35%"
                             cy="50%"
                             label
                             outerRadius={100}

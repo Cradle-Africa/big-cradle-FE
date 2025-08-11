@@ -30,8 +30,8 @@ const Topbar = () => {
     }
     return (
         <>
-            <div className='md:ml-[550px] lg:ml-[650px] xl:ml-0'>
-                <div className="border-b border-gray-300 w-full flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
+            <div className="relative ml-0 md:ml-[550px] md:mb-16 lg:ml-[650px] xl:ml-[300px]">
+                <div className="md:fixed z-50 bg-white border-b border-gray-300  lg:left-[650px] xl:left-[290px] right-0 flex justify-end md:justify-between pl-5 pr-2 pt-5 pb-4">
                     <form className="hidden relative lg:flex items-center">
                         <Search className="absolute left-3 text-gray-300 w-4 h-4 pointer-events-none" />
                         <input
@@ -76,7 +76,7 @@ const Topbar = () => {
                     </div>
                 </div>
                 {openProfile && (
-                    <div className='absolute md:w-72 z-20 right-0 shadow-xl bg-white px-3 py-2 md:px-5 md:py-5 rounded-xl' ref={menuRef}>
+                    <div className='absolute md:w-72 z-60 right-0 shadow-xl bg-white px-3 py-2 md:px-5 md:py-5 rounded-xl' ref={menuRef}>
                         <X onClick={() => setOpenProfile(!openProfile)} size={15} className='absolute right-2 md:right-5 hover:cursor-pointer lg:hidden' color='red' />
                         <p className='text-sm'>My Profiles</p>
                         <div className='inline-flex w-full space-x-3 mt-5 bg-gray-50 rounded-lg px-3 py-3'>
@@ -116,7 +116,7 @@ const Topbar = () => {
                                 className='w-full flex items-center justify-start px-2 mt-2 rounded-md  text-md hover:cursor-pointer hover:bg-gray-100  py-2'
                                 onClick={() => removeUser()}
                             >
-                                <LogOut size={12} className='inline mr-1'/>
+                                <LogOut size={12} className='inline mr-1' />
                                 Logout of my account
                             </button>
                         </div>

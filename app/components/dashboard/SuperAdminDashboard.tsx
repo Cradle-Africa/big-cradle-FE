@@ -66,11 +66,11 @@ const SuperAdminDashboard = () => {
 				</div>
 			</div>
 
-			<div className="flex w-full justify-between gap-5 mt-5" >
+			<div className="md:flex w-full justify-between gap-5 mt-5" >
 				<div className="w-4/4">
 					<TopResearchers />
 				</div>
-				<div className="w-4/4">
+				<div className="w-4/4 mt-5 md:mt-0">
 					<TopLocations />
 				</div>
 			</div>

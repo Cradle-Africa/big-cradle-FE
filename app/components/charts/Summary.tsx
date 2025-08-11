@@ -73,7 +73,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
     return (
         <>
             {module === 'Survey' && surveyData && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
                     <BusinessCard
                         title={'Total Surveys'}
                         value={surveyData.totalSurveys}
@@ -101,7 +101,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
             )}
 
             {module === 'Data Flywheel' && flyWheelData && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
                     <BusinessCard
                         title={'Total data Pipelines'}
                         value={flyWheelData?.totalDataPoints}
@@ -129,7 +129,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
             )}
 
             {(role === 'super admin') && (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-5">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-5">
                     <BusinessCard
                         title={'Total Ecosystem enablers'}
                         value={String(superAdminSuammaryData?.totalAdminUsers)}

@@ -65,11 +65,11 @@ const BusinessDashboard = () => {
 			{/* Engagement and sentiment charts*/}
 			{module === 'Survey' && (
 				<>
-					<div className="flex justify-between gap-5 mt-5">
-						<div className="w-3/5">
+					<div className="md:flex justify-between gap-5 mt-5">
+						<div className="md:w-3/5">
 							<EngagementChart module={module} business={business} />
 						</div>
-						<div className="w-2/4">
+						<div className="md:w-2/4 mt-5 md:mt-0">
 							<SurveyPaymentStatsChart business={business} />
 						</div>
 					</div>
