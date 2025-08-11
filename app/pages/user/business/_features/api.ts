@@ -124,7 +124,7 @@ export const fetchSingleBusiness = async (axios: AxiosInstance, businessUserId: 
             }
         });
 
-        return res.data.data;
+        return res.data.businessUser;
     } catch (error: any) {
         console.error("Error fetching data:", error);
         return []
