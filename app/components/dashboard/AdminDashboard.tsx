@@ -13,18 +13,27 @@ import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 import TopSurveys from "../charts/TopSurveys";
 import TopPipelines from "../charts/TopPipelines";
 
-const BusinessDashboard = () => {
+const AdminDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false);
 	const [openAdminKycVerification, setOpenAdminKycVerification] = useState(false);
 	const { data: user, isLoading } = useFetchMe({ axios });
 	const [module, setModule] = useState<string>("Survey");
-	const [business, setBusiness] = useState<string>("");
+	const [business, setBusiness] = useState<string | null>(null); // null means "not loaded yet"
+	const [businessLoaded, setBusinessLoaded] = useState(false); // track when business is set
 
 	if (isLoading) {
 		return <DashboardSkeleton />;
 	}
 
-	if (user?.data.kycStatus === 'not-submitted' || user?.data.kycStatus === 'pending' || user?.data.kycStatus === 'rejected') {
+	const handleSetBusiness = (value: string | null) => {
+		setBusiness(value);
+		setBusinessLoaded(true);
+	};
+	if (
+		user?.data.kycStatus === 'not-submitted' ||
+		user?.data.kycStatus === 'pending' ||
+		user?.data.kycStatus === 'rejected'
+	) {
 		return (
 			<KycVerification
 				openBusinessKycVerification={openBusinessKycVerification}
@@ -33,7 +42,7 @@ const BusinessDashboard = () => {
 				setOpenAdminKycVerification={setOpenAdminKycVerification}
 				user={user?.data!}
 			/>
-		)
+		);
 	}
 
 	return (
@@ -57,13 +66,22 @@ const BusinessDashboard = () => {
 				user={user?.data!}
 				module={module}
 				setModule={setModule}
-				setBusiness={setBusiness}
+				setBusiness={handleSetBusiness}
 			/>
+
+			{businessLoaded && !business && (
+				<div className="flex justify-center px-10 py-10 bg-gray-100 rounded-md">
+					No business attached to this account
+				</div>
+			)}
+
 			{/* Summary cards */}
-			<Summary module={module} business={business} />
+			{business && (
+				<Summary module={module} business={business} />
+			)}
 
 			{/* Engagement and sentiment charts*/}
-			{module === 'Survey' && (
+			{module === 'Survey' && business && (
 				<>
 					<div className="md:flex justify-between gap-5 mt-5">
 						<div className="md:w-3/5">
@@ -75,7 +93,7 @@ const BusinessDashboard = () => {
 					</div>
 				</>
 			)}
-			{module === 'Data Flywheel' && (
+			{module === 'Data Flywheel' && business && (
 				<div className="flex justify-between h-[410px] gap-5 mt-5">
 					<div className="w-3/5">
 						<FlywheelAverageEntriesChart business={business} />
@@ -87,13 +105,13 @@ const BusinessDashboard = () => {
 			)}
 
 			<Flex className="mt-5">
-				{module === "Survey" && (
+				{module === "Survey" && business && (
 					<div className="w-full">
 						<TopSurveys module={module} business={business} />
 					</div>
 				)}
 
-				{module === "Data Flywheel" && (
+				{module === "Data Flywheel" && business && (
 					<div className="w-full">
 						{business && <TopPipelines business={business} />}
 					</div>
@@ -103,4 +121,4 @@ const BusinessDashboard = () => {
 	);
 };
 
-export default BusinessDashboard;
+export default AdminDashboard;

@@ -34,7 +34,7 @@ export default function SurveyPaymentStatsChart({ startDate, endDate, business }
         businessUserId = business ?? ''
     }
 
-    const { data, isPending, isError } = useSurveyPaymentStats({
+    const { data, isPending } = useSurveyPaymentStats({
         businessUserId,
         role,
         startDate,
@@ -43,11 +43,11 @@ export default function SurveyPaymentStatsChart({ startDate, endDate, business }
     });
 
     if (isPending) return <Spinner />;
-    if (isError || !data) return <p className="text-red-500">Failed to load payment stats.</p>;
+    // if (isError || !data) return <p className="text-red-500">No data.</p>;
 
-    const total = data.reduce((sum: number, item: any) => sum + item.value, 0);
+    const total = data?.reduce((sum: number, item: any) => sum + item.value, 0);
 
-    const chartData = data.map((item: any) => ({
+    const chartData = data?.map((item: any) => ({
         ...item,
         percentage: ((item.value / total) * 100).toFixed(1),
     }));
@@ -70,7 +70,7 @@ export default function SurveyPaymentStatsChart({ startDate, endDate, business }
                         labelLine={false}
                         label={({ value }) => `${value}`}
                     >
-                        {chartData.map((entry: any, index: any) => (
+                        {chartData?.map((entry: any, index: any) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>

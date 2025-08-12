@@ -95,7 +95,9 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
         if (isAdmin) {
             if (isLoadingUseAdminBusiness) return <p><Spinner /></p>;
             if (errorAdminUserBusiness) return <p>Error loading businesses</p>;
-            if (!approvedAdminBusinesses?.length) return <p>No business attached</p>;
+            if (!approvedAdminBusinesses?.length) return <div className="flex justify-center px-10 py-10 bg-gray-100 rounded-md">
+					No business attached to this account
+				</div>;
         }
 
         if (isSuperAdmin) {

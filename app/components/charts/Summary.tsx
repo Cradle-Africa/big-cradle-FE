@@ -68,7 +68,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
 
     if (isLoading || loadingSuperAdmin) return <Spinner />;
 
-    if (isError || errorSuperAdmin) return <p>Error fetching the summary</p>;
+    if (isError || errorSuperAdmin) return <p> {''}</p>;
 
     return (
         <>
