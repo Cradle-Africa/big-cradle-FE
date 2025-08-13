@@ -39,9 +39,9 @@ const TopLocations = () => {
               <Table.Body>
                 {locationsData?.map((location, index) => (
                   <Table.Row key={index}>
-                    <Table.Cell>{location?.city}</Table.Cell>
-                    <Table.Cell>{location?.state}</Table.Cell>
                     <Table.Cell>{location?.country}</Table.Cell>
+                    <Table.Cell>{location?.state}</Table.Cell>
+                    <Table.Cell>{location?.city}</Table.Cell>
                     <Table.Cell>{location?.entryCount}</Table.Cell>
                   </Table.Row>
                 ))}

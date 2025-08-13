@@ -100,7 +100,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
             {
                 endpoint,
                 businessUserId,
-                dataPoint: uniqueDataPoint,
+                dataPoint: pipelineId,
             },
             {
                 onSuccess: (res) => {

@@ -10,30 +10,25 @@ import AnalyseDataChart from "@/app/components/charts/AnalyseDataChart";
 interface AnalyseDataProps {
     analyseData: boolean;
     onClose: () => void;
-	structuredData: any;
-	mutation: any;
+    structuredData: any;
+    mutation: any;
 }
 
 const AnalyseData: React.FC<AnalyseDataProps> = ({
     analyseData,
     onClose,
-	structuredData,
-	mutation,
+    structuredData,
+    mutation,
 }) => {
     const [isDownloading, setIsDownloading] = useState(false);
     const analysisRef = useRef<HTMLDivElement>(null);
 
     const chartData =
-        mutation.data?.visualization?.data?.labels?.map((label: string, index: number) => ({
+        mutation.data?.analysis?.visualization?.data?.labels?.map((label: string, index: number) => ({
             name: label,
-            value: mutation.data.visualization.data.datasets[0].data[index],
+            value: mutation.data.analysis.visualization.data.datasets[0].data[index],
         })) || [];
 
-    // useEffect(() => {
-    //     if (analyseData && dataPointId && businessUserId && endpoint) {
-    //         mutation.mutate({ endpoint, businessUserId, dataPoint: dataPointId });
-    //     }
-    // }, [analyseData, dataPointId, businessUserId, endpoint]);
 
     const handleDownload = async () => {
         if (!analysisRef.current) {
@@ -107,7 +102,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({
 
     if (mutation.isPending) {
         return (
-            <div className=""><Spinner/></div>
+            <div className=""><Spinner /></div>
         )
     }
 
@@ -138,7 +133,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({
                                         <div>
                                             <h3 className="text-base font-semibold mb-5">📌 Insights</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
-                                                {structuredData?.insights?.map((insight: string, index: number) => (
+                                                {structuredData?.analysis?.insights?.map((insight: string, index: number) => (
                                                     <p
                                                         key={index}
                                                         className="text-gray-800"
@@ -154,7 +149,7 @@ const AnalyseData: React.FC<AnalyseDataProps> = ({
                                         <div style={{ pageBreakBefore: "always" }}>
                                             <h3 className="text-base font-semibold mb-1">✅ Recommendations</h3>
                                             <ul className="list-disc list-inside pl-4 space-y-1">
-                                                {structuredData?.recommendations?.map((rec: string, index: number) => (
+                                                {structuredData?.analysis?.recommendations?.map((rec: string, index: number) => (
                                                     <p
                                                         key={index}
                                                         className="text-gray-800"

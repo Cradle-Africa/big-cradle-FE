@@ -36,9 +36,7 @@ export const fetchBusinesses = async (
             page: Number(res.data.page),
             total: Number(res.data.total),
         };
-    } catch (error: any) {
-        console.log(JSON.stringify(error));
-
+    } finally {
         return {
             data: [],
             limit: 10,
