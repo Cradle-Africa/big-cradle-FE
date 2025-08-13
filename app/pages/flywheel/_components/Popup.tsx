@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import { ArrowUpDown, Network } from "lucide-react";
 import { useRef } from "react";
