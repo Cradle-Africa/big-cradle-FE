@@ -155,7 +155,7 @@ const SurveyPage = () => {
 
 	useEffect(() => {
 		if (isVerifyPaymentSuccess) {
-			if (paymentMadeData.paymentResult.data.status === "successful") {
+			if (paymentMadeData?.paymentStatus === "paid") {
 				toast.success("Payment made successfull");
 			} else {
 				toast.error("Error when making payments");
@@ -165,7 +165,7 @@ const SurveyPage = () => {
 		txRef,
 		verifyPayementFunc,
 		isVerifyPaymentSuccess,
-		paymentMadeData?.paymentResult.data.status,
+		paymentMadeData?.paymentStatus,
 	]);
 
 	useEffect(() => {
