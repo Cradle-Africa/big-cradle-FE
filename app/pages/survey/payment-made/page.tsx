@@ -2,7 +2,7 @@
 
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { formattedDate } from "@/app/utils/tools";
+// import { formattedDate } from "@/app/utils/tools";
 import { Verified, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect } from "react";
@@ -90,7 +90,6 @@ const PaymentMadePage = () => {
 						</span>
 					</div>
 
-					<PaymentItem label="Date" value={formattedDate(data?.paymentResult?.data.created_at ?? '')} />
 					<PaymentItem label="Reference" value={data?.paymentResult?.data.tx_ref ?? ''} />
 					<PaymentItem label="Amount" value={`${data?.paymentResult?.data.amount ?? 0}`} />
 				</div>
