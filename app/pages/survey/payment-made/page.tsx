@@ -40,16 +40,15 @@ const PaymentMadePage = () => {
 
 	useEffect(() => {
 		if (isVerifyPaymentSuccess) {
-			if (data.paymentResult.data.status === "successful") {
-				toast.success("Payment successfull");
+			if (data.paymentStatus === "paid") {
+				toast.success("Payment successful");
 			} else {
-				toast.error("Error when making payments");
+				toast.error("Payments not paid");
 			}
 		}
 	}, [
 		txRef,
-		data?.message,
-		data?.paymentResult.data.status,
+		data?.paymentStatus,
 		isVerifyPaymentSuccess,
 		verifyPayementFunc,
 	]);
@@ -83,15 +82,23 @@ const PaymentMadePage = () => {
 							<div className="bg-green-300 rounded-full p-2">
 								<Verified color="white" />
 							</div>
-							<p className="text-xl font-bold">{data?.paymentResult.message}</p>
+							{data?.paymentStatus === "paid" && (
+								<div className="text-green-600 border border-green-600 rounded-full py-1 px-5 capitalize">
+									Payment Successful
+								</div>
+							)}
+							{data?.paymentStatus === "not-paid" && (
+								<div className="text-red-600 border border-red-600 rounded-full py-1 px-5 capitalize">
+									Payment Failed
+								</div>
+							)}
 						</div>
-						<span className="text-green-600 border border-green-600 rounded-full py-1 px-5 capitalize mt-5">
-							{data?.paymentResult.data.status}
-						</span>
+
+
 					</div>
 
-					<PaymentItem label="Reference" value={data?.paymentResult?.data.tx_ref ?? ''} />
-					<PaymentItem label="Amount" value={`${data?.paymentResult?.data.amount ?? 0}`} />
+					<PaymentItem label="Reference" value={data?.tx_ref ?? ''} />
+					<PaymentItem label="Amount" value={`${data?.amount ?? 0}`} />
 				</div>
 			</div>
 		</DashboardLayout>

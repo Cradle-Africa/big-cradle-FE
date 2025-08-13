@@ -143,7 +143,7 @@ export const verifySurvey = async (axios: AxiosInstance, txRef: string) => {
     const res = await axios.get(
       `/survey-mgt/verify-survey-payment?tx_ref=${txRef}`
     );
-    return res.data;
+    return res.data.data;
   } finally {
   }
 };

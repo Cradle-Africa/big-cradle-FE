@@ -3,11 +3,12 @@ import {
   FlutterwaveHostedLinkResponse,
   FlutterWavePaymentSubmit,
   PaginationMeta,
-  PaymentVerificationResponse,
+  // PaymentVerificationResponse,
   SingleSurveyResponse,
   SuperAdminSurveyListResponse,
   Survey,
   SurveyEntry,
+  SurveyListItem,
   SurveyListResponse,
   SurveySchema,
 } from "@/app/lib/type";
@@ -130,7 +131,7 @@ export const useFetchSurveyAnalyctics = ({
 };
 
 export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<PaymentVerificationResponse, void, string>({
+  return useMutation<SurveyListItem, void, string>({
     mutationFn: (txRef: string) => verifySurvey(axios, txRef),
   });
 };
