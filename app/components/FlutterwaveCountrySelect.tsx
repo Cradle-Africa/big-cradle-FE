@@ -2,16 +2,18 @@
 import { useState, useEffect } from "react";
 
 const countries = [
-    { code: "NG", name: "Nigeria" },
-    { code: "GH", name: "Ghana" },
-    { code: "RW", name: "Rwanda" },
-    { code: "KE", name: "Kenya" },
-    { code: "ZM", name: "Zambia" },
-    { code: "TZ", name: "Tanzania" },
-    { code: "MW", name: "Malawi" },
-    { code: "FR", name: "France" },
-    { code: "GB", name: "United Kingdom" },
-    { code: "EU", name: "European Union" }
+  { code: "NG", name: "Nigeria" },          // NGN
+  { code: "GB", name: "United Kingdom" },   // GBP
+  { code: "EU", name: "European Union" },   // EUR
+  { code: "GH", name: "Ghana" },            // GHS
+  { code: "RW", name: "Rwanda" },           // RWF
+  { code: "KE", name: "Kenya" },            // KES
+  { code: "ZM", name: "Zambia" },           // ZMW
+  { code: "TZ", name: "Tanzania" },         // TZS
+  { code: "MW", name: "Malawi" },           // MWK
+  { code: "XO", name: "West African CFA" }, // XOF
+  { code: "UG", name: "Uganda" },           // UGX
+  { code: "ET", name: "Ethiopia" }          // ETB
 ];
 
 interface Props {
