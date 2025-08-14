@@ -81,7 +81,8 @@ const SurveyPayementArea = ({
 		enabled: !!user,
 	});
 
-	const { data: paymentMethodsData } = useFlutterwavePaymentMethods(
+	// Get Flutterwave payment methods
+	const { data: paymentMethodsData, isLoading: isLoadingPaymentMethods } = useFlutterwavePaymentMethods(
 		selectedCountry,
 		Boolean(selectedCountry)
 	);
@@ -274,6 +275,8 @@ const SurveyPayementArea = ({
 									setValue("country", value);
 								}}
 							/>
+
+							{isLoadingPaymentMethods && <Spinner />}
 							<ErrorMessage>{errors.country?.message}</ErrorMessage>
 
 							{paymentMethodsData?.paymentMethods?.methods?.length ? (

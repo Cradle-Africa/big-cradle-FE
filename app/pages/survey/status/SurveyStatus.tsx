@@ -33,7 +33,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
     } = useActivateSurvey({ axios });
 
     // Get Flutterwave payment methods
-    const { data: paymentMethodsData } = useFlutterwavePaymentMethods(
+    const { data: paymentMethodsData, isLoading: isLoadingPaymentMethods } = useFlutterwavePaymentMethods(
         selectedCountry,
         Boolean(selectedCountry)
     );
@@ -179,6 +179,8 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                                     setSelectedCountry(value);
                                 }}
                             />
+
+                            {isLoadingPaymentMethods && <Spinner className='inline mr-1' />}
 
                             {paymentMethodsData?.paymentMethods?.methods?.length ? (
                                 <ul className="mt-2 space-y-2">

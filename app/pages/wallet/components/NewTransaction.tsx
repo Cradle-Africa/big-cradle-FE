@@ -3,14 +3,16 @@ import axios, { INTERNAL_URL } from '@/app/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, Wallet, X } from 'lucide-react';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Spinner } from '@radix-ui/themes';
 import { useCreateTransaction, useInitiateTransaction } from '../_features/hook';
-import { CreateTransactionPayload, FlutterWavePaymentSubmit, TransactionSchema, WalletSuccessResponse } from '@/app/lib/type';
+import { CreateTransactionPayload, FlutterwavePaymentMethod, FlutterWavePaymentSubmit, TransactionSchema, WalletSuccessResponse } from '@/app/lib/type';
 import { transactionSchema } from '@/app/lib/validationSchemas';
 import { getUser } from '@/app/utils/user/userData';
+import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
+import { useFlutterwavePaymentMethods } from '../../survey/_features/hooks';
 
 interface Props {
 	setOpenTransaction: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +23,8 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 	const menuRef = useRef<HTMLDivElement>(null);
 	const queryClient = useQueryClient();
 	const user = getUser();
+	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string } | null>(null);
 
 	const {
 		register,
@@ -30,10 +34,17 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 		resolver: zodResolver(transactionSchema),
 	});
 
+	// Create transaction mutation
 	const {
 		mutateAsync: createTransaction,
 		isSuccess: isCreateSuccess,
 	} = useCreateTransaction({ axios });
+
+	// Get Flutterwave payment methods
+	const { data: paymentMethodsData, isLoading: isLoadingPaymentMethods } = useFlutterwavePaymentMethods(
+		selectedCountry,
+		Boolean(selectedCountry)
+	);
 
 	const { mutateAsync: initiateTransaction } = useInitiateTransaction(
 		{ axios }
@@ -45,10 +56,11 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 
 			const result = await initiateTransaction({
 				tx_ref: data.tx_ref,
-				amount: data.amount,
-				currency: data.currency,
+				amount: data?.amount,
+				country: selectedCountry,
+				currency: selectedPaymentMethod?.currency ?? '',
+				payment_options: selectedPaymentMethod?.code ?? '',
 				redirect_url: data.redirect_url,
-				payment_options: data.payment_options,
 				customer: data.customer,
 				customizations: data.customizations,
 			});
@@ -82,18 +94,18 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 			const { tx_ref, amount } = response.data;
 
 			await submitInitiateTransaction({
-				tx_ref,
-				amount,
-				currency: "NGN",
+				tx_ref: tx_ref,
+				amount: amount,
+				country: selectedCountry,
+				currency: selectedPaymentMethod?.currency ?? '',
+				payment_options: selectedPaymentMethod?.code ?? '',
 				redirect_url: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${tx_ref}`,
-				payment_options:
-					"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
 				customer: {
 					email: user?.email || "",
 				},
 				customizations: {
-					title: 'Survey Budget',
-					description: `Initialize a credit of ${amount}`,
+					title: 'Credit wallet',
+					description: `${data.description}`,
 				},
 			});
 		} catch (error: any) {
@@ -156,6 +168,40 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 						/>
 						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
 					</div>
+
+					<>
+						<FlutterwaveCountrySelect
+							value={selectedCountry}
+							onChange={(value) => {
+								setSelectedCountry(value);
+							}}
+						/>
+
+						{ isLoadingPaymentMethods && <Spinner className='inline mr-1' />}
+
+						{paymentMethodsData?.paymentMethods?.methods?.length ? (
+							<ul className="mt-2 space-y-2">
+								{paymentMethodsData.paymentMethods.methods.map((method: FlutterwavePaymentMethod) => (
+									<li key={method.code} className="border border-gray-300 p-2 rounded">
+										<label className="flex items-center gap-2 cursor-pointer">
+											<input
+												type="radio"
+												name="paymentMethod"
+												value={method.code}
+												onChange={() =>
+													setSelectedPaymentMethod({
+														code: method.code,
+														currency: paymentMethodsData?.paymentMethods.currency || "",
+													})
+												}
+											/>
+											{method.label} ({method.code})
+										</label>
+									</li>
+								))}
+							</ul>
+						) : null}
+					</>
 
 					<div>
 						<textarea
