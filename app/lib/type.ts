@@ -87,11 +87,11 @@ export type ReviewBusinessKyc = {
 };
 
 export type ReviewResearcherKyc = {
-  businessUserId: string,
-  adminUserId: string,
-  researcherUserId: string,
-  action: string,
-  reason: string
+	businessUserId: string,
+	adminUserId: string,
+	researcherUserId: string,
+	action: string,
+	reason: string
 }
 
 export type ReviewAdminKyc = {
@@ -164,7 +164,7 @@ export type ResearcherKyc = {
 	state: string;
 	country: string;
 	isMobileUser: boolean;
-	role: string; 
+	role: string;
 	image: string;
 	individualValidMeansOfId: string;
 	kycStatus: string;
@@ -515,32 +515,38 @@ export type TransactionVerificationResponse = {
 	};
 };
 
-
-// export type SurveyListField = {
-//   label: string;
-//   key: string;
-//   type: string; // consider using a union like 'text' | 'number' | 'select' etc. if known
-//   required: boolean;
-//   options?: string[]; // assuming options are strings
-//   id: string;
-//   createdAt: string;
-//   updatedAt: string;
-// };
-
 export type FlutterWavePaymentSubmit = {
-	tx_ref: string;
-	amount: number;
-	currency: string;
-	redirect_url: string;
-	payment_options: string;
-	customer: {
-		email: string;
-	};
-	customizations: {
-		title: string;
-		description?: string;
-	};
+  tx_ref: string;
+  amount: number;
+  country: string; // selected country
+  currency: string; // currency from selected payment method
+  redirect_url: string;
+  payment_options: string; // code from selected payment method
+  customer: {
+    email: string;
+  };
+  customizations: {
+    title: string;
+    description?: string;
+  };
 };
+
+
+// types/flutterwave.ts
+export interface FlutterwavePaymentMethod {
+	code: string;
+	label: string;
+}
+
+export interface FlutterwavePaymentMethodsResponse {
+	success: boolean;
+	message: string;
+	paymentMethods: {
+		country: string;
+		currency: string;
+		methods: FlutterwavePaymentMethod[];
+	};
+}
 
 
 export type Location = {

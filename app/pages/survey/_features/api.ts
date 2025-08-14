@@ -1,5 +1,5 @@
-import { axiosWithoutAuth } from "@/app/lib/axios";
-import { FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
+import axios, { axiosWithoutAuth } from "@/app/lib/axios";
+import { FlutterwavePaymentMethodsResponse, FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
 import { AxiosInstance } from "axios";
 
 export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
@@ -173,6 +173,34 @@ export const surveyPay = async (
   }
 };
 
+
+export const getFlutterwavePaymentMethods = async (country: string):
+  Promise<FlutterwavePaymentMethodsResponse> => {
+  try {
+    const res = await axios.get(`/payments/flutterwave/payment-methods/${country}`);
+    return res.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = "";
+
+    switch (statusCode) {
+      case 409:
+        message = "Conflict";
+        break;
+
+      default:
+        message = "An unexpected error occurred";
+    }
+
+    const customError = new Error(message);
+    throw customError;
+  }
+}
+
+
+
+
+
 export const fetchSurveyDataEntries = async (
   axios: AxiosInstance,
   queryParams?: {
@@ -205,56 +233,56 @@ export const fetchSurveyDataEntries = async (
 
 
 export const activateSurvey = async (axios: AxiosInstance, id: string) => {
-    try {
-        const response = await axios.put(`/survey-mgt/survey/${id}/activate`);
-        return response.data;
-    } catch (error: any) {
-        const statusCode = error?.response?.status;
-        let message = error?.response?.message;
+  try {
+    const response = await axios.put(`/survey-mgt/survey/${id}/activate`);
+    return response.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.message;
 
-        switch (statusCode) {
-            case 400:
-                message = error?.response?.data?.message || 'Invalid request';
-                break;
-            case 401:
-                message = 'Unauthorized';
-                break;
-            case 404:
-                message = 'Survey not found';
-                break;
-            default:
-                message = 'An unexpected error occurred';
-        }
-
-        throw new Error(message);
+    switch (statusCode) {
+      case 400:
+        message = error?.response?.data?.message || 'Invalid request';
+        break;
+      case 401:
+        message = 'Unauthorized';
+        break;
+      case 404:
+        message = 'Survey not found';
+        break;
+      default:
+        message = 'An unexpected error occurred';
     }
+
+    throw new Error(message);
+  }
 };
 
 
 export const suspendSurvey = async (axios: AxiosInstance, id: string) => {
-    try {
-        const response = await axios.put(`/survey-mgt/survey/${id}/suspend`);
-        return response.data;
-    } catch (error: any) {
-        const statusCode = error?.response?.status;
-        let message = error?.response?.message;
+  try {
+    const response = await axios.put(`/survey-mgt/survey/${id}/suspend`);
+    return response.data;
+  } catch (error: any) {
+    const statusCode = error?.response?.status;
+    let message = error?.response?.message;
 
-        switch (statusCode) {
-            case 400:
-                message = error?.response?.data?.message || 'Invalid request';
-                break;
-            case 401:
-                message = 'Unauthorized';
-                break;
-            case 404:
-                message = 'Survey not found';
-                break;
-            default:
-                message = 'An unexpected error occurred';
-        }
-
-        throw new Error(message);
+    switch (statusCode) {
+      case 400:
+        message = error?.response?.data?.message || 'Invalid request';
+        break;
+      case 401:
+        message = 'Unauthorized';
+        break;
+      case 404:
+        message = 'Survey not found';
+        break;
+      default:
+        message = 'An unexpected error occurred';
     }
+
+    throw new Error(message);
+  }
 };
 
 

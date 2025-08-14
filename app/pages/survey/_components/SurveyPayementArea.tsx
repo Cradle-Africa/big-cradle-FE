@@ -1,5 +1,4 @@
-
-'use client';
+"use client";
 
 import ErrorMessage from "@/app/components/form/ErrorMessage";
 import axios, { INTERNAL_URL } from "@/app/lib/axios";
@@ -15,9 +14,13 @@ import { surveyPaymentSchema } from "@/app/lib/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Banknote, Check, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useCreateSurvey, useSurveyPay } from "../_features/hooks";
+import {
+	useCreateSurvey,
+	useFlutterwavePaymentMethods,
+	useSurveyPay,
+} from "../_features/hooks";
 
 import {
 	getBusinessId,
@@ -26,7 +29,9 @@ import {
 } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
 import Spinner from "@/app/components/Spinner";
-import { useCreateTransaction, useFetchWallet } from "../../wallet/_features/hook";
+import { useFetchWallet } from "../../wallet/_features/hook";
+import FlutterwaveCountrySelect from "@/app/components/FlutterwaveCountrySelect";
+import { createTransaction } from "../../wallet/_features/api";
 
 type Props = {
 	form: DataPointForm;
@@ -60,40 +65,26 @@ const SurveyPayementArea = ({
 }: Props) => {
 	const router = useRouter();
 	const user = getUser();
-
 	let businessUserId: string | null = null;
 	const employeeUserId = getEmployeeUserId();
+	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string; } | null>(null);
 
-	const { mutateAsync: createSurvey, isPending: isCreatingSurvey } =
-		useCreateSurvey({ axios });
+	const { mutateAsync: createSurvey, isPending: isCreatingSurvey } = useCreateSurvey({ axios });
 
-	const { mutateAsync: makePayment, isPending: isMakingPayment } = useSurveyPay(
-		{ axios }
-	);
+	const { mutateAsync: makePayment, isPending: isMakingPayment } =
+		useSurveyPay({ axios });
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<SurveyPaymentSchema>({
-		resolver: zodResolver(surveyPaymentSchema),
-	});
-
-	//Create transaction with a debit type
-	const {
-		mutateAsync: createTransaction,
-		// isSuccess: isCreateSuccess,
-	} = useCreateTransaction({ axios });
-
-	//Get wallet by user id
-	const {
-		data: wallet,
-	} = useFetchWallet({
+	const { data: wallet } = useFetchWallet({
 		axios,
-		userId: user?.id || '',
+		userId: user?.id || "",
 		enabled: !!user,
 	});
 
+	const { data: paymentMethodsData } = useFlutterwavePaymentMethods(
+		selectedCountry,
+		Boolean(selectedCountry)
+	);
 
 	if (user?.role === "business") {
 		businessUserId = getBusinessId() || null;
@@ -101,28 +92,42 @@ const SurveyPayementArea = ({
 		businessUserId = user?.businessUserId || null;
 	}
 
+	const {
+		register,
+		handleSubmit,
+		watch,
+		formState: { errors },
+		setValue,
+	} = useForm<SurveyPaymentSchema>({
+		resolver: zodResolver(surveyPaymentSchema),
+	});
+
+	// Watch the useWallet checkbox
+	const useWallet = watch("useWallet", false);
+
 	const submitSurveyPayment = async (data: FlutterWavePaymentSubmit) => {
 		try {
 			await makePayment(
 				{
 					tx_ref: data.tx_ref,
 					amount: data.amount,
+					country: data.country,
 					currency: data.currency,
 					redirect_url: data.redirect_url,
-					payment_options: data.payment_options,
+					payment_options: data.payment_options, // the code from selected payment method
 					customer: data.customer,
 					customizations: data.customizations,
 				},
 				{
-					onSuccess: (data) => {
-						window.location.href = data.data.link;
+					onSuccess: (response) => {
+						window.location.href = response.data.link;
 						toast.success("Survey payment initialized");
 					},
 				}
 			);
-		} finally {
-		}
+		} finally { }
 	};
+
 
 	const submitSurvey = async (data: SurveyPaymentSchema) => {
 		const demographicsToPost = countriesAndCities.map((v) => ({
@@ -131,130 +136,122 @@ const SurveyPayementArea = ({
 			city: v.city,
 		}));
 
-		// console.log(JSON.stringify(JSON.stringify(demographicsToPost)));
-		// console.log(JSON.stringify(countriesAndCities));
-
 		const payload: Survey = {
 			businessUserId,
 			employeeUserId,
-			surveyName: surveyName,
-			surveyDescription: surveyDescription,
-			sector: sector,
-			surveyGoal: surveyGoal,
-			surveyType: surveyType,
-			startDate: startDate,
-			endDate: endDate,
+			surveyName,
+			surveyDescription,
+			sector,
+			surveyGoal,
+			surveyType,
+			startDate,
+			endDate,
 			amount: parseInt(`${data.amount}`),
 			field: form.field,
 			surveyLocations: demographicsToPost,
 			ageDemographics: locationAndDemographic,
-			gender: gender
+			gender,
 		};
 
 		await createSurvey(payload, {
 			onSuccess: (createdSurvey) => {
-				setForm({ dataPointId: "", field: [] }); // clear the form
+				setForm({ dataPointId: "", field: [] });
 
-				// If the survey is internal and the user is not using the wallet pay with flutterwave
-				if (surveyType === 'internal' && (!data.useWallet)) {
+				// Internal survey & Flutterwave
+				if (surveyType === "internal" && !data.useWallet) {
+					if (!selectedPaymentMethod) {
+						toast.error("Please select a payment method to proceed");
+						return;
+					}
 					submitSurveyPayment({
 						tx_ref: createdSurvey.data.tx_ref,
 						amount: parseInt(data.amount),
-						currency: "NGN",
+						country: selectedCountry,
+						currency: selectedPaymentMethod.currency,
+						payment_options: selectedPaymentMethod.code,
 						redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
-						payment_options:
-							"card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
-						customer: {
-							email: user?.email || "",
-						},
+						customer: { email: user?.email || "" },
 						customizations: {
-							title: 'Survey Budget',
-							description: 'Budget allocated to the survey ' + surveyName,
+							title: "Survey Budget",
+							description: "Budget allocated to the survey " + surveyName,
 						},
 					});
 				}
 
-				//pay with bigcradle wallet
-				if (surveyType === 'internal' && wallet?.data?.id && data.useWallet) {
+				// Internal survey & wallet
+				if (surveyType === "internal" && wallet?.data?.id && data.useWallet) {
 					const payload: CreateTransactionPayload = {
-						walletId: wallet?.data?.id ?? '',
-						type: 'debit',
+						walletId: wallet?.data?.id ?? "",
+						type: "debit",
 						amount: Number(data.amount),
-						description: 'Survey payed with big cradle wallet'
+						description: "Survey payed with big cradle wallet",
 					};
-					createTransaction(payload, {
-						onSuccess: () => {
-							toast.success('Survey has been created successfully and your wallet has been debited for the payment');
+					createTransaction(axios, payload)
+						.then(() => {
+							toast.success(
+								"Survey has been created successfully and your wallet has been debited for the payment"
+							);
 							router.push(`/pages/survey?status=all`);
-						},
-					});
+						})
+						.catch((error) => {
+							toast.error(error?.message || "Failed to create transaction");
+						});
 				}
 
 				if (!wallet?.data?.id && data.useWallet) {
-					toast.error('You do not have a wallet. Please create a wallet to use this feature.');
+					toast.error("You do not have a wallet. Please create a wallet to use this feature.");
 				}
 
-				if (surveyType === 'external') {
-					toast.success('Survey has been created successfully');
+				if (surveyType === "external") {
+					toast.success("Survey has been created successfully");
 					router.push(`/pages/survey?status=all`);
 				}
 			},
 			onError: (error: any) => {
-				console.error("Create survey error:", error);
-				const message =
-					error?.response?.data?.message ||
-					error?.message ||
-					"Failed to create the survey";
-				toast.error(message);
+				toast.error(
+					error?.response?.data?.message || error?.message || "Failed to create the survey"
+				);
 			},
 		});
 	};
 
-	//   useEffect(() => {
-	//     if (isCreateSurveySuccess) {
-	//       submitSurveyPayment();
-	//     }
-	//   }, []);
-
 	return (
 		<div className="my-5 flex flex-col gap-4 max-w-xl 2xl:max-w-3xl mx-auto">
-			<div className="relative flex justify-around ">
+			{/* Header */}
+			<div className="relative flex justify-around">
 				<button
 					type="button"
-					className="absolute left-0 bg-gray-100 w-10 h-10 flex justify-start items-center rounded-full p-2 
-				    	hover:cursor-pointer hover:bg-blue-600 hover:text-white transition duration-500 "
+					className="absolute left-0 bg-gray-100 w-10 h-10 flex justify-start items-center rounded-full p-2 hover:cursor-pointer hover:bg-blue-600 hover:text-white transition duration-500"
 					onClick={() => router.back()}
 				>
 					<ChevronLeft size={30} />
 				</button>
 				<div className="flex flex-col justify-center">
-					<div
-						className="bg-blue-100 p-2 text-blue-600 rounded-full h-10 w-10
-						flex items-center justify-center
-					">
+					<div className="bg-blue-100 p-2 text-blue-600 rounded-full h-10 w-10 flex items-center justify-center">
 						<Banknote size={20} />
 					</div>
 				</div>
 			</div>
-			<h3 className="flex w-full justify-center font-semibold teext-lg mt-2">Payment Details</h3>
+
+			<h3 className="flex w-full justify-center font-semibold text-lg mt-2">Payment Details</h3>
 
 			<p className="mb-8">
 				Please enter the amount you wish to allocate as your survey budget. Once you have specified your budget, you can proceed to make a secure payment to launch your survey.
 			</p>
-			<form
-				onSubmit={handleSubmit(submitSurvey)}
-				className="flex flex-col gap-2"
-			>
+
+			<form onSubmit={handleSubmit(submitSurvey)} className="flex flex-col gap-2">
 				<div className="flex flex-col xl:flex-wrap gap-4">
+					{/* Amount */}
 					<div className="w-full">
 						<input
 							{...register("amount")}
 							placeholder="Amount"
-							className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none "
+							className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
 						/>
 						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
 					</div>
 
+					{/* Wallet Checkbox */}
 					<div className="w-full">
 						<label className="flex items-center gap-2 cursor-pointer">
 							<input
@@ -267,8 +264,45 @@ const SurveyPayementArea = ({
 						<ErrorMessage>{errors.useWallet?.message}</ErrorMessage>
 					</div>
 
+					{/* Show country + payment methods only if not using wallet */}
+					{!useWallet && (
+						<div className="w-full">
+							<FlutterwaveCountrySelect
+								value={selectedCountry}
+								onChange={(value) => {
+									setSelectedCountry(value);
+									setValue("country", value);
+								}}
+							/>
+							<ErrorMessage>{errors.country?.message}</ErrorMessage>
+
+							{paymentMethodsData?.paymentMethods?.methods?.length ? (
+								<ul className="mt-2 space-y-2">
+									{paymentMethodsData.paymentMethods.methods.map((method) => (
+										<li key={method.code} className="border border-gray-300 p-2 rounded">
+											<label className="flex items-center gap-2 cursor-pointer">
+												<input
+													type="radio"
+													name="paymentMethod"
+													value={method.code}
+													onChange={() =>
+														setSelectedPaymentMethod({
+															code: method.code,
+															currency: paymentMethodsData?.paymentMethods.currency || "",
+														})
+													}
+												/>
+												{method.label} ({method.code})
+											</label>
+										</li>
+									))}
+								</ul>
+							) : null}
+						</div>
+					)}
 				</div>
 
+				{/* Submit Button */}
 				<button
 					disabled={isMakingPayment || isCreatingSurvey}
 					className="w-full flex items-center justify-center bg-blue-600 rounded-md py-2 px-8 mr-auto mt-4 cursor-pointer"
@@ -291,18 +325,5 @@ const SurveyPayementArea = ({
 		</div>
 	);
 };
-
-// const paymentMethods = [
-//   "card",
-//   "account",
-//   "banktransfer",
-//   "ussd",
-//   "mpesa",
-//   "ghana_mobilemoney",
-//   "uganda_mobilemoney",
-//   "rwanda_mobilemoney",
-//   "barter",
-//   "credit",
-// ];
 
 export default SurveyPayementArea;

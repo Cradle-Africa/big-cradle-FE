@@ -1,6 +1,7 @@
 import {
   DashboardAnalyticsResponse,
   FlutterwaveHostedLinkResponse,
+  FlutterwavePaymentMethodsResponse,
   FlutterWavePaymentSubmit,
   PaginationMeta,
   // PaymentVerificationResponse,
@@ -25,6 +26,7 @@ import {
   fetchSurveyDataEntries,
   fetchSurveys,
   fetchSurveysAnalytics,
+  getFlutterwavePaymentMethods,
   surveyPay,
   suspendSurvey,
   updateSurvey,
@@ -60,7 +62,7 @@ type UseFetchSuperAdminSurvey = {
   search: string
   startDate: string,
   endDate: string,
-  enabled : boolean;
+  enabled: boolean;
   onSuccess?: (data: any) => void;
 };
 
@@ -90,7 +92,7 @@ type UseFetchSurvey = {
   page: number;
   limit: number;
   businessUserId: string | null;
-  enabled : boolean
+  enabled: boolean
   onSuccess?: (data: any) => void;
 };
 
@@ -136,16 +138,18 @@ export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
   });
 };
 
-// export const useVerifySurvey = ({
-//   enabled,
-//   axios,
-// }: UseVerifySurveySurvey) => {
-//   return useQuery({
-//     queryKey: ["verify-survey"],
-//     queryFn: (txRef : string) => verifySurvey(axios, txRef),
-//     enabled,
-//   });
-// };
+
+export const useFlutterwavePaymentMethods = (
+  country: string,
+  enabled: boolean
+) => {
+  return useQuery<FlutterwavePaymentMethodsResponse>({
+    queryKey: ["flutterwave-payment-methods", country],
+    queryFn: () => getFlutterwavePaymentMethods(country),
+    enabled,
+    staleTime: 1000 * 60 * 5,
+  });
+};
 
 type UseFetchSingleSurvey = {
   axios: AxiosInstance;
@@ -209,8 +213,8 @@ export const useSuspendSurvey = ({ axios }: { axios: AxiosInstance }) => {
 };
 
 export const useAnalyseSurveyData = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<any, Error, {surveyId: string}>({
-    mutationFn: ({ surveyId}) =>
+  return useMutation<any, Error, { surveyId: string }>({
+    mutationFn: ({ surveyId }) =>
       analyseSurveyData(axios, surveyId),
   });
 };

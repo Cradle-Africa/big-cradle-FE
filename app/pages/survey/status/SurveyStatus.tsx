@@ -1,12 +1,13 @@
 import axios, { INTERNAL_URL } from '@/app/lib/axios';
 import { useQueryClient } from '@tanstack/react-query';
 import { Banknote, Check, X } from 'lucide-react';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useActivateSurvey, useSurveyPay, useSuspendSurvey } from '../_features/hooks';
+import { useActivateSurvey, useFlutterwavePaymentMethods, useSurveyPay, useSuspendSurvey } from '../_features/hooks';
 import { Spinner } from '@radix-ui/themes';
-import { FlutterWavePaymentSubmit, SurveyListItem } from '@/app/lib/type';
+import { FlutterwavePaymentMethod, FlutterWavePaymentSubmit, SurveyListItem } from '@/app/lib/type';
 import { getUser } from '@/app/utils/user/userData';
+import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
 
 
 interface Props {
@@ -22,6 +23,8 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
     const menuRef = useRef<HTMLDivElement>(null);
     const queryClient = useQueryClient();
     const user = getUser();
+    const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string } | null>(null);
 
     const {
         mutateAsync: activateSurvey,
@@ -29,6 +32,13 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
         isPending: isPendingActivate
     } = useActivateSurvey({ axios });
 
+    // Get Flutterwave payment methods
+    const { data: paymentMethodsData } = useFlutterwavePaymentMethods(
+        selectedCountry,
+        Boolean(selectedCountry)
+    );
+
+    //activate a survey
     const onSubmitActivate = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -38,11 +48,13 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
         }
     };
 
+    //suspend a survey
     const {
         mutateAsync: suspendSurvey,
         isSuccess: isSucessSuspend,
         isPending: isPendingSuspend
     } = useSuspendSurvey({ axios });
+
 
     const onSubmitSuspend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,6 +76,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                 {
                     tx_ref: data.tx_ref,
                     amount: data.amount,
+                    country: data.country,
                     currency: data.currency,
                     redirect_url: data.redirect_url,
                     payment_options: data.payment_options,
@@ -114,7 +127,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
 
             <div
                 ref={menuRef}
-                className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-lg z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                className="bg-white p-6 rounded-md shadow-md w-82 md:w-full max-w-xl z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             >
                 <div className="flex justify-center mt-5">
                     {
@@ -157,7 +170,39 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                 {completePayment && (
                     <div className="items-center text-center mt-5">
                         <h2 className="text-md font-semibold text-black mb-4">Complete the payment of the survey: {survey.surveyName}</h2>
-                        <p className="text-sm text-gray-500">Click on continue to complete your survey payment?</p>
+                        <p className="text-sm text-gray-500 mb-5">Select the country and click on continue to complete your survey payment?</p>
+
+                        <>
+                            <FlutterwaveCountrySelect
+                                value={selectedCountry}
+                                onChange={(value) => {
+                                    setSelectedCountry(value);
+                                }}
+                            />
+
+                            {paymentMethodsData?.paymentMethods?.methods?.length ? (
+                                <ul className="mt-2 space-y-2">
+                                    {paymentMethodsData.paymentMethods.methods.map((method: FlutterwavePaymentMethod) => (
+                                        <li key={method.code} className="border border-gray-300 p-2 rounded">
+                                            <label className="flex items-center gap-2 cursor-pointer">
+                                                <input
+                                                    type="radio"
+                                                    name="paymentMethod"
+                                                    value={method.code}
+                                                    onChange={() =>
+                                                        setSelectedPaymentMethod({
+                                                            code: method.code,
+                                                            currency: paymentMethodsData?.paymentMethods.currency || "",
+                                                        })
+                                                    }
+                                                />
+                                                {method.label} ({method.code})
+                                            </label>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : null}
+                        </>
                     </div>
                 )}
 
@@ -166,14 +211,20 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                         e.preventDefault();
                         if (activate) return onSubmitActivate(e);
                         if (suspend) return onSubmitSuspend(e);
-                        if (completePayment) return submitSurveyPayment(
-                            {
+
+                        if (completePayment) {
+                            if (!selectedPaymentMethod) {
+                                toast.error("Please select a payment method");
+                                return;
+                            }
+
+                            submitSurveyPayment({
                                 tx_ref: survey.tx_ref,
                                 amount: survey?.amount,
-                                currency: "NGN",
+                                country: selectedCountry,
+                                currency: selectedPaymentMethod.currency,
+                                payment_options: selectedPaymentMethod.code,
                                 redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${survey.tx_ref}`,
-                                payment_options:
-                                    "card,account,banktransfer,ussd,mpesa,ghana_mobilemoney,uganda_mobilemoney,rwanda_mobilemoney,barter,credit",
                                 customer: {
                                     email: user?.email || "",
                                 },
@@ -181,8 +232,9 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                                     title: 'Survey Budget',
                                     description: 'Budget allocated to the survey ' + survey?.surveyName,
                                 },
-                            }
-                        );
+                            });
+                        }
+
                     }}
                     className="space-y-4 mt-5 lg:mt-12"
                 >
@@ -227,18 +279,21 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                         )}
 
                         {completePayment && (
-                            <button
-                                type="submit"
-                                disabled={isPendingSuspend}
-                                className="flex justify-center items-center w-1/2 py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
-                            >
-                                {isPendingSuspend ? (
-                                    <Spinner className='mr-1 inline' />
-                                ) : (
-                                    <> <Check size={14} className='mr-1 inline' /> </>
-                                )}
-                                {isPendingSuspend ? 'Prcessing...' : 'Continue'}
-                            </button>
+                            <>
+                                <button
+                                    type="submit"
+                                    disabled={isPendingSuspend}
+                                    className="flex justify-center items-center w-1/2 py-2 rounded-md text-white bg-blue-600 hover:cursor-pointer"
+                                >
+                                    {isPendingSuspend ? (
+                                        <Spinner className='mr-1 inline' />
+                                    ) : (
+                                        <> <Check size={14} className='mr-1 inline' /> </>
+                                    )}
+                                    {isPendingSuspend ? 'Prcessing...' : 'Continue'}
+                                </button>
+                            </>
+
                         )}
 
                     </div>

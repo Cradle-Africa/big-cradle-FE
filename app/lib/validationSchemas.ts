@@ -118,6 +118,7 @@ export const surveyPaymentSchema = z.object({
 		}, {
 			message: "The amount must be greater or equal to 2000",
 		}),
+	country: z.string().min(1, "Select a country"),
 	title: z.string().optional(),
 	email: z.string().optional(),
 	description: z.string().optional(),

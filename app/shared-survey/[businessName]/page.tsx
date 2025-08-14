@@ -88,7 +88,7 @@ const DataEntryPage = () => {
         const payload: SurveyEntryData = {
             businessUserId: survey?.data?.businessUserId ?? '',
             surveyId: survey?.data?.id ?? '',
-            researcherId: survey?.data?.employeeUserId ?? '', // optional? depends on your system
+            researcherId: survey?.data?.employeeUserId ?? '', 
             location: {
                 type: "Point",
                 coordinates: survey?.data?.surveyLocations?.[0]?.location?.coordinates ?? [0, 0],
