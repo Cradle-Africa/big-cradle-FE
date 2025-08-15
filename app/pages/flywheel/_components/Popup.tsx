@@ -2,9 +2,7 @@
 
 import { ArrowUpDown, Network } from "lucide-react";
 import { useRef } from "react";
-// import Link from 'next/link'
-// import { ArrowUpDown, Network } from "lucide-react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface PopUpProps {
     openPopup: boolean;
@@ -14,7 +12,6 @@ interface PopUpProps {
 
 const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) => {
     const menuRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
 
     return (
         <div>
@@ -28,13 +25,11 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
 
                         <h3 className="font-bold"> How would you like to collect your data?</h3>
                         <div className="md:flex justify-between gap-3 md:gap-5 mt-5">
-                            <div className="md:w-full bg-orange-50">
-                                <button
-                                    onClick={() => {
-                                        router.push("https://tinyurl.com/2ammll52")
-                                        onClose();
-                                    }}
-                                    className="md:mt-0 w-full md:h-48 px-6 py-6 border-2 border-dashed border-orange-400 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer"
+                            <div className="md:w-full bg-orange-50 border-2 border-dashed border-orange-400 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer">
+                                <Link
+                                    href="https://tinyurl.com/2ammll52"
+                                    onClick={onClose}
+                                    className="md:mt-0 w-full md:h-48 px-6 py-6"
 
                                 >
                                     <div className="flex justify-center">
@@ -47,25 +42,16 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                     </p>
                                     <p className="mt-3 text-md text-gray-800">Integrate with your existing apps, websites, or CRM</p>
                                     
-                                </button>
-                                {/* <button
-                                    className="w-full mt-5 bg-blue-600 text-white px-5 py-2 rounded-md flex justify-center hover:cursor-pointer"
-                                    onClick={() => {
-                                        onBuildPipeline();
-                                        onClose();
-                                    }}
-                                >
-                                        Connect via Api
-                                </button> */}
+                                </Link>
                             </div>
 
-                            <div className="md:w-full bg-blue-50">
+                            <div className="md:w-full bg-blue-50 border-2 border-dashed border-blue-500 hover:border  hover:transition-all ease-in rounded-lg hover:cursor-pointer">
                                 <button
                                     onClick={() => {
                                         onBuildPipeline();
                                         onClose();
                                     }}
-                                    className="md:mt-0 w-full md:h-48 px-6 py-6 border-2 border-dashed border-blue-500 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer"
+                                    className="md:mt-0 w-full md:h-48 px-6 py-6 hover:cursor-pointer"
 
                                 >
                                     <div className="flex justify-center">
@@ -79,15 +65,6 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                     <p className="mt-3 text-md text-gray-800">Use our form builder to create your own data pipeline</p>
                                     
                                 </button>
-                                {/* <button
-                                    className="w-full mt-5 bg-blue-600 text-white px-5 py-2 rounded-md flex justify-center hover:cursor-pointer"
-                                    onClick={() => {
-                                        onBuildPipeline();
-                                        onClose();
-                                    }}
-                                >
-                                    Build your own pipeline
-                                </button> */}
                             </div>
 
                         </div>

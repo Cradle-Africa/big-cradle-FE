@@ -59,12 +59,10 @@ export const useCreateTransaction = ({ axios }: { axios: AxiosInstance }) => {
 };
 
 
-
 export const useInitiateTransaction = ({ axios }: { axios: AxiosInstance }) =>
   useMutation<{ link: string }, Error, FlutterWavePaymentSubmit>({
     mutationFn: (payload) => initiateTransaction(axios, payload),
   });
-
 
 
 export const useVerifyTransaction = ({ axios }: { axios: AxiosInstance }) => {

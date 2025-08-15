@@ -1,12 +1,20 @@
 'use client';
 
 import { WalletTransactionList } from "@/app/lib/type";
+import WalletActions from "./WalletActions";
+import { useState } from "react";
+import TransactionModal from "./TransactionModal";
 
 type TransactionsTableProps = {
 	transactionsData?: WalletTransactionList[];
 };
 
 const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) => {
+
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
+	const [selectedTransaction, setSelectedTransaction] = useState<WalletTransactionList | null>(null);
+	const [completePayment, setCompletePayment] = useState(false)
+
 	if (!transactionsData.length) {
 		return <p className="text-gray-500">No transactions available.</p>;
 	}
@@ -21,6 +29,7 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Type and Description</th>
 						<th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
+						<th className="px-6 py-3 text-left text-sm font-semibold">Action</th>
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
@@ -40,19 +49,43 @@ const TransactionsTable = ({ transactionsData = [] }: TransactionsTableProps) =>
 											: transaction.description)}
 								</td>
 								<td className="px-6 py-4 w-44">
-									<div className={`${transaction.paymentStatus === 'paid' ? 'border border-green-600 text-green-600' :
+									<span className={`${transaction.paymentStatus === 'paid' ? 'border border-green-600 text-green-600' :
 										'border border-red-600 text-red-600'}
 										rounded-full px-5 py-1 capitalize w-full text-center
 									`
 									}>
 										{transaction.paymentStatus}
-									</div>
+									</span>
 								</td>
+
+								<td className="px-6 py-6" >
+									<WalletActions
+										index={index}
+										openIndex={openIndex}
+										setOpenIndex={setOpenIndex}
+										paymentStatus={transaction.paymentStatus}
+										setSelectedTransaction={() => {
+											setSelectedTransaction(transaction);
+											setCompletePayment(true);
+										}}
+									/>
+								</td>
+
 							</tr>
 						);
 					})}
 				</tbody>
 			</table>
+
+			{
+				completePayment && selectedTransaction &&  (
+					<TransactionModal
+						transaction={selectedTransaction}
+						setOpen={setCompletePayment}
+						completeTransaction={true}
+					/>
+				)
+			}
 		</div>
 	);
 };

@@ -34,11 +34,7 @@ import {
 } from "./api";
 
 export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<
-    FlutterwaveHostedLinkResponse,
-    Error,
-    FlutterWavePaymentSubmit
-  >({
+  return useMutation<FlutterwaveHostedLinkResponse, Error, FlutterWavePaymentSubmit>({
     mutationFn: (data: FlutterWavePaymentSubmit) => surveyPay(axios, data),
   });
 };

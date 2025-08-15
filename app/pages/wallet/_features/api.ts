@@ -120,8 +120,6 @@ export const initiateTransaction = async (
     return { link: response.data.data?.link };
 };
 
-
-
 export const verifyTransaction = async (axios: AxiosInstance, txRef: string) => {
     try {
         const res = await axios.post(
