@@ -1,14 +1,12 @@
-import { getAdminUserId, removeUser } from '@/app/utils/user/userData';
+import { getUser, removeUser } from '@/app/utils/user/userData';
 import { Business, InviteBusiness } from '@/app/lib/type';
 import { AxiosInstance } from "axios";
 
-const adminUserId = getAdminUserId()
-
 export const fetchBusinesses = async (
     axios: AxiosInstance,
-    queryParams?: { 
-        page?: number; 
-        limit?: number; 
+    queryParams?: {
+        page?: number;
+        limit?: number;
         adminUserId?: string | null;
     }
 ): Promise<{
@@ -17,26 +15,46 @@ export const fetchBusinesses = async (
     page: number;
     total: number;
 }> => {
+    const user = getUser();
     try {
         const params = {
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
-            adminUserId: adminUserId || undefined,
+            adminUserId: queryParams?.adminUserId || undefined,
         };
+        let endpoint = ''
+        if (user?.role === 'admin' && queryParams?.adminUserId !== null && queryParams?.adminUserId !== undefined) {
+            endpoint = `/manage-business/all-admin-user-businesses`;
+            const res = await axios.get(endpoint, { params });
 
-        const res = await axios.get(`/manage-business/all-admin-user-businesses`, { params });
+            return {
+                data: res.data.businessUser ?? res.data.businessUsers ?? [],
+                limit: Number(res.data.limit),
+                page: Number(res.data.page),
+                total: Number(res.data.total),
+            };
+        } else if (user?.role === 'super admin') {
+            endpoint = `/manage-business`;
+            const res = await axios.get(endpoint, { params });
 
-        if (res?.status === 401) {
-            removeUser();
+            return {
+                data: res.data.businessUser ?? res.data.businessUsers ?? [],
+                limit: Number(res.data.limit),
+                page: Number(res.data.page),
+                total: Number(res.data.total),
+            };
         }
 
         return {
-            data: res.data.businessUser ?? [],
-            limit: Number(res.data.limit),
-            page: Number(res.data.page),
-            total: Number(res.data.total),
+            data: [],
+            limit: Number(0),
+            page: Number(0),
+            total: Number(0),
         };
-    } finally {
+
+
+    } catch (error) {
+        console.error("Error fetching businesses:", error);
         return {
             data: [],
             limit: 10,
@@ -76,41 +94,41 @@ export const inviteBusiness = async (
 
 
 export const deleteBusinesse = async (
-  axios: any,
-  businessUserId: string
+    axios: any,
+    businessUserId: string
 ) => {
-  try {
-    const res = await axios.delete(`/manage-business/${businessUserId}`);
+    try {
+        const res = await axios.delete(`/manage-business/${businessUserId}`);
 
-    if (res?.status === 401) {
-      removeUser();
+        if (res?.status === 401) {
+            removeUser();
+        }
+
+        return res.data;
+    } catch (error: any) {
+        console.error("Error deleting business:", error);
+        throw error;
     }
-
-    return res.data;
-  } catch (error: any) {
-    console.error("Error deleting business:", error);
-    throw error;
-  }
 };
 
 
 
 export const resetPasswordBusiness = async (
-  axios: any,
-  businessUserId: string
+    axios: any,
+    businessUserId: string
 ) => {
-  try {
-    const res = await axios.put(`/manage-business/change-password/${businessUserId}`);
+    try {
+        const res = await axios.put(`/manage-business/change-password/${businessUserId}`);
 
-    if (res?.status === 401) {
-      removeUser();
+        if (res?.status === 401) {
+            removeUser();
+        }
+
+        return res.data;
+    } catch (error: any) {
+        console.error("Error resetting business password", error);
+        throw error;
     }
-
-    return res.data;
-  } catch (error: any) {
-    console.error("Error resetting business password", error);
-    throw error;
-  }
 };
 
 

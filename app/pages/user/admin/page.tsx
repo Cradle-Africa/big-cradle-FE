@@ -1,50 +1,73 @@
-'use client'
+
+'use client';
+
 import React from 'react'
-import TableComponent from '@/app/components/table/TableComponent';
+import DashboardLayout from '@/app/DashboardLayout';
+import axios from "@/app/lib/axios";
+import { useState } from "react";
+import { useFetchAdmins } from './_features/hook';
+import { Spinner } from '@radix-ui/themes';
+import Pagination from './_components/Pagination';
+import AdminTable from './_components/AdminTable';
 
-const Admin = () => {
+const Admins = () => {
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
 
-    const fields = [
-        { key: 'fullName', label: 'Full Name', className: '' },
-        { key: 'email', label: 'Email', className: '' },
-        { key: 'phoneNumber', label: 'Phone Number', className: '' },
-        { key: 'address', label: 'Address', className: '' },
-        { key: 'department', label: 'Department', className: '' },
-        { key: 'business', label: 'Business Name', className: '' },
-        { key: 'role', label: 'Role', className: '' },
-
-    ]
-
-    const actionConfig = {
-        delete: {
-            endPoint: '/api/user/delete',
-            method: 'DELETE',
-            payload: {}
+    const { isLoading, data: adminData } = useFetchAdmins({
+        axios,
+        queryParams: {
+            page,
+            limit
         },
-        suspend: {
-            endPoint: '/api/user/suspend',
-            method: 'POST',
-            payload: { reason: 'violation' }
-        }
+    });
 
-    }
-        
+    const adminList = adminData?.data ?? [];
+    const pagination = {
+        page: Number(adminData?.page) || 1,
+        limit: Number(adminData?.limit) || 10,
+        total: Number(adminData?.total) || 0,
+        pages: Math.ceil(Number(adminData?.total || 0) / Number(adminData?.limit || 10)),
+    };
+
+    if (isLoading) return <DashboardLayout><Spinner /></DashboardLayout>;
 
     return (
-        <>
-            <TableComponent
-                title="Ecosystem enablers"
-                endpoint="all-admins"
-                fields={fields}
-                breadcrumbs={{
-                    parent: { path: '/user/admin', label: 'Admin' },
-                    current: 'Admins'
-                }}
-                actionConfig={actionConfig}
-            />
-        </>
+        <DashboardLayout>
+            <div className="flex justify-between">
+                <div className="flex flex-col gap-2">
+                    <h2 className="font-bold text-black">Ecosystems enablers</h2>
+                </div>
+            </div>
 
-    )
-}
+            {/* ecosystems enablers table  */}
+            <div className="flex flex-col mt-5">
 
-export default Admin
+                <div className="relative xs:w-90 sm:w-93 sm:min-w-full rounded-md" key="table-container">
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <>
+                            <div className=' bg-white'>
+                                <AdminTable data={adminList ?? []} />
+                            </div>
+
+                            <Pagination
+                                currentPage={pagination.page}
+                                totalPages={pagination.pages}
+                                limit={pagination.limit}
+                                onPageChange={(newPage) => setPage(newPage)}
+                                onLimitChange={(newLimit) => {
+                                    setLimit(newLimit);
+                                    setPage(1); // Reset to page 1 on limit change
+                                }}
+                            />
+                        </>
+                    )}
+                </div>
+            </div>
+        </DashboardLayout>
+    );
+};
+
+export default Admins;

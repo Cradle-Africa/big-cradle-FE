@@ -151,6 +151,29 @@ export type BusinessKyc = {
 	certificateOfIncorporation: string;
 };
 
+
+export type Admin = {
+	kycReviewReason: string | null;
+	id: string;
+	userType: string;
+	fullName: string;
+	businessName: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	countryCode: string;
+	phoneNumber: string;
+	address: string;
+	city: string;
+	state: string;
+	country: string;
+	role: string;
+	hash: string;
+	certificateOfIncorporation: string | null;
+	individualValidMeansOfId: string | null;
+	kycStatus: string;
+}
+
 export type ResearcherKyc = {
 	kycReviewReason: string | null;
 	id: string;
@@ -516,19 +539,19 @@ export type TransactionVerificationResponse = {
 };
 
 export type FlutterWavePaymentSubmit = {
-  tx_ref: string;
-  amount: number;
-  country: string; // selected country
-  currency: string; // currency from selected payment method
-  redirect_url: string;
-  payment_options: string; // code from selected payment method
-  customer: {
-    email: string;
-  };
-  customizations: {
-    title: string;
-    description?: string;
-  };
+	tx_ref: string;
+	amount: number;
+	country: string; // selected country
+	currency: string; // currency from selected payment method
+	redirect_url: string;
+	payment_options: string; // code from selected payment method
+	customer: {
+		email: string;
+	};
+	customizations: {
+		title: string;
+		description?: string;
+	};
 };
 
 

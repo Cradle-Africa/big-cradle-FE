@@ -9,7 +9,6 @@ const TopLocations = () => {
     error,
   } = useFetchTopLocations();
 
-  console.log(locationsData);
   if (isLoading) return <Spinner />;
 
   if (error) return <p>Error fetching data</p>;

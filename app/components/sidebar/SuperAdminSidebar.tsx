@@ -67,6 +67,13 @@ export default function SuperAdminSidebar() {
                 Organizations
               </Link>
               <Link
+                href="/pages/user/admin/"
+                className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+              >
+                <Building2 size={14} />
+                Ecosystem enablers
+              </Link>
+              <Link
                 href="/pages/user/business/business-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >

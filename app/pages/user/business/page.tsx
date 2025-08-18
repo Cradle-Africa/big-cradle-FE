@@ -6,23 +6,28 @@ import { Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import BusinessTable from "./_components/BusinessTable";
 import InviteBusiness from "./_components/InviteBusiness";
-import { useFetchBusinesses } from "./_features/hook";
 import BusinessLoading from "./loading";
 import Pagination from './_components/Pagination';
+import { getAdminUserId } from '@/app/utils/user/userData';
+import { useFetchBusinesses } from './_features/hook';
 
 const Business = () => {
     const [open, setOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
+    const adminUserId = getAdminUserId()
 
     const { isLoading, data: businessesData } = useFetchBusinesses({
         axios,
         queryParams: {
             page,
             limit,
+            adminUserId
         },
     });
+
+    console.log('data:', businessesData)
 
     const businessList = businessesData?.data ?? [];
     const pagination = {

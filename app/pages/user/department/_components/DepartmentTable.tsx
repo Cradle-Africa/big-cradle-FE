@@ -55,8 +55,7 @@ const
 											(department.departmentDescription.length > 55
 												? department.departmentDescription.slice(0, 55) + '...'
 												: department.departmentDescription)}
-
-										K									</td>
+									</td>
 									<td className="px-6 py-4 mb-10 border-r border-gray-100 whitespace-nowrap relative">
 										<button
 											className="bg-gray-100 rounded-lg px-2 py-1 cursor-pointer hover:bg-blue-600 hover:text-white"

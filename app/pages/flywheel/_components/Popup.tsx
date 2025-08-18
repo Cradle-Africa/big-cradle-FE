@@ -28,6 +28,7 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                             <div className="md:w-full bg-orange-50 border-2 border-dashed border-orange-400 hover:border  hover:transition-all ease-in rounded-lg cursor-pointer">
                                 <Link
                                     href="https://tinyurl.com/2ammll52"
+                                    target="_blank"
                                     onClick={onClose}
                                     className="md:mt-0 w-full md:h-48 px-6 py-6"
 
