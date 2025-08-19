@@ -18,7 +18,8 @@ export const fetchAdmins = async (
             page: queryParams?.page || 1,
             limit: queryParams?.limit || 10,
         };
-        const endpoint = 'admin-auth/get-all-admins?page=1&limit=10';
+
+        const endpoint = "admin-auth/get-all-admins";
 
         const res = await axios.get(endpoint, { params });
 

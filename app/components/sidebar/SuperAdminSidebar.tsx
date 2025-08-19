@@ -13,6 +13,8 @@ import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
 export default function SuperAdminSidebar() {
   const [usersMenuOpen, setUsersMenuOpen] = useState(false);
+  const [kycMenuOpen, setKycMenuOpen] = useState(false);
+
   const currentPath = usePathname();
 
   return (
@@ -40,9 +42,13 @@ export default function SuperAdminSidebar() {
           </li>
         ))}
 
+        {/* users */}
         <li>
           <div
-            onClick={() => setUsersMenuOpen(!usersMenuOpen)}
+            onClick={() => {
+              setUsersMenuOpen(!usersMenuOpen);
+              setKycMenuOpen(false);
+            }}
             className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
           >
             <div className="flex gap-1 items-center justify-between">
@@ -73,6 +79,34 @@ export default function SuperAdminSidebar() {
                 <Building2 size={14} />
                 Ecosystem enablers
               </Link>
+            </div>
+          )}
+        </li>
+
+
+        {/* kyc */}
+        <li>
+          <div
+            onClick={() => {
+              setKycMenuOpen(!kycMenuOpen);
+              setUsersMenuOpen(false);
+            }}
+            className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
+          >
+            <div className="flex gap-1 items-center justify-between">
+              <div className="flex gap-1 items-center">
+                <UsersRound size={15} />
+                Users Kyc
+              </div>
+              {kycMenuOpen ? (
+                <ChevronUp size={15} />
+              ) : (
+                <ChevronDown size={15} />
+              )}
+            </div>
+          </div>
+          {kycMenuOpen && (
+            <div className="ml-6 mt-1 space-y-1">
               <Link
                 href="/pages/user/business/business-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
@@ -85,19 +119,20 @@ export default function SuperAdminSidebar() {
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                 Ecosystem enablers KYC
+                Ecosystem KYC
               </Link>
               <Link
                 href="/pages/user/researcher-kyc/"
                 className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
               >
                 <Building2 size={14} />
-                 Researchers KYC
+                Researchers KYC
               </Link>
-             
+
             </div>
           )}
         </li>
+
       </ul>
     </SideBarWrapper>
   );
@@ -108,10 +143,10 @@ const sideBarLinks: {
   href: string;
   icon: JSX.Element;
 }[] = [
-  { label: "Dashboard", href: "/", icon: <House size={15} /> },
-  // {
-  //   label: "Research and Survey",
-  //   href: "/pages/survey?status=all&page=1",
-  //   icon: <File size={15} />,
-  // },
-];
+    { label: "Dashboard", href: "/", icon: <House size={15} /> },
+    // {
+    //   label: "Research and Survey",
+    //   href: "/pages/survey?status=all&page=1",
+    //   icon: <File size={15} />,
+    // },
+  ];

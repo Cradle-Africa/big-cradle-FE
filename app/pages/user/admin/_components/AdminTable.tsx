@@ -17,7 +17,6 @@ const AdminTable = ({ data }: { data: Admin[] }) => {
 							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">State</th>
 							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Address</th>
 							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">KYC Status</th>
-							<th className="px-6 py-3 text-left text-sm font-semibold whitespace-nowrap">Status</th>
 						</tr>
 					</thead>
 					<tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">

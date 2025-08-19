@@ -1,19 +1,17 @@
 import { Business } from "@/app/lib/type";
-import { MoreVertical, Trash } from "lucide-react";
+import { Eye, MoreVertical, Trash } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import axios from "@/app/lib/axios";
 import { useDeleteBusinesses } from "../_features/hook";
+import Link from "next/link";
 
 const BusinessTable = ({ data }: { data: Business[] }) => {
 	const menuRef = useRef<HTMLUListElement>(null);
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
 	const [openDelete, setOpenDelete] = useState(false);
-	const [uniqueId, setUniqueId] = useState<string>('')
+	const [uniqueId, setUniqueId] = useState<string>('');
 
 	const { mutate: deleteBusiness, isPending: deletePending } = useDeleteBusinesses(axios);
-
-	// const { mutate: resetBusinessPassword, isPending: resetPasswordPending } = useBusinessesResetPassword(axios);
-
 
 	useEffect(() => {
 		const handler = (e: MouseEvent) => {
@@ -30,12 +28,6 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 		setUniqueId(id)
 		setOpenIndex(null);
 	};
-
-	// const handleResetPassword = (id: string) => {
-	//   resetBusinessPassword(id);
-	//   setOpenIndex(null); 
-	// };
-
 
 	return (
 		<>
@@ -124,6 +116,17 @@ const BusinessTable = ({ data }: { data: Business[] }) => {
 														{deletePending ? 'Deleting...' : 'Delete this business'}
 													</div>
 												</button>
+											</li>
+											<li className="px-1">
+												<Link
+													href={`/pages/user/employee/${business.id}`}
+													className="flex w-full px-4 py-2 text-left text-sm rounded-md text-blue-600 hover:bg-blue-200 hover:cursor-pointer"
+												>
+													<div className="flex items-center gap-1">
+														<Eye size={14} />
+														View employees
+													</div>
+												</Link>
 											</li>
 
 											{/* <li className="px-1">

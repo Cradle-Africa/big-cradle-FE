@@ -34,7 +34,7 @@ const Admins = () => {
 
     return (
         <DashboardLayout>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-5">
                 <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-black">Ecosystems enablers</h2>
                 </div>

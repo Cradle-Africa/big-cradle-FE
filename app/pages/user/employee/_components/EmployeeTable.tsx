@@ -30,10 +30,10 @@ const EmployeeTable = ({ employeeData }: Props) => {
 	return (
 		<>
 			<div className="overflow-x-auto pb-10 rounded-[8px] border border-gray-200">
-				<table className="min-w-[73%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px] bg-white">
+				<table className="min-w-[72%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px] bg-white">
 					<thead className="bg-gray-50">
 						<tr>
-							{["#", "First Name", "Last Name", "Email", "Role", "Invitation Status", "Status", "Actions"].map((header) => (
+							{["#", "First Name", "Last Name", "Email", "Invitation Status", "Status", "Actions"].map((header) => (
 								<th key={header} className="px-6 py-3 text-left text-sm font-semibold">{header}</th>
 							))}
 						</tr>
@@ -45,7 +45,6 @@ const EmployeeTable = ({ employeeData }: Props) => {
 								<td className="px-6 py-4 font-medium">{employee.firstName}</td>
 								<td className="px-6 py-4 font-medium">{employee.lastName}</td>
 								<td className="px-6 py-4 font-medium">{employee.email}</td>
-								<td className="px-6 py-4 font-medium">{employee.role}</td>
 								<td className="px-6 py-4 font-medium text-center">
 									<div className={` ${employee.invitationStatus === 'pending' ? 'border border-red-600 text-red-600' :
 										'border border-green-600 text-green-600'} w-34 rounded-full py-1 px-5 capitalize`}>

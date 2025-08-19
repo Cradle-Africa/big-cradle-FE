@@ -17,10 +17,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
+import { getBusinessId } from "@/app/utils/user/userData";
 
 export default function BusinessSideBar() {
   const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
+  const businessId = getBusinessId();
 
   return (
     <SideBarWrapper>
@@ -72,7 +74,7 @@ export default function BusinessSideBar() {
                 Organization KYC
               </Link> */}
               <Link
-                href="/pages/user/employee/"
+                href={`/pages/user/employee/${businessId}`}
                 className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"
               >
                 <Users size={14} />
@@ -91,30 +93,30 @@ const sideBarLinks: {
   href: string;
   icon: JSX.Element;
 }[] = [
-  { label: "Dashboard", href: "/", icon: <House size={15} /> },
-  {
-    label: "Research and Survey",
-    href: "/pages/survey?status=all&page=1",
-    icon: <File size={15} />,
-  },
-  {
-    label: "Data Flywheel",
-    href: "/pages/flywheel",
-    icon: <Database size={15} />,
-  },
-  {
-    label: "Wallet",
-    href: "/pages/wallet",
-    icon: <Wallet size={15} />,
-  },
-  // {
-  //   label: "Social Media",
-  //   href:"/pages/flywheel/social-media",
-  //   icon: <ChartNoAxesCombined size={15} />,
-  // },
-  {
-    label: "Department",
-    href: "/pages/user/department",
-    icon: <MonitorCog size={15} />,
-  },
-];
+    { label: "Dashboard", href: "/", icon: <House size={15} /> },
+    {
+      label: "Research and Survey",
+      href: "/pages/survey?status=all&page=1",
+      icon: <File size={15} />,
+    },
+    {
+      label: "Data Flywheel",
+      href: "/pages/flywheel",
+      icon: <Database size={15} />,
+    },
+    {
+      label: "Wallet",
+      href: "/pages/wallet",
+      icon: <Wallet size={15} />,
+    },
+    // {
+    //   label: "Social Media",
+    //   href:"/pages/flywheel/social-media",
+    //   icon: <ChartNoAxesCombined size={15} />,
+    // },
+    {
+      label: "Department",
+      href: "/pages/user/department",
+      icon: <MonitorCog size={15} />,
+    },
+  ];

@@ -103,7 +103,7 @@ const PlatformOverviewHeader: React.FC<PlatformOverviewHeaderProps> = ({
         if (isSuperAdmin) {
             if (isLoadingBusiness) return <p><Spinner /></p>;
             if (errorBusiness) return <p>Error loading businesses</p>;
-            if (!approvedSuperAdminBusinesses?.length) return <p>No business found</p>;
+            if (!approvedSuperAdminBusinesses?.length) return <p></p>;
         }
     }
 

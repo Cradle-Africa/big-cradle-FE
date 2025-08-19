@@ -27,8 +27,6 @@ const Business = () => {
         },
     });
 
-    console.log('data:', businessesData)
-
     const businessList = businessesData?.data ?? [];
     const pagination = {
         page: Number(businessesData?.page) || 1,
@@ -51,7 +49,7 @@ const Business = () => {
 
     return (
         <DashboardLayout>
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-5">
                 <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-black">Organizations</h2>
                 </div>
