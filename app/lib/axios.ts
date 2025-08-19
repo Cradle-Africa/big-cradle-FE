@@ -14,7 +14,7 @@ import { refreshTokenService } from "../services/user/userService";
 
 // export const BASE_URL = "https://big-cradle-be-dev.onrender.com/api/v1";
 export const BASE_URL = "https://big-cradle-be-1.onrender.com/api/v1";
-export const INTERNAL_URL = "https://big-cradle-frontend-eight.vercel.app";
+export const INTERNAL_URL = "https://app.bigcradle.com";
 
 const apiClient_ = axios.create({
 	baseURL: BASE_URL,
