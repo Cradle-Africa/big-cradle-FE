@@ -635,6 +635,7 @@ export type WalletTransactionList = {
 	type: 'credit' | 'debit';
 	amount: number;
 	paymentStatus: string;
+	payoutStatus: string;
 	tx_ref: string;
 	description: string;
 	createdAt: string;
