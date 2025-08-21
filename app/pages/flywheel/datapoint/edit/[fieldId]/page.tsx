@@ -34,6 +34,7 @@ const EditDataPoint = () => {
     const { data, isLoading } = useFetchSingleDataPoint({ axios, id: fieldId });
     const { mutate, isPending } = useEditPipeline({ axios });
 
+    console.log(data);
     useEffect(() => {
         if (data) {
             setForm({
@@ -106,11 +107,8 @@ const EditDataPoint = () => {
 
         mutate({ id: fieldId, payload }, {
             onSuccess: () => {
-                // queryClient.invalidateQueries({ queryKey: ["data-points"] });
                 router.push(`/pages/flywheel?tab=pipelines`);
-
                 toast.success("Data point updated successfully");
-                // setEditingDataPoint(false);
             },
             onError: (error: any) => {
                 toast.error(error.message || "Failed to update data point");
@@ -123,7 +121,6 @@ const EditDataPoint = () => {
         </DashboardLayout>
     }
 
-    // if (!editingDataPoint) return null;
     return (
         <DashboardLayout>
             <div
@@ -193,7 +190,7 @@ const EditDataPoint = () => {
 
                         ))}
 
-                        <div className="flex gap-3 mt-5">
+                        <div className="flex gap-3 mt-5 pb-10">
                             <AddFieldButton
                                 totalFields={form.field.length}
                                 onAdd={addField}

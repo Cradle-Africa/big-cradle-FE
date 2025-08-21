@@ -299,7 +299,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                 analyseData={analyseData}
                 onClose={() => setAnalyseData(false)}
                 structuredData={structuredData}
-            	mutation={mutation}
+                mutation={mutation}
             />
 
             <NewDataEntry
@@ -324,42 +324,51 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                         <div className="w-3/4 md:w-2/4 text-center bg-white p-7 rounded-lg z-50 fixed top-[300px] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                             <div className="flex justify-end gap-2">
                                 <button onClick={() => setOpenOptionsEntry(false)}>
-                                    <X size={20} className="text-red-500 cursor-pointer" />
+                                    <X size={25} className="text-red-500 cursor-pointer" />
                                 </button>
                             </div>
 
-                            <div className="md:flex justify-between gap-5 mt-5">
+                            <div className="md:flex justify-between gap-5 mt-10">
                                 <div
                                     onClick={() => handleNewDataEntry(dataPointId ?? '')}
-                                    className="md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
-                                    <Plus
-                                        size={25}
-                                        color="white"
-                                        className="mr-1 inline bg-blue-600 rounded-full p-1"
-                                    />
+                                    className="md:w-1/2 bg-blue-50 text-blue-600 border-dashed border-2 border-blue-600 rounded-md p-7 hover:border-3 hover:border-blue-300 h-48 cursor-pointer">
+                                    <div className="bg-white rounded-full p-2 inline-flex items-center justify-center">
+                                        <Plus
+                                            size={25}
+                                            className="inline text-blue-600 rounded-full"
+                                        />
+                                    </div>
+
                                     <button
-                                        className="mt-3 py-5 px-2 w-full flex items-center justify-center cursor-pointer text-white rounded-md bg-blue-600"
+                                        className="mt-3 py-3 px-2 w-full flex items-center justify-center cursor-pointer font-bold rounded-md text-blue-600"
                                     >
                                         New Data Entry
                                     </button>
+                                    <p>
+                                        Add a new data entry to this pipeline.
+                                    </p>
                                 </div>
 
                                 <div
                                     onClick={() =>
                                         router.push(`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`)
                                     }
-                                    className="mt-5 md:mt-0 md:w-1/2 bg-blue-50 text-blue-600 rounded-md p-7 border border-white hover:border hover:border-blue-300 h-38 cursor-pointer">
-                                    <FileStackIcon
-                                        size={25}
-                                        color="white"
-                                        className="mr-1 inline bg-blue-600 rounded-full p-1"
-                                    />
+                                    className="mt-5 md:mt-0 md:w-1/2 bg-orange-50 text-orange-600 border-dashed border-2 border-orange-600 rounded-md p-7  hover:border-3 hover:border-orange-300 h-48 cursor-pointer">
+                                    <div className="bg-white rounded-full p-2 inline-flex items-center justify-center">
+                                        <FileStackIcon
+                                            size={25}
+                                            className="inline text-orange-600 rounded-full"
+                                        />
+                                    </div>
                                     <Link
-                                        className="mt-3 py-5 px-2 flex justify-center items-center cursor-pointer text-white rounded-md bg-blue-600"
+                                        className="mt-3 py-3 px-2 flex justify-center items-center cursor-pointer font-bold rounded-md text-orange-600"
                                         href={`/pages/flywheel/data-entry/new/bulk/${pipelineId}/${singlePipeline?.fieldId}`}
                                     >
                                         Bulk Data Entry
                                     </Link>
+                                    <p>
+                                        Add multiple data entries to this pipeline at once.
+                                    </p>
                                 </div>
                             </div>
                         </div>

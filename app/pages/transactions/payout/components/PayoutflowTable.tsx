@@ -36,25 +36,37 @@ const PayoutFlowTable = ({
                 <table className="min-w-[75%] md:w-full table-auto divide-y divide-gray-200 rounded-[8px] bg-white">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Type & Description</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold">Actions</th>
+                            <th className="px-4 py-3 text-left text-sm font-semibold">#</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Date</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Amount</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Researcher</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Payment Type</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Phone Number</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Type & Description</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Status</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                         {transactionsData.map((transaction, index) => (
                             <tr key={transaction.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium">{index + 1}</td>
-                                <td className="px-6 py-4 font-medium">
+                                <td className="px-4 py-4 font-medium">{index + 1}</td>
+                                <td className="px-3 py-4 font-medium">
                                     {new Date(transaction.createdAt).toLocaleString()}
                                 </td>
-                                <td className="px-6 py-4 font-semibold">
+                                <td className="px-3 py-4 font-semibold">
                                     {transaction.amount.toFixed(2)}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-3 py-4 font-semibold">
+                                    {transaction.researcherFirstName} {transaction.researcherLastName}
+                                </td>
+                                <td className="px-3 py-4 font-semibold">
+                                    {transaction.paymentType}
+                                </td>
+                                <td className="px-3 py-4 font-semibold">
+                                    {transaction.phoneNumber}
+                                </td>
+                                <td className="px-3 py-4">
                                     <span className="block font-semibold mt-1 capitalize">
                                         {transaction.type}
                                     </span>
@@ -63,7 +75,7 @@ const PayoutFlowTable = ({
                                             ? transaction.description.slice(0, 55) + "..."
                                             : transaction.description)}
                                 </td>
-                                <td className="px-6 py-4 w-44">
+                                <td className="px-3 py-4 w-44">
                                     <span
                                         className={`${transaction.payoutStatus === "paid"
                                             ? "border border-green-600 text-green-600"
@@ -73,7 +85,7 @@ const PayoutFlowTable = ({
                                         {transaction.payoutStatus}
                                     </span>
                                 </td>
-                                <td className="px-4 py-4">
+                                <td className="px-3 py-4">
                                     {transaction.payoutStatus !== "paid" ? (
                                         <PayoutActions
                                             index={index}

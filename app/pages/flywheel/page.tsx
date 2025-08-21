@@ -125,11 +125,22 @@ const Flywheel = () => {
 		),
 
 		"Overview": () => (
-			<Overview
-				pipelines={dataOverview.totalDataPoints}
-				dataPoint={dataOverview.totalFields}
-				dataEntries={dataOverview.totalEntries}
-			/>
+
+			<>
+				<div className="flex justify-between mb-5 border-b border-gray-300 pb-3">
+					<div className="flex justify-between mt-5">
+						<div className="flex flex-col gap-2">
+							<p>Transform insights into actions that accelerate your business growth</p>
+						</div>
+					</div>
+				</div>
+				<Overview
+					pipelines={dataOverview.totalDataPoints}
+					dataPoint={dataOverview.totalFields}
+					dataEntries={dataOverview.totalEntries}
+				/>
+			</>
+
 		),
 
 		"Data Pipelines": () => (
@@ -140,10 +151,9 @@ const Flywheel = () => {
 					</>
 				) : (
 					<>
-						<div className="flex justify-between mb-5">
+						<div className="flex justify-between mb-5 border-b border-gray-300 pb-3">
 							<div className="flex justify-between">
 								<div className="flex flex-col gap-2">
-									<p className="font-semibold text-lg text-black">Data pipeline</p>
 									<p>Transform insights into actions that accelerate your business growth</p>
 								</div>
 							</div>

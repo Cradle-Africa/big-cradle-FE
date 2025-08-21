@@ -29,6 +29,7 @@ const InFlowTable = ({
                             <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Date</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Amount</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold">Business Name</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Type & Description</th>
                             <th className="px-6 py-3 text-left text-sm font-semibold">Status</th>
                         </tr>
@@ -42,6 +43,9 @@ const InFlowTable = ({
                                 </td>
                                 <td className="px-6 py-4 font-semibold">
                                     {transaction.amount.toFixed(2)}
+                                </td>
+                                <td className="px-6 py-4 font-semibold">
+                                    {transaction.businessName}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className="block font-semibold mt-1 capitalize">

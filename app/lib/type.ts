@@ -636,6 +636,11 @@ export type WalletTransactionList = {
 	amount: number;
 	paymentStatus: string;
 	payoutStatus: string;
+	phoneNumber: string;
+	paymentType: string;
+	businessName: string;
+	researcherFirstName: string;
+	researcherLastName: string;
 	tx_ref: string;
 	description: string;
 	createdAt: string;

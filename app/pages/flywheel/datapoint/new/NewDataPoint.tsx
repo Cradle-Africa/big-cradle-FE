@@ -229,7 +229,7 @@ const NewDataPoint: React.FC<DataPointProps> = ({ pipelineId, pipelineName, pipe
                         </div>
                     ))}
 
-                    <div className="flex justify-between gap-3 mt-5">
+                    <div className="flex justify-between gap-3 mt-5 pb-10">
                         <AddFieldButton
                             totalFields={form.field.length}
                             onAdd={addField}

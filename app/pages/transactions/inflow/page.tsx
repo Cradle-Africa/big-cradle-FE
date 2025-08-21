@@ -18,8 +18,8 @@ const Page = () => {
 
     // pagination metadata 
     const pagination = {
-        page: page, // Use current state, not API response
-        limit: limit, // Use current state, not API response
+        page: page, // Use current state,
+        limit: limit, // Use current state,
         total: transactionsData?.pagination.total || 0,
         pages: transactionsData?.pagination.pages || 0
     };
