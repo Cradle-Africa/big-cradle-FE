@@ -78,13 +78,13 @@ export default function SuperAdminSidebar() {
 								<CircleArrowDown size={14} />
 								In flow
 							</Link>
-							<Link
+							{/* <Link
 								href="/pages/transactions/outflow"
 								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
 							>
 								<CircleArrowUp  size={14} />
 								Out flow
-							</Link>
+							</Link> */}
 							<Link
 								href="/pages/transactions/payout"
 								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
