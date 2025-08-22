@@ -65,7 +65,7 @@ export const RenderDynamicField: React.FC<RenderFieldProps> = ({
 
     case "radio":
       return (
-        <div className="flex items-center gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {field.options?.map((opt: string, i: number) => (
             <label key={i} className="flex items-center gap-2 text-sm">
               <input
@@ -83,7 +83,7 @@ export const RenderDynamicField: React.FC<RenderFieldProps> = ({
 
     case "checkbox":
       return (
-        <div className="flex flex-col gap-2">
+        <div className="grid grid-cols-3 gap-2">
           {field.options?.map((opt: string, i: number) => (
             <label key={i} className="flex items-center gap-2 text-sm">
               <input

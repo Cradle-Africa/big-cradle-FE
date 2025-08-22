@@ -5,6 +5,8 @@ import Pagination from "./Pagination";
 import { useState } from "react";
 import PayoutActions from "./PayoutActions";
 import PayoutStatus from "./PayoutStatus";
+import toast from "react-hot-toast";
+import { Copy } from "lucide-react";
 
 type PayoutFlowTableProps = {
     transactionsData?: WalletTransactionList[];
@@ -30,6 +32,15 @@ const PayoutFlowTable = ({
         return <p className="text-gray-500">No transactions available.</p>;
     }
 
+    const handleCopy = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            toast.success("Account number copied to clipboard!");
+        } catch {
+            toast.error("Failed to copy account number.");
+        }
+    };
+
     return (
         <>
             <div className="overflow-x-auto rounded-[8px] border border-gray-200 mt-5 pb-10">
@@ -40,16 +51,18 @@ const PayoutFlowTable = ({
                             <th className="px-3 py-3 text-left text-sm font-semibold">Date</th>
                             <th className="px-3 py-3 text-left text-sm font-semibold">Amount</th>
                             <th className="px-3 py-3 text-left text-sm font-semibold">Researcher</th>
-                            <th className="px-3 py-3 text-left text-sm font-semibold">Payment Type</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold whitespace-nowrap">Payment Type</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold">Bank</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold whitespace-nowrap">Account name</th>
                             <th className="px-3 py-3 text-left text-sm font-semibold">Phone Number</th>
-                            <th className="px-3 py-3 text-left text-sm font-semibold">Type & Description</th>
+                            <th className="px-3 py-3 text-left text-sm font-semibold whitespace-nowrap">Type & Description</th>
                             <th className="px-3 py-3 text-left text-sm font-semibold">Status</th>
                             <th className="px-3 py-3 text-left text-sm font-semibold">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-100 text-sm text-gray-700">
                         {transactionsData.map((transaction, index) => (
-                            <tr key={transaction.id} className="hover:bg-gray-50">
+                            <tr key={index} className="hover:bg-gray-50">
                                 <td className="px-4 py-4 font-medium">{index + 1}</td>
                                 <td className="px-3 py-4 font-medium">
                                     {new Date(transaction.createdAt).toLocaleString()}
@@ -62,6 +75,20 @@ const PayoutFlowTable = ({
                                 </td>
                                 <td className="px-3 py-4 font-semibold">
                                     {transaction.paymentType}
+                                </td>
+                                <td className="px-3 py-4 font-semibold">
+                                    {transaction.bank ?? 'bank name'}
+                                </td>
+                                <td className="px-3 py-4">
+                                    <span className="block font-semibold">{transaction.accountName ?? 'Account name'}</span>
+
+                                    <button
+                                        className="flex justify-center items-center gap-1 text-blue-600 underline hover:cursor-pointer"
+                                        onClick={() => handleCopy(transaction.accountNumber ?? 22222)}
+                                    >
+                                        {transaction.accountNumber ?? 22222}
+                                        <Copy className="inline " size={13}  />
+                                    </button>
                                 </td>
                                 <td className="px-3 py-4 font-semibold">
                                     {transaction.phoneNumber}
@@ -97,7 +124,7 @@ const PayoutFlowTable = ({
                                                 setActivateOpen(true);
                                             }}
                                         />
-                                    ):(
+                                    ) : (
                                         <span className="px-2">
                                             N/A
                                         </span>

@@ -163,7 +163,7 @@ const DataEntryPage = () => {
                                         <form className="space-y-6 text-left text-sm" onSubmit={handleSubmit}>
                                             {datapoints?.field.map((field, index) => (
                                                 <div key={index}>
-                                                    <label className="block text-gray-700 mb-1 font-medium">
+                                                    <label className="block text-gray-700 mb-1 font-semibold">
                                                         {field.label}
                                                         {field.required && (
                                                             <span className="text-red-500 ml-1">*</span>
