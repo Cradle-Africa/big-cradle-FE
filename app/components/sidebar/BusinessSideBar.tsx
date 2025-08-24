@@ -66,13 +66,6 @@ export default function BusinessSideBar() {
           </div>
           {usersMenuOpen && (
             <div className="ml-6 mt-1 space-y-1">
-              {/* <Link
-                href="/pages/user/business/business-kyc/"
-                className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"
-              >
-                <Building2 size={14} />
-                Organization KYC
-              </Link> */}
               <Link
                 href={`/pages/user/employee/${businessId}`}
                 className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"

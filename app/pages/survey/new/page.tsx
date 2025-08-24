@@ -26,7 +26,7 @@ const NewSurveyPage = () => {
 	const router = useRouter();
 	type TabKey = 'survey-name-and-description' | 'location-and-demographic' | 'survey-questions' | 'survey-payment' | '';
 	const paramSurvey = (searchParams.get("survey") ?? "") as TabKey;
-
+	const user = getUser();
 
 	const [countriesAndCities, setCountriesAndCities] = useState<
 		CountryAndCity[]
@@ -59,7 +59,7 @@ const NewSurveyPage = () => {
 
 
 	const surveyName = watch("surveyName");
-	const sector = getUser()?.sector ?? '';
+	const sector = user?.sector ?? '';
 	const surveyGoal = watch("surveyGoal");
 	const surveyType = watch("surveyType");
 	const surveyDescription = watch("surveyDescription");
@@ -70,7 +70,6 @@ const NewSurveyPage = () => {
 	const endDate = watch('endDate');
 	const ageDemographics = watchDemographic("ageDemographics");
 	const gender = watchDemographic("gender");
-	const user = getUser();
 
 	// In parent component
 	const onDemographicSubmit = (data: DemographicFormValues) => {

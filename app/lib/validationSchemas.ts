@@ -109,21 +109,32 @@ export const surveySchema = z
 		path: ["endDate"],
 	});
 
-export const surveyPaymentSchema = z.object({
-	amount: z
-		.string()
-		.refine((val) => {
-			const num = Number(val);
-			return !isNaN(num) && num >= 2000;
-		}, {
-			message: "The amount must be greater or equal to 2000",
-		}),
-	country: z.string().min(1, "Select a country"),
-	title: z.string().optional(),
-	email: z.string().optional(),
-	description: z.string().optional(),
-	useWallet: z.boolean().optional(),
-});
+
+export const surveyPaymentSchema = z
+  .object({
+    amount: z
+      .string()
+      .refine((val) => {
+        const num = Number(val);
+        return !isNaN(num) && num >= 2000;
+      }, {
+        message: "The amount must be greater or equal to 2000",
+      }),
+    country: z.string().optional(), // <-- not required by default
+    title: z.string().optional(),
+    email: z.string().optional(),
+    description: z.string().optional(),
+    useWallet: z.boolean().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.useWallet && (!data.country || data.country.trim() === "")) {
+      ctx.addIssue({
+        path: ["country"],
+        code: "custom",
+        message: "Select a country when not using wallet",
+      });
+    }
+  });
 
 
 export const transactionSchema = z.object({

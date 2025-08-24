@@ -232,20 +232,20 @@ const SurveyPage = () => {
 			<div className="w-full">
 				<div className="flex justify-between">
 					<p className="font-semibold text-lg text-black">Surveys</p>
-					{user?.role === "business" && (
+
+					<button
+						className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer"
+					//   onClick={() => setOpen(true)}
+					>
 						<button
-							className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer"
-						//   onClick={() => setOpen(true)}
-						>
-							<button 
-								onClick={() => setPopupOpen(true)}
-								// href="/pages/survey/new?survey=survey-name-and-description">
-								className="flex items-center gap-2 hover:cursor-pointer">
-									<Plus size={18} color="white" />
-									<span className="text-white">Create new survey</span>
-							</button>
+							onClick={() => setPopupOpen(true)}
+							// href="/pages/survey/new?survey=survey-name-and-description">
+							className="flex items-center gap-2 hover:cursor-pointer">
+							<Plus size={18} color="white" />
+							<span className="text-white">Create new survey</span>
 						</button>
-					)}
+					</button>
+
 				</div>
 				<p className="mt-2">
 					View, manage, and track your survey tasks. Create new surveys to

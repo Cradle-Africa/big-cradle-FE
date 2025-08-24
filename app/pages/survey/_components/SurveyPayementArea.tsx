@@ -75,7 +75,7 @@ const SurveyPayementArea = ({
 	const { mutateAsync: makePayment, isPending: isMakingPayment } =
 		useSurveyPay({ axios });
 
-	const { data: wallet } = useFetchWallet({
+	const { data: wallet, error: walletError, isPending: isPendingWallet } = useFetchWallet({
 		axios,
 		userId: user?.id || "",
 		enabled: !!user,
@@ -124,6 +124,11 @@ const SurveyPayementArea = ({
 						window.location.href = response.data.link;
 						toast.success("Survey payment initialized");
 					},
+					onError: (error: any) => {
+						toast.error(
+							error?.response?.data?.message || error?.response?.message || error?.message || "Failed to fetch wallet"
+						);
+					},
 				}
 			);
 		} finally { }
@@ -155,15 +160,47 @@ const SurveyPayementArea = ({
 		};
 
 		await createSurvey(payload, {
-			onSuccess: (createdSurvey) => {
+			onSuccess: async (createdSurvey) => {
 				setForm({ dataPointId: "", field: [] });
 
-				// Internal survey & Flutterwave
+				// Case 1: Internal survey + Wallet
+				if (surveyType === "internal" && data.useWallet) {
+					if (isPendingWallet) {
+						toast.loading("Please wait, checking your wallet...");
+						return;
+					}
+
+					if (!wallet?.data?.id) {
+						toast.error("You do not have a valid wallet. Please create one in your profile.");
+						return;
+					}
+
+					// Safe to continue
+					const transactionPayload: CreateTransactionPayload = {
+						walletId: wallet.data.id,
+						type: "debit",
+						amount: Number(data.amount),
+						description: `Survey paid with Big Cradle wallet`,
+					};
+
+					try {
+						await createTransaction(axios, transactionPayload);
+						toast.success("Survey created successfully and wallet debited.");
+						router.push(`/pages/survey?status=all`);
+					} catch (error: any) {
+						toast.error(error?.message || "Failed to debit wallet");
+					}
+					return;
+				}
+
+
+				// Case 2: Internal survey + Flutterwave
 				if (surveyType === "internal" && !data.useWallet) {
 					if (!selectedPaymentMethod) {
 						toast.error("Please select a payment method to proceed");
 						return;
 					}
+
 					submitSurveyPayment({
 						tx_ref: createdSurvey.data.tx_ref,
 						amount: parseInt(data.amount),
@@ -177,44 +214,19 @@ const SurveyPayementArea = ({
 							description: "Budget allocated to the survey " + surveyName,
 						},
 					});
+					return;
 				}
 
-				// Internal survey & wallet
-				if (surveyType === "internal" && wallet?.data?.id && data.useWallet) {
-					const payload: CreateTransactionPayload = {
-						walletId: wallet?.data?.id ?? "",
-						type: "debit",
-						amount: Number(data.amount),
-						description: "Survey payed with big cradle wallet",
-					};
-					createTransaction(axios, payload)
-						.then(() => {
-							toast.success(
-								"Survey has been created successfully and your wallet has been debited for the payment"
-							);
-							router.push(`/pages/survey?status=all`);
-						})
-						.catch((error) => {
-							toast.error(error?.message || "Failed to create transaction");
-						});
-				}
-
-				if (!wallet?.data?.id && data.useWallet) {
-					toast.error("You do not have a wallet. Please create a wallet to use this feature.");
-				}
-
+				// Case 3: External survey
 				if (surveyType === "external") {
-					toast.success("Survey has been created successfully");
+					toast.success("Survey created successfully");
 					router.push(`/pages/survey?status=all`);
 				}
 			},
-			onError: (error: any) => {
-				toast.error(
-					error?.response?.data?.message || error?.message || "Failed to create the survey"
-				);
-			},
 		});
 	};
+
+
 
 	return (
 		<div className="my-5 flex flex-col gap-4 max-w-xl 2xl:max-w-3xl mx-auto">
@@ -265,6 +277,12 @@ const SurveyPayementArea = ({
 						<ErrorMessage>{errors.useWallet?.message}</ErrorMessage>
 					</div>
 
+					{(useWallet && walletError) && (
+						<div className="p-4 border border-red-300 bg-red-50 rounded-md text-red-600">
+							You do not have a wallet yet. Please create one in your profile before proceeding with survey payments.
+						</div>
+					)}
+
 					{/* Show country + payment methods only if not using wallet */}
 					{!useWallet && (
 						<div className="w-full">
@@ -307,23 +325,28 @@ const SurveyPayementArea = ({
 
 				{/* Submit Button */}
 				<button
-					disabled={isMakingPayment || isCreatingSurvey}
-					className="w-full flex items-center justify-center bg-blue-600 rounded-md py-2 px-8 mr-auto mt-4 cursor-pointer"
+					type="submit"
+					disabled={isMakingPayment || isCreatingSurvey || isPendingWallet}
+					className="w-full flex items-center justify-center bg-blue-600 rounded-md py-2 px-8 mr-auto mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
 				>
 					<span className="flex items-center text-white">
-						{isMakingPayment || isCreatingSurvey ? (
+						{isMakingPayment || isCreatingSurvey || isPendingWallet ? (
 							<>
-								<span className="mr-2">Loading</span>
+								<span className="mr-2">Processing</span>
 								<Spinner />
 							</>
 						) : (
 							<>
-								<Check size={15} className="mr-1 inline text-blue-600 bg-white p-[2px] rounded-full" />
+								<Check
+									size={15}
+									className="mr-1 inline text-blue-600 bg-white p-[2px] rounded-full"
+								/>
 								Proceed
 							</>
 						)}
 					</span>
 				</button>
+
 			</form>
 		</div>
 	);

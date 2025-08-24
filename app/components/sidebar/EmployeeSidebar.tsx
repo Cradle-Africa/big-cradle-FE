@@ -3,7 +3,8 @@
 import classNames from "classnames";
 import {
   Database,
-  House
+  House,
+  File
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,10 +47,16 @@ const sideBarLinks: {
   href: string;
   icon: JSX.Element;
 }[] = [
-  { label: "Dashboard", href: "/", icon: <House size={15} /> },
-  {
-    label: "Data Flywheel",
-    href: "/pages/flywheel",
-    icon: <Database size={15} />,
-  },
-];
+    { label: "Dashboard", href: "/", icon: <House size={15} /> },
+    {
+      label: "Research and Survey",
+      href: "/pages/survey?status=all&page=1",
+      icon: <File size={15} />,
+    },
+    {
+      label: "Data Flywheel",
+      href: "/pages/flywheel",
+      icon: <Database size={15} />,
+    },
+
+  ];
