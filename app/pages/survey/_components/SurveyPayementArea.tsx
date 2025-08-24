@@ -265,17 +265,19 @@ const SurveyPayementArea = ({
 					</div>
 
 					{/* Wallet Checkbox */}
-					<div className="w-full">
-						<label className="flex items-center gap-2 cursor-pointer">
-							<input
-								type="checkbox"
-								{...register("useWallet")}
-								className="h-4 w-4 border-gray-300 rounded"
-							/>
-							<span>Would you like to use Big Cradle Wallet to pay for this survey?</span>
-						</label>
-						<ErrorMessage>{errors.useWallet?.message}</ErrorMessage>
-					</div>
+					{user?.role === "business" && (
+						<div className="w-full">
+							<label className="flex items-center gap-2 cursor-pointer">
+								<input
+									type="checkbox"
+									{...register("useWallet")}
+									className="h-4 w-4 border-gray-300 rounded"
+								/>
+								<span>Would you like to use Big Cradle Wallet to pay for this survey?</span>
+							</label>
+							<ErrorMessage>{errors.useWallet?.message}</ErrorMessage>
+						</div>
+					)}
 
 					{(useWallet && walletError) && (
 						<div className="p-4 border border-red-300 bg-red-50 rounded-md text-red-600">

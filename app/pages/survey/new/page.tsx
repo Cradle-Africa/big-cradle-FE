@@ -59,7 +59,7 @@ const NewSurveyPage = () => {
 
 
 	const surveyName = watch("surveyName");
-	const sector = user?.sector ?? '';
+	const sector = user?.role === "business" ? user?.sector ?? '' : '';
 	const surveyGoal = watch("surveyGoal");
 	const surveyType = watch("surveyType");
 	const surveyDescription = watch("surveyDescription");
