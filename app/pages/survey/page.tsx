@@ -31,7 +31,7 @@ const SurveyPage = () => {
 	const [, setCreatingSurvey] = useState(false);
 
 	const surveyStatus = searchParam.get("status");
-	const user = getUser();
+	const user = getUser() ?? null;
 	const changeStatus = (status: string) => {
 		const params = new URLSearchParams(searchParams);
 		params.set("status", status);
@@ -57,6 +57,7 @@ const SurveyPage = () => {
 	const [surveyLimit, setSurveyLimit] = useState(10);
 
 	const isBusiness = user?.role === "business";
+	const isEmployee = user?.role === "employee";
 	const isSuperAdmin = user?.role === "super admin";
 
 	const {
@@ -70,8 +71,8 @@ const SurveyPage = () => {
 		startDate: selectedStartDate,
 		endDate: selectedEndDate,
 		search: search,
-		businessUserId: isBusiness ? user?.id : null,
-		enabled: isBusiness,
+		businessUserId: user?.role === "business" ? user?.id || "" : user?.businessUserId || "",
+		enabled: isBusiness || isEmployee,
 	});
 
 	const {
@@ -113,12 +114,12 @@ const SurveyPage = () => {
 		isLoading: analyticsLoading,
 	} = useFetchSurveyAnalyctics({
 		axios,
-		businessUserId: user?.id ?? "",
+		businessUserId: user?.id || user?.businessUserId || "",
 	});
 
 	const filteredSurveys = useMemo(() => {
 		let surveys: SurveyListItem[] = [];
-		if (user?.role === "business") {
+		if (user?.role === "business" || user?.role === "employee") {
 			surveys = surveysListResponse?.survey || [];
 		} else if (user?.role === "super admin") {
 			surveys = superAdminSurveysListResponse?.data || [];
