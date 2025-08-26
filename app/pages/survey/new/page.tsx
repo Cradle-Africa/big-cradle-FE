@@ -13,24 +13,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { JSX, useState } from "react";
 
-
 import SurveyTabButton from "../_components/SurveyTabButton";
-import { getUser } from "@/app/utils/user/userData";
 import toast from "react-hot-toast";
 import { Spinner } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import FormArea from "./Form";
+import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
+import axios from "@/app/lib/axios";
 
 const NewSurveyPage = () => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	type TabKey = 'survey-name-and-description' | 'location-and-demographic' | 'survey-questions' | 'survey-payment' | '';
 	const paramSurvey = (searchParams.get("survey") ?? "") as TabKey;
-	const user = getUser();
+
+	const { data: user, isLoading } = useFetchMe({ axios });
 
 	const [countriesAndCities, setCountriesAndCities] = useState<
 		CountryAndCity[]
 	>([]);
+
+	const sector = user?.data?.sector ?? "";
 
 	const [form, setForm] = useState<DataPointForm>({
 		dataPointId: "",
@@ -57,9 +60,7 @@ const NewSurveyPage = () => {
 		resolver: zodResolver(demographicSchema),
 	});
 
-
 	const surveyName = watch("surveyName");
-	const sector = user?.role === "business" ? user?.sector ?? '' : '';
 	const surveyGoal = watch("surveyGoal");
 	const surveyType = watch("surveyType");
 	const surveyDescription = watch("surveyDescription");
@@ -82,16 +83,27 @@ const NewSurveyPage = () => {
 			]);
 			toast.success("Country, region, age and gender added successfully to the list");
 		}
-		// else {
-		//   toast.error("City or region already exist in the list, please select a new one");
-		// }
 	};
 
+	if (isLoading || !user) {
+		return <Spinner />;
+	}
 	// Create a separate handler for the final submission
+	// This will be called when user clicks "Next"
 	const handleFinalDemographicSubmit = (data: DemographicSubmitValues) => {
-		// This will be called when user clicks "Next"
-		// You can process the array data here if needed
-		console.log("Final demographic data:", data);
+		const payload = {
+			...data,
+			surveyName,
+			surveyGoal,
+			surveyType,
+			surveyDescription,
+			startDate,
+			endDate,
+			countriesAndCities,
+			sector, // sector guaranteed
+		};
+
+		console.log("Final survey payload:", payload);
 	};
 
 	const onDeleteClick = (data: CountryAndCity) => {
@@ -156,7 +168,7 @@ const NewSurveyPage = () => {
 
 		"survey-payment": () => (
 			<>
-				{user?.role === "business" && (
+				{user?.data.role === "business" && (
 					<SurveyTabButton
 						isSelected={paramSurvey === "survey-payment"}
 					>
@@ -184,7 +196,7 @@ const NewSurveyPage = () => {
 				register={register}
 				surveyName={surveyName}
 				surveyDescription={surveyDescription}
-				sector={sector}
+				sector={sector ?? ''}
 				surveyGoal={surveyGoal}
 				surveyType={surveyType}
 				startDate={startDate}
