@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearch } from "./_features/_hook";
 import axios from "@/app/lib/axios";
 import {
@@ -18,6 +18,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import { Spinner } from "@radix-ui/themes";
 import DashboardLayout from "@/app/DashboardLayout";
+import { Loader } from "lucide-react";
 
 const TableWrapper = ({ children }: { children: React.ReactNode }) => (
     <div className="overflow-x-auto pb-10 rounded-[8px] border border-gray-200">
@@ -27,7 +28,7 @@ const TableWrapper = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-const SearchPage = () => {
+const SearchPageClient = () => {
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
 
@@ -392,6 +393,14 @@ const SearchPage = () => {
                 )}
             </div>
         </DashboardLayout>
+    );
+};
+
+const SearchPage = () => {
+    return (
+        <Suspense fallback={<Loader />}>
+            <SearchPageClient />
+        </Suspense>
     );
 };
 
