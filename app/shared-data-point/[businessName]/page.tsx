@@ -138,7 +138,7 @@ const DataEntryPage = () => {
                             className="w-1/3 h-10"
                         />
                     </div>
-                    <div className="flex text-blue-600 font-semibold text-xl mx-5 px-3 py-2">
+                    <div className="flex capitalize text-blue-600 font-semibold text-xl mx-5 px-3 py-2">
                         {singlePipeline?.dataPointName}
                     </div>
 

@@ -158,7 +158,7 @@ const DataEntryPage = () => {
                         />
                     </div>
 
-                    <div className="flex text-blue-600 text-xl mx-5 px-3 py-2">
+                    <div className="flex capitalize text-blue-600 text-xl mx-5 px-3 py-2">
                         {survey?.data?.surveyName}
                     </div>
 

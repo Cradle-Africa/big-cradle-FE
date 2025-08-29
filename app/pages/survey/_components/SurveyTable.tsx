@@ -103,7 +103,7 @@ const SurveyTable = ({
 											alt={'Big cradle logo'}
 											className="inline text-inherit"
 										/>
-										<h2 className="inline ml-2 text-[18px] text-[#0C0C0C] ">
+										<h2 className="inline capitalize ml-2 text-[18px] text-[#0C0C0C] ">
 											{survey.surveyName}
 										</h2>
 									</div>
@@ -147,10 +147,13 @@ const SurveyTable = ({
 									</h6>
 
 									<div className="flex justify-start space-x-2 mt-5">
-										<div className={`text-xs capitalize ${survey?.paymentStatus === 'paid' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
-											'bg-red-50 border border-orange-600 text-orange-500 rounded-full px-3 py-[2px]'} `}>
-											{survey?.paymentStatus}
-										</div>
+										{survey?.surveyType === 'internal' && (
+											<div className={`text-xs capitalize ${survey?.paymentStatus === 'paid' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
+												'bg-red-50 border border-orange-600 text-orange-500 rounded-full px-3 py-[2px]'} `}>
+												{survey?.paymentStatus}
+											</div>
+										)}
+
 										{survey?.surveyType && (
 											<div className={`text-xs capitalize ${survey?.surveyType === 'internal' ? 'bg-blue-50 border border-blue-600 text-blue-600 rounded-full px-3 py-[2px]' :
 												'bg-red-50 border border-green-600 text-green-500 rounded-full px-3 py-[2px]'} `}>
@@ -186,11 +189,11 @@ const SurveyTable = ({
 					totalPages={pagination.pages}
 					limit={pagination.limit}
 					onPageChange={(newPage) => {
-						onPageChange(newPage); 
+						onPageChange(newPage);
 					}}
 					onLimitChange={(newLimit) => {
-						setLimit(newLimit); 
-						onLimitChange(newLimit); 
+						setLimit(newLimit);
+						onLimitChange(newLimit);
 					}}
 				/>
 
