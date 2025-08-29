@@ -149,8 +149,8 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     }
 
     if (mutation.isPending) {
-        return(
-        <div className="flex justify-center mt-[20%]"> <Spinner/></div>    
+        return (
+            <div className="flex justify-center mt-[20%]"> <Spinner /></div>
         )
     };
 
@@ -164,11 +164,14 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
                     </h2>
                     <>
                         <div className="flex justify-end gap-2 ">
-                            <button
-                                onClick={() => handleShareSurvey()}
-                                className="flex items-center cursor-pointer px-3 py-1 border border-blue-600 text-blue-600 rounded-md"
-                            > <Share2 size={13} className="inline mr-1" /> Share
-                            </button>
+                            {singleSurvey?.data.surveyType === 'external' && (
+                                <button
+                                    onClick={() => handleShareSurvey()}
+                                    className="flex items-center cursor-pointer px-3 py-1 border border-blue-600 text-blue-600 rounded-md"
+                                > <Share2 size={13} className="inline mr-1" /> Share
+                                </button>
+                            )}
+
                             {!isLoadingDataEntries && !isLodingSingleSurvey && entries && entries.length > 0 && (
                                 <button
                                     className="px-5 h-[36px] flex items-center bg-blue-600 text-white rounded-md cursor-pointer"
