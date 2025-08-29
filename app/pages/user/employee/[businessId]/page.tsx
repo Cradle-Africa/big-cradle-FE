@@ -7,11 +7,15 @@ import { useFetchEmployees } from "../_features/hook";
 import EmployeeLoading from "../loading";
 import EmployeeTable from "../_components/EmployeeTable";
 import Pagination from "../_components/Pagination";
-
+import { Plus } from "lucide-react";
+import InviteEmployee from "../_components/InviteEmployee";
+import { getUser } from "@/app/utils/user/userData";
 
 const Employee = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
+    const [open, setOpen] = useState(false);
+    const user = getUser();
 
     const params = useParams();
     const { businessId } = params as { businessId: string }
@@ -41,11 +45,23 @@ const Employee = () => {
                 <div className="flex flex-col gap-2">
                     <h2 className="font-bold text-black">Employees</h2>
                 </div>
-                
+
+                {user?.role === "business" && (
+                    <button
+                        className="bg-[#3352FF] rounded-md px-4 h-[36px] cursor-pointer"
+                        onClick={() => setOpen(true)}
+                    >
+                        <div className="flex  items-center gap-2">
+                            <Plus size={18} color="white" />
+                            <span className="text-white">Invite Employee</span>
+                        </div>
+                    </button>
+                )}
             </div>
 
             {/* employees table  */}
             <div className="flex flex-col mt-5">
+                {open && <InviteEmployee setOpen={setOpen} />}
 
                 {isLoading ? (
                     <EmployeeLoading />

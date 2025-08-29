@@ -64,7 +64,7 @@ const Employee = () => {
         </button>
       </div>
 
-      {/* department table  */}
+      {/* employee table  */}
       <div className="flex flex-col mt-5">
 
 
