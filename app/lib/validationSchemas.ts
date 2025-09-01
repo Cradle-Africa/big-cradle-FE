@@ -118,7 +118,8 @@ export const surveyPaymentSchema = z
       .string()
       .refine((val) => {
         const num = Number(val);
-        return !isNaN(num) && num >= 2000;
+        return !isNaN(num) && num >= 500;
+        // return !isNaN(num) && num >= 2000;
       }, {
         message: "The amount must be greater or equal to 2000",
       }),
