@@ -50,13 +50,14 @@ const NewSurveyPage = () => {
 		resolver: zodResolver(surveySchema),
 	});
 
+	// Demographic form ✅ simplified generics
 	const {
 		register: registerDemographic,
 		watch: watchDemographic,
 		handleSubmit: handleSubmitDemographic,
 		control: controlDemographic,
 		formState: { errors: errorsDemographic },
-	} = useForm<DemographicFormValues, any, DemographicFormValues>({
+	} = useForm<DemographicFormValues>({
 		resolver: zodResolver(demographicSchema),
 	});
 
@@ -79,7 +80,7 @@ const NewSurveyPage = () => {
 		if (!valueExist) {
 			setCountriesAndCities((prev: CountryAndCity[]) => [
 				...(prev ?? []),
-				{ city: data.city, state: data.state, country: data.country },
+				{ city: data.city ?? "", state: data.state ?? "", country: data.country },
 			]);
 			toast.success("Country, region, age and gender added successfully to the list");
 		}
@@ -207,7 +208,7 @@ const NewSurveyPage = () => {
 				handleFinalDemographicSubmit={handleFinalDemographicSubmit}
 				errors={errors}
 				country={country}
-				city={city}
+				city={city ?? ""}
 				ageDemographics={Array.isArray(ageDemographics) ? ageDemographics : [ageDemographics]}
 				gender={Array.isArray(gender) ? gender : [gender]}
 				errorsDemographic={errorsDemographic}
@@ -218,7 +219,7 @@ const NewSurveyPage = () => {
 				onDeleteClick={onDeleteClick}
 				onNextClicked={onNextClicked}
 				countriesAndCities={countriesAndCities}
-				state={state}
+				state={state ?? ""}
 			/>
 
 		</DashboardLayout>

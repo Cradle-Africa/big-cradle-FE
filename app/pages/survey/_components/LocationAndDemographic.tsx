@@ -78,8 +78,8 @@ const LocationAndDemographic = ({
 			age: data.ageDemographics,
 			gender: data.gender,
 			country: data.country,
-			state: data.state,
-			city: data.city
+			state: data.state ?? "",
+			city: data.city ?? ""
 		};
 
 		setDemographicSelections(prev => [...prev, newSelection]);

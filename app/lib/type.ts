@@ -290,13 +290,22 @@ export interface DataPoint {
 
 
 // In your type definitions file
-export interface DemographicFormValues {
-	country: string;
-	state: string;
-	city: string;
-	ageDemographics: string[];
-	gender: string[];
-}
+// export interface DemographicFormValues {
+// 	country: string;
+// 	state: string;
+// 	city: string;
+// 	ageDemographics: string[];
+// 	gender: string[];
+// }
+
+export type DemographicFormValues = {
+  country: string;
+  ageDemographics: string[];
+  gender: string[];
+  state?: string;  // make optional
+  city?: string;   // make optional
+};
+
 
 
 export type DemographicSubmitValues = DemographicFormValues;
