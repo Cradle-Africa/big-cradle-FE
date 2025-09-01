@@ -74,8 +74,10 @@ export const reviewAdminKycSchema = z.object({
 
 export const demographicSchema = z.object({
 	country: z.string().min(1, "Select a country please"),
-	state: z.string().min(1, "Select a state please"),
-	city: z.string().min(1, "Select a city please"),
+	state: z.string().optional(),
+	city: z.string().optional(),
+	// state: z.string().min(1, "Select a state please"),
+	// city: z.string().min(1, "Select a city please"),
 	ageDemographics: z.array(z.string()).min(1, "Select an age group"),
 	gender: z.array(z.string()).min(1, "Select a gender"),
 });

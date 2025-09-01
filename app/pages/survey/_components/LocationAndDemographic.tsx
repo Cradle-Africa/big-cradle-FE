@@ -218,7 +218,7 @@ const LocationAndDemographic = ({
 									placeHolder="Select State"
 									value={field.name}
 								/>
-								<ErrorMessage>{errors.state?.message}</ErrorMessage>
+								{/* <ErrorMessage>{errors.state?.message}</ErrorMessage> */}
 							</div>
 						)}
 					/>
@@ -240,7 +240,7 @@ const LocationAndDemographic = ({
 									placeHolder="Select city"
 									value={field.value}
 								/>
-								<ErrorMessage>{errors.city?.message}</ErrorMessage>
+								{/* <ErrorMessage>{errors.city?.message}</ErrorMessage> */}
 							</div>
 						)}
 					/>
