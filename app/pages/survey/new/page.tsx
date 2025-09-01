@@ -75,16 +75,33 @@ const NewSurveyPage = () => {
 
 	// In parent component
 	const onDemographicSubmit = (data: DemographicFormValues) => {
-		// Handle adding to countriesAndCities list
-		const valueExist = countriesAndCities.some((v) => v.city === data.city);
+		// Check if the exact demographic already exists
+		const valueExist = countriesAndCities.some(
+			(v) =>
+			v.country === data.country &&
+			v.state === (data.state ?? "") &&
+			v.city === (data.city ?? "")
+		);
+
 		if (!valueExist) {
 			setCountriesAndCities((prev: CountryAndCity[]) => [
-				...(prev ?? []),
-				{ city: data.city ?? "", state: data.state ?? "", country: data.country },
+			...(prev ?? []),
+			{
+				country: data.country,
+				state: data.state ?? "",
+				city: data.city ?? "",
+				ageDemographics: data.ageDemographics, // ✅ keep these
+				gender: data.gender,                   // ✅ keep these
+			} as any, // extend CountryAndCity if needed
 			]);
-			toast.success("Country, region, age and gender added successfully to the list");
+			toast.success(
+			"Demographic (country, region, age, gender) added successfully to the list"
+			);
+		} else {
+			toast.error("This demographic already exists in the list");
 		}
 	};
+
 
 	if (isLoading || !user) {
 		return <Spinner />;
@@ -108,9 +125,19 @@ const NewSurveyPage = () => {
 	};
 
 	const onDeleteClick = (data: CountryAndCity) => {
-		const filteredList = countriesAndCities.filter((v) => v.city !== data.city);
-		setCountriesAndCities([...filteredList]);
+		const filteredList = countriesAndCities.filter(
+			(v) =>
+			!(
+				v.country === data.country &&
+				v.state === data.state &&
+				v.city === data.city &&
+				JSON.stringify(v.ageDemographics) === JSON.stringify(data.ageDemographics) &&
+				JSON.stringify(v.gender) === JSON.stringify(data.gender)
+			)
+		);
+		setCountriesAndCities(filteredList);
 	};
+
 
 	const onNextClicked = () => {
 		if (countriesAndCities.length < 1) {

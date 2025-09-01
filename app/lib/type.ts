@@ -101,11 +101,21 @@ export type ReviewAdminKyc = {
 	adminUserId: string;
 };
 
+// export type CountryAndCity = {
+// 	country: string;
+// 	state: string;
+// 	city: string,
+// };
+
+
 export type CountryAndCity = {
-	country: string;
-	state: string;
-	city: string,
+  country: string;
+  state: string;
+  city: string;
+  ageDemographics: string[];
+  gender: string[];
 };
+
 
 export type Business = {
 	id: string;
