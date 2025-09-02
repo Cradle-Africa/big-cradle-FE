@@ -31,6 +31,7 @@ import {
   suspendSurvey,
   updateSurvey,
   verifySurvey,
+  verifyWalletTrx,
 } from "./api";
 
 export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
@@ -131,6 +132,12 @@ export const useFetchSurveyAnalyctics = ({
 export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
   return useMutation<SurveyListItem, void, string>({
     mutationFn: (txRef: string) => verifySurvey(axios, txRef),
+  });
+};
+
+export const useVerifyWalletTrx = ({ axios }: { axios: AxiosInstance }) => {
+  return useMutation<SurveyListItem, void, string>({
+    mutationFn: (tx_ref: string) => verifyWalletTrx(axios, tx_ref),
   });
 };
 

@@ -148,6 +148,17 @@ export const verifySurvey = async (axios: AxiosInstance, txRef: string) => {
   }
 };
 
+export const verifyWalletTrx = async (axios: AxiosInstance, tx_ref: string) => {
+  try {
+    // call the PUT endpoint with the tx_ref as path param
+    const res = await axios.put(`/survey-mgt/${tx_ref}`);
+    return res.data.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 export const surveyPay = async (
   axios: AxiosInstance,
   data: FlutterWavePaymentSubmit

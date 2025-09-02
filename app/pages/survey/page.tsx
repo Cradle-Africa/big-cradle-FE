@@ -13,296 +13,327 @@ import SurveyCard from "./_components/SurveyCard";
 import { statuses } from "./_components/SurveyStatus";
 import SurveyTable from "./_components/SurveyTable";
 import {
-	useFetchSuperAdminSurvey,
-	useFetchSurvey,
-	useFetchSurveyAnalyctics,
-	useVerifySurveyPayment,
+  useFetchSuperAdminSurvey,
+  useFetchSurvey,
+  useFetchSurveyAnalyctics,
+  useVerifySurveyPayment,
+  useVerifyWalletTrx, // ✅ add wallet trx hook
 } from "./_features/hooks";
 import SurveyPageLoading from "./loading";
 import { Spinner } from "@radix-ui/themes";
 import PopUp from "./_components/Popup";
 
 const SurveyPage = () => {
-	const searchParam = useSearchParams();
-	const router = useRouter();
-	const searchParams = useSearchParams();
-	const [surveyDashBoardItems, setSurveyDashBoardItems] = useState<DashboardMenu[]>();
-	const [popupOpen, setPopupOpen] = useState(false);
-	const [, setCreatingSurvey] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [surveyDashBoardItems, setSurveyDashBoardItems] =
+    useState<DashboardMenu[]>();
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [, setCreatingSurvey] = useState(false);
 
-	const surveyStatus = searchParam.get("status");
-	const user = getUser() ?? null;
-	const changeStatus = (status: string) => {
-		const params = new URLSearchParams(searchParams);
-		params.set("status", status);
-		router.push("?" + params.toString());
-	};
+  const surveyStatus = searchParams.get("status");
+  const txRef = searchParams.get("tx_ref");
+  const source = searchParams.get("source"); // 👈 NEW: wallet | flutterwave
 
-	const txRef = searchParams.get("tx_ref");
-	const {
-		mutateAsync: verifyPayment,
-		isPending: isVerifing,
-		data: paymentMadeData,
-		isSuccess: isVerifyPaymentSuccess,
-		isError,
-	} = useVerifySurveyPayment({
-		axios,
-	});
+  const user = getUser() ?? null;
 
-	const [selectedStartDate, setSelectedStartDate] = useState('');
-	const [selectedEndDate, setSelectedEndDate] = useState('');
-	const [search, setSearch] = useState('');
+  const changeStatus = (status: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("status", status);
+    router.push("?" + params.toString());
+  };
 
-	const [surveyPage, setSurveyPage] = useState(1);
-	const [surveyLimit, setSurveyLimit] = useState(10);
+  // Flutterwave verification
+  const {
+    mutateAsync: verifySurveyPayment,
+    isPending: isSurveyVerifying,
+    data: surveyPaymentData,
+    isSuccess: isSurveyVerifySuccess,
+    isError: isSurveyError,
+  } = useVerifySurveyPayment({ axios });
 
-	const isBusiness = user?.role === "business";
-	const isEmployee = user?.role === "employee";
-	const isSuperAdmin = user?.role === "super admin";
+  // Wallet verification
+  const {
+    mutateAsync: verifyWalletTrx,
+    isPending: isWalletVerifying,
+    data: walletPaymentData,
+    isSuccess: isWalletVerifySuccess,
+    isError: isWalletError,
+  } = useVerifyWalletTrx({ axios });
 
-	const {
-		data: surveysListResponse,
-		isLoading: isLoadingSurveyList,
-		refetch: refetchSurveyList,
-	} = useFetchSurvey({
-		axios,
-		page: surveyPage,
-		limit: surveyLimit,
-		startDate: selectedStartDate,
-		endDate: selectedEndDate,
-		search: search,
-		businessUserId: user?.role === "business" ? user?.id || "" : user?.businessUserId || "",
-		enabled: isBusiness || isEmployee,
-	});
+  const verifyPaymentFunc = useCallback(async () => {
+    if (!txRef) return;
+    try {
+      if (source === "wallet") {
+        await verifyWalletTrx(txRef);
+      } else {
+        await verifySurveyPayment(txRef);
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Verification failed");
+    }
+  }, [txRef, source, verifySurveyPayment, verifyWalletTrx]);
 
-	const {
-		data: superAdminSurveysListResponse,
-		isLoading: isLoadingSuperAdminSurveys,
-		refetch: refetchSuperAdminSurvey,
-	} = useFetchSuperAdminSurvey({
-		axios,
-		page: surveyPage,
-		limit: surveyLimit,
-		startDate: selectedStartDate,
-		endDate: selectedEndDate,
-		search: search,
-		enabled: isSuperAdmin,
-	});
+  useEffect(() => {
+    if (txRef) verifyPaymentFunc();
+  }, [txRef, verifyPaymentFunc]);
 
-	// Pagination for business
-	const survey_pagination = {
-		page: surveysListResponse?.pagination?.page || 1,
-		limit: surveysListResponse?.pagination?.limit || 10,
-		total: surveysListResponse?.pagination?.total || 0,
-		pages: Math.ceil((surveysListResponse?.pagination?.total || 0) / (surveysListResponse?.pagination?.limit || 10)),
-	};
+  useEffect(() => {
+    const data = source === "wallet" ? walletPaymentData : surveyPaymentData;
+    const success =
+      source === "wallet" ? isWalletVerifySuccess : isSurveyVerifySuccess;
+    const error =
+      source === "wallet" ? isWalletError : isSurveyError;
 
-	// Pagination for super admin
-	const super_admin_survey_pagination = {
-		page: Number(superAdminSurveysListResponse?.pagination?.page || 1),
-		limit: Number(superAdminSurveysListResponse?.pagination?.limit || 10),
-		total: Number(superAdminSurveysListResponse?.pagination?.total || 0),
-		pages: Math.ceil(
-			Number(superAdminSurveysListResponse?.pagination?.total || 0) /
-			Number(superAdminSurveysListResponse?.pagination?.limit || 10)
-		),
-	};
+    if (success) {
+      if (data?.paymentStatus === "paid") {
+        toast.success("Payment made successfully");
+      } else {
+        toast.error("Error when making payments");
+      }
+    }
 
-	const {
-		data: surveysAnalyticsResponse,
-		isSuccess: analyticsSuccess,
-		isLoading: analyticsLoading,
-	} = useFetchSurveyAnalyctics({
-		axios,
-		businessUserId: user?.id || user?.businessUserId || "",
-	});
+    if (error) {
+      toast.error("An error occurred while verifying your payment");
+    }
+  }, [
+    source,
+    walletPaymentData,
+    surveyPaymentData,
+    isWalletVerifySuccess,
+    isSurveyVerifySuccess,
+    isWalletError,
+    isSurveyError,
+  ]);
 
-	const filteredSurveys = useMemo(() => {
-		let surveys: SurveyListItem[] = [];
-		if (user?.role === "business" || user?.role === "employee") {
-			surveys = surveysListResponse?.survey || [];
-		} else if (user?.role === "super admin") {
-			surveys = superAdminSurveysListResponse?.data || [];
-		}
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [selectedEndDate, setSelectedEndDate] = useState("");
+  const [search, setSearch] = useState("");
 
-		if (!surveyStatus || surveyStatus === "all") return surveys;
-		if (surveyStatus.toLowerCase() === "active") {
-			return surveys.filter((survey) => survey.isActive);
-		} else {
-			return surveys.filter((survey) => !survey.isActive);
-		}
-	}, [
-		surveyStatus,
-		surveysListResponse?.survey,
-		superAdminSurveysListResponse?.data,
-		user?.role,
-	]);
+  const [surveyPage, setSurveyPage] = useState(1);
+  const [surveyLimit, setSurveyLimit] = useState(10);
 
-	const verifyPayementFunc = useCallback(async () => {
-		try {
-			await verifyPayment(txRef || "");
-		} catch (error) {
-			console.log(error);
-		}
-	}, [txRef, verifyPayment]);
+  const isBusiness = user?.role === "business";
+  const isEmployee = user?.role === "employee";
+  const isSuperAdmin = user?.role === "super admin";
 
-	useEffect(() => {
-		try {
-			if (txRef) verifyPayementFunc();
-		} catch (error: any) {
-			toast.error(`${error.message}`);
-		}
-	}, [txRef, verifyPayementFunc]);
+  const {
+    data: surveysListResponse,
+    isLoading: isLoadingSurveyList,
+    refetch: refetchSurveyList,
+  } = useFetchSurvey({
+    axios,
+    page: surveyPage,
+    limit: surveyLimit,
+    startDate: selectedStartDate,
+    endDate: selectedEndDate,
+    search,
+    businessUserId:
+      user?.role === "business" ? user?.id || "" : user?.businessUserId || "",
+    enabled: isBusiness || isEmployee,
+  });
 
-	useEffect(() => {
-		if (isVerifyPaymentSuccess) {
-			if (paymentMadeData?.paymentStatus === "paid") {
-				toast.success("Payment made successfull");
-			} else {
-				toast.error("Error when making payments");
-			}
-		}
-	}, [
-		txRef,
-		verifyPayementFunc,
-		isVerifyPaymentSuccess,
-		paymentMadeData?.paymentStatus,
-	]);
+  const {
+    data: superAdminSurveysListResponse,
+    isLoading: isLoadingSuperAdminSurveys,
+    refetch: refetchSuperAdminSurvey,
+  } = useFetchSuperAdminSurvey({
+    axios,
+    page: surveyPage,
+    limit: surveyLimit,
+    startDate: selectedStartDate,
+    endDate: selectedEndDate,
+    search,
+    enabled: isSuperAdmin,
+  });
 
-	useEffect(() => {
-		if (analyticsSuccess && surveysAnalyticsResponse) {
-			const dashBoardValue: DashboardMenu[] = [
-				{
-					value: `${surveysAnalyticsResponse.data.totalSurveys}`,
-					title: "All surveys",
-					subTitle: "All created surveys",
-					icon: <FolderOpenDot size={16} color="blue" />,
-				},
-				{
-					value: `${surveysAnalyticsResponse.data.totalEntries}`,
-					title: "Total entries",
-					subTitle: "All regitered entries",
-					icon: <ShieldCheck size={16} color="blue" />,
-				},
-				{
-					value: `${surveysAnalyticsResponse.data.totalAmount}`,
-					title: "Total Amount",
-					subTitle: "Total amount",
-					icon: <ShieldBan size={16} color="blue" />,
-				},
-			];
+  // Pagination for business
+  const survey_pagination = {
+    page: surveysListResponse?.pagination?.page || 1,
+    limit: surveysListResponse?.pagination?.limit || 10,
+    total: surveysListResponse?.pagination?.total || 0,
+    pages: Math.ceil(
+      (surveysListResponse?.pagination?.total || 0) /
+        (surveysListResponse?.pagination?.limit || 10)
+    ),
+  };
 
-			setSurveyDashBoardItems(dashBoardValue);
-		}
-	}, [analyticsSuccess, surveysAnalyticsResponse]);
+  // Pagination for super admin
+  const super_admin_survey_pagination = {
+    page: Number(superAdminSurveysListResponse?.pagination?.page || 1),
+    limit: Number(superAdminSurveysListResponse?.pagination?.limit || 10),
+    total: Number(superAdminSurveysListResponse?.pagination?.total || 0),
+    pages: Math.ceil(
+      Number(superAdminSurveysListResponse?.pagination?.total || 0) /
+        Number(superAdminSurveysListResponse?.pagination?.limit || 10)
+    ),
+  };
 
-	useEffect(() => {
-		if (isError) toast.error(`An error occured when verifing your payment`);
-	}, [isError, txRef, verifyPayementFunc]);
+  const {
+    data: surveysAnalyticsResponse,
+    isSuccess: analyticsSuccess,
+    isLoading: analyticsLoading,
+  } = useFetchSurveyAnalyctics({
+    axios,
+    businessUserId: user?.id || user?.businessUserId || "",
+  });
 
-	useEffect(() => {
-		if (user?.role === 'business') {
-			refetchSurveyList();
-		}
-	}, [user?.role, refetchSurveyList, selectedStartDate, selectedEndDate, search, surveyLimit, surveyPage]);
+  const filteredSurveys = useMemo(() => {
+    let surveys: SurveyListItem[] = [];
+    if (user?.role === "business" || user?.role === "employee") {
+      surveys = surveysListResponse?.survey || [];
+    } else if (user?.role === "super admin") {
+      surveys = superAdminSurveysListResponse?.data || [];
+    }
 
-	useEffect(() => {
-		if (user?.role === 'super admin') {
-			refetchSuperAdminSurvey();
-		}
-	}, [user?.role, refetchSuperAdminSurvey, selectedStartDate, selectedEndDate, search, surveyLimit, surveyPage]);
+    if (!surveyStatus || surveyStatus === "all") return surveys;
+    if (surveyStatus.toLowerCase() === "active") {
+      return surveys.filter((survey) => survey.isActive);
+    } else {
+      return surveys.filter((survey) => !survey.isActive);
+    }
+  }, [
+    surveyStatus,
+    surveysListResponse?.survey,
+    superAdminSurveysListResponse?.data,
+    user?.role,
+  ]);
 
+  useEffect(() => {
+    if (analyticsSuccess && surveysAnalyticsResponse) {
+      const dashBoardValue: DashboardMenu[] = [
+        {
+          value: `${surveysAnalyticsResponse.data.totalSurveys}`,
+          title: "All surveys",
+          subTitle: "All created surveys",
+          icon: <FolderOpenDot size={16} color="blue" />,
+        },
+        {
+          value: `${surveysAnalyticsResponse.data.totalEntries}`,
+          title: "Total entries",
+          subTitle: "All registered entries",
+          icon: <ShieldCheck size={16} color="blue" />,
+        },
+        {
+          value: `${surveysAnalyticsResponse.data.totalAmount}`,
+          title: "Total Amount",
+          subTitle: "Total amount",
+          icon: <ShieldBan size={16} color="blue" />,
+        },
+      ];
 
-	if (analyticsLoading || isVerifing)
-		return <SurveyPageLoading />;
+      setSurveyDashBoardItems(dashBoardValue);
+    }
+  }, [analyticsSuccess, surveysAnalyticsResponse]);
 
-	// if (isLoadingSurveyList || isLoadingSuperAdminSurveys)
-	// 	return <SurveyPageLoading />;
+  useEffect(() => {
+    if (user?.role === "business") {
+      refetchSurveyList();
+    }
+  }, [
+    user?.role,
+    refetchSurveyList,
+    selectedStartDate,
+    selectedEndDate,
+    search,
+    surveyLimit,
+    surveyPage,
+  ]);
 
-	return (
-		<DashboardLayout>
+  useEffect(() => {
+    if (user?.role === "super admin") {
+      refetchSuperAdminSurvey();
+    }
+  }, [
+    user?.role,
+    refetchSuperAdminSurvey,
+    selectedStartDate,
+    selectedEndDate,
+    search,
+    surveyLimit,
+    surveyPage,
+  ]);
 
-			<PopUp
-				openPopup={popupOpen}
-				onClose={() => setPopupOpen(false)}
-				onBuildPipeline={() => {
-					setCreatingSurvey(true);
-					// setCreatingDataPoint(false);
-				}}
-			/>
-			<div className="w-full">
-				<div className="flex justify-between">
-					<p className="font-semibold text-lg text-black">Surveys</p>
+  if (analyticsLoading || isSurveyVerifying || isWalletVerifying)
+    return <SurveyPageLoading />;
 
-					<button
-						className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer"
-					//   onClick={() => setOpen(true)}
-					>
-						<button
-							onClick={() => setPopupOpen(true)}
-							// href="/pages/survey/new?survey=survey-name-and-description">
-							className="flex items-center gap-2 hover:cursor-pointer">
-							<Plus size={18} color="white" />
-							<span className="text-white">Create new survey</span>
-						</button>
-					</button>
+  return (
+    <DashboardLayout>
+      <PopUp
+        openPopup={popupOpen}
+        onClose={() => setPopupOpen(false)}
+        onBuildPipeline={() => {
+          setCreatingSurvey(true);
+        }}
+      />
+      <div className="w-full">
+        <div className="flex justify-between">
+          <p className="font-semibold text-lg text-black">Surveys</p>
 
-				</div>
-				<p className="mt-2">
-					View, manage, and track your survey tasks. Create new surveys to
-					collect insights in real time
-				</p>
-			</div>
-			{/* Build the cards area */}
-			<div className="grid grid-cols-2 md:grid md:grid-cols-3 2xl:grid 2xl:grid-cols-4 gap-3 lg:gap-6 mt-8">
-				{surveyDashBoardItems?.map((menu, index) => (
-					<SurveyCard
-						key={`${menu.title}`}
-						data={menu}
-						isHighLighted={index === 0}
-					/>
-				))}
-			</div>
-			{/* Survey table  */}
-			<div className="flex flex-col rounded-md bg-white lg:p-4 mt-8">
-				<p className="font-bold text-black">Surveys</p>
-				<div className="flex gap-4 my-4">
-					{statuses.map((status) => (
-						<SurveyStatus
-							key={status}
-							isSelected={status.toLowerCase() === surveyStatus}
-							status={status}
-							onClick={() => changeStatus(status.toLowerCase())}
-						/>
-					))}
-				</div>
+          <button className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer">
+            <button
+              onClick={() => setPopupOpen(true)}
+              className="flex items-center gap-2 hover:cursor-pointer"
+            >
+              <Plus size={18} color="white" />
+              <span className="text-white">Create new survey</span>
+            </button>
+          </button>
+        </div>
+        <p className="mt-2">
+          View, manage, and track your survey tasks. Create new surveys to
+          collect insights in real time
+        </p>
+      </div>
+      {/* Build the cards area */}
+      <div className="grid grid-cols-2 md:grid md:grid-cols-3 2xl:grid 2xl:grid-cols-4 gap-3 lg:gap-6 mt-8">
+        {surveyDashBoardItems?.map((menu, index) => (
+          <SurveyCard
+            key={`${menu.title}`}
+            data={menu}
+            isHighLighted={index === 0}
+          />
+        ))}
+      </div>
+      {/* Survey table */}
+      <div className="flex flex-col rounded-md bg-white lg:p-4 mt-8">
+        <p className="font-bold text-black">Surveys</p>
+        <div className="flex gap-4 my-4">
+          {statuses.map((status) => (
+            <SurveyStatus
+              key={status}
+              isSelected={status.toLowerCase() === surveyStatus}
+              status={status}
+              onClick={() => changeStatus(status.toLowerCase())}
+            />
+          ))}
+        </div>
 
-				{isLoadingSurveyList && isLoadingSuperAdminSurveys && (
-					<div> <Spinner /> </div>
-				)}
+        {isLoadingSurveyList && isLoadingSuperAdminSurveys && <Spinner />}
 
-				<SurveyTable
-					data={filteredSurveys || []}
-					pagination={user?.role === "super admin" ? super_admin_survey_pagination : survey_pagination}
-					onPageChange={setSurveyPage}
-					onLimitChange={(newLimit) => {
-						setSurveyLimit(newLimit);
-						setSurveyPage(1);
-					}}
-					selectedStartDate={selectedStartDate}
-					selectedEndDate={selectedEndDate}
-					setSelectedStartDate={setSelectedStartDate}
-					setSelectedEndDate={setSelectedEndDate}
-					search={search}
-					setSearch={setSearch}
-					loading={false} // Set to false here since we already checked loading state
-				/>
-
-
-
-			</div>
-		</DashboardLayout>
-	);
+        <SurveyTable
+          data={filteredSurveys || []}
+          pagination={
+            user?.role === "super admin"
+              ? super_admin_survey_pagination
+              : survey_pagination
+          }
+          onPageChange={setSurveyPage}
+          onLimitChange={(newLimit) => {
+            setSurveyLimit(newLimit);
+            setSurveyPage(1);
+          }}
+          selectedStartDate={selectedStartDate}
+          setSelectedStartDate={setSelectedStartDate}
+          selectedEndDate={selectedEndDate}
+          setSelectedEndDate={setSelectedEndDate}
+          search={search}
+          setSearch={setSearch}
+          loading={false}
+        />
+      </div>
+    </DashboardLayout>
+  );
 };
 
 export default SurveyPage;
