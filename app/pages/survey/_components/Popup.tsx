@@ -42,8 +42,8 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                             <PlusCircle className="" />
                                         </div>
                                     </div>
-                                    <p className="mt-3 text-md font-semibold">Internal Survey</p>
-                                    <p className="text-sm mt-3">
+                                    <p className="mt-3 text-sm text-blue-600 font-semibold">Internal Survey</p>
+                                    <p className="text-lg mt-3">
                                         Collect responses from audiences using the Big Cradle app
                                     </p>
                                 </button>
@@ -65,8 +65,8 @@ const PopUp: React.FC<PopUpProps> = ({ openPopup, onClose, onBuildPipeline }) =>
                                             <List className="" />
                                         </div>
                                     </div>
-                                    <p className="mt-3 text-md font-semibold">External Survey</p>
-                                    <p className="text-sm mt-3">
+                                    <p className="mt-3 text-sm text-blue-600 font-semibold">External Survey</p>
+                                    <p className="text-lg mt-3">
                                         Collect responses from external audiences using sharable links
                                     </p>
                                 </button>
