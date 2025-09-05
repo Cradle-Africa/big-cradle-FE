@@ -105,7 +105,6 @@ const AccountVerification: React.FC<AccountVerificationProps> = ({ setShowAccoun
                         <p>
                             Didn’t get the code?
                             <a onClick={handleResendCode} className="underline text-blue-500 mx-1 hover:cursor-pointer">Resend code</a>
-                            in 4 seconds...
                         </p>
                     </div>
 
