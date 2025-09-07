@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import {
-    LineChart,
-    Line,
+    BarChart,
+    Bar,
     XAxis,
     YAxis,
     CartesianGrid,
@@ -15,12 +15,10 @@ import { Spinner } from "@radix-ui/themes";
 import { useCreatedSurveyStats } from "../dashboard/_features/hook";
 import { formatISOWeekToRange } from "@/app/utils/formatDate";
 
-
-
 const CreatedSurvey: React.FC = () => {
     const [period, setPeriod] = useState<"daily" | "weekly" | "monthly" | "yearly">("monthly");
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
     const { data, isLoading, error } = useCreatedSurveyStats({
         period,
@@ -40,7 +38,6 @@ const CreatedSurvey: React.FC = () => {
 
     const chartData = data?.map((entry) => {
         const rawLabel = (entry as any)[labelKey];
-
         return {
             name: period === "weekly" ? formatISOWeekToRange(rawLabel) : rawLabel,
             value: entry.count,
@@ -80,20 +77,14 @@ const CreatedSurvey: React.FC = () => {
 
             <div className="w-full h-[350px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={chartData}>
+                    <BarChart data={chartData}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke="#004484"
-                            strokeWidth={2}
-                            activeDot={{ r: 6 }}
-                        />
-                    </LineChart>
+                        <Bar dataKey="value" fill="#00875A" barSize={40} radius={[6, 6, 0, 0]} />
+                    </BarChart>
                 </ResponsiveContainer>
             </div>
         </div>
