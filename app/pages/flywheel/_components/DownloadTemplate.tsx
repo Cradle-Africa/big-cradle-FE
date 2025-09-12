@@ -12,15 +12,16 @@ export const DownloadTemplate = ({ data, dataPointName }: DownloadTemplateProps)
         if (!data?.field) return;
 
         const headers = data.field.map((f: any) => f.label || f.key);
-        const sampleRow = data.field.reduce((acc: any, f: any) => {
-            acc[f.label] = f.type === "checkbox" ? "Option1, Option2" : f.label;
-            return acc;
-        }, {});
-        const worksheet = XLSX.utils.json_to_sheet([sampleRow], { header: headers });
+
+        // Create an empty sheet with only headers
+        const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
+
         XLSX.writeFile(workbook, `${dataPointName} data-entry-template.xlsx`);
     };
+
 
     return (
         <button
