@@ -137,7 +137,7 @@ export const RenderDynamicField: React.FC<RenderFieldProps> = ({
     case "rating":
       return (
         <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
+          {["1", "2", "3", "4", "5"].map((star) => (
             <button
               key={star}
               type="button"
