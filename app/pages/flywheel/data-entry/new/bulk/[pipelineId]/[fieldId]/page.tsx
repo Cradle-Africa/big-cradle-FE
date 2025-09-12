@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+
+
 "use client";
 
 import DashboardLayout from "@/app/DashboardLayout";
@@ -297,9 +301,6 @@ const NewBulkDataEntry = () => {
 
                             <div className="flex gap-2 flex-wrap">
                                 <ImportExcel data={datapoints} setEntries={setEntries} />
-                                {/* <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Template"} /> */}
-
-                                {/* <ExportToExcel data={entries} datapoints={datapoints} dataPointName={singlePipeline?.dataPointName || "Export"} /> */}
                                 <button
                                     onClick={() => router.back()}
                                     className="flex items-center justify-between bg-blue-600 rounded-md text-white px-3 py-2 cursor-pointer">
@@ -309,61 +310,7 @@ const NewBulkDataEntry = () => {
                             </div>
                         </div>
 
-                        {/* <div className="overflow-y-auto w-full flex justify-between py-8">
-                            <form onSubmit={handleSubmit} className="space-y-6 w-full text-left text-sm">
-                                {entries.map((formData, index) => (
-                                    <div key={index} className="pb-2 border-b border-gray-200">
-                                        <h3 className="mb-2 text-blue-600">Entry: {index + 1}</h3>
-                                        <div className="border border-gray-300 px-5 pt-5 pb-8 mb-4 rounded-md relative">
-                                            {datapoints?.field.map((field: any, i: number) => (
-                                                <div key={i} className="mb-3">
-                                                    <label className="block mb-1 text-sm font-medium text-gray-700">
-                                                        {field.label}{" "}
-                                                        {field.required && <span className="text-red-500">*</span>}
-                                                    </label>
-                                                    {renderField(field, i, formData, (value) =>
-                                                        handleEntryChange(index, field.key, value)
-                                                    )}
-                                                </div>
-                                            ))}
-                                            {index > 0 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeEntry(index)}
-                                                    className="absolute bottom-2 right-5 hover:bg-red-100 border border-red-500 text-red-500 p-1 rounded-sm text-xs"
-                                                >
-                                                    - Remove
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-
-                                <div className="flex gap-2 justify-between items-center mt-4">
-                                    <button
-                                        type="button"
-                                        onClick={addEntry}
-                                        className="w-1/2 border border-blue-600 text-blue-600 px-4 py-2 rounded-md cursor-pointer"
-                                    >
-                                        + Add Entry
-                                    </button>
-
-                                    <button
-                                        type="submit"
-                                        disabled={isPending}
-                                        className="w-1/2 flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium cursor-pointer"
-                                    >
-                                        {isPending ? (
-                                            <Spinner className='inline mr-1' />
-                                        ) : (
-                                            <Check size={14} className="inline mr-1" />
-                                        )
-                                        }
-                                        {isPending ? "Submitting..." : "Submit"}
-                                    </button>
-                                </div>
-                            </form>
-                        </div> */}
+                        
                         <div className="border-2 border-dashed rounded-lg border-blue-600 mt-20 p-10">
                             <h2 className="text-center">Download the template to see the format, <br /> click on import the upload the filled excel sheet. 
                             </h2>
