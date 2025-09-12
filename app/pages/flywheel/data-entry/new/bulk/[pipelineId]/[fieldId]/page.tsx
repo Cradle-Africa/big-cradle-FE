@@ -297,7 +297,7 @@ const NewBulkDataEntry = () => {
 
                             <div className="flex gap-2 flex-wrap">
                                 <ImportExcel data={datapoints} setEntries={setEntries} />
-                                <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Template"} />
+                                {/* <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Template"} /> */}
 
                                 {/* <ExportToExcel data={entries} datapoints={datapoints} dataPointName={singlePipeline?.dataPointName || "Export"} /> */}
                                 <button
@@ -309,7 +309,7 @@ const NewBulkDataEntry = () => {
                             </div>
                         </div>
 
-                        <div className="overflow-y-auto w-full flex justify-between py-8">
+                        {/* <div className="overflow-y-auto w-full flex justify-between py-8">
                             <form onSubmit={handleSubmit} className="space-y-6 w-full text-left text-sm">
                                 {entries.map((formData, index) => (
                                     <div key={index} className="pb-2 border-b border-gray-200">
@@ -363,6 +363,13 @@ const NewBulkDataEntry = () => {
                                     </button>
                                 </div>
                             </form>
+                        </div> */}
+                        <div className="border-2 border-dashed rounded-lg border-blue-600 mt-20 p-10">
+                            <h2 className="text-center">Download the template to see the format, <br /> click on import the upload the filled excel sheet. 
+                            </h2>
+                            <div className="flex justify-center">
+                                 <DownloadTemplate data={datapoints} dataPointName={singlePipeline?.dataPointName || "Click to download"} />
+                            </div>
                         </div>
                     </div>
                 )}
