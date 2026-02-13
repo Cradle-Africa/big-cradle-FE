@@ -13,7 +13,8 @@ import {
 import { refreshTokenService } from "../services/user/userService";
 
 // export const BASE_URL = "https://big-cradle-be-dev.onrender.com/api/v1";
-export const BASE_URL = "https://big-cradle-be-rctm.onrender.com/api/v1";
+// export const BASE_URL = "https://big-cradle-be-rctm.onrender.com/api/v1";
+export const BASE_URL = "https://bigcradle-backend-app-sjdxg.ondigitalocean.app/api/v1";
 export const INTERNAL_URL = "https://app.bigcradle.com";
 
 const apiClient_ = axios.create({
