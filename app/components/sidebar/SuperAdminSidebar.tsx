@@ -7,6 +7,7 @@ import {
 	ChevronUp,
 	CircleArrowDown,
 	CircleArrowUp,
+	Coins,
 	House,
 	UsersRound,
 } from "lucide-react";
@@ -91,6 +92,13 @@ export default function SuperAdminSidebar() {
 							>
 								<CircleArrowUp  size={14} />
 								Payout
+							</Link>
+							<Link
+								href="/pages/transactions/binance"
+								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+							>
+								<Coins size={14} />
+								Binance
 							</Link>
 						</div>
 					)}

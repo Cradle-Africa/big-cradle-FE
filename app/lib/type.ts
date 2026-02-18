@@ -669,6 +669,43 @@ export type WalletTransactionList = {
 	updatedAt: string;
 }
 
+// Binance transaction history (super-admin)
+export type BinanceTransaction = {
+	id: string;
+	type: "deposit" | "withdrawal";
+	coin: string;
+	amount: string;
+	network?: string;
+	txId?: string | null;
+	address?: string | null;
+	status: number;
+	timestamp: number;
+	transactionFee?: string | null;
+	raw?: Record<string, unknown>;
+};
+
+export type BinanceDateRange = {
+	minDate: number;
+	maxDate: number;
+};
+
+export type BinanceTransactionsResponse = {
+	success: boolean;
+	data: BinanceTransaction[];
+	pagination: {
+		page: number;
+		limit: number;
+		total: number;
+		totalPages: number;
+	};
+	dateRange: BinanceDateRange | null;
+};
+
+export type BinanceSyncResponse = {
+	success: boolean;
+	message: string;
+};
+
 export type CreateTransactionPayload = {
 	walletId: string;
 	type: "credit" | "debit";
