@@ -689,6 +689,20 @@ export type BinanceDateRange = {
 	maxDate: number;
 };
 
+export type BinanceSummaryByType = {
+	count: number;
+	totalAmount: number;
+};
+
+export type BinanceSummary = {
+	totalCount: number;
+	byType: {
+		deposit: BinanceSummaryByType;
+		withdrawal: BinanceSummaryByType;
+	};
+	totalFees: number;
+};
+
 export type BinanceTransactionsResponse = {
 	success: boolean;
 	data: BinanceTransaction[];
@@ -699,6 +713,7 @@ export type BinanceTransactionsResponse = {
 		totalPages: number;
 	};
 	dateRange: BinanceDateRange | null;
+	summary: BinanceSummary | null;
 };
 
 export type BinanceSyncResponse = {

@@ -3,6 +3,7 @@ import type {
 	BinanceTransaction,
 	BinanceTransactionsResponse,
 	BinanceSyncResponse,
+	BinanceSummary,
 	PaginationMeta,
 } from "@/app/lib/type";
 
@@ -18,6 +19,7 @@ export type FetchBinanceTransactionsResult = {
 	data: BinanceTransaction[];
 	pagination: PaginationMeta;
 	dateRange: { minDate: number; maxDate: number } | null;
+	summary: BinanceSummary | null;
 };
 
 export async function fetchBinanceTransactions(
@@ -42,6 +44,7 @@ export async function fetchBinanceTransactions(
 			pages: d.pagination?.totalPages ?? 0,
 		},
 		dateRange: d.dateRange ?? null,
+		summary: d.summary ?? null,
 	};
 }
 

@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
-import type { BinanceTransaction, PaginationMeta } from "@/app/lib/type";
+import type { BinanceTransaction, BinanceSummary, PaginationMeta } from "@/app/lib/type";
 import { fetchBinanceTransactions, triggerBinanceSync } from "./api";
 
 export type BinanceQueryParams = {
@@ -17,6 +17,7 @@ export type BinanceTransactionsResult = {
 	data: BinanceTransaction[];
 	pagination: PaginationMeta;
 	dateRange: { minDate: number; maxDate: number } | null;
+	summary: BinanceSummary | null;
 };
 
 export function useFetchBinanceTransactions({
