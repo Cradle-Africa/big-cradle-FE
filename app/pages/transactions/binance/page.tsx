@@ -27,6 +27,11 @@ function formatAmount(value: number): string {
 	});
 }
 
+function formatBalance(value: number): string {
+	const formatted = formatAmount(Math.abs(value));
+	return value > 0 ? `+${formatted}` : value < 0 ? `-${formatted}` : formatted;
+}
+
 function formatDateRange(startISO: string | undefined, endISO: string | undefined): string {
 	if (!startISO && !endISO) return "All time";
 	if (startISO && endISO) {
@@ -152,7 +157,7 @@ const Page = () => {
 										{summary.totalCount.toLocaleString()} transaction{summary.totalCount !== 1 ? "s" : ""}
 									</p>
 									<p className="text-sm text-gray-600 mt-1">
-										Total fees: {formatAmount(summary.totalFees)} USDT
+										Net flow: {formatBalance(summary.balance)} USDT
 									</p>
 								</div>
 								{/* Deposits card */}

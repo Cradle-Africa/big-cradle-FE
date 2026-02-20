@@ -700,7 +700,7 @@ export type BinanceSummary = {
 		deposit: BinanceSummaryByType;
 		withdrawal: BinanceSummaryByType;
 	};
-	totalFees: number;
+	balance: number;
 };
 
 export type BinanceTransactionsResponse = {
