@@ -255,7 +255,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                             submitSurveyPayment({
                                 reference: survey.tx_ref,
                                 amount: survey?.amount,
-                                currency: selectedProvider === 'kuvarpay' ? 'NGN' : selectedPaymentMethod!.currency,
+                                currency: selectedProvider === 'kuvarpay' ? 'RWF' : selectedPaymentMethod!.currency,
                                 redirectUrl: `${INTERNAL_URL}/pages/survey/payment-made?tx_ref=${survey.tx_ref}`,
                                 customerEmail: user?.email || '',
                                 customerName: (user as { fullName?: string })?.fullName

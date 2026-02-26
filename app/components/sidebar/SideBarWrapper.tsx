@@ -4,13 +4,18 @@ import LogoWithText from "@/public/images/logo-with-text.png";
 import { FilePlus, Menu, Plus, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { getUser } from "@/app/utils/user/userData";
 import PopUp from "@/app/pages/survey/_components/Popup";
 
 const SideBarWrapper = ({ children }: PropsWithChildren) => {
   const [open, setOpen] = useState(false);
-  const user = getUser();
+  const [mounted, setMounted] = useState(false);
+  const user = mounted ? getUser() : null;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [popupOpen, setPopupOpen] = useState(false);
   const [, setCreatingSurvey] = useState(false);
 
@@ -74,7 +79,7 @@ const SideBarWrapper = ({ children }: PropsWithChildren) => {
             {children}
           </div>
           {
-            (user?.role === 'employee' || user?.role === 'business') && (
+            mounted && (user?.role === 'employee' || user?.role === 'business') && (
               <div className="bg-[#2B99FA] mt-5 md:mt-auto rounded-lg mx-4 p-3 text-white">
                 <h2 className="flex items-center text-md font-semibold">
                   <FilePlus size={14} className="inline mr-1" />

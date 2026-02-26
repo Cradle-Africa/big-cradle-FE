@@ -274,14 +274,12 @@ const SurveyPage = () => {
         <div className="flex justify-between">
           <p className="font-semibold text-lg text-black">Surveys</p>
 
-          <button className="flex bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer">
-            <button
-              onClick={() => setPopupOpen(true)}
-              className="flex items-center gap-2 hover:cursor-pointer"
-            >
-              <Plus size={18} color="white" />
-              <span className="text-white">Create new survey</span>
-            </button>
+          <button
+            onClick={() => setPopupOpen(true)}
+            className="flex items-center gap-2 bg-blue-600 rounded-md px-4 py-1 lg:py-2 cursor-pointer hover:cursor-pointer"
+          >
+            <Plus size={18} color="white" />
+            <span className="text-white">Create new survey</span>
           </button>
         </div>
         <p className="mt-2">
