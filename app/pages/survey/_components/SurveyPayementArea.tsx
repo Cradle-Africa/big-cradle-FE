@@ -6,7 +6,8 @@ import {
 	CountryAndCity,
 	CreateTransactionPayload,
 	DataPointForm,
-	FlutterWavePaymentSubmit,
+	InitializePaymentPayload,
+	PaymentProvider,
 	Survey,
 	SurveyPaymentSchema,
 } from "@/app/lib/type";
@@ -31,6 +32,7 @@ import toast from "react-hot-toast";
 import Spinner from "@/app/components/Spinner";
 import { useFetchWallet } from "../../wallet/_features/hook";
 import FlutterwaveCountrySelect from "@/app/components/FlutterwaveCountrySelect";
+import { useKuvarPay } from "@/app/hooks/useKuvarPay";
 import { createTransaction } from "../../wallet/_features/api";
 
 type Props = {
@@ -68,12 +70,14 @@ const SurveyPayementArea = ({
 	let businessUserId: string | null = null;
 	const employeeUserId = getEmployeeUserId();
 	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>('flutterwave');
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string; } | null>(null);
 
 	const { mutateAsync: createSurvey, isPending: isCreatingSurvey } = useCreateSurvey({ axios });
 
 	const { mutateAsync: makePayment, isPending: isMakingPayment } =
 		useSurveyPay({ axios });
+	const { openPayment: openKuvarPayModal } = useKuvarPay();
 
 	const { data: wallet, error: walletError, isPending: isPendingWallet } = useFetchWallet({
 		axios,
@@ -101,36 +105,35 @@ const SurveyPayementArea = ({
 		setValue,
 	} = useForm<SurveyPaymentSchema>({
 		resolver: zodResolver(surveyPaymentSchema),
+		defaultValues: { provider: "flutterwave" },
 	});
 
 	// Watch the useWallet checkbox
 	const useWallet = watch("useWallet", false);
 
-	const submitSurveyPayment = async (data: FlutterWavePaymentSubmit) => {
+	const submitSurveyPayment = async (payload: InitializePaymentPayload) => {
 		try {
-			await makePayment(
-				{
-					tx_ref: data.tx_ref,
-					amount: data.amount,
-					country: data.country,
-					currency: data.currency,
-					redirect_url: data.redirect_url,
-					payment_options: data.payment_options, // the code from selected payment method
-					customer: data.customer,
-					customizations: data.customizations,
-				},
-				{
-					onSuccess: (response) => {
-						window.location.href = response.data.link;
+			await makePayment(payload, {
+				onSuccess: (response) => {
+					if (payload.provider === 'kuvarpay' && response.sessionId) {
+						openKuvarPayModal(response.sessionId, {
+							onSuccess: () => {
+								window.location.href = `${INTERNAL_URL}/pages/survey/payment-made?tx_ref=${payload.reference}&provider=kuvarpay`;
+							},
+							onCancel: () => toast.error('Payment cancelled'),
+							onError: () => toast.error('Payment failed'),
+						});
+					} else if (response.paymentUrl) {
+						window.location.href = response.paymentUrl;
 						toast.success("Survey payment initialized");
-					},
-					onError: (error: any) => {
-						toast.error(
-							error?.response?.data?.message || error?.response?.message || error?.message || "Failed to fetch wallet"
-						);
-					},
-				}
-			);
+					}
+				},
+				onError: (error: any) => {
+					toast.error(
+						error?.response?.data?.message || error?.response?.message || error?.message || "Failed to initialize payment"
+					);
+				},
+			});
 		} finally { }
 	};
 
@@ -194,26 +197,30 @@ const SurveyPayementArea = ({
 				}
 
 
-				// Case 2: Internal survey + Flutterwave
+				// Case 2: Internal survey + Flutterwave/KuvarPay
 				if (surveyType === "internal" && !data.useWallet) {
-					if (!selectedPaymentMethod) {
+					if (selectedProvider === 'flutterwave' && !selectedPaymentMethod) {
 						toast.error("Please select a payment method to proceed");
 						return;
 					}
 
-					submitSurveyPayment({
-						tx_ref: createdSurvey.data.tx_ref,
+					const initPayload: InitializePaymentPayload = {
+						reference: createdSurvey.data.tx_ref,
 						amount: parseInt(data.amount),
-						country: selectedCountry,
-						currency: selectedPaymentMethod.currency,
-						payment_options: selectedPaymentMethod.code,
-						redirect_url: `${INTERNAL_URL}/pages/survey/payment-made?${createdSurvey.data.tx_ref}`,
-						customer: { email: user?.email || "" },
-						customizations: {
-							title: "Survey Budget",
-							description: "Budget allocated to the survey " + surveyName,
-						},
-					});
+						currency: selectedProvider === 'kuvarpay' ? 'RWF' : selectedPaymentMethod!.currency,
+						redirectUrl: `${INTERNAL_URL}/pages/survey/payment-made?tx_ref=${createdSurvey.data.tx_ref}`,
+						customerEmail: user?.email || '',
+						customerName: (user as { fullName?: string })?.fullName
+							|| ((user as { contactPersonFirstName?: string; contactPersonLastName?: string })?.contactPersonFirstName
+								? `${(user as any).contactPersonFirstName} ${(user as any).contactPersonLastName ?? ''}`.trim()
+								: undefined),
+						title: "Survey Budget",
+						description: "Budget allocated to the survey " + surveyName,
+						provider: selectedProvider,
+						country: selectedCountry || undefined,
+					};
+
+					submitSurveyPayment(initPayload);
 					return;
 				}
 
@@ -287,19 +294,54 @@ const SurveyPayementArea = ({
 
 					{/* Show country + payment methods only if not using wallet */}
 					{!useWallet && (
-						<div className="w-full">
-							<FlutterwaveCountrySelect
-								value={selectedCountry}
-								onChange={(value) => {
-									setSelectedCountry(value);
-									setValue("country", value);
-								}}
-							/>
+						<div className="w-full space-y-4">
+							{/* Payment method selector */}
+							<div className="space-y-2">
+								<label className="block text-sm font-medium text-gray-700">Payment method</label>
+								<div className="flex gap-4 flex-wrap">
+									<label className="flex items-center gap-2 cursor-pointer">
+										<input
+											type="radio"
+											name="paymentProvider"
+											value="flutterwave"
+											checked={selectedProvider === 'flutterwave'}
+											onChange={() => {
+												setSelectedProvider('flutterwave');
+												setValue('provider', 'flutterwave');
+											}}
+										/>
+										<span>Card / Bank (Flutterwave)</span>
+									</label>
+									<label className="flex items-center gap-2 cursor-pointer">
+										<input
+											type="radio"
+											name="paymentProvider"
+											value="kuvarpay"
+											checked={selectedProvider === 'kuvarpay'}
+											onChange={() => {
+												setSelectedProvider('kuvarpay');
+												setValue('provider', 'kuvarpay');
+											}}
+										/>
+										<span>Crypto (KuvarPay)</span>
+									</label>
+								</div>
+							</div>
 
-							{isLoadingPaymentMethods && <Spinner />}
-							<ErrorMessage>{errors.country?.message}</ErrorMessage>
+							{selectedProvider === 'flutterwave' && (
+								<>
+									<FlutterwaveCountrySelect
+										value={selectedCountry}
+										onChange={(value) => {
+											setSelectedCountry(value);
+											setValue("country", value);
+										}}
+									/>
 
-							{paymentMethodsData?.paymentMethods?.methods?.length ? (
+									{isLoadingPaymentMethods && <Spinner />}
+									<ErrorMessage>{errors.country?.message}</ErrorMessage>
+
+									{paymentMethodsData?.paymentMethods?.methods?.length ? (
 								<ul className="mt-2 space-y-2">
 									{paymentMethodsData.paymentMethods.methods.map((method) => (
 										<li key={method.code} className="border border-gray-300 p-2 rounded">
@@ -320,7 +362,9 @@ const SurveyPayementArea = ({
 										</li>
 									))}
 								</ul>
-							) : null}
+									) : null}
+								</>
+							)}
 						</div>
 					)}
 				</div>

@@ -123,14 +123,17 @@ export const surveyPaymentSchema = z
       }, {
         message: "The amount must be greater or equal to 2000",
       }),
-    country: z.string().optional(), // <-- not required by default
+    country: z.string().optional(),
+    provider: z.enum(["flutterwave", "kuvarpay"]).optional(),
     title: z.string().optional(),
     email: z.string().optional(),
     description: z.string().optional(),
     useWallet: z.boolean().optional(),
   })
   .superRefine((data, ctx) => {
-    if (!data.useWallet && (!data.country || data.country.trim() === "")) {
+    // Only require country when using Flutterwave (not wallet, not KuvarPay)
+    const needsCountry = !data.useWallet && data.provider !== "kuvarpay";
+    if (needsCountry && (!data.country || data.country.trim() === "")) {
       ctx.addIssue({
         path: ["country"],
         code: "custom",

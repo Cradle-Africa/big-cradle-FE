@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -37,6 +38,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         cz-shortcut-listen="true"
       >
+        <Script
+          src="https://pay.kuvarpay.com/kuvarpay-sdk.js"
+          strategy="beforeInteractive"
+        />
         <QueryProvider>
           <ReduxProvider>
             <Theme>

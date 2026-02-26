@@ -1,4 +1,4 @@
-import { CreateTransactionPayload, CreateTransactionResponse, CreateWalletPayload, FlutterWavePaymentSubmit, PaginationMeta, TransactionVerificationResponse, WalletErrorResponse, WalletSuccessResponse, WalletTransactionList } from "@/app/lib/type";
+import { CreateTransactionPayload, CreateTransactionResponse, CreateWalletPayload, InitializePaymentPayload, PaginationMeta, TransactionVerificationResponse, WalletErrorResponse, WalletSuccessResponse, WalletTransactionList } from "@/app/lib/type";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosInstance } from "axios";
 import { createTransaction, createWallet, fetchTransactions, fetchWallet, initiateTransaction, verifyTransaction } from "./api";
@@ -60,7 +60,7 @@ export const useCreateTransaction = ({ axios }: { axios: AxiosInstance }) => {
 
 
 export const useInitiateTransaction = ({ axios }: { axios: AxiosInstance }) =>
-  useMutation<{ link: string }, Error, FlutterWavePaymentSubmit>({
+  useMutation<{ paymentUrl: string; link?: string; sessionId?: string }, Error, InitializePaymentPayload>({
     mutationFn: (payload) => initiateTransaction(axios, payload),
   });
 

@@ -1,4 +1,4 @@
-import { CreateTransactionPayload, CreateWalletPayload, FlutterWavePaymentSubmit, PaginationMeta, WalletTransactionList } from "@/app/lib/type";
+import { CreateTransactionPayload, CreateWalletPayload, InitializePaymentPayload, PaginationMeta, WalletTransactionList } from "@/app/lib/type";
 import { AxiosInstance } from "axios";
 
 
@@ -114,10 +114,13 @@ export const createTransaction = async (
 
 export const initiateTransaction = async (
     axios: AxiosInstance,
-    payload: FlutterWavePaymentSubmit
-): Promise<{ link: string }> => {
-    const response = await axios.post('/payments/flutterwave/initialize', payload);
-    return { link: response.data.data?.link };
+    payload: InitializePaymentPayload
+): Promise<{ paymentUrl: string; link?: string; sessionId?: string }> => {
+    const response = await axios.post('/payments/initialize', payload);
+    const data = response.data;
+    const paymentUrl = data.paymentUrl ?? data.data?.link ?? '';
+    const sessionId = data.sessionId;
+    return { paymentUrl, link: paymentUrl, sessionId };
 };
 
 export const verifyTransaction = async (axios: AxiosInstance, txRef: string) => {

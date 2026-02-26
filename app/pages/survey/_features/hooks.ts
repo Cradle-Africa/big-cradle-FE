@@ -1,9 +1,10 @@
 import {
   DashboardAnalyticsResponse,
-  FlutterwaveHostedLinkResponse,
   FlutterwavePaymentMethodsResponse,
-  FlutterWavePaymentSubmit,
+  InitializePaymentPayload,
+  InitializePaymentResponse,
   PaginationMeta,
+  PaymentProvider,
   // PaymentVerificationResponse,
   SingleSurveyResponse,
   SuperAdminSurveyListResponse,
@@ -35,8 +36,8 @@ import {
 } from "./api";
 
 export const useSurveyPay = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<FlutterwaveHostedLinkResponse, Error, FlutterWavePaymentSubmit>({
-    mutationFn: (data: FlutterWavePaymentSubmit) => surveyPay(axios, data),
+  return useMutation<InitializePaymentResponse, Error, InitializePaymentPayload>({
+    mutationFn: (data: InitializePaymentPayload) => surveyPay(axios, data),
   });
 };
 
@@ -130,8 +131,12 @@ export const useFetchSurveyAnalyctics = ({
 };
 
 export const useVerifySurveyPayment = ({ axios }: { axios: AxiosInstance }) => {
-  return useMutation<SurveyListItem, void, string>({
-    mutationFn: (txRef: string) => verifySurvey(axios, txRef),
+  return useMutation<
+    SurveyListItem,
+    void,
+    { txRef: string; provider?: PaymentProvider }
+  >({
+    mutationFn: ({ txRef, provider }) => verifySurvey(axios, txRef, provider),
   });
 };
 

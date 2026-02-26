@@ -573,6 +573,26 @@ export type FlutterWavePaymentSubmit = {
 	};
 };
 
+export type PaymentProvider = 'flutterwave' | 'kuvarpay';
+
+export type InitializePaymentPayload = {
+	reference: string;
+	amount: number;
+	currency: string;
+	redirectUrl: string;
+	customerEmail: string;
+	customerName?: string;
+	title: string;
+	description: string;
+	provider?: PaymentProvider;
+	country?: string;
+};
+
+export type InitializePaymentResponse = {
+	paymentUrl: string;
+	reference: string;
+	sessionId?: string;
+};
 
 // types/flutterwave.ts
 export interface FlutterwavePaymentMethod {
@@ -726,6 +746,7 @@ export type CreateTransactionPayload = {
 	type: "credit" | "debit";
 	amount: number;
 	description: string;
+	provider?: 'flutterwave' | 'kuvarpay';
 };
 
 

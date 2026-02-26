@@ -8,10 +8,11 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Spinner } from '@radix-ui/themes';
 import { useCreateTransaction, useInitiateTransaction } from '../_features/hook';
-import { CreateTransactionPayload, FlutterwavePaymentMethod, FlutterWavePaymentSubmit, TransactionSchema, WalletSuccessResponse } from '@/app/lib/type';
+import { CreateTransactionPayload, FlutterwavePaymentMethod, InitializePaymentPayload, PaymentProvider, TransactionSchema, WalletSuccessResponse } from '@/app/lib/type';
 import { transactionSchema } from '@/app/lib/validationSchemas';
 import { getUser } from '@/app/utils/user/userData';
 import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
+import { useKuvarPay } from '@/app/hooks/useKuvarPay';
 import { useFlutterwavePaymentMethods } from '../../survey/_features/hooks';
 
 interface Props {
@@ -24,6 +25,7 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 	const queryClient = useQueryClient();
 	const user = getUser();
 	const [selectedCountry, setSelectedCountry] = useState("");
+	const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>('flutterwave');
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string } | null>(null);
 
 	const {
@@ -49,31 +51,33 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 	const { mutateAsync: initiateTransaction } = useInitiateTransaction(
 		{ axios }
 	);
+	const { openPayment: openKuvarPayModal } = useKuvarPay();
 
-	const submitInitiateTransaction = async (data: FlutterWavePaymentSubmit) => {
+	const submitInitiateTransaction = async (payload: InitializePaymentPayload) => {
 		try {
 			toast.loading('Initializing payment ...');
 
-			const result = await initiateTransaction({
-				tx_ref: data.tx_ref,
-				amount: data?.amount,
-				country: selectedCountry,
-				currency: selectedPaymentMethod?.currency ?? '',
-				payment_options: selectedPaymentMethod?.code ?? '',
-				redirect_url: data.redirect_url,
-				customer: data.customer,
-				customizations: data.customizations,
-			});
+			const result = await initiateTransaction(payload);
 
 			toast.dismiss();
-			toast.success("Survey payment initialized");
+			toast.success("Payment initialized");
 
-			if (result?.link) {
-				window.location.href = result.link;
+			if (payload.provider === 'kuvarpay' && result?.sessionId) {
+				openKuvarPayModal(result.sessionId, {
+					onSuccess: () => {
+						window.location.href = `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${payload.reference}`;
+					},
+					onCancel: () => toast.error('Payment cancelled'),
+					onError: () => toast.error('Payment failed'),
+				});
 			} else {
-				toast.error("Redirect link not found.");
+				const paymentUrl = result?.paymentUrl ?? result?.link;
+				if (paymentUrl) {
+					window.location.href = paymentUrl;
+				} else {
+					toast.error("Redirect link not found.");
+				}
 			}
-
 		} finally {
 			toast.dismiss();
 		}
@@ -82,32 +86,40 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 
 	const onSubmit = async (data: TransactionSchema) => {
 		try {
-			const payload: CreateTransactionPayload = {
+			const createPayload: CreateTransactionPayload = {
 				walletId: wallet?.data.id ?? '',
 				type: 'credit',
 				amount: Number(data.amount),
 				description: data.description,
+				provider: selectedProvider,
 			};
 
-			const response = await createTransaction(payload);
+			const response = await createTransaction(createPayload);
 
 			const { tx_ref, amount } = response.data;
 
-			await submitInitiateTransaction({
-				tx_ref: tx_ref,
-				amount: amount,
-				country: selectedCountry,
-				currency: selectedPaymentMethod?.currency ?? '',
-				payment_options: selectedPaymentMethod?.code ?? '',
-				redirect_url: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${tx_ref}`,
-				customer: {
-					email: user?.email || "",
-				},
-				customizations: {
-					title: 'Credit wallet',
-					description: `${data.description}`,
-				},
-			});
+			const initPayload: InitializePaymentPayload = {
+				reference: tx_ref,
+				amount,
+				currency: selectedProvider === 'kuvarpay' ? 'RWF' : (selectedPaymentMethod?.currency ?? ''),
+				redirectUrl: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${tx_ref}`,
+				customerEmail: user?.email || '',
+				customerName: (user as { fullName?: string })?.fullName
+					|| ((user as { contactPersonFirstName?: string; contactPersonLastName?: string })?.contactPersonFirstName
+						? `${(user as any).contactPersonFirstName} ${(user as any).contactPersonLastName ?? ''}`.trim()
+						: undefined),
+				title: 'Credit wallet',
+				description: data.description || '',
+				provider: selectedProvider,
+				country: selectedCountry || undefined,
+			};
+
+			if (selectedProvider === 'flutterwave' && !selectedPaymentMethod) {
+				toast.error('Please select a payment method');
+				return;
+			}
+
+			await submitInitiateTransaction(initPayload);
 		} catch (error: any) {
 			toast.error(error?.message || 'Failed to create transaction');
 		}
@@ -169,39 +181,68 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
 					</div>
 
-					<>
-						<FlutterwaveCountrySelect
-							value={selectedCountry}
-							onChange={(value) => {
-								setSelectedCountry(value);
-							}}
-						/>
+					{/* Payment method selector */}
+					<div className="space-y-2">
+						<label className="block text-sm font-medium text-gray-700">Payment method</label>
+						<div className="flex gap-4 flex-wrap">
+							<label className="flex items-center gap-2 cursor-pointer">
+								<input
+									type="radio"
+									name="paymentProvider"
+									value="flutterwave"
+									checked={selectedProvider === 'flutterwave'}
+									onChange={() => setSelectedProvider('flutterwave')}
+								/>
+								<span>Card / Bank (Flutterwave)</span>
+							</label>
+							<label className="flex items-center gap-2 cursor-pointer">
+								<input
+									type="radio"
+									name="paymentProvider"
+									value="kuvarpay"
+									checked={selectedProvider === 'kuvarpay'}
+									onChange={() => setSelectedProvider('kuvarpay')}
+								/>
+								<span>Crypto (KuvarPay)</span>
+							</label>
+						</div>
+					</div>
 
-						{ isLoadingPaymentMethods && <Spinner className='inline mr-1' />}
+					{selectedProvider === 'flutterwave' && (
+						<>
+							<FlutterwaveCountrySelect
+								value={selectedCountry}
+								onChange={(value) => {
+									setSelectedCountry(value);
+								}}
+							/>
 
-						{paymentMethodsData?.paymentMethods?.methods?.length ? (
-							<ul className="mt-2 space-y-2">
-								{paymentMethodsData.paymentMethods.methods.map((method: FlutterwavePaymentMethod) => (
-									<li key={method.code} className="border border-gray-300 p-2 rounded">
-										<label className="flex items-center gap-2 cursor-pointer">
-											<input
-												type="radio"
-												name="paymentMethod"
-												value={method.code}
-												onChange={() =>
-													setSelectedPaymentMethod({
-														code: method.code,
-														currency: paymentMethodsData?.paymentMethods.currency || "",
-													})
-												}
-											/>
-											{method.label} ({method.code})
-										</label>
-									</li>
-								))}
-							</ul>
-						) : null}
-					</>
+							{ isLoadingPaymentMethods && <Spinner className='inline mr-1' />}
+
+							{paymentMethodsData?.paymentMethods?.methods?.length ? (
+								<ul className="mt-2 space-y-2">
+									{paymentMethodsData.paymentMethods.methods.map((method: FlutterwavePaymentMethod) => (
+										<li key={method.code} className="border border-gray-300 p-2 rounded">
+											<label className="flex items-center gap-2 cursor-pointer">
+												<input
+													type="radio"
+													name="paymentMethod"
+													value={method.code}
+													onChange={() =>
+														setSelectedPaymentMethod({
+															code: method.code,
+															currency: paymentMethodsData?.paymentMethods.currency || "",
+														})
+													}
+												/>
+												{method.label} ({method.code})
+											</label>
+										</li>
+									))}
+								</ul>
+							) : null}
+						</>
+					)}
 
 					<div>
 						<textarea

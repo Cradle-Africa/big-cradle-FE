@@ -4,9 +4,10 @@ import { Banknote, Check } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Spinner } from '@radix-ui/themes';
-import { FlutterwavePaymentMethod, FlutterWavePaymentSubmit, WalletTransactionList } from '@/app/lib/type';
+import { FlutterwavePaymentMethod, InitializePaymentPayload, PaymentProvider, WalletTransactionList } from '@/app/lib/type';
 import { getUser } from '@/app/utils/user/userData';
 import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
+import { useKuvarPay } from '@/app/hooks/useKuvarPay';
 import { useFlutterwavePaymentMethods } from '../../survey/_features/hooks';
 import { useInitiateTransaction } from '../_features/hook';
 
@@ -22,6 +23,7 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
     const queryClient = useQueryClient();
     const user = getUser();
     const [selectedCountry, setSelectedCountry] = useState("");
+    const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>('flutterwave');
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<{ code: string; currency: string } | null>(null);
 
    
@@ -35,29 +37,29 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
     const { mutateAsync: completePayment, isPending: isMakingPayment } = useInitiateTransaction(
         { axios }
     );
+    const { openPayment: openKuvarPayModal } = useKuvarPay();
 
-    const submitSurveyPayment = async (data: FlutterWavePaymentSubmit) => {
+    const submitSurveyPayment = async (payload: InitializePaymentPayload) => {
         try {
             toast.loading('Initializing payment ...');
-            await completePayment(
-                {
-                    tx_ref: data.tx_ref,
-                    amount: data.amount,
-                    country: data.country,
-                    currency: data.currency,
-                    redirect_url: data.redirect_url,
-                    payment_options: data.payment_options,
-                    customer: data.customer,
-                    customizations: data.customizations,
+            await completePayment(payload, {
+                onSuccess: (result) => {
+                    toast.dismiss();
+                    toast.success("Payment initialized successfully");
+                    if (payload.provider === 'kuvarpay' && result?.sessionId) {
+                        openKuvarPayModal(result.sessionId, {
+                            onSuccess: () => {
+                                window.location.href = `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${payload.reference}`;
+                            },
+                            onCancel: () => toast.error('Payment cancelled'),
+                            onError: () => toast.error('Payment failed'),
+                        });
+                    } else {
+                        const paymentUrl = result?.paymentUrl ?? result?.link;
+                        if (paymentUrl) window.location.href = paymentUrl;
+                    }
                 },
-                {
-                    onSuccess: (data) => {
-                        toast.dismiss();
-                        toast.success("Payment initialized successfully");
-                        window.location.href = data.link;
-                    },
-                }
-            );
+            });
         } finally {
             toast.dismiss();
         }
@@ -101,16 +103,45 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
                         <p className="text-sm text-gray-500 mb-5">Select the country and select the payment method to complete your transaction</p>
 
                         <>
-                            <FlutterwaveCountrySelect
-                                value={selectedCountry}
-                                onChange={(value) => {
-                                    setSelectedCountry(value);
-                                }}
-                            />
+                            {/* Payment method selector */}
+                            <div className="space-y-2 mb-4">
+                                <label className="block text-sm font-medium text-gray-700">Payment method</label>
+                                <div className="flex gap-4 flex-wrap">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="paymentProvider"
+                                            value="flutterwave"
+                                            checked={selectedProvider === 'flutterwave'}
+                                            onChange={() => setSelectedProvider('flutterwave')}
+                                        />
+                                        <span>Card / Bank (Flutterwave)</span>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="paymentProvider"
+                                            value="kuvarpay"
+                                            checked={selectedProvider === 'kuvarpay'}
+                                            onChange={() => setSelectedProvider('kuvarpay')}
+                                        />
+                                        <span>Crypto (KuvarPay)</span>
+                                    </label>
+                                </div>
+                            </div>
 
-                            {isLoadingPaymentMethods && <Spinner className='mt-5 flex justify-center  mr-1' />}
+                            {selectedProvider === 'flutterwave' && (
+                                <>
+                                    <FlutterwaveCountrySelect
+                                        value={selectedCountry}
+                                        onChange={(value) => {
+                                            setSelectedCountry(value);
+                                        }}
+                                    />
 
-                            {paymentMethodsData?.paymentMethods?.methods?.length ? (
+                                    {isLoadingPaymentMethods && <Spinner className='mt-5 flex justify-center  mr-1' />}
+
+                                    {paymentMethodsData?.paymentMethods?.methods?.length ? (
                                 <ul className="mt-2 space-y-2">
                                     {paymentMethodsData.paymentMethods.methods.map((method: FlutterwavePaymentMethod) => (
                                         <li key={method.code} className="border border-gray-300 p-2 rounded">
@@ -131,7 +162,9 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
                                         </li>
                                     ))}
                                 </ul>
-                            ) : null}
+                                    ) : null}
+                                </>
+                            )}
                         </>
                     </div>
                 )}
@@ -141,25 +174,25 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
                         e.preventDefault();
 
                         if (completeTransaction) {
-                            if (!selectedPaymentMethod) {
+                            if (selectedProvider === 'flutterwave' && !selectedPaymentMethod) {
                                 toast.error("Please select a payment method to proceed");
                                 return;
                             }
 
                             submitSurveyPayment({
-                                tx_ref: transaction.tx_ref,
+                                reference: transaction.tx_ref,
                                 amount: transaction?.amount,
-                                country: selectedCountry,
-                                currency: selectedPaymentMethod.currency,
-                                payment_options: selectedPaymentMethod.code,
-                                redirect_url: `${INTERNAL_URL}/pages/wallet/payment-made?${transaction.tx_ref}`,
-                                customer: {
-                                    email: user?.email || "",
-                                },
-                                customizations: {
-                                    title: 'Complete transaction',
-                                    description: 'complete transaction of ' + transaction?.amount,
-                                },
+                                currency: selectedProvider === 'kuvarpay' ? 'NGN' : selectedPaymentMethod!.currency,
+                                redirectUrl: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${transaction.tx_ref}`,
+                                customerEmail: user?.email || '',
+                                customerName: (user as { fullName?: string })?.fullName
+                                    || ((user as { contactPersonFirstName?: string; contactPersonLastName?: string })?.contactPersonFirstName
+                                        ? `${(user as any).contactPersonFirstName} ${(user as any).contactPersonLastName ?? ''}`.trim()
+                                        : undefined),
+                                title: 'Complete transaction',
+                                description: 'complete transaction of ' + transaction?.amount,
+                                provider: selectedProvider,
+                                country: selectedCountry || undefined,
                             });
                         }
 

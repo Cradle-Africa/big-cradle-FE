@@ -13,7 +13,8 @@ const PaymentMadePage = () => {
   const searchParams = useSearchParams();
   const txRef = searchParams.get("tx_ref");
   const status = searchParams.get("status");
-  const source = searchParams.get("source"); // 👈 optional flag: "wallet" or "flutterwave"
+  const source = searchParams.get("source"); // "wallet" = wallet verification, else survey
+  const provider = searchParams.get("provider"); // "kuvarpay" for survey KuvarPay verification
 
   // Flutterwave verification
   const {
@@ -38,12 +39,15 @@ const PaymentMadePage = () => {
       if (source === "wallet") {
         await verifyWalletPayment(txRef);
       } else {
-        await verifySurveyPayment(txRef);
+        await verifySurveyPayment({
+          txRef,
+          provider: provider === "kuvarpay" ? "kuvarpay" : undefined,
+        });
       }
     } catch (error: any) {
       toast.error(error.message || "Verification failed");
     }
-  }, [txRef, source, verifySurveyPayment, verifyWalletPayment]);
+  }, [txRef, source, provider, verifySurveyPayment, verifyWalletPayment]);
 
   useEffect(() => {
     if (txRef) verifyPaymentFunc();

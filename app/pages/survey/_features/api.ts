@@ -1,5 +1,5 @@
 import axios, { axiosWithoutAuth } from "@/app/lib/axios";
-import { FlutterwavePaymentMethodsResponse, FlutterWavePaymentSubmit, Survey } from "@/app/lib/type";
+import { FlutterwavePaymentMethodsResponse, InitializePaymentPayload, InitializePaymentResponse, Survey } from "@/app/lib/type";
 import { AxiosInstance } from "axios";
 
 export const createSurvey = async (axios: AxiosInstance, data: Survey) => {
@@ -138,10 +138,16 @@ export const fetchSurvey = async (axios: AxiosInstance, surveyId: string) => {
   }
 };
 
-export const verifySurvey = async (axios: AxiosInstance, txRef: string) => {
+export const verifySurvey = async (
+  axios: AxiosInstance,
+  txRef: string,
+  provider?: 'flutterwave' | 'kuvarpay'
+) => {
   try {
+    const params = new URLSearchParams({ tx_ref: txRef });
+    if (provider === 'kuvarpay') params.append('provider', 'kuvarpay');
     const res = await axios.get(
-      `/survey-mgt/verify-survey-payment?tx_ref=${txRef}`
+      `/survey-mgt/verify-survey-payment?${params.toString()}`
     );
     return res.data.data;
   } finally {
@@ -161,11 +167,16 @@ export const verifyWalletTrx = async (axios: AxiosInstance, tx_ref: string) => {
 
 export const surveyPay = async (
   axios: AxiosInstance,
-  data: FlutterWavePaymentSubmit
-) => {
+  data: InitializePaymentPayload
+): Promise<InitializePaymentResponse> => {
   try {
-    const res = await axios.post(`/payments/flutterwave/initialize`, data);
-    return res.data;
+    const res = await axios.post(`/payments/initialize`, data);
+    const payload = res.data;
+    return {
+      paymentUrl: payload.paymentUrl ?? payload.data?.link ?? '',
+      reference: payload.reference ?? '',
+      sessionId: payload.sessionId ?? undefined,
+    };
   } catch (error: any) {
     const statusCode = error?.response?.status;
     let message = "";
