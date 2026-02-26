@@ -182,7 +182,7 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
                             submitSurveyPayment({
                                 reference: transaction.tx_ref,
                                 amount: transaction?.amount,
-                                currency: selectedProvider === 'kuvarpay' ? 'NGN' : selectedPaymentMethod!.currency,
+                                currency: selectedProvider === 'kuvarpay' ? 'RWF' : selectedPaymentMethod!.currency,
                                 redirectUrl: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${transaction.tx_ref}`,
                                 customerEmail: user?.email || '',
                                 customerName: (user as { fullName?: string })?.fullName
