@@ -1,4 +1,6 @@
 import ErrorMessage from '@/app/components/form/ErrorMessage';
+import AmountInput from '@/app/components/form/AmountInput';
+import PaymentProviderSelector from '@/app/components/PaymentProviderSelector';
 import axios, { INTERNAL_URL } from '@/app/lib/axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
@@ -101,7 +103,7 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 			const initPayload: InitializePaymentPayload = {
 				reference: tx_ref,
 				amount,
-				currency: selectedProvider === 'kuvarpay' ? 'RWF' : (selectedPaymentMethod?.currency ?? ''),
+				currency: selectedProvider === 'kuvarpay' ? 'USDT' : (selectedPaymentMethod?.currency ?? ''),
 				redirectUrl: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${tx_ref}`,
 				customerEmail: user?.email || '',
 				customerName: (user as { fullName?: string })?.fullName
@@ -172,41 +174,18 @@ const NewTransaction: React.FC<Props> = ({ setOpenTransaction, wallet }) => {
 					onSubmit={handleSubmit(onSubmit)}
 					className="space-y-4 mt-5 lg:mt-12">
 					<div>
-						<input
-							{...register("amount")}
-							type="text"
+						<AmountInput
+							currency={selectedProvider === 'kuvarpay' ? 'USDT' : (selectedPaymentMethod?.currency ?? '')}
+							register={register("amount")}
 							placeholder="Amount"
-							className="w-full border border-gray-300 rounded px-3 py-2 outline-none"
 						/>
 						<ErrorMessage>{errors.amount?.message}</ErrorMessage>
 					</div>
 
-					{/* Payment method selector */}
-					<div className="space-y-2">
-						<label className="block text-sm font-medium text-gray-700">Payment method</label>
-						<div className="flex gap-4 flex-wrap">
-							<label className="flex items-center gap-2 cursor-pointer">
-								<input
-									type="radio"
-									name="paymentProvider"
-									value="flutterwave"
-									checked={selectedProvider === 'flutterwave'}
-									onChange={() => setSelectedProvider('flutterwave')}
-								/>
-								<span>Card / Bank (Flutterwave)</span>
-							</label>
-							<label className="flex items-center gap-2 cursor-pointer">
-								<input
-									type="radio"
-									name="paymentProvider"
-									value="kuvarpay"
-									checked={selectedProvider === 'kuvarpay'}
-									onChange={() => setSelectedProvider('kuvarpay')}
-								/>
-								<span>Crypto (KuvarPay)</span>
-							</label>
-						</div>
-					</div>
+					<PaymentProviderSelector
+						selected={selectedProvider}
+						onChange={setSelectedProvider}
+					/>
 
 					{selectedProvider === 'flutterwave' && (
 						<>

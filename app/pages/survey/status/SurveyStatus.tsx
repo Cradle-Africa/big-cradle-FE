@@ -8,6 +8,7 @@ import { Spinner } from '@radix-ui/themes';
 import { FlutterwavePaymentMethod, InitializePaymentPayload, PaymentProvider, SurveyListItem } from '@/app/lib/type';
 import { getUser } from '@/app/utils/user/userData';
 import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
+import PaymentProviderSelector from '@/app/components/PaymentProviderSelector';
 import { useKuvarPay } from '@/app/hooks/useKuvarPay';
 
 
@@ -170,39 +171,22 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
 
                 {completePayment && (
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-black mb-4">Complete the payment of the survey: {survey.surveyName}</h2>
-                        <p className="text-sm text-gray-500 mb-5">Select the country and click on continue to complete your survey payment?</p>
+                        <h2 className="text-md font-semibold text-black mb-4">
+                            Complete the payment of the survey: {survey.surveyName}
+                        </h2>
+                        <p className="text-sm text-gray-500 mb-2">
+                            Amount: {survey.amount} {selectedProvider === 'kuvarpay' ? 'USDT' : (selectedPaymentMethod?.currency || '')}
+                        </p>
+                        <p className="text-sm text-gray-500 mb-5">Select the payment method and click continue to complete your survey payment</p>
 
                         <>
-                            {/* Payment method selector */}
-                            <div className="space-y-2 mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Payment method</label>
-                                <div className="flex gap-4 flex-wrap">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="paymentProvider"
-                                            value="flutterwave"
-                                            checked={selectedProvider === 'flutterwave'}
-                                            onChange={() => setSelectedProvider('flutterwave')}
-                                        />
-                                        <span>Card / Bank (Flutterwave)</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="paymentProvider"
-                                            value="kuvarpay"
-                                            checked={selectedProvider === 'kuvarpay'}
-                                            onChange={() => setSelectedProvider('kuvarpay')}
-                                        />
-                                        <span>Crypto (KuvarPay)</span>
-                                    </label>
-                                </div>
-                            </div>
+                            <PaymentProviderSelector
+                                selected={selectedProvider}
+                                onChange={setSelectedProvider}
+                            />
 
                             {selectedProvider === 'flutterwave' && (
-                                <>
+                                <div className="mt-4">
                                     <FlutterwaveCountrySelect
                                         value={selectedCountry}
                                         onChange={(value) => {
@@ -234,7 +218,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                                     ))}
                                 </ul>
                                     ) : null}
-                                </>
+                                </div>
                             )}
                         </>
                     </div>
@@ -255,7 +239,7 @@ const SurveyStatus: React.FC<Props> = ({ setOpen, uniqueId, survey, activate, su
                             submitSurveyPayment({
                                 reference: survey.tx_ref,
                                 amount: survey?.amount,
-                                currency: selectedProvider === 'kuvarpay' ? 'RWF' : selectedPaymentMethod!.currency,
+                                currency: selectedProvider === 'kuvarpay' ? 'USDT' : selectedPaymentMethod!.currency,
                                 redirectUrl: `${INTERNAL_URL}/pages/survey/payment-made?tx_ref=${survey.tx_ref}`,
                                 customerEmail: user?.email || '',
                                 customerName: (user as { fullName?: string })?.fullName

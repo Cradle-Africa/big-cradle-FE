@@ -7,6 +7,7 @@ import { Spinner } from '@radix-ui/themes';
 import { FlutterwavePaymentMethod, InitializePaymentPayload, PaymentProvider, WalletTransactionList } from '@/app/lib/type';
 import { getUser } from '@/app/utils/user/userData';
 import FlutterwaveCountrySelect from '@/app/components/FlutterwaveCountrySelect';
+import PaymentProviderSelector from '@/app/components/PaymentProviderSelector';
 import { useKuvarPay } from '@/app/hooks/useKuvarPay';
 import { useFlutterwavePaymentMethods } from '../../survey/_features/hooks';
 import { useInitiateTransaction } from '../_features/hook';
@@ -99,36 +100,16 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
 
                 {completeTransaction && (
                     <div className="items-center text-center mt-5">
-                        <h2 className="text-md font-semibold text-black mb-4">Complete the transaction  {transaction.amount}</h2>
-                        <p className="text-sm text-gray-500 mb-5">Select the country and select the payment method to complete your transaction</p>
+                        <h2 className="text-md font-semibold text-black mb-4">
+                            Complete the transaction: {transaction.amount} {selectedProvider === 'kuvarpay' ? 'USDT' : (selectedPaymentMethod?.currency || '')}
+                        </h2>
+                        <p className="text-sm text-gray-500 mb-5">Select the payment method to complete your transaction</p>
 
                         <>
-                            {/* Payment method selector */}
-                            <div className="space-y-2 mb-4">
-                                <label className="block text-sm font-medium text-gray-700">Payment method</label>
-                                <div className="flex gap-4 flex-wrap">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="paymentProvider"
-                                            value="flutterwave"
-                                            checked={selectedProvider === 'flutterwave'}
-                                            onChange={() => setSelectedProvider('flutterwave')}
-                                        />
-                                        <span>Card / Bank (Flutterwave)</span>
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <input
-                                            type="radio"
-                                            name="paymentProvider"
-                                            value="kuvarpay"
-                                            checked={selectedProvider === 'kuvarpay'}
-                                            onChange={() => setSelectedProvider('kuvarpay')}
-                                        />
-                                        <span>Crypto (KuvarPay)</span>
-                                    </label>
-                                </div>
-                            </div>
+                            <PaymentProviderSelector
+                                selected={selectedProvider}
+                                onChange={setSelectedProvider}
+                            />
 
                             {selectedProvider === 'flutterwave' && (
                                 <>
@@ -182,7 +163,7 @@ const TransactionModal: React.FC<Props> = ({ setOpen, transaction, completeTrans
                             submitSurveyPayment({
                                 reference: transaction.tx_ref,
                                 amount: transaction?.amount,
-                                currency: selectedProvider === 'kuvarpay' ? 'RWF' : selectedPaymentMethod!.currency,
+                                currency: selectedProvider === 'kuvarpay' ? 'USDT' : selectedPaymentMethod!.currency,
                                 redirectUrl: `${INTERNAL_URL}/pages/wallet/payment-made?tx_ref=${transaction.tx_ref}`,
                                 customerEmail: user?.email || '',
                                 customerName: (user as { fullName?: string })?.fullName
