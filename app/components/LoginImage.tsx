@@ -19,11 +19,11 @@ const LoginImage = () => {
   }, []);
 
   return (
-    <div className="hidden md:flex  h-screen items-center justify-center px-6  mt-14">
+    <div className="hidden md:flex h-full items-stretch justify-center px-6 py-8 mr-8">
 
-      <div className="flex flex-col w-full h-full rounded-[28px] overflow-hidden shadow-2xl bg-white">
+      <div className="flex flex-col w-full flex-1 rounded-[28px] overflow-hidden shadow-2xl bg-white">
 
-        <div className="relative flex-1 w-full overflow-hidden">
+        <div className="relative flex-1 w-full overflow-hidden min-h-[400px]">
 
           <AnimatePresence mode="wait">
             <motion.div
@@ -37,14 +37,11 @@ const LoginImage = () => {
               }}
               className="absolute inset-0"
             >
-              <Image
-                src={imagesList[currentIndex].imgPath}
-                alt="login image"
-                fill
-                priority
-                className="object-cover"
-                
-              />
+              <img
+        src={imagesList[currentIndex].imgPath.src}
+        alt="login image"
+        className="w-full h-full object-cover object-center"
+      />
             </motion.div>
           </AnimatePresence>
         </div>

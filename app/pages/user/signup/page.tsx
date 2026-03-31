@@ -187,7 +187,7 @@ function BuildSignUpPage() {
 					</div>
 				</div>
 			</div>
-			<div  className="w-full lg:w-1/2 hidden lg:block">
+			<div  className="w-full lg:w-1/2 hidden lg:flex flex-col">
 				<LoginImage />
 			</div>
 			
