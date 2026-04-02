@@ -1,68 +1,643 @@
-'use client';
+"use client";
 
-import DashboardLayout from '@/app/DashboardLayout';
-import { Spinner } from '@radix-ui/themes';
-import axios from '@/app/lib/axios';
-import { useEffect, useState } from 'react';
-import { useFetchInflowTransactions } from '../_features/hook';
-import InflowTable from './components/InflowTable';
+import DashboardLayout from "@/app/DashboardLayout";
+import { Spinner } from "@radix-ui/themes";
+import axios from "@/app/lib/axios";
+import { useEffect, useMemo, useState } from "react";
+import { useInflowSummary, useInflowTransactions } from "../_features/hook";
+import InflowTable from "./components/InflowTable";
+import { ArrowUpDown, LayoutGrid, Percent, SlidersHorizontal, X, Wallet } from "lucide-react";
+
+const INFLOW_STATUSES = ["not-paid", "pending", "paid", "failed"] as const;
+type InflowStatus = (typeof INFLOW_STATUSES)[number];
+
+function toISODateOnly(value: string): string | undefined {
+	if (!value?.trim()) return undefined;
+	const d = new Date(value);
+	if (Number.isNaN(d.getTime())) return undefined;
+	return d.toISOString().slice(0, 10);
+}
+
+function formatDateRange(startISO: string | undefined, endISO: string | undefined): string {
+	if (!startISO && !endISO) return "All time";
+	if (startISO && endISO) {
+		const start = new Date(startISO).toLocaleDateString(undefined, {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		});
+		const end = new Date(endISO).toLocaleDateString(undefined, {
+			day: "numeric",
+			month: "short",
+			year: "numeric",
+		});
+		return `${start} – ${end}`;
+	}
+	if (startISO)
+		return `From ${new Date(startISO).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`;
+	if (endISO)
+		return `Until ${new Date(endISO).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}`;
+	return "All time";
+}
+
+function formatAmount(value: number): string {
+	return value.toLocaleString(undefined, {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	});
+}
 
 const Page = () => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
+	const [page, setPage] = useState(1);
+	const [limit, setLimit] = useState(10);
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
+	const [selectedStatuses, setSelectedStatuses] = useState<Set<InflowStatus>>(new Set());
+	const [provider, setProvider] = useState<"" | "flutterwave" | "kuvarpay">("");
+	const [businessNameDraft, setBusinessNameDraft] = useState("");
+	const [businessName, setBusinessName] = useState("");
+	const [sortBy, setSortBy] = useState<"createdAt" | "amount">("createdAt");
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+	const [filtersOpen, setFiltersOpen] = useState(false);
+	const [sortOpen, setSortOpen] = useState(false);
 
-    const { data: transactionsData, isLoading, refetch } = useFetchInflowTransactions({
-        axios,
-        queryParams: { page, limit },
-    });
+	const startISO = toISODateOnly(startDate);
+	const endISO = toISODateOnly(endDate);
+	const dateError =
+		startISO && endISO && new Date(startISO) > new Date(endISO)
+			? "End date must be on or after start date."
+			: null;
 
-    // pagination metadata 
-    const pagination = {
-        page: page, // Use current state,
-        limit: limit, // Use current state,
-        total: transactionsData?.pagination.total || 0,
-        pages: transactionsData?.pagination.pages || 0
-    };
+	const paymentStatusComma =
+		selectedStatuses.size > 0 && selectedStatuses.size < INFLOW_STATUSES.length
+			? [...selectedStatuses].join(",")
+			: undefined;
 
-    useEffect(() => {
-        if (!isLoading && transactionsData) {
-            refetch();
-        }
-    }, [isLoading, transactionsData, refetch]);
+	const summaryQueryParams = useMemo(
+		() => ({
+			startDate: dateError ? undefined : startISO,
+			endDate: dateError ? undefined : endISO,
+			paymentStatus: paymentStatusComma,
+			provider: provider || undefined,
+			businessName: businessName.trim() || undefined,
+		}),
+		[startISO, endISO, dateError, paymentStatusComma, provider, businessName]
+	);
 
+	const listQueryParams = useMemo(
+		() => ({
+			...summaryQueryParams,
+			page,
+			limit: Math.min(100, limit),
+			sortBy,
+			sortOrder,
+		}),
+		[summaryQueryParams, page, limit, sortBy, sortOrder]
+	);
 
-    if (isLoading) {
-        return (
-            <DashboardLayout>
-                <div className="flex justify-center items-center min-h-screen">
-                    <Spinner />
-                </div>
-            </DashboardLayout>
-        );
-    }
+	// Debounce business search to avoid refetching on every keystroke.
+	useEffect(() => {
+		const t = window.setTimeout(() => {
+			setBusinessName(businessNameDraft);
+			setPage(1);
+		}, 600);
+		return () => window.clearTimeout(t);
+	}, [businessNameDraft]);
 
-    return (
-        <DashboardLayout>
-            <div className="w-full mt-5">
-                <h2 className="font-bold text-lg text-black mb-4">In flow transactions</h2>
-                <p>
-                    View and manage all in flow transactions across the BigCradle ecosystem.
-                </p>
+	const enabled = !dateError;
 
-                <div className="mt-10">
-                    <InflowTable
-                        transactionsData={transactionsData?.data}
-                        pagination={pagination}
-                        onPageChange={setPage}
-                        onLimitChange={(newLimit) => {
-                            setLimit(newLimit);
-                            setPage(1); // reset to first page when limit changes
-                        }}
-                    />
-                </div>
-            </div>
-        </DashboardLayout>
-    );
+	const summary = useInflowSummary({ axios, queryParams: summaryQueryParams, enabled });
+	const list = useInflowTransactions({ axios, queryParams: listQueryParams, enabled });
+
+	const isError = summary.isError || list.isError;
+	const errorMessage =
+		summary.error?.message || list.error?.message || "An error occurred.";
+
+	const handleRetry = () => {
+		void summary.refetch();
+		void list.refetch();
+	};
+
+	const isBootstrapping =
+		(summary.isPending || list.isPending) && !summary.isError && !list.isError;
+
+	const pagination = {
+		page: list.data?.pagination.page ?? page,
+		limit: list.data?.pagination.limit ?? limit,
+		total: list.data?.pagination.total ?? 0,
+		pages: list.data?.pagination.pages ?? 0,
+	};
+
+	const toggleStatus = (s: InflowStatus) => {
+		setSelectedStatuses((prev) => {
+			const next = new Set(prev);
+			if (next.has(s)) next.delete(s);
+			else next.add(s);
+			return next;
+		});
+		setPage(1);
+	};
+
+	const clearFilters = () => {
+		setStartDate("");
+		setEndDate("");
+		setSelectedStatuses(new Set());
+		setProvider("");
+		setBusinessNameDraft("");
+		setBusinessName("");
+		setSortBy("createdAt");
+		setSortOrder("desc");
+		setPage(1);
+	};
+
+	const clearFilterGroup = () => {
+		setSelectedStatuses(new Set());
+		setProvider("");
+		setBusinessNameDraft("");
+		setBusinessName("");
+		setPage(1);
+	};
+
+	const clearSortGroup = () => {
+		setStartDate("");
+		setEndDate("");
+		setSortBy("createdAt");
+		setSortOrder("desc");
+		setPage(1);
+	};
+
+	const selectAllStatuses = () => {
+		setSelectedStatuses(new Set());
+		setPage(1);
+	};
+
+	const activeFilterCriteriaCount =
+		(selectedStatuses.size > 0 ? 1 : 0) +
+		(provider ? 1 : 0) +
+		(businessName.trim() ? 1 : 0);
+
+	const activeSortCriteriaCount =
+		(startDate.trim() || endDate.trim() ? 1 : 0) +
+		(sortBy !== "createdAt" ? 1 : 0) +
+		(sortOrder !== "desc" ? 1 : 0);
+
+	const isAnyActive = activeFilterCriteriaCount > 0 || activeSortCriteriaCount > 0;
+
+	if (isBootstrapping) {
+		return (
+			<DashboardLayout>
+				<div className="flex justify-center items-center min-h-[200px]">
+					<Spinner size="3" />
+				</div>
+			</DashboardLayout>
+		);
+	}
+
+	const s = summary.data;
+
+	return (
+		<DashboardLayout>
+			<div className="w-full mt-5">
+				<div className="mb-4">
+					<h2 className="font-bold text-lg text-black">Inflow transactions</h2>
+					<p className="text-gray-600 text-sm mt-1">
+						Credits across the platform. All payment statuses are included unless you filter
+						by status. Summary and table use the same filters.
+					</p>
+				</div>
+
+				{!isError && (
+					<section className="mt-6" aria-label="Summary">
+						{s?.totals ? (
+							<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+								<div className="rounded-[8px] border border-gray-200 bg-white p-4 shadow-sm">
+									<div className="flex items-center gap-2 text-gray-500 mb-1">
+										<LayoutGrid size={18} aria-hidden />
+										<span className="text-sm font-medium">Total</span>
+									</div>
+									<p className="text-xl font-semibold text-gray-900">
+										{(s.totals.count ?? 0).toLocaleString()} transaction
+										{(s.totals.count ?? 0) !== 1 ? "s" : ""}
+									</p>
+									<p className="text-sm text-gray-600 mt-1">
+										Amount: {formatAmount(s.totals.totalAmount ?? 0)}
+									</p>
+								</div>
+								<div className="rounded-[8px] border border-gray-200 bg-white p-4 shadow-sm">
+									<div className="flex items-center gap-2 text-gray-500 mb-1">
+										<Percent size={18} aria-hidden />
+										<span className="text-sm font-medium">Success rate</span>
+									</div>
+									<p className="text-xl font-semibold text-gray-900">
+										{s.successRatePercent != null
+											? `${Number(s.successRatePercent).toFixed(1)}%`
+											: "—"}
+									</p>
+									<p className="text-sm text-gray-600 mt-1">
+										Paid {(s.counts?.paid ?? 0).toLocaleString()} · Pending{" "}
+										{(s.counts?.pending ?? 0).toLocaleString()} · Failed{" "}
+										{(s.counts?.failed ?? 0).toLocaleString()} · Not paid{" "}
+										{(s.counts?.notPaid ?? 0).toLocaleString()}
+									</p>
+								</div>
+								<div className="rounded-[8px] border border-gray-200 bg-white p-4 shadow-sm">
+									<div className="flex items-center gap-2 text-gray-500 mb-1">
+										<Wallet size={18} aria-hidden />
+										<span className="text-sm font-medium">By provider</span>
+									</div>
+									{s.byProvider?.length ? (
+										<ul className="text-sm text-gray-700 space-y-1 mt-1">
+											{s.byProvider.map((row) => (
+												<li key={row.provider}>
+													<span className="font-medium capitalize">{row.provider}</span>:{" "}
+													{row.count.toLocaleString()} · {formatAmount(row.totalAmount)}
+												</li>
+											))}
+										</ul>
+									) : (
+										<p className="text-sm text-gray-500 mt-1">No provider breakdown</p>
+									)}
+								</div>
+							</div>
+						) : (
+							<div className="rounded-[8px] border border-gray-200 bg-gray-50 p-4">
+								<p className="text-sm text-gray-500">No summary data for this range.</p>
+							</div>
+						)}
+					</section>
+				)}
+
+				<section
+					className="mt-6 p-4 rounded-[8px] border border-gray-200 bg-gray-50"
+					aria-label="Filters and sort"
+				>
+					<div className="flex flex-wrap items-center justify-between gap-3">
+						<div className="flex flex-wrap items-center gap-2">
+							<button
+								type="button"
+								onClick={() => setFiltersOpen(true)}
+								className="flex items-center gap-2 px-3 py-2 text-sm rounded-[8px] border border-gray-300 bg-white hover:bg-gray-100 font-medium"
+							>
+								<SlidersHorizontal size={16} aria-hidden />
+								Filters
+								{activeFilterCriteriaCount > 0 && (
+									<span className="inline-flex items-center justify-center min-w-6 h-6 px-1 rounded-full bg-[#004484] text-white text-xs font-semibold">
+										{activeFilterCriteriaCount}
+									</span>
+								)}
+							</button>
+							<button
+								type="button"
+								onClick={() => setSortOpen(true)}
+								className="flex items-center gap-2 px-3 py-2 text-sm rounded-[8px] border border-gray-300 bg-white hover:bg-gray-100 font-medium"
+							>
+								<ArrowUpDown size={16} aria-hidden />
+								Sort & Date
+								{activeSortCriteriaCount > 0 && (
+									<span className="inline-flex items-center justify-center min-w-6 h-6 px-1 rounded-full bg-[#004484] text-white text-xs font-semibold">
+										{activeSortCriteriaCount}
+									</span>
+								)}
+							</button>
+						</div>
+
+						<div className="flex items-center gap-2">
+							{isAnyActive && (
+								<button
+									type="button"
+									onClick={() => {
+										clearFilters();
+										setFiltersOpen(false);
+										setSortOpen(false);
+									}}
+									className="flex items-center gap-2 px-3 py-2 text-sm rounded-[8px] border border-gray-300 bg-white hover:bg-gray-100 font-medium"
+								>
+									<X size={14} aria-hidden />
+									Clear
+								</button>
+							)}
+
+							<input
+								type="search"
+								value={businessNameDraft}
+								onChange={(e) => {
+									setBusinessNameDraft(e.target.value);
+								}}
+								placeholder="Search business"
+								aria-label="Search business"
+								className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-[240px] max-w-full"
+							/>
+						</div>
+					</div>
+
+					{/* Filters modal */}
+					{filtersOpen && (
+						<div className="fixed inset-0 z-50">
+							<div
+								className="fixed inset-0 bg-[#0000004D] bg-opacity-30"
+								onClick={() => setFiltersOpen(false)}
+								aria-hidden
+							/>
+							<div className="relative bg-white w-full max-w-xl mx-auto mt-[10vh] rounded-[8px] shadow-lg border border-gray-200 p-6 overflow-y-auto max-h-[80vh]">
+								<div className="flex items-start justify-between gap-4">
+									<div>
+										<h3 className="text-base sm:text-lg font-semibold text-black">Filters</h3>
+										<p className="text-sm text-gray-600 mt-1">Status, provider, and counterparty search.</p>
+									</div>
+									<button
+										type="button"
+										onClick={() => setFiltersOpen(false)}
+										className="p-2 rounded-[8px] hover:bg-gray-100"
+										aria-label="Close filters"
+									>
+										<X size={16} aria-hidden />
+									</button>
+								</div>
+
+								<div className="mt-5 space-y-5">
+									<div>
+										<span className="block text-sm font-medium text-gray-700 mb-2">Payment status</span>
+										<div className="grid grid-cols-2 gap-2">
+											{INFLOW_STATUSES.map((st) => (
+												<label
+													key={st}
+													className="inline-flex items-center gap-2 text-sm text-gray-700"
+												>
+													<input
+														type="checkbox"
+														checked={selectedStatuses.has(st)}
+														onChange={() => toggleStatus(st)}
+														className="rounded border-gray-300"
+													/>
+													<span className="capitalize">{st.replace("-", " ")}</span>
+												</label>
+											))}
+										</div>
+										<button
+											type="button"
+											onClick={selectAllStatuses}
+											className="mt-3 text-sm text-[#004484] font-medium hover:underline"
+										>
+											All statuses
+										</button>
+									</div>
+
+									<div>
+										<label
+											htmlFor="inflow-provider-modal"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
+											Provider
+										</label>
+										<select
+											id="inflow-provider-modal"
+											value={provider}
+											onChange={(e) => {
+												setProvider(e.target.value as "" | "flutterwave" | "kuvarpay");
+												setPage(1);
+											}}
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										>
+											<option value="">All</option>
+											<option value="flutterwave">Flutterwave</option>
+											<option value="kuvarpay">Kuvarpay</option>
+										</select>
+									</div>
+
+									<div>
+										<label
+											htmlFor="inflow-business-modal"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
+											Business name
+										</label>
+										<input
+											id="inflow-business-modal"
+											type="search"
+											value={businessNameDraft}
+											onChange={(e) => {
+												setBusinessNameDraft(e.target.value);
+											}}
+											placeholder="Search"
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										/>
+									</div>
+								</div>
+
+								<div className="mt-6 flex justify-end gap-2">
+									<button
+										type="button"
+										onClick={clearFilterGroup}
+										className="px-3 py-2 text-sm rounded-[8px] border border-gray-300 bg-white hover:bg-gray-100 font-medium"
+									>
+										Reset filters
+									</button>
+									<button
+										type="button"
+										onClick={() => setFiltersOpen(false)}
+										className="px-3 py-2 text-sm rounded-[8px] bg-[#004484] text-white hover:bg-[#003366] font-medium"
+									>
+										Done
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+
+					{/* Sort & date modal */}
+					{sortOpen && (
+						<div className="fixed inset-0 z-50">
+							<div
+								className="fixed inset-0 bg-[#0000004D] bg-opacity-30"
+								onClick={() => setSortOpen(false)}
+								aria-hidden
+							/>
+							<div className="relative bg-white w-full max-w-xl mx-auto mt-[10vh] rounded-[8px] shadow-lg border border-gray-200 p-6 overflow-y-auto max-h-[80vh]">
+								<div className="flex items-start justify-between gap-4">
+									<div>
+										<h3 className="text-base sm:text-lg font-semibold text-black">Sort & Date</h3>
+										<p className="text-sm text-gray-600 mt-1">Ordering and date range.</p>
+									</div>
+									<button
+										type="button"
+										onClick={() => setSortOpen(false)}
+										className="p-2 rounded-[8px] hover:bg-gray-100"
+										aria-label="Close sort and date"
+									>
+										<X size={16} aria-hidden />
+									</button>
+								</div>
+
+								<div className="mt-5 space-y-5">
+									<div>
+										<label
+											htmlFor="inflow-sort-by-modal"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
+											Sort by
+										</label>
+										<select
+											id="inflow-sort-by-modal"
+											value={sortBy}
+											onChange={(e) => {
+												setSortBy(e.target.value as "createdAt" | "amount");
+												setPage(1);
+											}}
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										>
+											<option value="createdAt">Date</option>
+											<option value="amount">Amount</option>
+										</select>
+
+										<label
+											htmlFor="inflow-sort-order-modal"
+											className="block text-sm font-medium text-gray-700 mt-3 mb-1"
+										>
+											Order
+										</label>
+										<select
+											id="inflow-sort-order-modal"
+											value={sortOrder}
+											onChange={(e) => {
+												setSortOrder(e.target.value as "asc" | "desc");
+												setPage(1);
+											}}
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										>
+											<option value="desc">Descending</option>
+											<option value="asc">Ascending</option>
+										</select>
+									</div>
+
+									<div>
+										<label
+											htmlFor="inflow-start-modal"
+											className="block text-sm font-medium text-gray-700 mb-1"
+										>
+											Start date
+										</label>
+										<input
+											id="inflow-start-modal"
+											type="date"
+											value={startDate}
+											onChange={(e) => {
+												setStartDate(e.target.value);
+												setPage(1);
+											}}
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										/>
+
+										<label
+											htmlFor="inflow-end-modal"
+											className="block text-sm font-medium text-gray-700 mt-3 mb-1"
+										>
+											End date
+										</label>
+										<input
+											id="inflow-end-modal"
+											type="date"
+											value={endDate}
+											onChange={(e) => {
+												setEndDate(e.target.value);
+												setPage(1);
+											}}
+											className="rounded-[8px] border border-gray-200 px-3 py-2 text-sm bg-white w-full"
+										/>
+
+										{dateError && (
+											<p className="text-red-600 text-sm font-medium mt-3" role="alert">
+												{dateError}
+											</p>
+										)}
+									</div>
+								</div>
+
+								<div className="mt-6 flex justify-end gap-2">
+									<button
+										type="button"
+										onClick={clearSortGroup}
+										className="px-3 py-2 text-sm rounded-[8px] border border-gray-300 bg-white hover:bg-gray-100 font-medium"
+									>
+										Reset sort
+									</button>
+									<button
+										type="button"
+										onClick={() => setSortOpen(false)}
+										className="px-3 py-2 text-sm rounded-[8px] bg-[#004484] text-white hover:bg-[#003366] font-medium"
+									>
+										Done
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+					{dateError && (
+						<p className="text-red-600 text-sm font-medium mt-3" role="alert">
+							{dateError}
+						</p>
+					)}
+					{!dateError && list.data && (
+						<div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center gap-2">
+							<span className="text-sm text-gray-500">Showing:</span>
+							<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-[#004484]/10 text-[#004484] text-sm font-medium">
+								{pagination.total} transaction{pagination.total !== 1 ? "s" : ""}
+							</span>
+							<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-200 text-gray-700 text-sm">
+								{sortBy === "createdAt" ? "Date" : "Amount"} ·{" "}
+								{sortOrder === "desc" ? "High → low" : "Low → high"}
+							</span>
+							<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-200 text-gray-700 text-sm">
+								{formatDateRange(startISO ?? undefined, endISO ?? undefined)}
+							</span>
+							{provider && (
+								<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-200 text-gray-700 text-sm capitalize">
+									{provider}
+								</span>
+							)}
+							{paymentStatusComma && (
+								<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-200 text-gray-700 text-sm">
+									Status: {paymentStatusComma}
+								</span>
+							)}
+							{businessName.trim() && (
+								<span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-200 text-gray-700 text-sm">
+									Business: {businessName.trim()}
+								</span>
+							)}
+						</div>
+					)}
+				</section>
+
+				{isError && (
+					<div className="mt-6 p-4 rounded-[8px] border border-red-200 bg-red-50 text-red-800">
+						<p className="font-medium">Failed to load inflow data</p>
+						<p className="text-sm mt-1">{errorMessage}</p>
+						<button
+							type="button"
+							onClick={handleRetry}
+							className="mt-3 px-3 py-2 text-sm rounded-[8px] bg-red-100 hover:bg-red-200"
+						>
+							Retry
+						</button>
+					</div>
+				)}
+
+				{!isError && (
+					<div className="mt-6">
+						<InflowTable
+							transactionsData={list.data?.data}
+							pagination={pagination}
+							onPageChange={setPage}
+							onLimitChange={(newLimit) => {
+								setLimit(Math.min(100, newLimit));
+								setPage(1);
+							}}
+						/>
+					</div>
+				)}
+			</div>
+		</DashboardLayout>
+	);
 };
 
 export default Page;
