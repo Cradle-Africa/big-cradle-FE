@@ -19,7 +19,7 @@ const LoginImage = () => {
   }, []);
 
   return (
-    <div className="hidden md:flex h-full items-stretch justify-center px-6 py-8 mr-8">
+    <div className="hidden md:flex h-screen items-stretch justify-center px-6 py-8">
 
       <div className="flex flex-col w-full flex-1 rounded-[28px] overflow-hidden shadow-2xl bg-white">
 
