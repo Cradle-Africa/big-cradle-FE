@@ -14,8 +14,10 @@ import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
 
 export default function AdminSidebar() {
-  const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
+  const usersMenuOpenInit = ["/pages/user/business/"].includes(currentPath);
+  const [usersMenuOpen, setUsersMenuOpen] = useState(usersMenuOpenInit);
+
 
   return (
     <SideBarWrapper>
@@ -46,6 +48,7 @@ export default function AdminSidebar() {
             className={classNames({
               "block py-2 px-3 rounded hover:cursor-pointer hover:bg-gray-200 hover:text-[#002648] transition":
                 true,
+              "bg-gray-200 text-[#002648]": usersMenuOpenInit,
             })}
           >
             <div className="flex gap-1 items-center justify-between">
