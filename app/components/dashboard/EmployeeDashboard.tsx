@@ -11,7 +11,7 @@ import KycVerification from "../KycVerification";
 import TopPipelines from "../charts/TopPipelines";
 import { Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import Summary from "../charts/Summary";
+import Summary from "../charts/summaryCard/Summary";
 import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 import TopSurveys from "../charts/TopSurveys";
 

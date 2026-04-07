@@ -1,10 +1,10 @@
 import BusinessCard from '@/app/pages/user/business/_components/BusinessCard';
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Spinner } from '@radix-ui/themes';
+import { SummaryCardSkeleton } from './SummaryCardSkeleton';
 import { ArrowDownCircle, ArrowUpCircle, Banknote, Database, File, Users2, Wallet } from "lucide-react";
 import { useEffect, useMemo } from 'react';
 import { MdChecklist } from "react-icons/md";
-import { useDatFlywheelSummary, useSuperAdminSummary, useSurveySummary } from '../dashboard/_features/hook';
+import { useDatFlywheelSummary, useSuperAdminSummary, useSurveySummary } from '../../dashboard/_features/hook';
 
 const Summary = ({ module, business }: { module: string, business?: string }) => {
     const user = getUser();
@@ -66,7 +66,7 @@ const Summary = ({ module, business }: { module: string, business?: string }) =>
     const isLoading = module === 'Survey' ? loadingSurvey : loadingFlywheel;
     const isError = module === 'Survey' ? errorSurvey : errorFlywheel;
 
-    if (isLoading || loadingSuperAdmin) return <Spinner />;
+    if (isLoading || loadingSuperAdmin) return <SummaryCardSkeleton count={3}  />;
 
     if (isError || errorSuperAdmin) return <p> {''}</p>;
 
