@@ -20,9 +20,11 @@ import SideBarWrapper from "./SideBarWrapper";
 import { getBusinessId } from "@/app/utils/user/userData";
 
 export default function BusinessSideBar() {
-  const [usersMenuOpen, setUsersMenuOpen] = useState(false);
   const currentPath = usePathname();
   const businessId = getBusinessId();
+  const isEmployeeActive = currentPath === `/pages/user/employee/${businessId}`;
+  const [usersMenuOpen, setUsersMenuOpen] = useState(isEmployeeActive);
+
 
   return (
     <SideBarWrapper>
@@ -37,7 +39,8 @@ export default function BusinessSideBar() {
               className={classNames({
                 "block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition":
                   true,
-                "bg-gray-200 text-[#002648] ": currentPath === link.href,
+                "bg-gray-200 text-[#002648] ":
+                  currentPath === link.href.split("?")[0],
               })}
             >
               <div className="flex gap-1 items-center ">
@@ -50,7 +53,10 @@ export default function BusinessSideBar() {
         <li>
           <div
             onClick={() => setUsersMenuOpen(!usersMenuOpen)}
-            className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
+            className={classNames({
+              "block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer": true,
+              "bg-gray-200 text-[#002648]": isEmployeeActive,
+            })}
           >
             <div className="flex gap-1 items-center justify-between">
               <div className="flex gap-1 items-center">
@@ -68,7 +74,12 @@ export default function BusinessSideBar() {
             <div className="ml-6 mt-1 space-y-1">
               <Link
                 href={`/pages/user/employee/${businessId}`}
-                className="py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648]  transition text-sm flex items-center gap-2"
+                className={classNames({
+                  "py-1 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition text-sm flex items-center gap-2":
+                    true,
+                  "bg-gray-200 text-[#002648] ":
+                    currentPath === `/pages/user/employee/${businessId}`,
+                })}
               >
                 <Users size={14} />
                 Employees

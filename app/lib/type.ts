@@ -689,6 +689,72 @@ export type WalletTransactionList = {
 	updatedAt: string;
 }
 
+/** Super-admin inflow row (credit); backend may include extra fields */
+export type InflowTransactionRow = WalletTransactionList & {
+	provider?: string;
+	currency?: string;
+	gatewayTransactionId?: string;
+};
+
+export type InflowSummaryQueryParams = {
+	startDate?: string;
+	endDate?: string;
+	paymentStatus?: string;
+	provider?: "flutterwave" | "kuvarpay";
+	businessName?: string;
+	researcherName?: string;
+};
+
+export type InflowListQueryParams = InflowSummaryQueryParams & {
+	page?: number;
+	limit?: number;
+	sortBy?: "createdAt" | "amount";
+	sortOrder?: "asc" | "desc";
+};
+
+export type InflowSummaryData = {
+	totals: { count: number; totalAmount: number };
+	byStatus: Array<{ paymentStatus: string; count: number; totalAmount: number }>;
+	byProvider: Array<{ provider: string; count: number; totalAmount: number }>;
+	counts: { paid: number; pending: number; failed: number; notPaid: number };
+	successRatePercent: number | null;
+};
+
+export type InflowTransactionsListResult = {
+	data: InflowTransactionRow[];
+	pagination: PaginationMeta;
+	filters?: Record<string, unknown>;
+};
+
+export type PayoutSummaryQueryParams = {
+	startDate?: string;
+	endDate?: string;
+	payoutStatus?: string;
+	paymentType?: string;
+	businessName?: string;
+	researcherName?: string;
+};
+
+export type PayoutListQueryParams = PayoutSummaryQueryParams & {
+	page?: number;
+	limit?: number;
+	sortBy?: "createdAt" | "amount";
+	sortOrder?: "asc" | "desc";
+};
+
+export type PayoutSummaryData = {
+	totals: { count: number; totalAmount: number };
+	byStatus: Array<{ payoutStatus: string; count: number; totalAmount: number }>;
+	byPaymentType: Array<{ paymentType: string; count: number; totalAmount: number }>;
+	counts: { paid: number; notPaid: number };
+};
+
+export type PayoutTransactionsListResult = {
+	data: WalletTransactionList[];
+	pagination: PaginationMeta;
+	filters?: Record<string, unknown>;
+};
+
 // Binance transaction history (super-admin)
 export type BinanceTransaction = {
 	id: string;

@@ -16,11 +16,28 @@ import { usePathname } from "next/navigation";
 import { JSX, useState } from "react";
 import SideBarWrapper from "./SideBarWrapper";
 export default function SuperAdminSidebar() {
-	const [usersMenuOpen, setUsersMenuOpen] = useState(false);
-	const [kycMenuOpen, setKycMenuOpen] = useState(false);
-	const [transactionOpen, setTransactionMenuOpen] = useState(false);
-
 	const currentPath = usePathname();
+	const transactionOpenInit = [
+		"/pages/transactions/inflow",
+		"/pages/transactions/payout",
+		"/pages/transactions/binance",
+	].includes(currentPath);
+
+	const usersMenuOpenInit = [
+		"/pages/user/business/",
+		"/pages/user/admin/",
+	].includes(currentPath);
+
+	const kycMenuOpenInit = [
+		"/pages/user/business/business-kyc/",
+		"/pages/user/admin/admin-kyc/",
+		"/pages/user/researcher-kyc/",
+	].includes(currentPath);
+
+	const [transactionOpen, setTransactionMenuOpen] = useState(transactionOpenInit);
+	const [usersMenuOpen, setUsersMenuOpen] = useState(usersMenuOpenInit);
+	const [kycMenuOpen, setKycMenuOpen] = useState(kycMenuOpenInit);
+
 
 	return (
 		<SideBarWrapper>
@@ -56,7 +73,10 @@ export default function SuperAdminSidebar() {
 							setUsersMenuOpen(false);
 							
 						}}
-						className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
+						className={classNames({
+							"block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer": true,
+							"bg-gray-200 text-[#002648]": transactionOpenInit,
+						})}
 					>
 						<div className="flex gap-1 items-center justify-between">
 							<div className="flex gap-1 items-center">
@@ -74,7 +94,12 @@ export default function SuperAdminSidebar() {
 						<div className="ml-6 mt-1 space-y-1">
 							<Link
 								href="/pages/transactions/inflow"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/transactions/inflow",
+								})}
 							>
 								<CircleArrowDown size={14} />
 								In flow
@@ -88,14 +113,24 @@ export default function SuperAdminSidebar() {
 							</Link> */}
 							<Link
 								href="/pages/transactions/payout"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/transactions/payout",
+								})}
 							>
 								<CircleArrowUp  size={14} />
 								Payout
 							</Link>
 							<Link
 								href="/pages/transactions/binance"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/transactions/binance",
+								})}
 							>
 								<Coins size={14} />
 								Binance
@@ -112,7 +147,10 @@ export default function SuperAdminSidebar() {
 							setKycMenuOpen(false);
 							setTransactionMenuOpen(false);
 						}}
-						className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
+						className={classNames({
+							"block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer": true,
+							"bg-gray-200 text-[#002648]": usersMenuOpenInit,
+						})}
 					>
 						<div className="flex gap-1 items-center justify-between">
 							<div className="flex gap-1 items-center">
@@ -130,14 +168,24 @@ export default function SuperAdminSidebar() {
 						<div className="ml-6 mt-1 space-y-1">
 							<Link
 								href="/pages/user/business/"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/user/business/",
+								})}
 							>
 								<Building2 size={14} />
 								Organizations
 							</Link>
 							<Link
 								href="/pages/user/admin/"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/user/admin/",
+								})}
 							>
 								<Building2 size={14} />
 								Ecosystem enablers
@@ -154,7 +202,10 @@ export default function SuperAdminSidebar() {
 							setUsersMenuOpen(false);
 							setTransactionMenuOpen(false);
 						}}
-						className="block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer"
+						className={classNames({
+							"block py-2 px-3 rounded hover:bg-gray-200 hover:text-[#002648] transition cursor-pointer": true,
+							"bg-gray-200 text-[#002648]": kycMenuOpenInit,
+						})}
 					>
 						<div className="flex gap-1 items-center justify-between">
 							<div className="flex gap-1 items-center">
@@ -172,21 +223,36 @@ export default function SuperAdminSidebar() {
 						<div className="ml-6 mt-1 space-y-1">
 							<Link
 								href="/pages/user/business/business-kyc/"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/user/business/business-kyc/",
+								})}
 							>
 								<Building2 size={14} />
 								Organizations KYC
 							</Link>
 							<Link
 								href="/pages/user/admin/admin-kyc/"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/user/admin/admin-kyc/",
+								})}
 							>
 								<Building2 size={14} />
 								Ecosystem KYC
 							</Link>
 							<Link
 								href="/pages/user/researcher-kyc/"
-								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+								className={classNames({
+									"py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2":
+										true,
+									"bg-gray-200 text-[#002648] ":
+										currentPath === "/pages/user/researcher-kyc/",
+								})}
 							>
 								<Building2 size={14} />
 								Researchers KYC
