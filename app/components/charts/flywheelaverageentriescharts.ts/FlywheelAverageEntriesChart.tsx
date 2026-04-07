@@ -15,8 +15,8 @@ import isoWeek from "dayjs/plugin/isoWeek";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 
-import { useFlywheelAverageEntries } from "../dashboard/_features/hook";
-import { Spinner } from "@radix-ui/themes";
+import { useFlywheelAverageEntries } from "../../dashboard/_features/hook";
+import { FlyWheelAverageEntriesChartSkeleton } from "./FlyWheelAverageEntriesChartSkeleton";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 
 dayjs.extend(isoWeek);
@@ -96,7 +96,7 @@ export default function FlywheelAverageEntriesChart({business} : ({business?: st
     return transformEngagementData(rawData?.[period] ?? [], period);
   }, [rawData, period]);
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <FlyWheelAverageEntriesChartSkeleton/>;
 
   return (
     <div className="relative h-full w-full bg-white rounded-xl px-4 py-4 border border-gray-200">

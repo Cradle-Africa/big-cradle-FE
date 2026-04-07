@@ -1,9 +1,9 @@
 "use client";
 
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
-import { useEntryVolume } from "../dashboard/_features/hook";
+import { useEntryVolume } from "../../dashboard/_features/hook";
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
-import { Spinner } from "@radix-ui/themes";
+import { FlywheelEntryVolumeSkeleton } from "./FlyWheelVolumeSkeleton";
 
 const COLORS = [
     "#004484", "#2B99FA", "#155DFC", "#004484", "#FFFF00", "#008000", "#FFA500"
@@ -47,7 +47,7 @@ export default function FlywheelEntryVolumeChart({
         endDate,
     });
 
-    if (isPending) return <div><Spinner /> </div>;
+    if (isPending) return <FlywheelEntryVolumeSkeleton/>;
     if (isError || !data) return <p>Failed to load entry volume data.</p>;
 
     const groupedByDay = Array(8).fill(0); // 0 index unused

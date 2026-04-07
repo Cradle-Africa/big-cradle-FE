@@ -6,10 +6,10 @@ import { Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import EngagementChart from "../charts/EngagementChart";
 import Summary from "../charts/summaryCard/Summary";
-import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
-import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
+import FlywheelAverageEntriesChart from "../charts/flywheelaverageentriescharts.ts/FlywheelAverageEntriesChart";
+import FlywheelEntryVolumeChart from "../charts/flywheelentryvolumecharts.tsx/FlywheelEntryVolumeChart";
 import TopSurveys from "../charts/TopSurveys";
-import TopPipelines from "../charts/TopPipelines";
+import TopPipelines from "../charts/toppipelines/TopPipelines";
 import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 
 const BusinessDashboard = () => {
