@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 const LoginImage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % imagesList.length);
@@ -18,91 +19,81 @@ const LoginImage = () => {
   }, []);
 
   return (
-    <div className="hidden md:block w-3/4 relative overflow-hidden">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentIndex}
-          initial={{ opacity: 1, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 1, x: 1 }}
-          transition={{
-            duration: 0.8,
-            ease: [0.25, 0.25, 0.25, 1],
-          }}
-          className="absolute top-0 left-0 w-full h-full"
-          style={{ zIndex: 1 }}
-        >
-          <LoginImageItem
-            imgPath={imagesList[currentIndex].imgPath}
-            title={imagesList[currentIndex].title}
-            description={imagesList[currentIndex].description}
-            currentIndex={currentIndex}
-            setCurrentIndex={setCurrentIndex}
-          />
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-};
+    <div className="hidden md:flex h-screen items-stretch justify-center px-6 py-8">
 
-type LoginImagePropsItem = {
-  imgPath: StaticImageData;
-  title: string;
-  description: string;
-  currentIndex: number;
-  setCurrentIndex: (val: number) => void;
-};
+      <div className="flex flex-col w-full flex-1 rounded-[28px] overflow-hidden shadow-2xl bg-white">
 
-const LoginImageItem = ({
-  imgPath,
-  title,
-  description,
-  currentIndex,
-  setCurrentIndex,
-}: LoginImagePropsItem) => {
-  return (
-    <div className="relative w-full h-full overflow-hidden">
-      <Image
-        src={imgPath}
-        alt="big cradle Sign up"
-        quality={100}
-        priority
-        fill
-        className="object-cover"
-      />
-      <div className="absolute bottom-16 left-16 right-16 text-white h-[120px] flex flex-col justify-between">
-        <div className="flex mb-4 items-center">
-          {imagesList.map((_, index) => (
-            <div
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className="w-[20px] flex justify-center cursor-pointer"
+        <div className="relative flex-1 w-full overflow-hidden min-h-[400px]">
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{
+                duration: 0.6,
+                ease: [0.25, 0.25, 0.25, 1],
+              }}
+              className="absolute inset-0"
             >
-              <div
-                className={classNames({
-                  "h-[20px] w-[4px] bg-white rounded-full":
-                    currentIndex !== index,
-                  "h-[6px] w-[6px] bg-white rounded-full":
-                    currentIndex === index,
-                })}
-              />
-            </div>
-          ))}
+              <img
+        src={imagesList[currentIndex].imgPath.src}
+        alt="login image"
+        className="w-full h-full object-cover object-center"
+      />
+            </motion.div>
+          </AnimatePresence>
         </div>
-        <div className="flex flex-col gap-1">
-          <p className="text-white font-semibold">{title}</p>
-          <p className="text-white mt-2">{description}</p>
+
+        <div className="p-8 bg-white">
+
+          
+          <div className="flex mb-4 items-center gap-2">
+            {imagesList.map((_, index) => (
+              <div
+                key={index}
+                onClick={() => setCurrentIndex(index)}
+                className="cursor-pointer"
+              >
+                <div
+                  className={classNames(
+                    "transition-all duration-300",
+                    {
+                      "h-[6px] w-[24px] bg-black rounded-full": currentIndex === index,
+                      "h-[6px] w-[6px] bg-black/40 rounded-full": currentIndex !== index,
+                    }
+                  )}
+                />
+              </div>
+            ))}
+          </div>
+
+          
+          <div className="max-w-[85%]">
+            <p className="text-xl font-semibold text-black">
+              {imagesList[currentIndex].title}
+            </p>
+            <p className="text-sm text-gray-600 mt-2 leading-relaxed">
+              {imagesList[currentIndex].description}
+            </p>
+          </div>
+
         </div>
       </div>
     </div>
   );
 };
 
-const imagesList: {
+
+type LoginImagePropsItem = {
   imgPath: StaticImageData;
   title: string;
   description: string;
-}[] = [
+};
+
+
+const imagesList: LoginImagePropsItem[] = [
   {
     imgPath: bigCradleDashboardImg,
     title: "Your Growth Partner",
