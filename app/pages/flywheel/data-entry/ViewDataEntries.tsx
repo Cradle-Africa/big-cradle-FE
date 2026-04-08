@@ -64,7 +64,7 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
     const { data: datapoints } = useFetchSingleDataPoint({
         axios,
         id: singlePipeline?.fieldId ?? '',
-        enabled: !singlePipeline?.fieldId, // only run when fieldId is present
+        enabled: !!singlePipeline?.fieldId, // only run when fieldId is present
     });
 
     const mutation = useAnalyseData({ axios });
@@ -188,10 +188,10 @@ const ViewDataEntries: React.FC<ViewDataEntriesProps> = ({
 
                         {!isLoading && entries && entries.length > 0 && (
                             <div className="">
-                                {datapoints && entries.length > 0 && (
+                                {datapoints && (
                                     <div className="flex gap-2 flex-wrap">
                                         <ExportToExcel
-                                            data={entries.map(e => e.data)}
+                                            entries={entries}
                                             datapoints={datapoints}
                                             dataPointName={singlePipeline?.dataPointName || "Export"}
                                         />

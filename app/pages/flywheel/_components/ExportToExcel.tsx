@@ -1,21 +1,24 @@
 "use client";
 import { FileDown } from "lucide-react";
 import * as XLSX from "xlsx";
+import { DataEntry } from "@/app/lib/type";
+import { formatDate } from "@/app/utils/formatDate";
 
 interface ExportToExcelProps {
-    data: Record<string, any>[];
+    entries: DataEntry[];
     datapoints: any;
     dataPointName: string;
 }
 
-export const ExportToExcel = ({ data, datapoints, dataPointName }: ExportToExcelProps) => {
+export const ExportToExcel = ({ entries, datapoints, dataPointName }: ExportToExcelProps) => {
     const handleExportToExcel = () => {
-        if (!data.length || !datapoints?.field) return;
+        if (!entries.length || !datapoints?.field) return;
 
-        const exportData = data.map((entry) => {
+        const exportData = entries.map((entry) => {
             const row: Record<string, any> = {};
+            row["Created at"] = formatDate(entry.createdAt ?? "");
             datapoints.field.forEach((field: any) => {
-                const val = entry[field.key];
+                const val = entry.data?.[field.key];
                 row[field.label] = Array.isArray(val) ? val.join(", ") : val;
             });
             return row;
