@@ -6,12 +6,12 @@ import { useState } from "react";
 import { Flex, Spinner } from "@radix-ui/themes";
 import EngagementChart from "../charts/EngagementChart";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import Summary from "../charts/summaryCard/Summary";
-import FlywheelAverageEntriesChart from "../charts/flywheelaverageentriescharts.ts/FlywheelAverageEntriesChart";
-import FlywheelEntryVolumeChart from "../charts/flywheelentryvolumecharts.tsx/FlywheelEntryVolumeChart";
+import Summary from "../charts/Summary";
+import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
+import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
 import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 import TopSurveys from "../charts/TopSurveys";
-import TopPipelines from "../charts/toppipelines/TopPipelines";
+import TopPipelines from "../charts/TopPipelines";
 
 const AdminDashboard = () => {
 	const [openBusinessKycVerification, setOpenBusinessKycVerification] = useState(false);

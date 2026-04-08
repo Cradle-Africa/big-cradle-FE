@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function TopPipelinesSkeleton({ rows = 5 }: { rows?: number }) {
+export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="bg-white p-4 border border-gray-100 rounded-md h-full">
 

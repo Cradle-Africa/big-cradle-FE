@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import Summary from "../charts/summaryCard/Summary";
+import Summary from "../charts/Summary";
 import FormPopup from "../pop-up/PopUpForm";
 import DashboardSkeleton from "../skeleton/Dashboardskeleton";
 // import { Flex, Grid } from "@radix-ui/themes";

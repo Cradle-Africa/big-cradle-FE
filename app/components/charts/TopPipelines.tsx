@@ -1,9 +1,9 @@
 import { getBusinessId, getUser } from "@/app/utils/user/userData";
 import { Table } from "@radix-ui/themes";
-import { TopPipelinesSkeleton } from "./TopPipeLinesSkeleton";
+import { TableSkeleton } from "../skeleton/TableSkeleton";
 import {
   useFetchTopPipelines
-} from "../../dashboard/_features/hook";
+} from "../dashboard/_features/hook";
 
 const TopPipelines = ({business}: ({business: string})) => {
   const user = getUser();
@@ -31,7 +31,7 @@ const TopPipelines = ({business}: ({business: string})) => {
     role,
   });
 
-  if (isLoading) return <TopPipelinesSkeleton rows={5} />;
+  if (isLoading) return <TableSkeleton rows={5} />;
 
   if (error) return <p>Error fetching the survey summary</p>;
   if ((pipelines?.data ?? []).length < 1) {

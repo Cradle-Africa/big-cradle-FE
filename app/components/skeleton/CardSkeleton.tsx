@@ -4,7 +4,7 @@ interface SummaryCardSkeletonProps {
   count?: number;
 }
 
-export function SummaryCardSkeleton({ count = 1 }: SummaryCardSkeletonProps) {
+export function CardSkeleton({ count = 1 }: SummaryCardSkeletonProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
       {Array.from({ length: count }).map((_, i) => (

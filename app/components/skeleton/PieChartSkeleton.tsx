@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function FlywheelEntryVolumeSkeleton() {
+export function PieChartSkeleton() {
   return (
     <div className="relative h-full w-full bg-white rounded-xl px-4 py-4 border border-gray-200">
       

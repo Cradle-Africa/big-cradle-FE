@@ -3,15 +3,15 @@ import axios from "@/app/lib/axios";
 import EngagementChart from "../charts/EngagementChart";
 // import SentimentChart from "../charts/SentimentCharts";
 
-import FlywheelAverageEntriesChart from "../charts/flywheelaverageentriescharts.ts/FlywheelAverageEntriesChart";
-import FlywheelEntryVolumeChart from "../charts/flywheelentryvolumecharts.tsx/FlywheelEntryVolumeChart";
+import FlywheelAverageEntriesChart from "../charts/FlywheelAverageEntriesChart";
+import FlywheelEntryVolumeChart from "../charts/FlywheelEntryVolumeChart";
 import { useState } from "react";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import KycVerification from "../KycVerification";
-import TopPipelines from "../charts/toppipelines/TopPipelines";
+import TopPipelines from "../charts/TopPipelines";
 import { Spinner } from "@radix-ui/themes";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
-import Summary from "../charts/summaryCard/Summary";
+import Summary from "../charts/Summary";
 import SurveyPaymentStatsChart from "../charts/SurveyPaymentStatsChart";
 import TopSurveys from "../charts/TopSurveys";
 
