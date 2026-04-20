@@ -9,6 +9,7 @@ import {
 	CircleArrowUp,
 	Coins,
 	House,
+	Satellite,
 	UsersRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -99,6 +100,13 @@ export default function SuperAdminSidebar() {
 							>
 								<Coins size={14} />
 								Binance
+							</Link>
+							<Link
+								href="/pages/transactions/stellar-payouts"
+								className="py-1 px-3 rounded hover:text-[#002648] hover:bg-gray-200 transition text-sm flex items-center gap-2"
+							>
+								<Satellite size={14} />
+								Stellar Payouts
 							</Link>
 						</div>
 					)}

@@ -150,20 +150,32 @@ const Page = () => {
 
 				{wallet?.data && (
 					<>
-						<div className="w-full bg-[#2694F6] text-white rounded-lg mt-5 px-8 py-5">
-							<h3 className="flex items-center gap-1 justify-start">
+						<div className="w-full bg-gradient-to-br from-[#2694F6] to-[#1a7ad4] text-white rounded-xl mt-5 px-8 py-6 shadow-md">
+							<h3 className="flex items-center gap-2 text-blue-100 text-sm font-medium uppercase tracking-wide">
 								<GoChecklist />
-								Total Wallet
+								Total Wallet Balance
 							</h3>
-							<div className="flex justify-between items-center mt-5">
-								<p className="font-bold text-2xl">{wallet.data.balance}</p>
+							<div className="flex justify-between items-end mt-4">
+								<div>
+									<p className="font-bold text-4xl tracking-tight">
+										{wallet.data.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+									</p>
+									<span className="inline-flex items-center gap-1 mt-1.5 bg-white/20 text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
+										BCC &nbsp;·&nbsp; 1 BCC = 1 USD
+									</span>
+								</div>
 								<button
-									className="bg-white text-[#2694F6] px-4 py-2 rounded-md font-medium hover:bg-gray-100 hover:cursor-pointer"
+									className="bg-white text-[#2694F6] px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-50 transition-colors shadow-sm"
 									onClick={() => setOpenTransaction(true)}
 								>
 									+ Add to Wallet
 								</button>
 							</div>
+							{wallet.data.lockedBalance > 0 && (
+								<p className="mt-3 text-blue-100 text-xs">
+									🔒 {wallet.data.lockedBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} BCC locked in pending payout
+								</p>
+							)}
 						</div>
 
 						<div className="mt-10">

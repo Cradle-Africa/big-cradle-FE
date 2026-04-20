@@ -5,7 +5,10 @@ import type {
 	InflowSummaryQueryParams,
 	InflowTransactionsListResult,
 	PaginationMeta,
+	PayoutCycle,
 	PayoutListQueryParams,
+	PayoutRequest,
+	PayoutStats,
 	PayoutSummaryData,
 	PayoutSummaryQueryParams,
 	PayoutTransactionsListResult,
@@ -217,3 +220,70 @@ export const payOut = async (
 		throw new Error(axiosErrorMessage(error));
 	}
 };
+
+// ─── Stellar Payout Admin APIs ────────────────────────────────────────────────
+
+export async function fetchPayoutStats(axios: AxiosInstance): Promise<PayoutStats> {
+	const res = await axios.get("/admin/payouts/stats");
+	return (res.data as { data: PayoutStats }).data;
+}
+
+export async function fetchPayoutCycles(
+	axios: AxiosInstance,
+	params: { page?: number; limit?: number } = {}
+): Promise<{ data: PayoutCycle[]; pagination: PaginationMeta }> {
+	const res = await axios.get("/admin/payouts/cycles", { params });
+	return {
+		data: (res.data as any).data ?? [],
+		pagination: normalizePagination((res.data as any).pagination ?? {}),
+	};
+}
+
+export async function fetchCurrentCycle(axios: AxiosInstance): Promise<PayoutCycle> {
+	const res = await axios.get("/admin/payouts/cycles/current");
+	return (res.data as any).data ?? res.data;
+}
+
+export async function fetchCycleRequests(
+	axios: AxiosInstance,
+	cycleId: string,
+	params: { page?: number; limit?: number } = {}
+): Promise<{ data: PayoutRequest[]; pagination: PaginationMeta }> {
+	const res = await axios.get(`/admin/payouts/cycles/${cycleId}/requests`, { params });
+	return {
+		data: (res.data as any).data ?? [],
+		pagination: normalizePagination((res.data as any).pagination ?? {}),
+	};
+}
+
+export async function fetchPendingPayouts(
+	axios: AxiosInstance,
+	params: { page?: number; limit?: number } = {}
+): Promise<{ data: PayoutRequest[]; pagination: PaginationMeta }> {
+	const res = await axios.get("/admin/payouts/pending", { params });
+	return {
+		data: (res.data as any).data ?? [],
+		pagination: normalizePagination((res.data as any).pagination ?? {}),
+	};
+}
+
+export async function fetchFailedPayouts(
+	axios: AxiosInstance,
+	params: { page?: number; limit?: number } = {}
+): Promise<{ data: PayoutRequest[]; pagination: PaginationMeta }> {
+	const res = await axios.get("/admin/payouts/failed", { params });
+	return {
+		data: (res.data as any).data ?? [],
+		pagination: normalizePagination((res.data as any).pagination ?? {}),
+	};
+}
+
+export async function triggerDisbursement(axios: AxiosInstance): Promise<PayoutCycle> {
+	const res = await axios.post("/admin/payouts/disburse");
+	return res.data;
+}
+
+export async function retryFailedPayouts(axios: AxiosInstance, requestIds: string[]): Promise<{ queued: number }> {
+	const res = await axios.post("/admin/payouts/retry", { requestIds });
+	return res.data;
+}

@@ -1,15 +1,16 @@
 import { BusinessKyc } from "@/app/lib/type";
-import { Eye, MoreVertical, Pencil, X } from "lucide-react";
+import { Eye, MoreVertical, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import ReviewBusinessKyc from "./ReviewBusinessKyc"; // Adjust the path if needed
+import KycViewerModal from "@/app/components/KycViewerModal";
 
 const BusinessKycTable = ({ data }: { data: BusinessKyc[] }) => {
   const menuRef = useRef<HTMLUListElement>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
-  const [certificate, setCertificate] = useState<string | null>(null);
-  const [viewKyc, setViewKyc] = useState(false)
+  const [kycUrl, setKycUrl] = useState<string | null>(null);
+  const [viewKycOpen, setViewKycOpen] = useState(false);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -27,11 +28,11 @@ const BusinessKycTable = ({ data }: { data: BusinessKyc[] }) => {
     setOpenIndex(null);
   };
 
-  const handleViewKyc = (certificate: string) => {
-    setViewKyc(true)
-    setCertificate(certificate)
-    console.log(certificate)
-  }
+  const handleViewKyc = (url: string | null) => {
+    setKycUrl(url ?? null);
+    setViewKycOpen(true);
+    setOpenIndex(null);
+  };
 
   return (
     <>
@@ -133,23 +134,12 @@ const BusinessKycTable = ({ data }: { data: BusinessKyc[] }) => {
         <ReviewBusinessKyc setOpen={setIsModalOpen} businessUserId={selectedBusinessId} />
       )}
 
-      {viewKyc && (
-        <div className="bg-white p-6 rounded-md  shadow-md w-82 h-[300px] md:h-[500px] md:w-3/4 z-50 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <button
-          className="absolute right-[-50px] top-1 hover:cursor-pointer bg-gray-100 rounded-full p-1 bg-opacity-90"
-          onClick={ () => setViewKyc(false)}
-          >
-            <X size={25} className="text-red-500" />
-          </button>
-          <div className='flex w-full h-full border border-gray-100 rounded-md'>
-            <iframe
-              src={typeof certificate === 'string' ? certificate : ''}
-              className="flex w-full h-full"
-              width={100}
-              title="Certificate of corporation Preview"
-            />
-          </div>
-        </div>
+      {viewKycOpen && (
+        <KycViewerModal
+          url={kycUrl}
+          title="Certificate of Incorporation"
+          onClose={() => setViewKycOpen(false)}
+        />
       )}
     </>
   );

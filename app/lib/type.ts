@@ -668,6 +668,8 @@ export type WalletErrorResponse = {
 };
 
 
+export type TransactionProvider = 'flutterwave' | 'kuvarpay' | 'stellar' | 'internal';
+
 export type WalletTransactionList = {
 	id: string;
 	walletId: string;
@@ -687,11 +689,17 @@ export type WalletTransactionList = {
 	description: string;
 	createdAt: string;
 	updatedAt: string;
+	// BCC / multi-currency fields
+	amountBCC?: number;
+	originalAmount?: number;
+	originalCurrency?: string;
+	exchangeRateAtTime?: number;
+	stellarTxHash?: string;
+	provider?: TransactionProvider;
 }
 
 /** Super-admin inflow row (credit); backend may include extra fields */
 export type InflowTransactionRow = WalletTransactionList & {
-	provider?: string;
 	currency?: string;
 	gatewayTransactionId?: string;
 };
@@ -700,9 +708,59 @@ export type InflowSummaryQueryParams = {
 	startDate?: string;
 	endDate?: string;
 	paymentStatus?: string;
-	provider?: "flutterwave" | "kuvarpay";
+	provider?: TransactionProvider;
 	businessName?: string;
 	researcherName?: string;
+};
+
+// ─── Stellar Payout Types ─────────────────────────────────────────────────────
+
+export type PayoutRequestStatus = 'pending' | 'locked' | 'processing' | 'completed' | 'failed' | 'cancelled';
+export type PayoutCycleStatus = 'open' | 'processing' | 'completed' | 'partially_failed' | 'failed';
+
+export type PayoutRequest = {
+	_id: string;
+	researcherId: string;
+	walletId: string;
+	amountBCC: number;
+	phoneNumber: string;
+	status: PayoutRequestStatus;
+	cycleId?: string;
+	sdpDisbursementId?: string;
+	sdpPaymentId?: string;
+	stellarTransactionHash?: string;
+	failureReason?: string;
+	requestedAt?: string;
+	processedAt?: string;
+	requeuedForNextCycle: boolean;
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type PayoutCycle = {
+	_id: string;
+	cycleKey: string;
+	disbursementDate: string;
+	cutoffTime: string;
+	disbursementTriggeredAt?: string;
+	status: PayoutCycleStatus;
+	sdpDisbursementId?: string;
+	totalRequests: number;
+	totalAmountBCC: number;
+	successCount: number;
+	failureCount: number;
+	triggeredBy: string;
+	completedAt?: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type PayoutStats = {
+	pending: number;
+	processing: number;
+	completed: number;
+	failed: number;
+	totalDisbursedBCC: number;
 };
 
 export type InflowListQueryParams = InflowSummaryQueryParams & {
