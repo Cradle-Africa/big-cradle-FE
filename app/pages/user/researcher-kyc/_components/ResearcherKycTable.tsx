@@ -67,11 +67,14 @@ const ResearcherKycTable = ({ data }: { data: ResearcherKyc[] }) => {
                 <td className="px-6 py-4">{researcher.address }</td>
                 <td className="px-6 py-4">
                   <span className={`
-                    flex justify-center w-[140px]
+                    flex justify-center w-[140px] px-3 py-1 rounded-full
                     ${researcher.kycStatus === 'approved'
                       ? 'border border-green-500 text-green-600'
-                      : 'border border-red-500 text-red-600'} 
-                    px-3 py-1 rounded-full`}>
+                      : researcher.kycStatus === 'pending'
+                      ? 'border border-yellow-500 text-yellow-600'
+                      : researcher.kycStatus === 'rejected'
+                      ? 'border border-red-500 text-red-600'
+                      : 'border border-gray-400 text-gray-500'}`}>
                     {researcher.kycStatus}
                   </span>
                 </td>
