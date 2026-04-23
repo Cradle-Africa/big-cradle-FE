@@ -2,15 +2,19 @@
 
 import DashboardLayout from "@/app/DashboardLayout";
 import axios from "@/app/lib/axios";
-import { PayoutCycle, PayoutCycleStatus, PayoutRequest, PayoutRequestStatus, PayoutStats } from "@/app/lib/type";
+import { PayoutCycle, PayoutCycleStatus, PayoutRequest, PayoutRequestStatus, PayoutSettings, PayoutStats } from "@/app/lib/type";
 import {
 	fetchCurrentCycle,
+	fetchCycleRequests,
 	fetchFailedPayouts,
 	fetchPayoutCycles,
+	fetchPayoutSettings,
 	fetchPayoutStats,
 	fetchPendingPayouts,
+	resetLockedPayouts,
 	retryFailedPayouts,
 	triggerDisbursement,
+	updatePayoutSetting,
 } from "../_features/api";
 import { useEffect, useState } from "react";
 import {
@@ -21,11 +25,23 @@ import {
 	ExternalLink,
 	Loader2,
 	RefreshCw,
+	RotateCcw,
 	Satellite,
+	Save,
 	Send,
+	Settings2,
 	XCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+
+// ─── Network helper ───────────────────────────────────────────────────────────
+
+const STELLAR_NETWORK = (process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "testnet") as "testnet" | "mainnet";
+
+function stellarExplorerUrl(hash: string): string {
+	const net = STELLAR_NETWORK === "mainnet" ? "public" : "testnet";
+	return `https://stellar.expert/explorer/${net}/tx/${hash}`;
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -110,7 +126,7 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 						{selectable && <th className="px-4 py-3 w-8" />}
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Researcher ID</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Amount</th>
-						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone</th>
+						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Stellar TX</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Failure Reason</th>
@@ -135,7 +151,7 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 								{r.amountBCC.toLocaleString(undefined, { minimumFractionDigits: 2 })}
 								{" "}<span className="text-xs font-normal text-blue-600">BCC</span>
 							</td>
-							<td className="px-4 py-3 text-gray-600 text-xs">{r.phoneNumber}</td>
+							<td className="px-4 py-3 text-gray-600 text-xs">{r.email ?? "—"}</td>
 							<td className="px-4 py-3">{requestBadge(r.status)}</td>
 							<td className="px-4 py-3">
 								{r.stellarTransactionHash ? (
@@ -147,7 +163,7 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 											<Copy size={12} />
 										</button>
 										<a
-											href={`https://stellar.expert/explorer/testnet/tx/${r.stellarTransactionHash}`}
+											href={stellarExplorerUrl(r.stellarTransactionHash)}
 											target="_blank" rel="noopener noreferrer"
 											className="text-blue-400 hover:text-blue-600"
 										>
@@ -170,9 +186,249 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 	);
 }
 
+// ─── Payout Settings Panel ────────────────────────────────────────────────────
+
+const DAY_NAMES: Record<number, string> = { 0: "Sunday", 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday" };
+
+function SettingsPanel() {
+	const [settings, setSettings] = useState<PayoutSettings | null>(null);
+	const [draft, setDraft] = useState<Partial<PayoutSettings>>({});
+	const [loading, setLoading] = useState(true);
+	const [saving, setSaving] = useState<string | null>(null);
+
+	useEffect(() => {
+		fetchPayoutSettings(axios)
+			.then((s) => { setSettings(s); setDraft(s); })
+			.catch(() => toast.error("Failed to load payout settings"))
+			.finally(() => setLoading(false));
+	}, []);
+
+	const save = async (key: string, value: string, label: string) => {
+		setSaving(key);
+		try {
+			await updatePayoutSetting(axios, key, value);
+			setSettings((prev) => prev ? { ...prev, ...draft } as PayoutSettings : prev);
+			toast.success(`${label} updated`);
+		} catch {
+			toast.error(`Failed to save ${label}`);
+		} finally {
+			setSaving(null);
+		}
+	};
+
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center py-20 text-gray-400">
+				<Loader2 size={24} className="animate-spin mr-2" />
+				Loading settings…
+			</div>
+		);
+	}
+
+	if (!settings) return null;
+
+	const SaveBtn = ({ configKey, label, value }: { configKey: string; label: string; value: string }) => (
+		<button
+			onClick={() => save(configKey, value, label)}
+			disabled={saving === configKey}
+			className="flex items-center gap-1 text-xs bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-colors"
+		>
+			{saving === configKey ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+			Save
+		</button>
+	);
+
+	return (
+		<div className="space-y-6 max-w-2xl">
+			<div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-start gap-2 text-sm text-amber-800">
+				<AlertTriangle size={16} className="mt-0.5 flex-shrink-0 text-amber-500" />
+				Changes take effect on the next payout cycle. Save each field individually.
+			</div>
+
+			{/* Schedule */}
+			<div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+				<div className="px-5 py-4">
+					<h3 className="font-semibold text-gray-800 text-sm">Schedule</h3>
+					<p className="text-xs text-gray-400 mt-0.5">When cycles run and cut off</p>
+				</div>
+
+				{/* Payout Day */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Payout Day</label>
+						<p className="text-xs text-gray-400">Day of week disbursements run (0 = Sunday)</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<select
+							value={draft.payoutDay ?? settings.payoutDay}
+							onChange={(e) => setDraft((d) => ({ ...d, payoutDay: Number(e.target.value) }))}
+							className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						>
+							{[0,1,2,3,4,5,6].map((d) => (
+								<option key={d} value={d}>{d} — {DAY_NAMES[d]}</option>
+							))}
+						</select>
+						<SaveBtn configKey="payout_day" label="Payout Day" value={String(draft.payoutDay ?? settings.payoutDay)} />
+					</div>
+				</div>
+
+				{/* Cutoff Hour */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Cutoff Hour (CAT)</label>
+						<p className="text-xs text-gray-400">Last hour requests are accepted for the cycle</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<input
+							type="number" min={0} max={23}
+							value={draft.cutoffHour ?? settings.cutoffHour}
+							onChange={(e) => setDraft((d) => ({ ...d, cutoffHour: Number(e.target.value) }))}
+							className="w-20 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+						<SaveBtn configKey="cutoff_hour" label="Cutoff Hour" value={String(draft.cutoffHour ?? settings.cutoffHour)} />
+					</div>
+				</div>
+
+				{/* Disbursement Hour */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Disbursement Hour (CAT)</label>
+						<p className="text-xs text-gray-400">Hour the cron triggers the SDP disbursement</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<input
+							type="number" min={0} max={23}
+							value={draft.disbursementHour ?? settings.disbursementHour}
+							onChange={(e) => setDraft((d) => ({ ...d, disbursementHour: Number(e.target.value) }))}
+							className="w-20 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+						<SaveBtn configKey="disbursement_hour" label="Disbursement Hour" value={String(draft.disbursementHour ?? settings.disbursementHour)} />
+					</div>
+				</div>
+
+				{/* Timezone */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Timezone</label>
+						<p className="text-xs text-gray-400">IANA timezone for cutoff/disbursement times</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<input
+							type="text"
+							value={draft.timezone ?? settings.timezone}
+							onChange={(e) => setDraft((d) => ({ ...d, timezone: e.target.value }))}
+							className="w-48 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+							placeholder="Africa/Kigali"
+						/>
+						<SaveBtn configKey="payout_timezone" label="Timezone" value={draft.timezone ?? settings.timezone} />
+					</div>
+				</div>
+			</div>
+
+			{/* Limits */}
+			<div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+				<div className="px-5 py-4">
+					<h3 className="font-semibold text-gray-800 text-sm">Limits</h3>
+					<p className="text-xs text-gray-400 mt-0.5">Minimum and maximum per payout request</p>
+				</div>
+
+				{/* Minimum BCC */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Minimum BCC</label>
+						<p className="text-xs text-gray-400">Smallest amount a researcher can request</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<input
+							type="number" min={1}
+							value={draft.minimumBCC ?? settings.minimumBCC}
+							onChange={(e) => setDraft((d) => ({ ...d, minimumBCC: Number(e.target.value) }))}
+							className="w-28 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+						<SaveBtn configKey="minimum_payout_bcc" label="Minimum BCC" value={String(draft.minimumBCC ?? settings.minimumBCC)} />
+					</div>
+				</div>
+
+				{/* Maximum BCC */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Maximum BCC</label>
+						<p className="text-xs text-gray-400">Cap per request — leave blank for no limit</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<input
+							type="number" min={1}
+							value={draft.maximumBCC ?? ""}
+							onChange={(e) => setDraft((d) => ({ ...d, maximumBCC: e.target.value ? Number(e.target.value) : null }))}
+							placeholder="No limit"
+							className="w-28 text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						/>
+						<SaveBtn configKey="maximum_payout_bcc" label="Maximum BCC" value={draft.maximumBCC != null ? String(draft.maximumBCC) : "null"} />
+					</div>
+				</div>
+			</div>
+
+			{/* Behaviour */}
+			<div className="bg-white rounded-xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+				<div className="px-5 py-4">
+					<h3 className="font-semibold text-gray-800 text-sm">Behaviour</h3>
+					<p className="text-xs text-gray-400 mt-0.5">Automation and failure handling</p>
+				</div>
+
+				{/* Auto Disburse */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Auto Disburse</label>
+						<p className="text-xs text-gray-400">Automatically trigger the cron on schedule — disable to require manual trigger only</p>
+					</div>
+					<div className="flex items-center gap-3">
+						<button
+							onClick={() => setDraft((d) => ({ ...d, autoDisburse: !(d.autoDisburse ?? settings.autoDisburse) }))}
+							className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+								(draft.autoDisburse ?? settings.autoDisburse) ? "bg-blue-600" : "bg-gray-200"
+							}`}
+						>
+							<span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+								(draft.autoDisburse ?? settings.autoDisburse) ? "translate-x-6" : "translate-x-1"
+							}`} />
+						</button>
+						<SaveBtn
+							configKey="auto_disburse"
+							label="Auto Disburse"
+							value={String(draft.autoDisburse ?? settings.autoDisburse)}
+						/>
+					</div>
+				</div>
+
+				{/* Failed Handling */}
+				<div className="px-5 py-4 flex items-center justify-between gap-4">
+					<div className="flex-1">
+						<label className="text-sm font-medium text-gray-700">Failed Payment Handling</label>
+						<p className="text-xs text-gray-400">
+							<strong>next_cycle</strong>: auto-requeue failed payments for next Friday.{" "}
+							<strong>manual</strong>: admin must retry from the Failed tab.
+						</p>
+					</div>
+					<div className="flex items-center gap-2">
+						<select
+							value={draft.failedHandling ?? settings.failedHandling}
+							onChange={(e) => setDraft((d) => ({ ...d, failedHandling: e.target.value as PayoutSettings["failedHandling"] }))}
+							className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						>
+							<option value="next_cycle">next_cycle — auto requeue</option>
+							<option value="manual">manual — admin retries</option>
+						</select>
+						<SaveBtn configKey="failed_payment_handling" label="Failed Handling" value={draft.failedHandling ?? settings.failedHandling} />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-const TABS = ["Overview", "Cycles", "Pending", "Failed"] as const;
+const TABS = ["Overview", "Cycles", "Pending", "Failed", "Settings"] as const;
 type Tab = typeof TABS[number];
 
 export default function StellarPayoutsPage() {
@@ -184,9 +440,12 @@ export default function StellarPayoutsPage() {
 	const [failedRequests, setFailedRequests] = useState<PayoutRequest[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [disbursing, setDisbursing] = useState(false);
+	const [resettingLocked, setResettingLocked] = useState(false);
 	const [retrying, setRetrying] = useState(false);
 	const [selectedFailed, setSelectedFailed] = useState<Set<string>>(new Set());
 	const [expandedCycleId, setExpandedCycleId] = useState<string | null>(null);
+	const [cycleRequests, setCycleRequests] = useState<Record<string, PayoutRequest[]>>({});
+	const [loadingCycleRequests, setLoadingCycleRequests] = useState<string | null>(null);
 
 	const load = async () => {
 		setLoading(true);
@@ -211,6 +470,38 @@ export default function StellarPayoutsPage() {
 	};
 
 	useEffect(() => { load(); }, []);
+
+	const handleExpandCycle = async (cycleId: string) => {
+		const next = expandedCycleId === cycleId ? null : cycleId;
+		setExpandedCycleId(next);
+		if (next && !cycleRequests[next]) {
+			setLoadingCycleRequests(next);
+			try {
+				const result = await fetchCycleRequests(axios, next, { limit: 100 });
+				setCycleRequests((prev) => ({ ...prev, [next]: result.data }));
+			} catch {
+				toast.error("Failed to load cycle requests");
+			} finally {
+				setLoadingCycleRequests(null);
+			}
+		}
+	};
+
+	const lockedCount = pendingRequests.filter((r) => r.status === "locked").length;
+
+	const handleResetLocked = async () => {
+		if (!confirm(`Reset all ${lockedCount} stuck LOCKED request(s) back to PENDING? They will be picked up on the next disbursement trigger.`)) return;
+		setResettingLocked(true);
+		try {
+			const { reset } = await resetLockedPayouts(axios);
+			toast.success(`${reset} request(s) reset to PENDING`);
+			load();
+		} catch (e: any) {
+			toast.error(e?.message ?? "Reset failed");
+		} finally {
+			setResettingLocked(false);
+		}
+	};
 
 	const handleDisburse = async () => {
 		if (!confirm("Trigger a manual disbursement now? This will process all pending payout requests immediately.")) return;
@@ -273,6 +564,17 @@ export default function StellarPayoutsPage() {
 							<RefreshCw size={14} className={loading ? "animate-spin" : ""} />
 							Refresh
 						</button>
+						{lockedCount > 0 && (
+							<button
+								onClick={handleResetLocked}
+								disabled={resettingLocked}
+								title="Some requests are stuck in LOCKED status from a failed cycle. Click to reset them to PENDING so they can be disbursed."
+								className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-60"
+							>
+								{resettingLocked ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+								Reset Locked ({lockedCount})
+							</button>
+						)}
 						<button
 							onClick={handleDisburse}
 							disabled={disbursing || loading}
@@ -339,6 +641,7 @@ export default function StellarPayoutsPage() {
 											: "text-gray-500 hover:text-gray-700"
 									}`}
 								>
+									{tab === "Settings" && <Settings2 size={13} className="inline mr-1 -mt-0.5" />}
 									{tab}
 									{tab === "Pending" && pendingRequests.length > 0 && (
 										<span className="ml-1.5 bg-amber-100 text-amber-700 text-xs px-1.5 py-0.5 rounded-full">{pendingRequests.length}</span>
@@ -402,7 +705,7 @@ export default function StellarPayoutsPage() {
 								{cycles.map((c) => (
 									<div key={c._id} className="border border-gray-100 rounded-xl shadow-sm overflow-hidden">
 										<button
-											onClick={() => setExpandedCycleId(expandedCycleId === c._id ? null : c._id)}
+											onClick={() => handleExpandCycle(c._id)}
 											className="w-full flex items-center justify-between px-5 py-4 bg-white hover:bg-gray-50 transition-colors"
 										>
 											<div className="flex items-center gap-3">
@@ -416,12 +719,28 @@ export default function StellarPayoutsPage() {
 											</div>
 										</button>
 										{expandedCycleId === c._id && (
-											<div className="border-t border-gray-100 px-5 py-4 bg-gray-50/50">
-												<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+											<div className="border-t border-gray-100 bg-gray-50/50">
+												{/* Cycle metadata */}
+												<div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-5 py-4 text-sm">
 													<div><p className="text-gray-400 text-xs">Cutoff</p><p className="font-medium text-gray-700">{formatDate(c.cutoffTime)}</p></div>
 													<div><p className="text-gray-400 text-xs">Triggered</p><p className="font-medium text-gray-700">{formatDate(c.disbursementTriggeredAt)}</p></div>
 													<div><p className="text-gray-400 text-xs">Completed</p><p className="font-medium text-gray-700">{formatDate(c.completedAt)}</p></div>
 													<div><p className="text-gray-400 text-xs">SDP Disbursement ID</p><p className="font-mono text-xs text-gray-600">{c.sdpDisbursementId ?? "—"}</p></div>
+												</div>
+
+												{/* Requests for this cycle */}
+												<div className="px-5 pb-4">
+													<p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Payout Requests</p>
+													{loadingCycleRequests === c._id ? (
+														<div className="flex items-center gap-2 text-gray-400 py-4">
+															<Loader2 size={16} className="animate-spin" />
+															<span className="text-sm">Loading requests…</span>
+														</div>
+													) : cycleRequests[c._id]?.length ? (
+														<RequestsTable requests={cycleRequests[c._id]} />
+													) : (
+														<p className="text-sm text-gray-400 py-4">No requests found for this cycle.</p>
+													)}
 												</div>
 											</div>
 										)}
@@ -489,6 +808,9 @@ export default function StellarPayoutsPage() {
 								)}
 							</div>
 						)}
+
+						{/* Tab: Settings */}
+						{activeTab === "Settings" && <SettingsPanel />}
 					</>
 				)}
 			</div>

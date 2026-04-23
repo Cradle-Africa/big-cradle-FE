@@ -8,6 +8,7 @@ import type {
 	PayoutCycle,
 	PayoutListQueryParams,
 	PayoutRequest,
+	PayoutSettings,
 	PayoutStats,
 	PayoutSummaryData,
 	PayoutSummaryQueryParams,
@@ -285,5 +286,22 @@ export async function triggerDisbursement(axios: AxiosInstance): Promise<PayoutC
 
 export async function retryFailedPayouts(axios: AxiosInstance, requestIds: string[]): Promise<{ queued: number }> {
 	const res = await axios.post("/admin/payouts/retry", { requestIds });
+	return res.data;
+}
+
+export async function fetchPayoutSettings(axios: AxiosInstance): Promise<PayoutSettings> {
+	const res = await axios.get("/system-config/payout-settings");
+	return (res.data as any).data ?? res.data;
+}
+
+export async function updatePayoutSetting(axios: AxiosInstance, key: string, value: string): Promise<void> {
+	await axios.patch(`/system-config/${key}`, { value });
+}
+
+export async function resetLockedPayouts(
+	axios: AxiosInstance,
+	requestIds?: string[],
+): Promise<{ reset: number }> {
+	const res = await axios.patch("/admin/payouts/reset-locked", requestIds?.length ? { requestIds } : {});
 	return res.data;
 }

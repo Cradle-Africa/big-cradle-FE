@@ -723,7 +723,8 @@ export type PayoutRequest = {
 	researcherId: string;
 	walletId: string;
 	amountBCC: number;
-	phoneNumber: string;
+	email: string;
+	stellarWalletAddress?: string;
 	status: PayoutRequestStatus;
 	cycleId?: string;
 	sdpDisbursementId?: string;
@@ -761,6 +762,17 @@ export type PayoutStats = {
 	completed: number;
 	failed: number;
 	totalDisbursedBCC: number;
+};
+
+export type PayoutSettings = {
+	payoutDay: number;
+	cutoffHour: number;
+	disbursementHour: number;
+	timezone: string;
+	minimumBCC: number;
+	maximumBCC: number | null;
+	autoDisburse: boolean;
+	failedHandling: 'next_cycle' | 'manual';
 };
 
 export type InflowListQueryParams = InflowSummaryQueryParams & {
