@@ -14,6 +14,7 @@ import {
 	resetLockedPayouts,
 	retryFailedPayouts,
 	triggerDisbursement,
+	triggerIndividualPayout,
 	updatePayoutSetting,
 } from "../_features/api";
 import { useEffect, useState } from "react";
@@ -104,11 +105,13 @@ function StatCard({ label, value, sub, icon, color }: {
 
 // ─── Requests Table ───────────────────────────────────────────────────────────
 
-function RequestsTable({ requests, selectable, selected, onSelect }: {
+function RequestsTable({ requests, selectable, selected, onSelect, onPay, payingId }: {
 	requests: PayoutRequest[];
 	selectable?: boolean;
 	selected?: Set<string>;
 	onSelect?: (id: string, checked: boolean) => void;
+	onPay?: (id: string) => void;
+	payingId?: string | null;
 }) {
 	if (!requests.length) {
 		return (
@@ -127,10 +130,12 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Researcher ID</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Amount</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</th>
+						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Stellar Wallet</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Stellar TX</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Failure Reason</th>
 						<th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Requested</th>
+						{onPay && <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Action</th>}
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-gray-50">
@@ -152,6 +157,18 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 								{" "}<span className="text-xs font-normal text-blue-600">BCC</span>
 							</td>
 							<td className="px-4 py-3 text-gray-600 text-xs">{r.email ?? "—"}</td>
+							<td className="px-4 py-3">
+								{r.stellarWalletAddress ? (
+									<div className="flex items-center gap-1.5">
+										<span className="font-mono text-xs bg-gray-100 px-2 py-0.5 rounded text-gray-600">
+											{truncateHash(r.stellarWalletAddress)}
+										</span>
+										<button onClick={() => copyToClipboard(r.stellarWalletAddress!, "Address copied!")} className="text-gray-400 hover:text-gray-600">
+											<Copy size={12} />
+										</button>
+									</div>
+								) : <span className="text-xs text-amber-500 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Not set</span>}
+							</td>
 							<td className="px-4 py-3">{requestBadge(r.status)}</td>
 							<td className="px-4 py-3">
 								{r.stellarTransactionHash ? (
@@ -178,6 +195,20 @@ function RequestsTable({ requests, selectable, selected, onSelect }: {
 									: <span className="text-gray-300 text-xs">—</span>}
 							</td>
 							<td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{formatDate(r.requestedAt)}</td>
+							{onPay && (
+								<td className="px-4 py-3">
+									{r.status === "pending" ? (
+										<button
+											onClick={() => onPay(r._id)}
+											disabled={payingId === r._id}
+											className="flex items-center gap-1 text-xs bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+										>
+											{payingId === r._id ? <Loader2 size={11} className="animate-spin" /> : <Send size={11} />}
+											Pay Now
+										</button>
+									) : <span className="text-gray-300 text-xs">—</span>}
+								</td>
+							)}
 						</tr>
 					))}
 				</tbody>
@@ -446,6 +477,7 @@ export default function StellarPayoutsPage() {
 	const [expandedCycleId, setExpandedCycleId] = useState<string | null>(null);
 	const [cycleRequests, setCycleRequests] = useState<Record<string, PayoutRequest[]>>({});
 	const [loadingCycleRequests, setLoadingCycleRequests] = useState<string | null>(null);
+	const [payingId, setPayingId] = useState<string | null>(null);
 
 	const load = async () => {
 		setLoading(true);
@@ -529,6 +561,20 @@ export default function StellarPayoutsPage() {
 			toast.error(e?.message ?? "Retry failed");
 		} finally {
 			setRetrying(false);
+		}
+	};
+
+	const handleIndividualPay = async (requestId: string) => {
+		if (!confirm("Send this payment directly via Stellar now? The funds will leave immediately.")) return;
+		setPayingId(requestId);
+		try {
+			await triggerIndividualPayout(axios, requestId);
+			toast.success("Payment triggered successfully!");
+			load();
+		} catch (e: any) {
+			toast.error(e?.message ?? "Payment failed");
+		} finally {
+			setPayingId(null);
 		}
 	};
 
@@ -764,7 +810,11 @@ export default function StellarPayoutsPage() {
 										<p className="text-xs mt-1">All caught up!</p>
 									</div>
 								) : (
-									<RequestsTable requests={pendingRequests} />
+									<RequestsTable
+										requests={pendingRequests}
+										onPay={handleIndividualPay}
+										payingId={payingId}
+									/>
 								)}
 							</div>
 						)}

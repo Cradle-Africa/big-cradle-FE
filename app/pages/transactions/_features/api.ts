@@ -305,3 +305,11 @@ export async function resetLockedPayouts(
 	const res = await axios.patch("/admin/payouts/reset-locked", requestIds?.length ? { requestIds } : {});
 	return res.data;
 }
+
+export async function triggerIndividualPayout(
+	axios: AxiosInstance,
+	requestId: string,
+): Promise<{ status: string; sdpPaymentId: string }> {
+	const res = await axios.post(`/admin/payouts/${requestId}/pay`);
+	return res.data;
+}
