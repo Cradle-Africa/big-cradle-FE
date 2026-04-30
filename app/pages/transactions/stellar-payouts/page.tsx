@@ -17,7 +17,7 @@ import {
 	triggerIndividualPayout,
 	updatePayoutSetting,
 } from "../_features/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	AlertTriangle,
 	CheckCircle2,
@@ -42,6 +42,68 @@ const STELLAR_NETWORK = (process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? "testnet") a
 function stellarExplorerUrl(hash: string): string {
 	const net = STELLAR_NETWORK === "mainnet" ? "public" : "testnet";
 	return `https://stellar.expert/explorer/${net}/tx/${hash}`;
+}
+
+// ─── Confirm Dialog ───────────────────────────────────────────────────────────
+
+interface ConfirmOptions {
+	title: string;
+	description: string;
+	confirmLabel?: string;
+	destructive?: boolean;
+}
+
+function ConfirmDialog({ options, onConfirm, onCancel }: {
+	options: ConfirmOptions;
+	onConfirm: () => void;
+	onCancel: () => void;
+}) {
+	return (
+		<div className="fixed inset-0 z-50 flex items-center justify-center">
+			<div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
+			<div className="relative bg-white rounded-2xl shadow-xl border border-gray-100 w-full max-w-md mx-4 p-6">
+				<h3 className="text-base font-semibold text-gray-900">{options.title}</h3>
+				<p className="mt-2 text-sm text-gray-500 leading-relaxed">{options.description}</p>
+				<div className="mt-6 flex items-center justify-end gap-3">
+					<button
+						onClick={onCancel}
+						className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+					>
+						Cancel
+					</button>
+					<button
+						onClick={onConfirm}
+						className={`px-4 py-2 text-sm font-semibold text-white rounded-lg transition-colors ${
+							options.destructive
+								? "bg-red-600 hover:bg-red-700"
+								: "bg-blue-600 hover:bg-blue-700"
+						}`}
+					>
+						{options.confirmLabel ?? "Confirm"}
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function useConfirm() {
+	const [dialog, setDialog] = useState<(ConfirmOptions & { resolve: (v: boolean) => void }) | null>(null);
+
+	const confirm = useCallback((options: ConfirmOptions): Promise<boolean> => {
+		return new Promise((resolve) => {
+			setDialog({ ...options, resolve });
+		});
+	}, []);
+
+	const handleConfirm = () => { dialog?.resolve(true); setDialog(null); };
+	const handleCancel  = () => { dialog?.resolve(false); setDialog(null); };
+
+	const DialogNode = dialog ? (
+		<ConfirmDialog options={dialog} onConfirm={handleConfirm} onCancel={handleCancel} />
+	) : null;
+
+	return { confirm, DialogNode };
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -478,6 +540,7 @@ export default function StellarPayoutsPage() {
 	const [cycleRequests, setCycleRequests] = useState<Record<string, PayoutRequest[]>>({});
 	const [loadingCycleRequests, setLoadingCycleRequests] = useState<string | null>(null);
 	const [payingId, setPayingId] = useState<string | null>(null);
+	const { confirm, DialogNode } = useConfirm();
 
 	const load = async () => {
 		setLoading(true);
@@ -522,7 +585,12 @@ export default function StellarPayoutsPage() {
 	const lockedCount = pendingRequests.filter((r) => r.status === "locked").length;
 
 	const handleResetLocked = async () => {
-		if (!confirm(`Reset all ${lockedCount} stuck LOCKED request(s) back to PENDING? They will be picked up on the next disbursement trigger.`)) return;
+		const ok = await confirm({
+			title: "Reset Locked Requests",
+			description: `Reset all ${lockedCount} stuck LOCKED request(s) back to PENDING? They will be picked up on the next disbursement trigger.`,
+			confirmLabel: "Reset",
+		});
+		if (!ok) return;
 		setResettingLocked(true);
 		try {
 			const { reset } = await resetLockedPayouts(axios);
@@ -536,7 +604,12 @@ export default function StellarPayoutsPage() {
 	};
 
 	const handleDisburse = async () => {
-		if (!confirm("Trigger a manual disbursement now? This will process all pending payout requests immediately.")) return;
+		const ok = await confirm({
+			title: "Trigger Disbursement",
+			description: "This will immediately process all pending payout requests. Make sure the distribution wallet has enough USDC before proceeding.",
+			confirmLabel: "Trigger Now",
+		});
+		if (!ok) return;
 		setDisbursing(true);
 		try {
 			await triggerDisbursement(axios);
@@ -565,7 +638,12 @@ export default function StellarPayoutsPage() {
 	};
 
 	const handleIndividualPay = async (requestId: string) => {
-		if (!confirm("Send this payment directly via Stellar now? The funds will leave immediately.")) return;
+		const ok = await confirm({
+			title: "Send Payment",
+			description: "Send this payout directly via Stellar now? The funds will leave the distribution wallet immediately.",
+			confirmLabel: "Send Now",
+		});
+		if (!ok) return;
 		setPayingId(requestId);
 		try {
 			await triggerIndividualPayout(axios, requestId);
@@ -587,8 +665,10 @@ export default function StellarPayoutsPage() {
 	};
 
 	return (
+		<>
+		{DialogNode}
 		<DashboardLayout>
-			<div className="p-6 max-w-7xl mx-auto overflow-x-hidden">
+			<div className="p-6 max-w-7xl mx-auto">
 
 				{/* Header */}
 				<div className="flex items-center justify-between mb-6">
@@ -662,12 +742,32 @@ export default function StellarPayoutsPage() {
 									</div>
 									<div className="flex items-center gap-6 text-center">
 										<div>
-											<p className="text-2xl font-bold">{currentCycle.totalRequests}</p>
-											<p className="text-blue-200 text-xs">Requests</p>
+											{currentCycle.status === "open" ? (
+												<>
+													<p className="text-2xl font-bold">{pendingRequests.length}</p>
+													<p className="text-blue-200 text-xs">Awaiting Disbursement</p>
+												</>
+											) : (
+												<>
+													<p className="text-2xl font-bold">{currentCycle.totalRequests}</p>
+													<p className="text-blue-200 text-xs">Requests</p>
+												</>
+											)}
 										</div>
 										<div>
-											<p className="text-2xl font-bold">{currentCycle.totalAmountBCC.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
-											<p className="text-blue-200 text-xs">BCC Queued</p>
+											{currentCycle.status === "open" ? (
+												<>
+													<p className="text-2xl font-bold">
+														{pendingRequests.reduce((s, r) => s + r.amountBCC, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+													</p>
+													<p className="text-blue-200 text-xs">BCC Pending</p>
+												</>
+											) : (
+												<>
+													<p className="text-2xl font-bold">{currentCycle.totalAmountBCC.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+													<p className="text-blue-200 text-xs">BCC Queued</p>
+												</>
+											)}
 										</div>
 										<div>{cycleBadge(currentCycle.status)}</div>
 									</div>
@@ -720,24 +820,40 @@ export default function StellarPayoutsPage() {
 												</tr>
 											</thead>
 											<tbody className="divide-y divide-gray-50">
-												{cycles.map((c) => (
-													<tr key={c._id} className="hover:bg-blue-50/20 transition-colors">
-														<td className="px-5 py-4 font-semibold text-gray-800">{c.cycleKey}</td>
-														<td className="px-5 py-4">{cycleBadge(c.status)}</td>
-														<td className="px-5 py-4 text-gray-700">{c.totalRequests}</td>
-														<td className="px-5 py-4 font-semibold text-gray-900">
-															{c.totalAmountBCC.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-															{" "}<span className="text-xs font-normal text-blue-600">BCC</span>
-														</td>
-														<td className="px-5 py-4">
-															<span className="text-green-600 font-medium">{c.successCount}</span>
-															<span className="text-gray-300 mx-1">/</span>
-															<span className="text-red-500 font-medium">{c.failureCount}</span>
-														</td>
-														<td className="px-5 py-4 text-xs text-gray-500">{c.triggeredBy}</td>
-														<td className="px-5 py-4 text-xs text-gray-400 whitespace-nowrap">{formatDate(c.disbursementDate)}</td>
-													</tr>
-												))}
+												{cycles.map((c) => {
+													const isOpen = c.status === "open";
+													const displayCount = isOpen ? pendingRequests.length : c.totalRequests;
+													const displayBCC = isOpen
+														? pendingRequests.reduce((s, r) => s + r.amountBCC, 0)
+														: c.totalAmountBCC;
+													return (
+														<tr key={c._id} className="hover:bg-blue-50/20 transition-colors">
+															<td className="px-5 py-4 font-semibold text-gray-800">{c.cycleKey}</td>
+															<td className="px-5 py-4">{cycleBadge(c.status)}</td>
+															<td className="px-5 py-4 text-gray-700">
+																{displayCount}
+																{isOpen && <span className="ml-1.5 text-xs text-amber-500 font-medium">pending</span>}
+															</td>
+															<td className="px-5 py-4 font-semibold text-gray-900">
+																{displayBCC.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+																{" "}<span className="text-xs font-normal text-blue-600">BCC</span>
+															</td>
+															<td className="px-5 py-4">
+																{isOpen ? (
+																	<span className="text-xs text-gray-400">—</span>
+																) : (
+																	<>
+																		<span className="text-green-600 font-medium">{c.successCount}</span>
+																		<span className="text-gray-300 mx-1">/</span>
+																		<span className="text-red-500 font-medium">{c.failureCount}</span>
+																	</>
+																)}
+															</td>
+															<td className="px-5 py-4 text-xs text-gray-500">{c.triggeredBy ?? "—"}</td>
+															<td className="px-5 py-4 text-xs text-gray-400 whitespace-nowrap">{formatDate(c.disbursementDate)}</td>
+														</tr>
+													);
+												})}
 											</tbody>
 										</table>
 									</div>
@@ -865,5 +981,6 @@ export default function StellarPayoutsPage() {
 				)}
 			</div>
 		</DashboardLayout>
+		</>
 	);
 }

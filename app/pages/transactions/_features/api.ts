@@ -310,6 +310,10 @@ export async function triggerIndividualPayout(
 	axios: AxiosInstance,
 	requestId: string,
 ): Promise<{ status: string; sdpPaymentId: string }> {
-	const res = await axios.post(`/admin/payouts/${requestId}/pay`);
-	return res.data;
+	try {
+		const res = await axios.post(`/admin/payouts/${requestId}/pay`);
+		return res.data;
+	} catch (e) {
+		throw new Error(axiosErrorMessage(e));
+	}
 }
