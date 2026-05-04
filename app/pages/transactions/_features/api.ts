@@ -306,6 +306,26 @@ export async function resetLockedPayouts(
 	return res.data;
 }
 
+export async function fetchProcessingPayouts(
+	axios: AxiosInstance,
+	params: { page?: number; limit?: number } = {}
+): Promise<{ data: PayoutRequest[]; pagination: PaginationMeta }> {
+	const res = await axios.get("/admin/payouts/processing", { params });
+	return {
+		data: (res.data as any).data ?? [],
+		pagination: normalizePagination((res.data as any).pagination ?? {}),
+	};
+}
+
+export async function syncProcessingPayouts(axios: AxiosInstance): Promise<{ message: string }> {
+	try {
+		const res = await axios.post("/admin/payouts/sync");
+		return res.data;
+	} catch (e) {
+		throw new Error(axiosErrorMessage(e));
+	}
+}
+
 export async function triggerIndividualPayout(
 	axios: AxiosInstance,
 	requestId: string,

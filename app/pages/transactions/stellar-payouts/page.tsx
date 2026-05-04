@@ -11,8 +11,10 @@ import {
 	fetchPayoutSettings,
 	fetchPayoutStats,
 	fetchPendingPayouts,
+	fetchProcessingPayouts,
 	resetLockedPayouts,
 	retryFailedPayouts,
+	syncProcessingPayouts,
 	triggerDisbursement,
 	triggerIndividualPayout,
 	updatePayoutSetting,
@@ -521,7 +523,7 @@ function SettingsPanel() {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-const TABS = ["Overview", "Cycles", "Pending", "Failed", "Settings"] as const;
+const TABS = ["Overview", "Cycles", "Pending", "Processing", "Failed", "Settings"] as const;
 type Tab = typeof TABS[number];
 
 export default function StellarPayoutsPage() {
@@ -530,9 +532,11 @@ export default function StellarPayoutsPage() {
 	const [currentCycle, setCurrentCycle] = useState<PayoutCycle | null>(null);
 	const [cycles, setCycles] = useState<PayoutCycle[]>([]);
 	const [pendingRequests, setPendingRequests] = useState<PayoutRequest[]>([]);
+	const [processingRequests, setProcessingRequests] = useState<PayoutRequest[]>([]);
 	const [failedRequests, setFailedRequests] = useState<PayoutRequest[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [disbursing, setDisbursing] = useState(false);
+	const [syncing, setSyncing] = useState(false);
 	const [resettingLocked, setResettingLocked] = useState(false);
 	const [retrying, setRetrying] = useState(false);
 	const [selectedFailed, setSelectedFailed] = useState<Set<string>>(new Set());
@@ -545,17 +549,19 @@ export default function StellarPayoutsPage() {
 	const load = async () => {
 		setLoading(true);
 		try {
-			const [s, cc, cy, pend, fail] = await Promise.all([
+			const [s, cc, cy, pend, proc, fail] = await Promise.all([
 				fetchPayoutStats(axios),
 				fetchCurrentCycle(axios),
 				fetchPayoutCycles(axios, { limit: 20 }),
 				fetchPendingPayouts(axios, { limit: 50 }),
+				fetchProcessingPayouts(axios, { limit: 50 }),
 				fetchFailedPayouts(axios, { limit: 50 }),
 			]);
 			setStats(s);
 			setCurrentCycle(cc);
 			setCycles(cy.data);
 			setPendingRequests(pend.data);
+			setProcessingRequests(proc.data);
 			setFailedRequests(fail.data);
 		} catch (e: any) {
 			toast.error(e?.message ?? "Failed to load data");
@@ -619,6 +625,19 @@ export default function StellarPayoutsPage() {
 			toast.error(e?.message ?? "Disbursement failed");
 		} finally {
 			setDisbursing(false);
+		}
+	};
+
+	const handleSync = async () => {
+		setSyncing(true);
+		try {
+			await syncProcessingPayouts(axios);
+			toast.success("Sync complete — check Processing tab for updates");
+			load();
+		} catch (e: any) {
+			toast.error(e?.message ?? "Sync failed");
+		} finally {
+			setSyncing(false);
 		}
 	};
 
@@ -690,6 +709,17 @@ export default function StellarPayoutsPage() {
 							<RefreshCw size={14} className={loading ? "animate-spin" : ""} />
 							Refresh
 						</button>
+						{processingRequests.length > 0 && (
+							<button
+								onClick={handleSync}
+								disabled={syncing || loading}
+								title="Poll SDP now to resolve any PROCESSING payments that have already completed on-chain"
+								className="flex items-center gap-1.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm disabled:opacity-60"
+							>
+								{syncing ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+								Sync Now ({processingRequests.length})
+							</button>
+						)}
 						{lockedCount > 0 && (
 							<button
 								onClick={handleResetLocked}
@@ -791,6 +821,9 @@ export default function StellarPayoutsPage() {
 									{tab}
 									{tab === "Pending" && pendingRequests.length > 0 && (
 										<span className="ml-1.5 bg-amber-100 text-amber-700 text-xs px-1.5 py-0.5 rounded-full">{pendingRequests.length}</span>
+									)}
+									{tab === "Processing" && processingRequests.length > 0 && (
+										<span className="ml-1.5 bg-indigo-100 text-indigo-700 text-xs px-1.5 py-0.5 rounded-full animate-pulse">{processingRequests.length}</span>
 									)}
 									{tab === "Failed" && failedRequests.length > 0 && (
 										<span className="ml-1.5 bg-red-100 text-red-700 text-xs px-1.5 py-0.5 rounded-full">{failedRequests.length}</span>
@@ -931,6 +964,40 @@ export default function StellarPayoutsPage() {
 										onPay={handleIndividualPay}
 										payingId={payingId}
 									/>
+								)}
+							</div>
+						)}
+
+						{/* Tab: Processing */}
+						{activeTab === "Processing" && (
+							<div>
+								<div className="flex items-center justify-between mb-4">
+									<h2 className="text-base font-semibold text-gray-800">
+										Processing Requests <span className="ml-2 text-sm text-gray-400 font-normal">({processingRequests.length})</span>
+									</h2>
+									<button
+										onClick={handleSync}
+										disabled={syncing || loading}
+										className="flex items-center gap-1.5 bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+									>
+										{syncing ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+										Sync Now
+									</button>
+								</div>
+								{processingRequests.length === 0 ? (
+									<div className="flex flex-col items-center justify-center py-16 text-gray-400 border border-dashed border-gray-200 rounded-xl">
+										<CheckCircle2 size={32} className="mb-2 text-green-300" />
+										<p className="text-sm font-medium">No processing requests</p>
+										<p className="text-xs mt-1">All payments have resolved</p>
+									</div>
+								) : (
+									<>
+										<div className="flex items-center gap-2 mb-3 text-xs text-gray-500 bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
+											<Loader2 size={14} className="text-indigo-500 animate-spin" />
+											These payments have been sent to SDP but are awaiting blockchain confirmation. Click "Sync Now" to poll SDP for their latest status.
+										</div>
+										<RequestsTable requests={processingRequests} />
+									</>
 								)}
 							</div>
 						)}
