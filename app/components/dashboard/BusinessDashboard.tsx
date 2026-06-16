@@ -2,7 +2,7 @@ import axios from "@/app/lib/axios";
 import { useFetchMe } from "@/app/shared-data-point/_features/hooks";
 import { useState } from "react";
 import KycVerification from "../KycVerification";
-import { Spinner } from "@radix-ui/themes";
+import { IntroductionSkeleton } from "../skeleton/IntroductionSkeleton";
 import PlatformOverviewHeader from "../charts/PlatformOverviewHeader";
 import EngagementChart from "../charts/EngagementChart";
 import Summary from "../charts/Summary";
@@ -37,9 +37,7 @@ const BusinessDashboard = () => {
 		<div>
 			{isLoading && (
 				<div>
-					<p>
-						<Spinner />{" "}
-					</p>
+						<IntroductionSkeleton/>
 				</div>
 			)}
 
@@ -67,7 +65,7 @@ const BusinessDashboard = () => {
 					<div className="mt-5">
 						<div className="relative md:flex justify-between gap-5">
 							<div className="md:w-3/5">
-								<EngagementChart />
+								<EngagementChart  />
 							</div>
 							<div className="md:w-2/4 mt-5 md:mt-0">
 								<SurveyPaymentStatsChart />
