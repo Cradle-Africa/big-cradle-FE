@@ -90,8 +90,8 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-between mlg:gap-16 md:py-0 bg-white">
-      <div className="flex items-center justify-center w-full  lg:max-w-[400px] md:px-12 py-4 bg-white">
+    <div className="flex flex-col lg:flex-row w-full min-h-screen">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 md:px-12 py-10 bg-white">
         {openReset && (
           <ForgotPassword
             openReset={openReset}
@@ -119,20 +119,20 @@ export default function SignInPage() {
           />
         )}
 
-        <div className="w-full px-10 lg:px-0 lg:max-w-md space-y-6 text-sm">
+        <div className="w-full px-10 lg:px-0 lg:max-w-md space-y-6 text-sm text-center">
           <Image
             src={LogoWithText}
             width={200}
             height={200}
             alt="Big Cradle Logo"
-            className="mb-4"
+            className="mb-8 mx-auto"
           />
           <h3 className="text-lg font-semibold text-gray-700">
             Welcome to Big Cradle
           </h3>
           <p className="text-gray-700 text-sm">
             Do not have an account with us?
-            <Link href="/pages/user/signup" className="underline ml-1">
+            <Link href="/pages/user/signup" className="underline ml-1 hover:text-blue-500 hover:no-underline">
               Sign up
             </Link>
           </p>
@@ -201,7 +201,9 @@ export default function SignInPage() {
           </form>
         </div>
       </div>
-      <LoginImage />
+      <div  className="w-full lg:w-1/2 hidden lg:block">
+				<LoginImage />
+			</div>
     </div>
   );
 }

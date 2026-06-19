@@ -128,7 +128,7 @@ export default function BusinessSignUp() {
 										value={form.businessName}
 										onChange={handleChange}
 										placeholder="Business Name"
-										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 focus:border-2"
 									/>
 									{errors.businessName && (
 										<p className="text-red-500 text-xs">
@@ -143,7 +143,7 @@ export default function BusinessSignUp() {
 										value={form.contactName}
 										onChange={handleChange}
 										placeholder="Contact Email"
-										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 focus:border-2"
 									/>
 									{errors.contactName && (
 										<p className="text-red-500 text-xs">{errors.contactName}</p>
@@ -155,7 +155,7 @@ export default function BusinessSignUp() {
 										value={form.contactPersonFirstName}
 										onChange={handleChange}
 										placeholder="Contact First Name"
-										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 focus:border-2"
 									/>
 									{errors.contactPersonFirstName && (
 										<p className="text-red-500 text-xs">
@@ -170,7 +170,7 @@ export default function BusinessSignUp() {
 										value={form.contactPersonLastName}
 										onChange={handleChange}
 										placeholder="Contact Last Name"
-										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+										className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 focus:border-2"
 									/>
 									{errors.contactPersonLastName && (
 										<p className="text-red-500 text-xs">
@@ -199,7 +199,7 @@ export default function BusinessSignUp() {
 											value={form.contactNumber}
 											onChange={handleChange}
 											placeholder="Phone Number"
-											className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none"
+											className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-blue-500 focus:border-2"
 										/>
 										{errors.contactNumber && (
 											<p className="text-red-500 text-xs">
